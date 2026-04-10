@@ -51,12 +51,58 @@ nav {
 nav .container {
   display: flex; justify-content: space-between; align-items: center;
 }
+.nav-left {
+  display: flex; align-items: center; gap: 12px;
+}
+.nav-headshot {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: border-color 0.3s;
+}
+.nav-headshot:hover { border-color: var(--accent); }
 .nav-logo {
   font-family: var(--serif);
   font-size: 18px;
   letter-spacing: 0.02em;
   color: var(--fg);
 }
+
+/* --- Lightbox --- */
+.lightbox {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.88);
+  z-index: 10000;
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s;
+  cursor: pointer;
+}
+.lightbox.active { opacity: 1; pointer-events: all; }
+.lightbox img {
+  max-width: 420px;
+  max-height: 80vh;
+  border-radius: 8px;
+  box-shadow: 0 24px 80px rgba(0,0,0,0.6);
+  transform: scale(0.9);
+  transition: transform 0.3s;
+}
+.lightbox.active img { transform: scale(1); }
+.lightbox-close {
+  position: absolute;
+  top: 24px; right: 32px;
+  color: var(--muted);
+  font-size: 28px;
+  cursor: pointer;
+  font-family: var(--sans);
+  font-weight: 300;
+  transition: color 0.3s;
+  line-height: 1;
+}
+.lightbox-close:hover { color: var(--fg); }
 .nav-links { display: flex; gap: 28px; }
 .nav-links a {
   color: var(--muted);
@@ -82,7 +128,7 @@ nav .container {
 /* --- Hero --- */
 .hero {
   min-height: auto;
-  padding: 100px 0 48px;
+  padding: 92px 0 32px;
 }
 .hero-inner {
   width: 100%;
@@ -113,7 +159,7 @@ nav .container {
 .hero-bio {
   font-size: 16px;
   color: var(--muted);
-  max-width: 520px;
+  max-width: 620px;
   line-height: 1.7;
   opacity: 0;
   animation: fadeUp 0.8s ease forwards 0.6s;
@@ -134,31 +180,14 @@ nav .container {
 }
 .inline-link:hover { border-color: var(--accent); }
 
-/* --- Headshot --- */
-.hero-headshot {
-  width: 110px;
-  height: 110px;
-  border-radius: 50%;
-  object-fit: cover;
-  margin-bottom: 20px;
-  border: 2px solid var(--border);
-  opacity: 0;
-  animation: fadeUp 0.8s ease forwards 0.1s;
-  transition: border-color 0.4s, box-shadow 0.4s;
-}
-.hero-headshot:hover {
-  border-color: var(--accent);
-  box-shadow: 0 0 24px rgba(201,169,110,0.15);
-}
-
 /* --- Sections --- */
-section { padding: 40px 0; }
+section { padding: 32px 0; }
 .section-label {
   font-size: 11px;
   letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--accent);
-  margin-bottom: 24px;
+  margin-bottom: 20px;
   font-weight: 500;
 }
 
@@ -173,7 +202,7 @@ section { padding: 40px 0; }
 }
 .t-item {
   padding-left: 32px;
-  margin-bottom: 28px;
+  margin-bottom: 20px;
   position: relative;
 }
 .t-item::before {
@@ -252,7 +281,7 @@ section { padding: 40px 0; }
   font-size: 20px;
   font-family: var(--serif);
   line-height: 1.55;
-  max-width: 600px;
+  max-width: 700px;
   color: var(--fg);
 }
 .approach-text em {
@@ -263,7 +292,7 @@ section { padding: 40px 0; }
 /* --- Contact --- */
 .contact-section {
   border-top: 1px solid var(--border);
-  padding: 48px 0;
+  padding: 40px 0;
   text-align: center;
 }
 .contact-section h2 {
@@ -305,7 +334,7 @@ footer {
 }
 
 /* --- Article cards --- */
-.article-list { display: flex; flex-direction: column; gap: 20px; }
+.article-list { display: flex; flex-direction: column; gap: 14px; }
 .article-card {
   background: var(--card);
   border: 1px solid var(--border);
@@ -363,7 +392,7 @@ footer {
 .shipped-intro {
   font-size: 15px;
   color: var(--muted);
-  margin-bottom: 32px;
+  margin-bottom: 20px;
 }
 .shipped-category {
   font-size: 12px;
@@ -371,7 +400,7 @@ footer {
   text-transform: uppercase;
   color: var(--accent);
   font-weight: 500;
-  margin: 28px 0 12px;
+  margin: 20px 0 10px;
 }
 .shipped-category:first-of-type { margin-top: 0; }
 
@@ -401,7 +430,10 @@ footer {
 
 <nav>
   <div class="container">
-    <div class="nav-logo">JD</div>
+    <div class="nav-left">
+      <img src="headshot.jpg" alt="Josh Dunlap" class="nav-headshot" onclick="document.getElementById('lightbox').classList.add('active')">
+      <div class="nav-logo">Josh Dunlap</div>
+    </div>
     <div class="nav-links">
       <a href="#experience">Experience</a>
       <a href="#expertise">Expertise</a>
@@ -412,10 +444,14 @@ footer {
   </div>
 </nav>
 
+<div id="lightbox" class="lightbox" onclick="this.classList.remove('active')">
+  <span class="lightbox-close">&times;</span>
+  <img src="headshot.jpg" alt="Josh Dunlap" onclick="event.stopPropagation()">
+</div>
+
 <section class="hero">
   <div class="container">
     <div class="hero-inner">
-      <img src="headshot.jpg" alt="Josh Dunlap" class="hero-headshot">
       <div class="hero-label">Executive Director of Digital Products & UX Design</div>
       <h1>Building digital<br>experiences at <em>scale</em></h1>
       <p class="hero-bio">Leading end-to-end digital experience and UX Design at MGM Resorts International. <a href="https://www.mgmresorts.com/en/company.html" target="_blank" class="inline-link">Learn more about MGM →</a></p>
@@ -572,11 +608,10 @@ footer {
       <div class="shipped-item">Global Search</div>
       <div class="shipped-item">Search History</div>
       <div class="shipped-item">Room Booking Flow Optimization</div>
-      <div class="shipped-item">Rooms for This Weekend Carousel</div>
-      <div class="shipped-item">Room Infinite Carousel</div>
       <div class="shipped-item">Native Room PDP</div>
       <div class="shipped-item">Native Pools & Spas PDPs</div>
       <div class="shipped-item">Native Resort PDPs</div>
+      <div class="shipped-item">Resort Tab App Hero</div>
       <div class="shipped-item">Dining & Entertainment PDPs</div>
       <div class="shipped-item">Dining Category Pages</div>
       <div class="shipped-item">Entertainment Calendar / Showtimes</div>
@@ -584,39 +619,32 @@ footer {
       <div class="shipped-item">Purchasable Room Upgrades</div>
       <div class="shipped-item">Early Check-in & Late Checkout</div>
       <div class="shipped-item">Event Packages (F1)</div>
-      <div class="shipped-item">Multi-offer Hero</div>
-      <div class="shipped-item">High Priority Announcement Modal</div>
-      <div class="shipped-item">Flash Sale Modules</div>
-      <div class="shipped-item">Offer Module Redesign</div>
       <div class="shipped-item">Discover Tab Full-screen Gallery</div>
       <div class="shipped-item">Mobile Ordering Module</div>
-      <div class="shipped-item">Packages Tile</div>
       <div class="shipped-item">Digital Concierge Chat</div>
-      <div class="shipped-item">Chatbot NPS Rating System</div>
-      <div class="shipped-item">In-Trip Promoted Entertainment</div>
       <div class="shipped-item">Folio & Stay Summary</div>
       <div class="shipped-item">Checkout Experiences</div>
       <div class="shipped-item">Carbon Offsetting Offers</div>
       <div class="shipped-item">Transactional Push Notifications & Emails</div>
-      <div class="shipped-item">Coach Marks & Onboarding</div>
       <div class="shipped-item">First Time User Experience Redesign</div>
       <div class="shipped-item">Guided Sign-in / Sign-up</div>
       <div class="shipped-item">Multi-Factor Authentication</div>
       <div class="shipped-item">Digital Account Unlock</div>
-      <div class="shipped-item">PIN Reset in Onboarding</div>
       <div class="shipped-item">Preferences Center</div>
       <div class="shipped-item">Rewards Stay Preferences</div>
       <div class="shipped-item">Profile Navigation Redesign</div>
-      <div class="shipped-item">Card Scanning (ML Kit)</div>
-      <div class="shipped-item">Native Feedback Widget</div>
     </div>
 
     <div class="shipped-category reveal">Guest Experience — Web</div>
     <div class="shipped-grid reveal">
-      <div class="shipped-item">Premium Property Websites (Bellagio, Cosmopolitan)</div>
+      <div class="shipped-item">Bellagio Premium Homepage</div>
+      <div class="shipped-item">The Cosmopolitan Premium Homepage</div>
+      <div class="shipped-item">TCOLV Discovery Navigation</div>
       <div class="shipped-item">Enterprise Homepage Redesign (Vega)</div>
       <div class="shipped-item">Top Navigation Optimization</div>
       <div class="shipped-item">Global Footer Redesign</div>
+      <div class="shipped-item">Sizzle Shorts Video Reels</div>
+      <div class="shipped-item">Video in Mobile Web Hero</div>
       <div class="shipped-item">Dining Product Detail Pages</div>
       <div class="shipped-item">Entertainment & Attractions PDPs</div>
       <div class="shipped-item">Pools PDPs</div>
@@ -624,17 +652,16 @@ footer {
       <div class="shipped-item">Private & Group Dining Pages</div>
       <div class="shipped-item">Premium Package PDPs</div>
       <div class="shipped-item">Dining Category Pages</div>
-      <div class="shipped-item">Packages 2.0 — Dynamic Pricing</div>
-      <div class="shipped-item">Video in Mobile Web Hero</div>
+      <div class="shipped-item">Packages — Dynamic Pricing</div>
       <div class="shipped-item">Wi-Fi Connection-to-Discovery Flow</div>
       <div class="shipped-item">Web Chat (Digital Concierge)</div>
       <div class="shipped-item">Web Check-in on Homepage</div>
       <div class="shipped-item">Meetings & Events Navigation</div>
-      <div class="shipped-item">Cross-sell via Rules API</div>
-      <div class="shipped-item">Branch.io App Download Banners</div>
-      <div class="shipped-item">Embedded Schema for SEO (Entertainment & Dining)</div>
+      <div class="shipped-item">Embedded Schema for SEO</div>
       <div class="shipped-item">CA Fee Transparency Pricing</div>
+      <div class="shipped-item">MFA on Web via Okta</div>
       <div class="shipped-item">Blog Platform</div>
+      <div class="shipped-item">Miscellaneous Page Redesigns & A/B Tests</div>
     </div>
 
     <div class="shipped-category reveal">Platform & Employee Tools</div>
@@ -643,12 +670,8 @@ footer {
       <div class="shipped-item">In-Lobby Hosted Digital Check-in App</div>
       <div class="shipped-item">Homescreen Experience Builder</div>
       <div class="shipped-item">Digital Key Manager</div>
-      <div class="shipped-item">Guest Services UI</div>
-      <div class="shipped-item">Permissions Manager</div>
       <div class="shipped-item">Backend for Frontend (BFF) Architecture</div>
       <div class="shipped-item">Rules Service / Personalization Engine</div>
-      <div class="shipped-item">App Observability</div>
-      <div class="shipped-item">Dining Availability PoC (SevenRooms)</div>
     </div>
 
   </div>
@@ -657,18 +680,7 @@ footer {
 <section id="approach">
   <div class="container">
     <div class="section-label reveal">Approach</div>
-    <p class="approach-text reveal">I believe the best digital products come from <em>obsessing over the guest experience</em> while relentlessly measuring what matters — revenue lift, conversion, and operational efficiency.</p>
-  </div>
-</section>
-
-<section id="education">
-  <div class="container">
-    <div class="section-label reveal">Education</div>
-    <div class="t-item reveal" style="padding-left:0;">
-      <div class="t-company">Middle Tennessee State University</div>
-      <div class="t-title">Bachelor of Arts — Jazz / Jazz Studies</div>
-      <div class="t-date">2004 – 2009</div>
-    </div>
+    <p class="approach-text reveal">Structure the team around AI-augmented workflows. <em>Measure everything that matters</em> — revenue lift, conversion, operational efficiency. Ship fast, validate faster, and let data kill your darlings.</p>
   </div>
 </section>
 
