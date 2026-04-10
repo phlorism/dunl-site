@@ -37,7 +37,7 @@ body::after {
 }
 
 /* --- Layout --- */
-.container { max-width: 900px; margin: 0 auto; padding: 0 32px; }
+.container { max-width: 1080px; margin: 0 auto; padding: 0 40px; }
 
 /* --- Nav --- */
 nav {
@@ -159,18 +159,19 @@ nav .container {
 .hero-bio {
   font-size: 16px;
   color: var(--muted);
-  max-width: 620px;
+  max-width: 760px;
   line-height: 1.7;
   opacity: 0;
   animation: fadeUp 0.8s ease forwards 0.6s;
 }
 .hero-rule {
-  width: 48px;
+  width: 100%;
   height: 1px;
-  background: linear-gradient(90deg, var(--accent), rgba(201,169,110,0.3));
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  background-size: 200% 100%;
   margin-top: 24px;
   opacity: 0;
-  animation: ruleExpand 1s ease forwards 0.8s;
+  animation: ruleExpand 1s ease forwards 0.8s, shimmer 3s ease-in-out 1.8s infinite;
 }
 .inline-link {
   color: var(--accent);
@@ -242,7 +243,7 @@ section { padding: 32px 0; }
   font-size: 14px;
   color: var(--muted);
   line-height: 1.65;
-  max-width: 480px;
+  max-width: 640px;
 }
 
 /* --- Expertise cards --- */
@@ -281,7 +282,7 @@ section { padding: 32px 0; }
   font-size: 22px;
   font-family: var(--serif);
   line-height: 1.55;
-  max-width: 700px;
+  max-width: 860px;
   color: var(--fg);
 }
 .approach-text em {
@@ -411,7 +412,11 @@ footer {
 }
 @keyframes ruleExpand {
   from { opacity: 0; width: 0; }
-  to { opacity: 1; width: 48px; }
+  to { opacity: 1; width: 100%; }
+}
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
 }
 
 /* Scroll-triggered fade */
