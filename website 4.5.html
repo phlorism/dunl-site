@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Josh Dunlap — Digital Products & UX Design</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0c0c0c;
+  --fg: #e8e4df;
+  --muted: #8a8580;
+  --accent: #c9a96e;
+  --card: #161614;
+  --border: #2a2825;
+  --serif: 'DM Serif Display', Georgia, serif;
+  --sans: 'DM Sans', sans-serif;
+}
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--sans);
+  font-weight: 300;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* --- Grain overlay --- */
+body::after {
+  content: '';
+  position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* --- Layout --- */
+.container { max-width: 900px; margin: 0 auto; padding: 0 32px; }
+
+/* --- Nav --- */
+nav {
+  position: fixed; top: 0; left: 0; right: 0;
+  z-index: 100;
+  padding: 20px 0;
+  background: rgba(12,12,12,0.85);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+}
+nav .container {
+  display: flex; justify-content: space-between; align-items: center;
+}
+.nav-left {
+  display: flex; align-items: center; gap: 12px;
+}
+.nav-headshot {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: border-color 0.3s;
+}
+.nav-headshot:hover { border-color: var(--accent); }
+.nav-logo {
+  font-family: var(--serif);
+  font-size: 18px;
+  letter-spacing: 0.02em;
+  color: var(--fg);
+}
+
+/* --- Lightbox --- */
+.lightbox {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.88);
+  z-index: 10000;
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s;
+  cursor: pointer;
+}
+.lightbox.active { opacity: 1; pointer-events: all; }
+.lightbox img {
+  max-width: 420px;
+  max-height: 80vh;
+  border-radius: 8px;
+  box-shadow: 0 24px 80px rgba(0,0,0,0.6);
+  transform: scale(0.9);
+  transition: transform 0.3s;
+}
+.lightbox.active img { transform: scale(1); }
+.lightbox-close {
+  position: absolute;
+  top: 24px; right: 32px;
+  color: var(--muted);
+  font-size: 28px;
+  cursor: pointer;
+  font-family: var(--sans);
+  font-weight: 300;
+  transition: color 0.3s;
+  line-height: 1;
+}
+.lightbox-close:hover { color: var(--fg); }
+.nav-links { display: flex; gap: 28px; }
+.nav-links a {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  transition: color 0.3s;
+  position: relative;
+}
+.nav-links a::after {
+  content: '';
+  position: absolute;
+  bottom: -4px; left: 0;
+  width: 0; height: 1px;
+  background: var(--accent);
+  transition: width 0.3s;
+}
+.nav-links a:hover { color: var(--accent); }
+.nav-links a:hover::after { width: 100%; }
+
+/* --- Hero --- */
+.hero {
+  min-height: auto;
+  padding: 92px 0 32px;
+}
+.hero-inner {
+  width: 100%;
+}
+.hero-label {
+  font-size: 13px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 16px;
+  font-weight: 500;
+  opacity: 0;
+  animation: fadeUp 0.8s ease forwards 0.2s;
+}
+.hero h1 {
+  font-family: var(--serif);
+  font-size: clamp(40px, 7vw, 64px);
+  font-weight: 400;
+  line-height: 1.1;
+  margin-bottom: 20px;
+  opacity: 0;
+  animation: fadeUp 0.8s ease forwards 0.4s;
+}
+.hero h1 em {
+  font-style: italic;
+  color: var(--accent);
+}
+.hero-bio {
+  font-size: 16px;
+  color: var(--muted);
+  max-width: 620px;
+  line-height: 1.7;
+  opacity: 0;
+  animation: fadeUp 0.8s ease forwards 0.6s;
+}
+.hero-rule {
+  width: 48px;
+  height: 1px;
+  background: linear-gradient(90deg, var(--accent), rgba(201,169,110,0.3));
+  margin-top: 24px;
+  opacity: 0;
+  animation: ruleExpand 1s ease forwards 0.8s;
+}
+.inline-link {
+  color: var(--accent);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(201,169,110,0.3);
+  transition: border-color 0.3s;
+}
+.inline-link:hover { border-color: var(--accent); }
+
+/* --- Sections --- */
+section { padding: 32px 0; }
+.section-label {
+  font-size: 13px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 20px;
+  font-weight: 500;
+}
+
+/* --- Career timeline --- */
+.timeline { position: relative; }
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 8px; bottom: 0;
+  width: 1px;
+  background: var(--border);
+}
+.t-item {
+  padding-left: 32px;
+  margin-bottom: 20px;
+  position: relative;
+}
+.t-item::before {
+  content: '';
+  position: absolute;
+  left: -3px; top: 8px;
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+.t-item.current::before {
+  box-shadow: 0 0 0 4px rgba(201,169,110,0.2);
+  animation: pulse 2s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%, 100% { box-shadow: 0 0 0 4px rgba(201,169,110,0.2); }
+  50% { box-shadow: 0 0 0 8px rgba(201,169,110,0.08); }
+}
+.t-company {
+  font-family: var(--serif);
+  font-size: 22px;
+  margin-bottom: 2px;
+}
+.t-title {
+  font-size: 14px;
+  color: var(--accent);
+  font-weight: 400;
+  margin-bottom: 4px;
+}
+.t-date {
+  font-size: 12px;
+  color: var(--muted);
+  letter-spacing: 0.04em;
+  margin-bottom: 10px;
+}
+.t-desc {
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.65;
+  max-width: 480px;
+}
+
+/* --- Expertise cards --- */
+.exp-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+@media (max-width: 560px) { .exp-grid { grid-template-columns: 1fr; } }
+.exp-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  padding: 28px 24px;
+  border-radius: 2px;
+  transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s;
+}
+.exp-card:hover {
+  border-color: var(--accent);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+}
+.exp-card h3 {
+  font-family: var(--serif);
+  font-size: 18px;
+  margin-bottom: 10px;
+  font-weight: 400;
+}
+.exp-card p {
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+/* --- Approach --- */
+.approach-text {
+  font-size: 22px;
+  font-family: var(--serif);
+  line-height: 1.55;
+  max-width: 700px;
+  color: var(--fg);
+}
+.approach-text em {
+  color: var(--accent);
+  font-style: italic;
+}
+
+/* --- Contact --- */
+.contact-section {
+  border-top: 1px solid var(--border);
+  padding: 40px 0;
+  text-align: center;
+}
+.contact-section h2 {
+  font-family: var(--serif);
+  font-size: 32px;
+  font-weight: 400;
+  margin-bottom: 16px;
+}
+.contact-section p {
+  color: var(--muted);
+  font-size: 15px;
+  margin-bottom: 32px;
+}
+.contact-link {
+  display: inline-block;
+  color: var(--accent);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border: 1px solid var(--accent);
+  padding: 14px 36px;
+  transition: all 0.3s;
+  margin: 0 8px;
+}
+.contact-link:hover {
+  background: var(--accent);
+  color: var(--bg);
+}
+
+/* --- Footer --- */
+footer {
+  padding: 40px 0;
+  text-align: center;
+  font-size: 12px;
+  color: var(--muted);
+  letter-spacing: 0.04em;
+}
+
+/* --- Article cards --- */
+.article-list { display: flex; flex-direction: column; gap: 14px; }
+.article-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  padding: 28px 28px 24px;
+  border-radius: 2px;
+  transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s;
+}
+.article-card:hover {
+  border-color: var(--accent);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+}
+.article-tag {
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--accent);
+  font-weight: 500;
+  margin-bottom: 10px;
+}
+.article-card h3 {
+  font-family: var(--serif);
+  font-size: 18px;
+  font-weight: 400;
+  margin-bottom: 10px;
+  line-height: 1.35;
+}
+.article-card p {
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+/* --- Shipped grid --- */
+.shipped-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.shipped-item {
+  background: var(--card);
+  border: 1px solid var(--border);
+  padding: 10px 18px;
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--fg);
+  border-radius: 2px;
+  transition: border-color 0.3s, transform 0.2s, background 0.3s;
+}
+.shipped-item:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+  background: rgba(201,169,110,0.06);
+}
+.shipped-intro {
+  font-size: 15px;
+  color: var(--muted);
+  margin-bottom: 20px;
+}
+.shipped-category {
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+  font-weight: 500;
+  margin: 20px 0 10px;
+}
+.shipped-category:first-of-type { margin-top: 0; }
+
+/* --- Animations --- */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes ruleExpand {
+  from { opacity: 0; width: 0; }
+  to { opacity: 1; width: 48px; }
+}
+
+/* Scroll-triggered fade */
+.reveal {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="container">
+    <div class="nav-left">
+      <img src="headshot.jpg" alt="Josh Dunlap" class="nav-headshot" onclick="document.getElementById('lightbox').classList.add('active')">
+      <div class="nav-logo">Josh Dunlap</div>
+    </div>
+    <div class="nav-links">
+      <a href="#experience">Experience</a>
+      <a href="#expertise">Expertise</a>
+      <a href="#insights">Insights</a>
+      <a href="#shipped">Shipped</a>
+      <a href="#contact">Contact</a>
+    </div>
+  </div>
+</nav>
+
+<div id="lightbox" class="lightbox" onclick="this.classList.remove('active')">
+  <span class="lightbox-close">&times;</span>
+  <img src="headshot.jpg" alt="Josh Dunlap" onclick="event.stopPropagation()">
+</div>
+
+<section class="hero">
+  <div class="container">
+    <div class="hero-inner">
+      <div class="hero-label">Executive Director of Digital Products & UX Design</div>
+      <h1>Building digital<br>experiences at <em>scale</em></h1>
+      <p class="hero-bio">Leading end-to-end digital experience and UX Design at MGM Resorts International. <a href="https://www.mgmresorts.com/en/company.html" target="_blank" class="inline-link">Learn more about MGM →</a></p>
+      <div class="hero-rule"></div>
+    </div>
+  </div>
+</section>
+
+<section id="experience">
+  <div class="container">
+    <div class="section-label reveal">Career</div>
+    <div class="timeline">
+
+      <div class="t-item current reveal">
+        <div class="t-company">MGM Resorts International</div>
+        <div class="t-title">Executive Director — Product, Digital Experience, & UX Design</div>
+        <div class="t-date">May 2024 – Present · San Francisco Bay Area</div>
+        <div class="t-desc">Leading UXD and platform Product Management organizations (26-person team), spanning discovery, search, personalization, and end-to-end digital experience across web, app, and kiosk. Driving native-AI team transition across UXD and product.</div>
+      </div>
+
+      <div class="t-item reveal">
+        <div class="t-company">MGM Resorts International</div>
+        <div class="t-title">Director of Product — Platform Experience</div>
+        <div class="t-date">Jan 2024 – May 2024</div>
+        <div class="t-desc">End-to-end user journey across app, web, and kiosk.</div>
+      </div>
+
+      <div class="t-item reveal">
+        <div class="t-company">MGM Resorts International</div>
+        <div class="t-title">Director of Product Management</div>
+        <div class="t-date">Jun 2022 – Jan 2024</div>
+        <div class="t-desc">Mobile App Platform and Employee Tools Platform.</div>
+      </div>
+
+      <div class="t-item reveal">
+        <div class="t-company">MGM Resorts International</div>
+        <div class="t-title">Senior Product Manager</div>
+        <div class="t-date">Aug 2020 – Jun 2022</div>
+        <div class="t-desc">Mobile check-in, digital key, purchasable room upgrades, early check-in and late checkout, transactional notifications, checkout experiences, folio and stay summary, and internal employee tools.</div>
+      </div>
+
+      <div class="t-item reveal">
+        <div class="t-company">Volvo Cars</div>
+        <div class="t-title">Head of Business & Product Operations</div>
+        <div class="t-date">Dec 2018 – Aug 2020 · San Francisco Bay Area</div>
+        <div class="t-desc">Led cross-functional team responsible for global product implementations, operations, partnerships, finances, and strategic planning across the digital product suite.</div>
+      </div>
+
+      <div class="t-item reveal">
+        <div class="t-company">Volvo Cars</div>
+        <div class="t-title">Product Partnerships</div>
+        <div class="t-date">Aug 2018 – Dec 2018 · New York City</div>
+        <div class="t-desc">Strategic development of a digital fleet orchestration platform.</div>
+      </div>
+
+      <div class="t-item reveal">
+        <div class="t-company">Good Uncle</div>
+        <div class="t-title">Director of Operations → Head of Expansion</div>
+        <div class="t-date">Mar 2017 – Aug 2018 · New York City</div>
+        <div class="t-desc">All new market standup processes — market analysis, leasing, construction, hiring, and operational development. P&L and FP&A ownership.</div>
+      </div>
+
+      <div class="t-item reveal">
+        <div class="t-company">Luxe</div>
+        <div class="t-title">General Manager — San Francisco & Austin</div>
+        <div class="t-date">Nov 2015 – Mar 2017</div>
+        <div class="t-desc">Market P&L, city operations, strategy, consumer marketing, sales. Built Austin market from scratch.</div>
+      </div>
+
+      <div class="t-item reveal">
+        <div class="t-company">Bellwether Music</div>
+        <div class="t-title">Founder</div>
+        <div class="t-date">Nov 2010 – Aug 2014 · Nashville</div>
+        <div class="t-desc">Platform enabling artists to sell compositions and arrangements, facilitating music commerce and creative collaboration.</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section id="expertise">
+  <div class="container">
+    <div class="section-label reveal">Expertise</div>
+    <div class="exp-grid">
+      <div class="exp-card reveal">
+        <h3>Digital Product Strategy</h3>
+        <p>End-to-end product vision across web, mobile, and kiosk — from discovery and search to booking, check-in, and stay.</p>
+      </div>
+      <div class="exp-card reveal">
+        <h3>UX & Design Leadership</h3>
+        <p>Leading a 26-person UXD organization, building design systems, and driving experience quality at portfolio scale.</p>
+      </div>
+      <div class="exp-card reveal">
+        <h3>AI & Emerging Tech</h3>
+        <p>AI chat, personalization, agentic commerce, GEO strategy, and MCP-based booking infrastructure.</p>
+      </div>
+      <div class="exp-card reveal">
+        <h3>Operations & Growth</h3>
+        <p>P&L ownership, market expansion, process optimization, and cross-functional team leadership across startups and enterprise.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="insights">
+  <div class="container">
+    <div class="section-label reveal">Insights & Thinking</div>
+    <div class="article-list">
+
+      <div class="article-card reveal">
+        <div class="article-tag">Strategy</div>
+        <h3>Hospitality Digital Roadmap Methodology</h3>
+        <p>Developed a rigorous framework for evaluating digital initiatives across a large resort portfolio — scoring each on revenue impact and operational efficiency, benchmarked against industry leaders in gaming, hospitality, airlines, and quick-service dining.</p>
+      </div>
+
+      <div class="article-card reveal">
+        <div class="article-tag">AI & Operations</div>
+        <h3>AI-Native Team Operating Models</h3>
+        <p>Exploring how UXD and Product Management teams can restructure around AI-augmented workflows — hybrid human-AI team structures, compressed delivery cycles, and agent-readable design specifications to significantly reduce manual production effort.</p>
+      </div>
+
+      <div class="article-card reveal">
+        <div class="article-tag">Emerging Tech</div>
+        <h3>Generative Engine Optimization & Agentic Commerce</h3>
+        <p>Thinking through the shift from SEO to GEO — how hospitality brands need to prepare for a world where AI agents discover, recommend, and transact on behalf of travelers. Covers structured data strategy, MCP-enabled direct booking, and first-party data positioning.</p>
+      </div>
+
+      <div class="article-card reveal">
+        <div class="article-tag">Design Systems</div>
+        <h3>Scalable Design System Governance</h3>
+        <p>Developing governance models for multi-platform component libraries (web, mobile, kiosk) that solve discoverability without manual maintenance — federated registries, automated inventory pipelines, and demand-driven promotion workflows.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section id="shipped">
+  <div class="container">
+    <div class="section-label reveal">Shipped</div>
+    <p class="shipped-intro reveal">Features and products taken from zero to production at MGM Resorts.</p>
+
+    <div class="shipped-category reveal">Guest Experience — Mobile App</div>
+    <div class="shipped-grid reveal">
+      <div class="shipped-item">Mobile Check-in</div>
+      <div class="shipped-item">Digital Key & Redesign</div>
+      <div class="shipped-item">Sponsored Digital Key</div>
+      <div class="shipped-item">Personalized Home Screen</div>
+      <div class="shipped-item">Personalized App Architecture by Trip State</div>
+      <div class="shipped-item">Experiences You'll Love Carousel</div>
+      <div class="shipped-item">Personalized Dining Recommendations</div>
+      <div class="shipped-item">Upcoming Trip Recommendations</div>
+      <div class="shipped-item">Cross-sell Entertainment × Dining</div>
+      <div class="shipped-item">Global Search</div>
+      <div class="shipped-item">Search History</div>
+      <div class="shipped-item">Room Booking Flow Optimization</div>
+      <div class="shipped-item">Native Room PDP</div>
+      <div class="shipped-item">Native Pools & Spas PDPs</div>
+      <div class="shipped-item">Native Resort PDPs</div>
+      <div class="shipped-item">Resort Tab App Hero</div>
+      <div class="shipped-item">Dining & Entertainment PDPs</div>
+      <div class="shipped-item">Dining Category Pages</div>
+      <div class="shipped-item">Entertainment Calendar / Showtimes</div>
+      <div class="shipped-item">Venue Calendar</div>
+      <div class="shipped-item">Purchasable Room Upgrades</div>
+      <div class="shipped-item">Early Check-in & Late Checkout</div>
+      <div class="shipped-item">Event Packages (F1)</div>
+      <div class="shipped-item">Discover Tab Full-screen Gallery</div>
+      <div class="shipped-item">Mobile Ordering Module</div>
+      <div class="shipped-item">Digital Concierge Chat</div>
+      <div class="shipped-item">Folio & Stay Summary</div>
+      <div class="shipped-item">Checkout Experiences</div>
+      <div class="shipped-item">Carbon Offsetting Offers</div>
+      <div class="shipped-item">Transactional Push Notifications & Emails</div>
+      <div class="shipped-item">First Time User Experience Redesign</div>
+      <div class="shipped-item">Guided Sign-in / Sign-up</div>
+      <div class="shipped-item">Multi-Factor Authentication</div>
+      <div class="shipped-item">Digital Account Unlock</div>
+      <div class="shipped-item">Preferences Center</div>
+      <div class="shipped-item">Rewards Stay Preferences</div>
+      <div class="shipped-item">Profile Navigation Redesign</div>
+    </div>
+
+    <div class="shipped-category reveal">Guest Experience — Web</div>
+    <div class="shipped-grid reveal">
+      <div class="shipped-item">Bellagio Premium Homepage</div>
+      <div class="shipped-item">The Cosmopolitan Premium Homepage</div>
+      <div class="shipped-item">TCOLV Discovery Navigation</div>
+      <div class="shipped-item">Enterprise Homepage Redesign (Vega)</div>
+      <div class="shipped-item">Top Navigation Optimization</div>
+      <div class="shipped-item">Global Footer Redesign</div>
+      <div class="shipped-item">Sizzle Shorts Video Reels</div>
+      <div class="shipped-item">Video in Mobile Web Hero</div>
+      <div class="shipped-item">Dining Product Detail Pages</div>
+      <div class="shipped-item">Entertainment & Attractions PDPs</div>
+      <div class="shipped-item">Pools PDPs</div>
+      <div class="shipped-item">Spas & Salons PDPs</div>
+      <div class="shipped-item">Private & Group Dining Pages</div>
+      <div class="shipped-item">Premium Package PDPs</div>
+      <div class="shipped-item">Dining Category Pages</div>
+      <div class="shipped-item">Packages — Dynamic Pricing</div>
+      <div class="shipped-item">Wi-Fi Connection-to-Discovery Flow</div>
+      <div class="shipped-item">Web Chat (Digital Concierge)</div>
+      <div class="shipped-item">Web Check-in on Homepage</div>
+      <div class="shipped-item">Meetings & Events Navigation</div>
+      <div class="shipped-item">Embedded Schema for SEO</div>
+      <div class="shipped-item">CA Fee Transparency Pricing</div>
+      <div class="shipped-item">MFA on Web via Okta</div>
+      <div class="shipped-item">Blog Platform</div>
+      <div class="shipped-item">Miscellaneous Page Redesigns & A/B Tests</div>
+    </div>
+
+    <div class="shipped-category reveal">Platform & Employee Tools</div>
+    <div class="shipped-grid reveal">
+      <div class="shipped-item">Employee Tools Platform (Backstage)</div>
+      <div class="shipped-item">In-Lobby Hosted Digital Check-in App</div>
+      <div class="shipped-item">Homescreen Experience Builder</div>
+      <div class="shipped-item">Digital Key Manager</div>
+      <div class="shipped-item">Backend for Frontend (BFF) Architecture</div>
+      <div class="shipped-item">Rules Service / Personalization Engine</div>
+    </div>
+
+  </div>
+</section>
+
+<section id="approach">
+  <div class="container">
+    <div class="section-label reveal">Approach</div>
+    <p class="approach-text reveal">I build and lead product and design organizations that ship <em>measurable digital experiences</em> at portfolio scale — currently across 30+ properties, 3 platforms, and a 26-person team transitioning to AI-native workflows.</p>
+  </div>
+</section>
+
+<section class="contact-section" id="contact">
+  <div class="container">
+    <h2 class="reveal">Let's connect</h2>
+    <p class="reveal">Open to conversations about product leadership, digital experience, and what's next.</p>
+    <a href="https://linkedin.com/in/joshdunlap" class="contact-link reveal" target="_blank">LinkedIn</a>
+    <a href="mailto:josh@dunl.app" class="contact-link reveal">Email</a>
+  </div>
+</section>
+
+<footer>
+  <div class="container">&copy; 2026 Josh Dunlap</div>
+</footer>
+
+<script>
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      // Stagger siblings
+      const parent = e.target.parentElement;
+      const siblings = Array.from(parent.querySelectorAll(':scope > .reveal'));
+      const idx = siblings.indexOf(e.target);
+      e.target.style.transitionDelay = (idx * 0.08) + 's';
+      e.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.1 });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
