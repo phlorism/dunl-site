@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Josh Dunlap — Product & Technology Leader</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0c0c0c;
+  --fg: #e8e4df;
+  --muted: #8a8580;
+  --accent: #c9a96e;
+  --card: #161614;
+  --border: #2a2825;
+  --serif: 'DM Serif Display', Georgia, serif;
+  --sans: 'DM Sans', sans-serif;
+}
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--sans);
+  font-weight: 300;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* --- Grain overlay --- */
+body::after {
+  content: '';
+  position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* --- Layout --- */
+.container { max-width: 720px; margin: 0 auto; padding: 0 28px; }
+
+/* --- Nav --- */
+nav {
+  position: fixed; top: 0; left: 0; right: 0;
+  z-index: 100;
+  padding: 20px 0;
+  background: rgba(12,12,12,0.85);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+}
+nav .container {
+  display: flex; justify-content: space-between; align-items: center;
+}
+.nav-logo {
+  font-family: var(--serif);
+  font-size: 18px;
+  letter-spacing: 0.02em;
+  color: var(--fg);
+}
+.nav-links { display: flex; gap: 28px; }
+.nav-links a {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  transition: color 0.3s;
+}
+.nav-links a:hover { color: var(--accent); }
+
+/* --- Hero --- */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  padding-top: 80px;
+}
+.hero-inner {
+  width: 100%;
+}
+.hero-label {
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 24px;
+  font-weight: 500;
+  opacity: 0;
+  animation: fadeUp 0.8s ease forwards 0.2s;
+}
+.hero h1 {
+  font-family: var(--serif);
+  font-size: clamp(40px, 7vw, 64px);
+  font-weight: 400;
+  line-height: 1.1;
+  margin-bottom: 28px;
+  opacity: 0;
+  animation: fadeUp 0.8s ease forwards 0.4s;
+}
+.hero h1 em {
+  font-style: italic;
+  color: var(--accent);
+}
+.hero-bio {
+  font-size: 17px;
+  color: var(--muted);
+  max-width: 520px;
+  line-height: 1.7;
+  opacity: 0;
+  animation: fadeUp 0.8s ease forwards 0.6s;
+}
+.hero-rule {
+  width: 48px;
+  height: 1px;
+  background: var(--accent);
+  margin-top: 40px;
+  opacity: 0;
+  animation: fadeUp 0.8s ease forwards 0.8s;
+}
+
+/* --- Sections --- */
+section { padding: 100px 0; }
+.section-label {
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 48px;
+  font-weight: 500;
+}
+
+/* --- Career timeline --- */
+.timeline { position: relative; }
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 8px; bottom: 0;
+  width: 1px;
+  background: var(--border);
+}
+.t-item {
+  padding-left: 32px;
+  margin-bottom: 48px;
+  position: relative;
+}
+.t-item::before {
+  content: '';
+  position: absolute;
+  left: -3px; top: 8px;
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+.t-item.current::before {
+  box-shadow: 0 0 0 4px rgba(201,169,110,0.2);
+}
+.t-company {
+  font-family: var(--serif);
+  font-size: 22px;
+  margin-bottom: 2px;
+}
+.t-title {
+  font-size: 14px;
+  color: var(--accent);
+  font-weight: 400;
+  margin-bottom: 4px;
+}
+.t-date {
+  font-size: 12px;
+  color: var(--muted);
+  letter-spacing: 0.04em;
+  margin-bottom: 10px;
+}
+.t-desc {
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.65;
+  max-width: 480px;
+}
+
+/* --- Expertise cards --- */
+.exp-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+@media (max-width: 560px) { .exp-grid { grid-template-columns: 1fr; } }
+.exp-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  padding: 28px 24px;
+  border-radius: 2px;
+  transition: border-color 0.3s;
+}
+.exp-card:hover { border-color: var(--accent); }
+.exp-card h3 {
+  font-family: var(--serif);
+  font-size: 17px;
+  margin-bottom: 10px;
+  font-weight: 400;
+}
+.exp-card p {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+/* --- Approach --- */
+.approach-text {
+  font-size: 24px;
+  font-family: var(--serif);
+  line-height: 1.55;
+  max-width: 600px;
+  color: var(--fg);
+}
+.approach-text em {
+  color: var(--accent);
+  font-style: italic;
+}
+
+/* --- Contact --- */
+.contact-section {
+  border-top: 1px solid var(--border);
+  padding: 80px 0;
+  text-align: center;
+}
+.contact-section h2 {
+  font-family: var(--serif);
+  font-size: 32px;
+  font-weight: 400;
+  margin-bottom: 16px;
+}
+.contact-section p {
+  color: var(--muted);
+  font-size: 15px;
+  margin-bottom: 32px;
+}
+.contact-link {
+  display: inline-block;
+  color: var(--accent);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border: 1px solid var(--accent);
+  padding: 14px 36px;
+  transition: all 0.3s;
+}
+.contact-link:hover {
+  background: var(--accent);
+  color: var(--bg);
+}
+
+/* --- Footer --- */
+footer {
+  padding: 40px 0;
+  text-align: center;
+  font-size: 12px;
+  color: var(--muted);
+  letter-spacing: 0.04em;
+}
+
+/* --- Animations --- */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Scroll-triggered fade */
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="container">
+    <div class="nav-logo">JD</div>
+    <div class="nav-links">
+      <a href="#experience">Experience</a>
+      <a href="#expertise">Expertise</a>
+      <a href="#contact">Contact</a>
+    </div>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="container">
+    <div class="hero-inner">
+      <div class="hero-label">Product & Technology Leader</div>
+      <h1>Building digital<br>experiences at <em>scale</em></h1>
+      <p class="hero-bio">Executive Director of Product Discovery & Digital Experience at MGM Resorts International, leading UX Design and Product Management across 22 hotels, 100+ restaurants, and the full digital guest journey.</p>
+      <div class="hero-rule"></div>
+    </div>
+  </div>
+</section>
+
+<section id="experience">
+  <div class="container">
+    <div class="section-label reveal">Career</div>
+    <div class="timeline">
+
+      <div class="t-item current reveal">
+        <div class="t-company">MGM Resorts International</div>
+        <div class="t-title">Executive Director — Product Discovery & Digital Experience</div>
+        <div class="t-date">May 2024 – Present · San Francisco Bay Area</div>
+        <div class="t-desc">Leading both UXD (22-person team) and Product Management organizations. Owning discovery, AI chat, search, personalization, and end-to-end digital experience across web, app, and kiosk surfaces.</div>
+      </div>
+
+      <div class="t-item reveal">
+        <div class="t-company">MGM Resorts International</div>
+        <div class="t-title">Director of Product — Platform Experience</div>
+        <div class="t-date">Jan 2024 – May 2024</div>
+        <div class="t-desc">End-to-end user journey across app, web, and kiosk.</div>
+      </div>
+
+      <div class="t-item reveal">
+        <div class="t-company">MGM Resorts International</div>
+        <div class="t-title">Director of Product Management</div>
+        <div class="t-date">Jun 2022 – Jan 2024</div>
+        <div class="t-desc">Mobile App Platform and Employee Tools Platform.</div>
+      </div>
+
+      <div class="t-item reveal">
+        <div class="t-company">MGM Resorts International</div>
+        <div class="t-title">Senior Product Manager</div>
+        <div class="t-date">Aug 2020 – Jun 2022</div>
+        <div class="t-desc">Mobile check-in, digital key, purchasable room upgrades, early check-in and late checkout, transactional notifications, checkout experiences, folio and stay summary, and internal employee tools.</div>
+      </div>
+
+      <div class="t-item reveal">
+        <div class="t-company">Volvo Cars</div>
+        <div class="t-title">Head of Business & Product Operations</div>
+        <div class="t-date">Dec 2018 – Aug 2020 · San Francisco Bay Area</div>
+        <div class="t-desc">Led cross-functional team responsible for global product implementations, operations, partnerships, finances, and strategic planning across the digital product suite.</div>
+      </div>
+
+      <div class="t-item reveal">
+        <div class="t-company">Volvo Cars</div>
+        <div class="t-title">Product Partnerships</div>
+        <div class="t-date">Aug 2018 – Dec 2018 · New York City</div>
+        <div class="t-desc">Strategic development of a digital fleet orchestration platform.</div>
+      </div>
+
+      <div class="t-item reveal">
+        <div class="t-company">Good Uncle</div>
+        <div class="t-title">Director of Operations → Head of Expansion</div>
+        <div class="t-date">Mar 2017 – Aug 2018 · New York City</div>
+        <div class="t-desc">All new market standup processes — market analysis, leasing, construction, hiring, and operational development. P&L and FP&A ownership.</div>
+      </div>
+
+      <div class="t-item reveal">
+        <div class="t-company">Luxe</div>
+        <div class="t-title">General Manager — San Francisco & Austin</div>
+        <div class="t-date">Nov 2015 – Mar 2017</div>
+        <div class="t-desc">Market P&L, city operations, strategy, consumer marketing, sales. Built Austin market from scratch.</div>
+      </div>
+
+      <div class="t-item reveal">
+        <div class="t-company">Bellwether Music</div>
+        <div class="t-title">Founder</div>
+        <div class="t-date">Nov 2010 – Aug 2014 · Nashville</div>
+        <div class="t-desc">Platform enabling artists to sell compositions and arrangements, facilitating music commerce and creative collaboration.</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section id="expertise">
+  <div class="container">
+    <div class="section-label reveal">Expertise</div>
+    <div class="exp-grid">
+      <div class="exp-card reveal">
+        <h3>Digital Product Strategy</h3>
+        <p>End-to-end product vision across web, mobile, and kiosk — from discovery and search to booking, check-in, and stay.</p>
+      </div>
+      <div class="exp-card reveal">
+        <h3>UX & Design Leadership</h3>
+        <p>Leading a 22-person UXD organization, building design systems, and driving experience quality at portfolio scale.</p>
+      </div>
+      <div class="exp-card reveal">
+        <h3>AI & Emerging Tech</h3>
+        <p>AI chat, personalization, agentic commerce, GEO strategy, and MCP-based booking infrastructure.</p>
+      </div>
+      <div class="exp-card reveal">
+        <h3>Operations & Growth</h3>
+        <p>P&L ownership, market expansion, process optimization, and cross-functional team leadership across startups and enterprise.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="approach">
+  <div class="container">
+    <div class="section-label reveal">Approach</div>
+    <p class="approach-text reveal">I believe the best digital products come from <em>obsessing over the guest experience</em> while relentlessly measuring what matters — revenue lift, conversion, and operational efficiency.</p>
+  </div>
+</section>
+
+<section id="education">
+  <div class="container">
+    <div class="section-label reveal">Education</div>
+    <div class="t-item reveal" style="padding-left:0;">
+      <div class="t-company">Middle Tennessee State University</div>
+      <div class="t-title">Bachelor of Arts — Jazz / Jazz Studies</div>
+      <div class="t-date">2004 – 2009</div>
+    </div>
+  </div>
+</section>
+
+<section class="contact-section" id="contact">
+  <div class="container">
+    <h2 class="reveal">Let's connect</h2>
+    <p class="reveal">Open to conversations about product leadership, digital experience, and what's next.</p>
+    <a href="https://linkedin.com/in/joshdunlap" class="contact-link reveal" target="_blank">LinkedIn</a>
+  </div>
+</section>
+
+<footer>
+  <div class="container">&copy; 2026 Josh Dunlap</div>
+</footer>
+
+<script>
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.15 });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
