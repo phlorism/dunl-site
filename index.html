@@ -1105,6 +1105,83 @@ body.theme-cosmic .feature-card p { color: #00ffff; }
 body.theme-cosmic footer { color: #ff00ff; }
 body.theme-cosmic .easter-egg { color: #00ff00; border-color: #00ff00; background: #000033; font-weight: 700; }
 
+/* --- Achievements --- */
+.ach-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.92);
+  z-index: 10001;
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.3s;
+}
+.ach-overlay.active { opacity: 1; pointer-events: all; }
+.ach-panel {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 32px;
+  max-width: 440px;
+  width: 90vw;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+.ach-title {
+  font-family: var(--serif);
+  font-size: 22px;
+  color: var(--fg);
+  margin-bottom: 4px;
+}
+.ach-subtitle {
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 20px;
+}
+.ach-item {
+  display: flex;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+  align-items: flex-start;
+}
+.ach-item:last-child { border-bottom: none; }
+.ach-icon {
+  width: 28px; height: 28px;
+  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px;
+  border-radius: 4px;
+  background: var(--border);
+}
+.ach-item.unlocked .ach-icon {
+  background: color-mix(in srgb, var(--accent) 15%, transparent);
+}
+.ach-name {
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--fg);
+  margin-bottom: 2px;
+}
+.ach-item.locked .ach-name { color: var(--muted); }
+.ach-desc {
+  font-size: 11px;
+  color: var(--muted);
+  line-height: 1.4;
+}
+.ach-item.unlocked .ach-desc { color: var(--accent); }
+.ach-close {
+  position: absolute;
+  top: 16px; right: 24px;
+  color: var(--muted); font-size: 24px;
+  cursor: pointer; font-weight: 300;
+  transition: color 0.3s;
+}
+.ach-close:hover { color: var(--fg); }
+.ach-count {
+  font-size: 11px;
+  color: var(--accent);
+  margin-bottom: 16px;
+}
+
 /* --- Hamburger --- */
 .nav-hamburger {
   display: none;
@@ -1207,12 +1284,22 @@ body.theme-cosmic .easter-egg { color: #00ff00; border-color: #00ff00; backgroun
   <div class="game-hint">Space or tap to jump</div>
 </div>
 
+<div id="achOverlay" class="ach-overlay" onclick="this.classList.remove('active')">
+  <div class="ach-panel" onclick="event.stopPropagation()" style="position:relative;">
+    <span class="ach-close" onclick="document.getElementById('achOverlay').classList.remove('active')">&times;</span>
+    <div class="ach-title">Secrets</div>
+    <div class="ach-subtitle">You found the door. Here's what you've unlocked.</div>
+    <div class="ach-count" id="achCount"></div>
+    <div id="achList"></div>
+  </div>
+</div>
+
 <section class="hero">
   <div class="container">
     <div class="hero-inner">
       <div class="hero-label">Executive Director of Digital Products & UX Design</div>
       <h1>Building digital<br>experiences at <em>scale</em></h1>
-      <div class="easter-egg-wrap"><span class="easter-egg" id="easterEgg" onclick="document.getElementById('gameOverlay').classList.add('active'); initGame();">psst... what's this?</span></div>
+      <div class="easter-egg-wrap"><span class="easter-egg" id="easterEgg" onclick="document.getElementById('gameOverlay').classList.add('active'); unlockAch('game'); initGame();">psst... what's this?</span></div>
       <p class="hero-bio">Leading a 28-person digital product and design organization focused on web, app, and kiosk across 20+ properties at MGM Resorts International. <a href="https://www.mgmresorts.com/en/company.html" target="_blank" rel="noopener noreferrer" class="inline-link">Learn more about MGM →</a></p>
       <div class="hero-rule"></div>
     </div>
@@ -1281,6 +1368,11 @@ body.theme-cosmic .easter-egg { color: #00ff00; border-color: #00ff00; backgroun
         <div class="stat-number" data-target="1">0</div>
         <div class="stat-label">Company Founded</div>
         <div class="stat-detail">Bellwether Music — Nashville, 2010–2014</div>
+      </div>
+      <div class="stat-card" onclick="this.classList.toggle('expanded')">
+        <div class="stat-number" data-target="18">0</div>
+        <div class="stat-label">Countries Launched</div>
+        <div class="stat-detail">Global app releases including GDPR compliance</div>
       </div>
     </div>
 
@@ -1636,7 +1728,7 @@ body.theme-cosmic .easter-egg { color: #00ff00; border-color: #00ff00; backgroun
 
 <footer>
   <div class="container">
-    <div>&copy; 2026 Josh Dunlap</div>
+    <div>&copy; <span id="copyrightYear" style="cursor:default;">2026</span> Josh Dunlap</div>
     <div style="margin-top:6px; font-size:11px; color:var(--muted);">Published April 10, 2026 · Last updated April 10, 2026</div>
   </div>
 </footer>
@@ -2107,6 +2199,7 @@ if (dlLabel) {
         hidden.style.transition = 'opacity 0.5s';
         requestAnimationFrame(() => { hidden.style.opacity = '1'; });
       }
+      unlockAch('hiddenThemes');
       dlClicks = 0;
     }
   });
@@ -2177,6 +2270,7 @@ function initGame() {
 
   function addScore(s) {
     if (s <= 0) return;
+    if (s >= 20) unlockAch('score20');
     scores.push({ score: s, date: Date.now() });
     scores.sort((a, b) => b.score - a.score);
     scores = scores.slice(0, 10);
@@ -2538,8 +2632,145 @@ function initGame() {
   loop();
 }
 
+// Achievement system
+const achievements = [
+  { id: 'game', icon: '🕹️', name: 'Player One', desc: 'Found the hidden game', clue: 'Some things reveal themselves when you look closely at the hero.' },
+  { id: 'score20', icon: '⚡', name: 'High Voltage', desc: 'Scored 20+ in the game', clue: 'Keep jumping. The diamond helps.' },
+  { id: 'hiddenThemes', icon: '🎨', name: 'Palette Unlocked', desc: 'Revealed the hidden themes', clue: 'Design Language has a persistent header. Very persistent.' },
+  { id: 'allThemes', icon: '🌈', name: 'Chameleon', desc: 'Tried all 9 themes', clue: 'Some themes are hidden. Try every one you can find.' },
+  { id: 'konami', icon: '🔑', name: 'The Door', desc: 'Entered the code', clue: 'Old games had cheat codes. This site does too.' },
+  { id: 'allFeatures', icon: '📋', name: 'Completionist', desc: 'Opened every shipped feature', clue: '68 features. 68 clicks. Dedication.' },
+  { id: 'copyright', icon: '🔍', name: 'Fine Print', desc: 'Read the fine print', clue: 'Even the footer has a story to tell.' },
+];
+
+let achState = {};
+try { achState = JSON.parse(localStorage.getItem('jdAch') || '{}'); } catch(e) {}
+
+function unlockAch(id) {
+  if (achState[id]) return;
+  achState[id] = Date.now();
+  try { localStorage.setItem('jdAch', JSON.stringify(achState)); } catch(e) {}
+}
+
+function renderAchievements() {
+  const list = document.getElementById('achList');
+  const unlocked = achievements.filter(a => achState[a.id]).length;
+  document.getElementById('achCount').textContent = unlocked + ' of ' + achievements.length + ' unlocked';
+  list.innerHTML = achievements.map(a => {
+    const isUnlocked = !!achState[a.id];
+    return `<div class="ach-item ${isUnlocked ? 'unlocked' : 'locked'}">
+      <div class="ach-icon">${isUnlocked ? a.icon : '?'}</div>
+      <div>
+        <div class="ach-name">${isUnlocked ? a.name : '???'}</div>
+        <div class="ach-desc">${isUnlocked ? a.desc : a.clue}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function showAchievements() {
+  renderAchievements();
+  document.getElementById('achOverlay').classList.add('active');
+}
+
+// Konami code: ↑↑↓↓←→←→BA
+const konamiSeq = [38,38,40,40,37,39,37,39,66,65];
+let konamiPos = 0;
+document.addEventListener('keydown', (e) => {
+  if (e.keyCode === konamiSeq[konamiPos]) {
+    konamiPos++;
+    if (konamiPos === konamiSeq.length) {
+      konamiPos = 0;
+      unlockAch('konami');
+      showAchievements();
+    }
+  } else {
+    konamiPos = 0;
+  }
+});
+
+// Mobile Konami: swipe pattern U U D D L R L R then double-tap
+const swipeSeq = ['up','up','down','down','left','right','left','right'];
+let swipePos = 0;
+let touchStartX = 0, touchStartY = 0;
+let doubleTapTimer = null, doubleTapCount = 0;
+
+document.addEventListener('touchstart', (e) => {
+  if (e.touches.length !== 1) return;
+  touchStartX = e.touches[0].clientX;
+  touchStartY = e.touches[0].clientY;
+}, { passive: true });
+
+document.addEventListener('touchend', (e) => {
+  if (swipePos >= swipeSeq.length) {
+    // Waiting for double-tap
+    doubleTapCount++;
+    clearTimeout(doubleTapTimer);
+    if (doubleTapCount >= 2) {
+      doubleTapCount = 0;
+      swipePos = 0;
+      unlockAch('konami');
+      showAchievements();
+    } else {
+      doubleTapTimer = setTimeout(() => { doubleTapCount = 0; }, 500);
+    }
+    return;
+  }
+  const t = e.changedTouches[0];
+  const dx = t.clientX - touchStartX;
+  const dy = t.clientY - touchStartY;
+  const absDx = Math.abs(dx), absDy = Math.abs(dy);
+  if (absDx < 20 && absDy < 20) { swipePos = 0; return; } // tap, not swipe
+  let dir;
+  if (absDx > absDy) { dir = dx > 0 ? 'right' : 'left'; }
+  else { dir = dy > 0 ? 'down' : 'up'; }
+  if (dir === swipeSeq[swipePos]) {
+    swipePos++;
+  } else {
+    swipePos = 0;
+  }
+}, { passive: true });
+
+// Track theme usage
+let themesUsed = new Set(['classic']);
+try {
+  const saved = JSON.parse(localStorage.getItem('jdThemesUsed') || '["classic"]');
+  themesUsed = new Set(saved);
+} catch(e) {}
+
+const origSetTheme = setTheme;
+setTheme = function(name) {
+  origSetTheme(name);
+  themesUsed.add(name);
+  try { localStorage.setItem('jdThemesUsed', JSON.stringify([...themesUsed])); } catch(e) {}
+  if (themesUsed.size >= 9) unlockAch('allThemes');
+};
+
+// Track shipped feature clicks
+let featuresOpened = new Set();
+try {
+  const saved = JSON.parse(localStorage.getItem('jdFeatOpened') || '[]');
+  featuresOpened = new Set(saved);
+} catch(e) {}
+
+// Copyright click
+const copyrightEl = document.getElementById('copyrightYear');
+if (copyrightEl) {
+  copyrightEl.addEventListener('click', () => {
+    unlockAch('copyright');
+    const body = document.body;
+    body.style.transition = 'transform 0.5s';
+    body.style.transform = 'rotate(180deg)';
+    setTimeout(() => {
+      body.style.transform = 'rotate(0deg)';
+      setTimeout(() => { body.style.transition = ''; body.style.transform = ''; }, 500);
+    }, 2000);
+  });
+}
+
 // Feature modal
 const fm = document.getElementById('featureModal');
+const totalFeatures = document.querySelectorAll('.shipped-item').length;
 document.querySelectorAll('.shipped-item').forEach(item => {
   item.addEventListener('click', () => {
     const name = item.textContent.trim();
@@ -2558,6 +2789,9 @@ document.querySelectorAll('.shipped-item').forEach(item => {
           bar.style.width = data.impact + '%';
         });
       });
+      featuresOpened.add(name);
+      try { localStorage.setItem('jdFeatOpened', JSON.stringify([...featuresOpened])); } catch(e) {}
+      if (featuresOpened.size >= totalFeatures) unlockAch('allFeatures');
     }
   });
 });
