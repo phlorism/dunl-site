@@ -344,12 +344,14 @@ footer {
   padding: 28px 28px 24px;
   border-radius: 2px;
   transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s;
+  cursor: pointer;
 }
 .article-card:hover {
   border-color: var(--accent);
   transform: translateY(-3px);
   box-shadow: 0 8px 24px rgba(0,0,0,0.3);
 }
+.article-card.expanded { transform: none; border-color: var(--accent); }
 .article-tag {
   font-size: 11px;
   letter-spacing: 0.15em;
@@ -370,6 +372,32 @@ footer {
   color: var(--muted);
   line-height: 1.6;
 }
+.article-detail {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.5s ease;
+}
+.article-card.expanded .article-detail { max-height: 500px; }
+.article-detail-inner {
+  border-top: 1px solid var(--border);
+  padding-top: 14px;
+  margin-top: 14px;
+}
+.article-detail-inner p {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.65;
+  margin-bottom: 8px;
+}
+.article-detail-inner p:last-child { margin-bottom: 0; }
+.article-kpi { color: var(--accent); font-weight: 500; }
+.article-expand-hint {
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 10px;
+  letter-spacing: 0.04em;
+}
+.article-card.expanded .article-expand-hint { display: none; }
 
 /* --- Shipped grid --- */
 .shipped-grid {
@@ -451,9 +479,15 @@ footer {
   color: var(--muted);
   line-height: 1.65;
 }
+.feature-card-bar-label {
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 20px;
+  margin-bottom: 6px;
+  letter-spacing: 0.06em;
+}
 .feature-card-bar {
   width: 100%; height: 2px;
-  margin-top: 20px;
   border-radius: 1px;
   background: var(--border);
   overflow: hidden;
@@ -462,6 +496,8 @@ footer {
   height: 100%;
   background: var(--accent);
   border-radius: 1px;
+  width: 0;
+  transition: width 0.8s cubic-bezier(0.22, 1, 0.36, 1);
 }
 .shipped-intro {
   font-size: 15px;
@@ -491,6 +527,61 @@ footer {
   0% { background-position: 200% 0; }
   100% { background-position: -200% 0; }
 }
+
+/* --- Stats / KPI --- */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+@media (max-width: 768px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 480px) { .stats-grid { grid-template-columns: 1fr 1fr; gap: 12px; } }
+.stat-card {
+  text-align: center;
+  padding: 24px 12px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  transition: border-color 0.3s, transform 0.3s;
+  cursor: pointer;
+  position: relative;
+}
+.stat-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+.stat-number {
+  font-family: var(--serif);
+  font-size: 36px;
+  color: var(--accent);
+  line-height: 1;
+  margin-bottom: 6px;
+}
+.stat-label {
+  font-size: 12px;
+  color: var(--muted);
+  letter-spacing: 0.06em;
+}
+.stat-detail {
+  font-size: 11px;
+  color: var(--muted);
+  line-height: 1.5;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease, margin-top 0.3s ease;
+  margin-top: 0;
+}
+.stat-card.expanded .stat-detail {
+  max-height: 80px;
+  margin-top: 8px;
+}
+.stat-card.expanded { border-color: var(--accent); }
+.stats-section-label {
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+  font-weight: 500;
+  margin-bottom: 12px;
+}
+.stats-section-label:not(:first-child) { margin-top: 20px; }
 
 /* --- Hamburger --- */
 .nav-hamburger {
@@ -572,7 +663,7 @@ footer {
     <div class="nav-links" id="navLinks">
       <a href="#experience">Experience</a>
       <a href="#expertise">Expertise</a>
-      <a href="#insights">Insights</a>
+      <a href="#insights">Outcomes</a>
       <a href="#shipped">Shipped</a>
       <a href="#contact">Contact</a>
     </div>
@@ -592,9 +683,78 @@ footer {
     <div class="hero-inner">
       <div class="hero-label">Executive Director of Digital Products & UX Design</div>
       <h1>Building digital<br>experiences at <em>scale</em></h1>
-      <p class="hero-bio">Leading end-to-end digital experience and UX Design at MGM Resorts International. <a href="https://www.mgmresorts.com/en/company.html" target="_blank" class="inline-link">Learn more about MGM →</a></p>
+      <p class="hero-bio">Leading a 28-person product and design organization across 30+ properties and 9 platforms at MGM Resorts International. <a href="https://www.mgmresorts.com/en/company.html" target="_blank" class="inline-link">Learn more about MGM →</a></p>
       <div class="hero-rule"></div>
     </div>
+  </div>
+</section>
+
+<section id="stats">
+  <div class="container">
+    <div class="stats-section-label reveal">Current Role</div>
+    <div class="stats-grid reveal">
+      <div class="stat-card" onclick="this.classList.toggle('expanded')">
+        <div class="stat-number" data-target="28">0</div>
+        <div class="stat-label">Team Size</div>
+        <div class="stat-detail">6 Product · 22 UX Design</div>
+      </div>
+      <div class="stat-card" onclick="this.classList.toggle('expanded')">
+        <div class="stat-number" data-target="1">0</div>
+        <div class="stat-label">App Managed</div>
+        <div class="stat-detail">MGM Rewards on iOS & Android</div>
+      </div>
+      <div class="stat-card" onclick="this.classList.toggle('expanded')">
+        <div class="stat-number" data-target="22">0</div>
+        <div class="stat-label">Websites</div>
+        <div class="stat-detail">All US-based MGM property websites and pages</div>
+      </div>
+      <div class="stat-card" onclick="this.classList.toggle('expanded')">
+        <div class="stat-number" data-target="2200" data-suffix="+">0</div>
+        <div class="stat-label">Webpages</div>
+        <div class="stat-detail">Across 22 property sites, MGMRI.com, and microsites</div>
+      </div>
+    </div>
+
+    <div class="stats-section-label reveal">Lifetime</div>
+    <div class="stats-grid reveal">
+      <div class="stat-card" onclick="this.classList.toggle('expanded')">
+        <div class="stat-number" data-target="16">0</div>
+        <div class="stat-label">Years in Industry</div>
+        <div class="stat-detail">Product, operations, and design leadership since 2010</div>
+      </div>
+      <div class="stat-card" onclick="this.classList.toggle('expanded')">
+        <div class="stat-number" data-target="5">0</div>
+        <div class="stat-label">Companies</div>
+        <div class="stat-detail">Bellwether Music · Luxe · Good Uncle · Volvo Cars · MGM Resorts</div>
+      </div>
+      <div class="stat-card" onclick="this.classList.toggle('expanded')">
+        <div class="stat-number" data-target="13">0</div>
+        <div class="stat-label">Roles Held</div>
+        <div class="stat-detail">Founder to Executive Director — startups to enterprise</div>
+      </div>
+      <div class="stat-card" onclick="this.classList.toggle('expanded')">
+        <div class="stat-number" data-target="100" data-suffix="+">0</div>
+        <div class="stat-label">Features Shipped</div>
+        <div class="stat-detail">Across web, mobile, kiosk, and employee platforms</div>
+      </div>
+      <div class="stat-card" onclick="this.classList.toggle('expanded')">
+        <div class="stat-number" data-target="9">0</div>
+        <div class="stat-label">Platforms Managed</div>
+        <div class="stat-detail">Web, iOS, Android, kiosk, employee tools, BFF, and more</div>
+      </div>
+      <div class="stat-card" onclick="this.classList.toggle('expanded')">
+        <div class="stat-number" data-target="17">0</div>
+        <div class="stat-label">Teams Managed</div>
+        <div class="stat-detail">Product, design, operations, and engineering teams</div>
+      </div>
+      <div class="stat-card" onclick="this.classList.toggle('expanded')">
+        <div class="stat-number" data-target="1">0</div>
+        <div class="stat-label">Company Founded</div>
+        <div class="stat-detail">Bellwether Music — Nashville, 2010–2014</div>
+      </div>
+    </div>
+
+    <p class="reveal" style="margin-top:20px; font-size:13px;"><a href="https://investors.mgmresorts.com/investors/events-and-presentations/" target="_blank" class="inline-link">MGM Resorts Investor Relations & Quarterly Earnings →</a></p>
   </div>
 </section>
 
@@ -607,7 +767,7 @@ footer {
         <div class="t-company">MGM Resorts International</div>
         <div class="t-title">Executive Director — Product, Digital Experience, & UX Design</div>
         <div class="t-date">May 2024 – Present · San Francisco Bay Area</div>
-        <div class="t-desc">Leading UXD and platform Product Management organizations (26-person team), spanning discovery, search, personalization, and end-to-end digital experience across web, app, and kiosk. Driving native-AI team transition across UXD and product.</div>
+        <div class="t-desc">Leading UXD and platform Product Management organizations (28-person team), spanning discovery, search, personalization, and end-to-end digital experience across web, app, and kiosk. Driving native-AI team transition across UXD and product.</div>
       </div>
 
       <div class="t-item reveal">
@@ -680,7 +840,7 @@ footer {
       </div>
       <div class="exp-card reveal">
         <h3>UX & Design Leadership</h3>
-        <p>Leading a 26-person UXD organization, building design systems, and driving experience quality at portfolio scale.</p>
+        <p>Leading a 28-person UXD and PM organization, building design systems, and driving experience quality at portfolio scale.</p>
       </div>
       <div class="exp-card reveal">
         <h3>AI & Emerging Tech</h3>
@@ -696,31 +856,84 @@ footer {
 
 <section id="insights">
   <div class="container">
-    <div class="section-label reveal">Insights & Thinking</div>
+    <div class="section-label reveal">Selected Outcomes</div>
     <div class="article-list">
 
-      <div class="article-card reveal">
-        <div class="article-tag">Strategy</div>
-        <h3>Hospitality Digital Roadmap Methodology</h3>
-        <p>Developed a rigorous framework for evaluating digital initiatives across a large resort portfolio — scoring each on revenue impact and operational efficiency, benchmarked against industry leaders in gaming, hospitality, airlines, and quick-service dining.</p>
+      <div class="article-card reveal" onclick="this.classList.toggle('expanded')">
+        <div class="article-tag">Revenue — Web</div>
+        <h3>Enterprise-wide Homepage & Navigation Redesign</h3>
+        <p>Led the redesign and rollout of the homepage and top navigation across 20+ property websites, driving significant annualized revenue lift across the portfolio.</p>
+        <div class="article-expand-hint">Tap to expand ↓</div>
+        <div class="article-detail"><div class="article-detail-inner">
+          <p>Redesigned homepage rolled out in batches across all properties — Bellagio first as A/B test, then enterprise-wide. Measured <span class="article-kpi">improvements in traffic-to-booking, conversion, AOV, and bounce rate</span>. Top navigation optimization shipped simultaneously with statistically significant conversion lift.</p>
+          <p>Combined, these two initiatives represented the largest annualized revenue lifts in the digital portfolio.</p>
+        </div></div>
       </div>
 
-      <div class="article-card reveal">
+      <div class="article-card reveal" onclick="this.classList.toggle('expanded')">
+        <div class="article-tag">Revenue — App</div>
+        <h3>Personalization Engine & Trip-State Architecture</h3>
+        <p>Rebuilt the mobile app's information architecture around trip state and launched a centralized rules-based personalization engine powering content across every surface.</p>
+        <div class="article-expand-hint">Tap to expand ↓</div>
+        <div class="article-detail"><div class="article-detail-inner">
+          <p>Upcoming Trip Recommendations drove <span class="article-kpi">meaningful conversion, AOV, and revenue improvements</span>. Cross-sell Entertainment × Dining and Room Booking Flow Optimization each delivered <span class="article-kpi">significant conversion gains</span>. Dining carousel powered by Rules Service showed <span class="article-kpi">strong conversion lift</span>.</p>
+          <p>Built the Rules Service from scratch — a centralized engine replacing hardcoded logic with configurable, data-driven personalization rules across home screen, resort tabs, and category pages.</p>
+        </div></div>
+      </div>
+
+      <div class="article-card reveal" onclick="this.classList.toggle('expanded')">
+        <div class="article-tag">Revenue — Web</div>
+        <h3>Product Detail Page System</h3>
+        <p>Designed and shipped a complete PDP system across every content vertical — dining, entertainment, attractions, pools, spas, and private dining — each measured against traffic-to-booking and conversion.</p>
+        <div class="article-expand-hint">Tap to expand ↓</div>
+        <div class="article-detail"><div class="article-detail-inner">
+          <p>Each vertical PDP was A/B tested, measured, and rolled out enterprise-wide. Results showed <span class="article-kpi">consistent traffic-to-booking and conversion improvements</span> across every content type — with dining and entertainment delivering the strongest lifts.</p>
+          <p>The system established a repeatable template for launching new content verticals with built-in measurement.</p>
+        </div></div>
+      </div>
+
+      <div class="article-card reveal" onclick="this.classList.toggle('expanded')">
+        <div class="article-tag">Brand</div>
+        <h3>Premium Property Websites</h3>
+        <p>Created a premium web experience tier for MGM's luxury properties — distinct brand identity, immersive video, and curated content hierarchy separate from the enterprise template.</p>
+        <div class="article-expand-hint">Tap to expand ↓</div>
+        <div class="article-detail"><div class="article-detail-inner">
+          <p>Bellagio launched first as the template for premium property experiences. The Cosmopolitan followed with its own bespoke identity and discovery navigation. Results showed <span class="article-kpi">strong traffic-to-booking and conversion improvements</span> over the previous experience.</p>
+          <p>These sites established that luxury properties need differentiated digital identities — not just skinned versions of the enterprise template. Now the playbook for additional properties in 2026.</p>
+        </div></div>
+      </div>
+
+      <div class="article-card reveal" onclick="this.classList.toggle('expanded')">
+        <div class="article-tag">Guest Experience</div>
+        <h3>Mobile Check-in, Digital Key & Digital Concierge</h3>
+        <p>Shipped the full digital arrival experience — from mobile check-in and digital key to AI-powered concierge chat — reducing front desk dependency and enabling self-service across the guest journey.</p>
+        <div class="article-expand-hint">Tap to expand ↓</div>
+        <div class="article-detail"><div class="article-detail-inner">
+          <p>Digital Key redesigned with full-screen UX, achieving <span class="article-kpi">near-perfect success rates</span>. Added sponsored digital key overlays for convention monetization. Digital Concierge deployed across app and web with NPS feedback collection.</p>
+          <p>Digital Account Unlock eliminated one of the highest-volume call center requests, delivering <span class="article-kpi">meaningful annual labor savings</span>. In-Lobby Digital Check-in App extended the same flow to lobby ambassadors on tablets.</p>
+        </div></div>
+      </div>
+
+      <div class="article-card reveal" onclick="this.classList.toggle('expanded')">
+        <div class="article-tag">Engagement</div>
+        <h3>Discovery, Search & Content Merchandising</h3>
+        <p>Built the discovery layer across app and web — global search, full-screen gallery browsing, video content (Sizzle Shorts), and Wi-Fi-to-discovery flows driving app installs and engagement.</p>
+        <div class="article-expand-hint">Tap to expand ↓</div>
+        <div class="article-detail"><div class="article-detail-inner">
+          <p>Discover Tab full-screen gallery, video hero on mobile web, and Wi-Fi connection-to-discovery flow each showed <span class="article-kpi">strong CTR and conversion improvements</span>. Video outperformed static imagery significantly on mobile web.</p>
+          <p>Preference Center launched as the foundation for preference-driven personalization across dining and entertainment, with <span class="article-kpi">dramatically higher engagement</span> than the previous experience.</p>
+        </div></div>
+      </div>
+
+      <div class="article-card reveal" onclick="this.classList.toggle('expanded')">
         <div class="article-tag">AI & Operations</div>
-        <h3>AI-Native Team Operating Models</h3>
-        <p>Exploring how UXD and Product Management teams can restructure around AI-augmented workflows — hybrid human-AI team structures, compressed delivery cycles, and agent-readable design specifications to significantly reduce manual production effort.</p>
-      </div>
-
-      <div class="article-card reveal">
-        <div class="article-tag">Emerging Tech</div>
-        <h3>Generative Engine Optimization & Agentic Commerce</h3>
-        <p>Thinking through the shift from SEO to GEO — how hospitality brands need to prepare for a world where AI agents discover, recommend, and transact on behalf of travelers. Covers structured data strategy, MCP-enabled direct booking, and first-party data positioning.</p>
-      </div>
-
-      <div class="article-card reveal">
-        <div class="article-tag">Design Systems</div>
-        <h3>Scalable Design System Governance</h3>
-        <p>Developing governance models for multi-platform component libraries (web, mobile, kiosk) that solve discoverability without manual maintenance — federated registries, automated inventory pipelines, and demand-driven promotion workflows.</p>
+        <h3>AI-Native Team Transition & Operating Model</h3>
+        <p>Developing the framework for transitioning a 28-person UXD and PM organization to AI-augmented workflows — hybrid human-AI team structures, compressed delivery cycles, and agent-readable design specifications.</p>
+        <div class="article-expand-hint">Tap to expand ↓</div>
+        <div class="article-detail"><div class="article-detail-inner">
+          <p>Designed Centaur Pod team structures pairing senior practitioners with AI agent fleets. Introduced bolt-based delivery cycles replacing traditional sprints. Created agent-readable design specifications as the highest-leverage artifact for AI-native design teams.</p>
+          <p>Built a 30+ initiative competitive analysis roadmap scoring every digital opportunity on ROI and Operational Efficiency, benchmarked against leaders across gaming, hospitality, airlines, and quick-service dining.</p>
+        </div></div>
       </div>
 
     </div>
@@ -837,6 +1050,7 @@ footer {
     <div class="feature-card-tag" id="fmTag"></div>
     <h3 id="fmTitle"></h3>
     <p id="fmDesc"></p>
+    <div class="feature-card-bar-label">Impact</div>
     <div class="feature-card-bar"><div class="feature-card-bar-fill" id="fmBar"></div></div>
   </div>
 </div>
@@ -847,6 +1061,7 @@ footer {
 
 <script>
 const featureData = {
+  // --- MOBILE APP ---
   "Mobile Check-in": { tag: "Guest Experience", desc: "End-to-end mobile check-in flow enabling guests to bypass the front desk entirely — from ID verification to room assignment to digital key delivery.", impact: 95 },
   "Digital Key & Redesign": { tag: "Guest Experience", desc: "Full-screen digital key with redesigned UX, animated unlock experience, error handling, and support for convention-sponsored branding overlays.", impact: 90 },
   "Sponsored Digital Key": { tag: "Revenue", desc: "Monetized digital key screen real estate by enabling convention and event sponsors to display branded overlays to guests during their stay.", impact: 70 },
@@ -857,11 +1072,16 @@ const featureData = {
   "Upcoming Trip Recommendations": { tag: "Revenue", desc: "Pre-trip recommendation engine surfacing relevant dining, entertainment, and spa experiences for upcoming reservations — driving significant conversion and AOV lift.", impact: 85 },
   "Cross-sell Entertainment × Dining": { tag: "Revenue", desc: "Contextual cross-sell system recommending dining options on entertainment PDPs and vice versa, powered by the Rules Service.", impact: 78 },
   "Global Search": { tag: "Discovery", desc: "Unified search experience across the mobile app, enabling guests to find rooms, dining, entertainment, and property information from a single entry point.", impact: 88 },
+  "Search History": { tag: "Discovery", desc: "Persistent search history allowing guests to quickly return to previous queries without retyping, reducing friction in the discovery flow.", impact: 65 },
   "Room Booking Flow Optimization": { tag: "Revenue", desc: "Iterative optimization of the room booking funnel — improving CTR and conversion through UX refinements, carousel logic, and pricing display.", impact: 93 },
   "Native Room PDP": { tag: "Guest Experience", desc: "Redesigned room product detail page with improved information hierarchy, aligned to the Vega design system, with booking-state-aware positioning.", impact: 80 },
-  "Native Pools & Spas PDPs": { tag: "Guest Experience", desc: "Native product detail pages for pools and spas, replacing webview experiences with performant native screens.", impact: 72 },
+  "Native Pools & Spas PDPs": { tag: "Guest Experience", desc: "Native product detail pages for pools and spas, replacing webview experiences with performant native screens and improved conversion.", impact: 72 },
   "Native Resort PDPs": { tag: "Revenue", desc: "Fully native resort-level product detail pages driving significant incremental revenue through improved browsing and booking conversion.", impact: 85 },
+  "Resort Tab App Hero": { tag: "Revenue", desc: "Redesigned hero component on the Resort tab driving measurable CTR and incremental revenue improvements.", impact: 78 },
+  "Dining & Entertainment PDPs": { tag: "Guest Experience", desc: "Native product detail pages for dining and entertainment venues, replacing webviews with faster, richer native experiences.", impact: 82 },
+  "Dining Category Pages": { tag: "Discovery", desc: "Category-level browsing pages for dining with filtering, sorting, and property-scoped results — driving traffic to booking.", impact: 80 },
   "Entertainment Calendar / Showtimes": { tag: "Discovery", desc: "Calendar view for entertainment and concert showtimes, giving guests a time-based way to browse and book upcoming performances.", impact: 75 },
+  "Venue Calendar": { tag: "Discovery", desc: "Property-level venue calendar enabling guests to see all upcoming events and shows at a specific venue.", impact: 72 },
   "Purchasable Room Upgrades": { tag: "Revenue", desc: "In-app room upgrade purchasing flow allowing guests to upgrade their room type after initial booking, creating incremental upsell revenue.", impact: 88 },
   "Early Check-in & Late Checkout": { tag: "Revenue", desc: "Purchasable stay enhancement options enabling guests to extend their stay window — generating ancillary revenue with zero inventory cost.", impact: 82 },
   "Event Packages (F1)": { tag: "Revenue", desc: "Bundled event package experience for Formula 1 and other tentpole events — combining room, tickets, and dining into purchasable packages.", impact: 76 },
@@ -870,21 +1090,47 @@ const featureData = {
   "Digital Concierge Chat": { tag: "Guest Experience", desc: "AI-powered chat experience for housekeeping requests, trip planning, booking activities, and answering guest questions — deployed across app and web.", impact: 90 },
   "Folio & Stay Summary": { tag: "Guest Experience", desc: "Digital folio and stay summary giving guests a clear view of charges, activity, and trip details throughout and after their stay.", impact: 70 },
   "Checkout Experiences": { tag: "Guest Experience", desc: "Streamlined digital checkout flow reducing front desk congestion and giving guests control over their departure experience.", impact: 78 },
+  "Carbon Offsetting Offers": { tag: "Guest Experience", desc: "Optional carbon offset purchasing integrated into the booking and stay flow, supporting MGM's sustainability positioning.", impact: 55 },
+  "Transactional Push Notifications & Emails": { tag: "Engagement", desc: "Automated transactional messaging across the guest journey — booking confirmations, check-in reminders, folio updates, and post-stay communications.", impact: 82 },
   "First Time User Experience Redesign": { tag: "Engagement", desc: "Redesigned onboarding flow explaining app capabilities, permission requests, and capturing user intent — with cohort testing for optimization.", impact: 80 },
-  "Guided Sign-in / Sign-up": { tag: "Engagement", desc: "Streamlined authentication flow with clearer instructions, password managers support, real-time validation, and MGM Rewards value proposition.", impact: 76 },
+  "Guided Sign-in / Sign-up": { tag: "Engagement", desc: "Streamlined authentication flow with clearer instructions, password manager support, real-time validation, and MGM Rewards value proposition.", impact: 76 },
   "Multi-Factor Authentication": { tag: "Security", desc: "SMS, email, and passkey-based MFA rolled out across app and web — initially optional, then mandatory for high-risk actions.", impact: 85 },
   "Digital Account Unlock": { tag: "Operations", desc: "Self-service account unlock flow reducing call center volume by eliminating a high-frequency support request — significant annual labor savings.", impact: 82 },
   "Preferences Center": { tag: "Personalization", desc: "Guest preference management hub enabling users to set dining, entertainment, and stay preferences — powering downstream personalization across all surfaces.", impact: 86 },
+  "Rewards Stay Preferences": { tag: "Personalization", desc: "Preferences allowing guests to manage and apply rewards points for automatic redemption at checkout.", impact: 72 },
+  "Profile Navigation Redesign": { tag: "Guest Experience", desc: "Relocated profile access from a dedicated tab to a persistent header element, freeing bottom navigation space for higher-value destinations.", impact: 68 },
+
+  // --- WEB ---
   "Bellagio Premium Homepage": { tag: "Brand", desc: "Premium homepage redesign for Bellagio featuring immersive video, distinctive brand identity, and curated content hierarchy — the template for luxury property web experiences.", impact: 92 },
   "The Cosmopolitan Premium Homepage": { tag: "Brand", desc: "Bespoke premium homepage for The Cosmopolitan of Las Vegas with unique brand expression, video content, and differentiated product merchandising.", impact: 90 },
+  "TCOLV Discovery Navigation": { tag: "Discovery", desc: "Custom discovery-optimized navigation for The Cosmopolitan, redesigning how guests browse dining, entertainment, and nightlife.", impact: 78 },
   "Enterprise Homepage Redesign (Vega)": { tag: "Revenue", desc: "Enterprise-wide homepage redesign rolled out across all properties — driving significant lifts in traffic-to-booking, conversion, and average order value.", impact: 95 },
   "Top Navigation Optimization": { tag: "Revenue", desc: "Redesigned top navigation rolled out enterprise-wide with measurable improvements in click-through rate and conversion across all properties.", impact: 93 },
+  "Global Footer Redesign": { tag: "Brand", desc: "Consistent global footer deployed across MGMRI and property sites — unifying branding, app download CTAs, and navigational structure.", impact: 62 },
+  "Sizzle Shorts Video Reels": { tag: "Engagement", desc: "Short-form vertical video content integrated into property pages, bringing social-style immersive content to the web experience.", impact: 75 },
+  "Video in Mobile Web Hero": { tag: "Revenue", desc: "Video hero treatment on mobile web driving significant improvements in CTR and conversion over static imagery.", impact: 82 },
   "Dining Product Detail Pages": { tag: "Revenue", desc: "Redesigned dining PDPs driving substantial traffic-to-booking and conversion improvements across the portfolio.", impact: 88 },
   "Entertainment & Attractions PDPs": { tag: "Revenue", desc: "Product detail page redesign for entertainment and attractions, significantly increasing traffic-to-booking and conversion.", impact: 88 },
+  "Pools PDPs": { tag: "Guest Experience", desc: "Dedicated product detail pages for pool experiences, driving increased traffic to booking across resort pool venues.", impact: 72 },
+  "Spas & Salons PDPs": { tag: "Revenue", desc: "Redesigned spa and salon product detail pages with improved CTR and measurable annualized revenue lift.", impact: 76 },
+  "Private & Group Dining Pages": { tag: "Revenue", desc: "Dedicated pages for private and group dining experiences, driving higher email CTR and incremental revenue.", impact: 74 },
+  "Premium Package PDPs": { tag: "Revenue", desc: "Enhanced product detail pages for premium packages with improved CTR, reduced bounce rate, and measurable revenue lift.", impact: 78 },
+  "Packages — Dynamic Pricing": { tag: "Revenue", desc: "Dynamic pricing display on package category and detail pages, pulling real-time rates including sold-out states and error handling.", impact: 80 },
+  "Wi-Fi Connection-to-Discovery Flow": { tag: "Engagement", desc: "Post-Wi-Fi-connection flow directing guests to app discovery content — driving significant CTR and app install improvements.", impact: 76 },
   "Web Chat (Digital Concierge)": { tag: "Guest Experience", desc: "Web-based digital concierge chat rolled out across property homepages, with NPS feedback collection and notification badges.", impact: 80 },
+  "Web Check-in on Homepage": { tag: "Guest Experience", desc: "Prominent check-in entry point on property homepages, making it easier for guests to start the check-in process from web.", impact: 70 },
+  "Meetings & Events Navigation": { tag: "Discovery", desc: "Added Meetings & Events to top navigation, driving significantly increased clicks to group and event booking content.", impact: 68 },
   "Embedded Schema for SEO": { tag: "Discovery", desc: "Structured data markup (schema.org) added to entertainment and restaurant PDPs, improving search engine visibility and rich result eligibility.", impact: 75 },
+  "CA Fee Transparency Pricing": { tag: "Compliance", desc: "Updated price displays across entertainment to comply with California fee transparency law — showing total price inclusive of fees.", impact: 60 },
+  "MFA on Web via Okta": { tag: "Security", desc: "Multi-factor authentication deployed on web via Okta — supporting SMS, email, and passkey methods for MGM Rewards account security.", impact: 82 },
+  "Blog Platform": { tag: "Discovery", desc: "Content marketing platform enabling editorial content to drive organic traffic and support SEO strategy across the portfolio.", impact: 70 },
+  "Miscellaneous Page Redesigns & A/B Tests": { tag: "Revenue", desc: "Ongoing cycle of page-level redesigns and A/B tests across the portfolio — each measured against traffic-to-booking, conversion, and revenue KPIs.", impact: 85 },
+
+  // --- PLATFORM & EMPLOYEE TOOLS ---
   "Employee Tools Platform (Backstage)": { tag: "Operations", desc: "Internal platform consolidating employee-facing tools — homescreen builder, digital key manager, guest services, and content management — into a unified application.", impact: 88 },
   "In-Lobby Hosted Digital Check-in App": { tag: "Operations", desc: "Employee-facing tablet application enabling lobby ambassadors to facilitate guest check-in, reducing front desk queues and improving the arrival experience.", impact: 82 },
+  "Homescreen Experience Builder": { tag: "Operations", desc: "Internal tool enabling non-technical operators to configure and reorder mobile app home screen modules based on trip state, network, and login status.", impact: 78 },
+  "Digital Key Manager": { tag: "Operations", desc: "Back-office tool for managing digital key backgrounds for standard and VIP guests, including sponsored convention overlays.", impact: 68 },
   "Backend for Frontend (BFF) Architecture": { tag: "Platform", desc: "API orchestration layer decoupling the mobile app from backend services — enabling faster feature development, better performance, and independent deployability.", impact: 90 },
   "Rules Service / Personalization Engine": { tag: "Platform", desc: "Centralized rules engine powering content personalization, cross-sell logic, and dynamic module assembly across app and web surfaces.", impact: 92 },
 };
@@ -924,6 +1170,27 @@ document.querySelectorAll('#navLinks a').forEach(a => {
   });
 });
 
+// Counter animation
+const counterObserver = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting && !e.target.dataset.counted) {
+      e.target.dataset.counted = 'true';
+      const target = parseInt(e.target.dataset.target);
+      const duration = 1200;
+      const start = performance.now();
+      const suffix = e.target.dataset.suffix || '';
+      const step = (now) => {
+        const progress = Math.min((now - start) / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        e.target.textContent = Math.round(eased * target) + (progress >= 1 ? suffix : '');
+        if (progress < 1) requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+    }
+  });
+}, { threshold: 0.3 });
+document.querySelectorAll('.stat-number').forEach(el => counterObserver.observe(el));
+
 // Feature modal
 const fm = document.getElementById('featureModal');
 document.querySelectorAll('.shipped-item').forEach(item => {
@@ -934,8 +1201,16 @@ document.querySelectorAll('.shipped-item').forEach(item => {
       document.getElementById('fmTag').textContent = data.tag;
       document.getElementById('fmTitle').textContent = name;
       document.getElementById('fmDesc').textContent = data.desc;
-      document.getElementById('fmBar').style.width = data.impact + '%';
+      const bar = document.getElementById('fmBar');
+      bar.style.transition = 'none';
+      bar.style.width = '0%';
       fm.classList.add('active');
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          bar.style.transition = 'width 0.8s cubic-bezier(0.22, 1, 0.36, 1)';
+          bar.style.width = data.impact + '%';
+        });
+      });
     }
   });
 });
