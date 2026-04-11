@@ -72,6 +72,9 @@ nav .container {
   border: 1px solid var(--border);
   cursor: pointer;
   transition: border-color 0.3s;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
 }
 .nav-headshot:hover { border-color: var(--accent); }
 .nav-logo {
@@ -1729,7 +1732,7 @@ body.theme-cosmic .easter-egg { color: #00ff00; border-color: #00ff00; backgroun
 <footer>
   <div class="container">
     <div>&copy; <span id="copyrightYear" style="cursor:default;">2026</span> Josh Dunlap</div>
-    <div style="margin-top:6px; font-size:11px; color:var(--muted);">Published April 10, 2026 · Last updated April 10, 2026</div>
+    <div style="margin-top:6px; font-size:11px; color:var(--muted);">Published April 10, 2026 · Last updated April 11, 2026</div>
   </div>
 </footer>
 
@@ -2701,12 +2704,13 @@ if (headshot) {
       unlockAch('konami');
       showAchievements();
     }, 3000);
-  }, { passive: true });
+  }, { passive: false });
   headshot.addEventListener('touchend', () => { clearTimeout(longPressTimer); });
   headshot.addEventListener('touchmove', () => { clearTimeout(longPressTimer); });
   headshot.addEventListener('click', (e) => {
     if (longPressTriggered) { e.preventDefault(); e.stopPropagation(); longPressTriggered = false; }
   }, true);
+  headshot.addEventListener('contextmenu', (e) => { e.preventDefault(); });
 }
 
 // Track theme usage
