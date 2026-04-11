@@ -2638,7 +2638,7 @@ const achievements = [
   { id: 'score20', icon: '⚡', name: 'High Voltage', desc: 'Scored 20+ in the game', clue: 'Keep jumping. The diamond helps.' },
   { id: 'hiddenThemes', icon: '🎨', name: 'Palette Unlocked', desc: 'Revealed the hidden themes', clue: 'Design Language has a persistent header. Very persistent.' },
   { id: 'allThemes', icon: '🌈', name: 'Chameleon', desc: 'Tried all 9 themes', clue: 'Some themes are hidden. Try every one you can find.' },
-  { id: 'konami', icon: '🔑', name: 'The Door', desc: 'Entered the code', clue: 'Old games had cheat codes. This site does too.' },
+  { id: 'konami', icon: '🔑', name: 'The Door', desc: 'Entered the code', clue: 'Old games had cheat codes. Some doors open when you hold on long enough.' },
   { id: 'allFeatures', icon: '📋', name: 'Completionist', desc: 'Opened every shipped feature', clue: '68 features. 68 clicks. Dedication.' },
   { id: 'copyright', icon: '🔍', name: 'Fine Print', desc: 'Read the fine print', clue: 'Even the footer has a story to tell.' },
 ];
@@ -2689,47 +2689,25 @@ document.addEventListener('keydown', (e) => {
   }
 });
 
-// Mobile Konami: swipe pattern U U D D L R L R then double-tap
-const swipeSeq = ['up','up','down','down','left','right','left','right'];
-let swipePos = 0;
-let touchStartX = 0, touchStartY = 0;
-let doubleTapTimer = null, doubleTapCount = 0;
-
-document.addEventListener('touchstart', (e) => {
-  if (e.touches.length !== 1) return;
-  touchStartX = e.touches[0].clientX;
-  touchStartY = e.touches[0].clientY;
-}, { passive: true });
-
-document.addEventListener('touchend', (e) => {
-  if (swipePos >= swipeSeq.length) {
-    // Waiting for double-tap
-    doubleTapCount++;
-    clearTimeout(doubleTapTimer);
-    if (doubleTapCount >= 2) {
-      doubleTapCount = 0;
-      swipePos = 0;
+// Mobile Konami: 3-second long-press on nav headshot
+let longPressTimer = null;
+let longPressTriggered = false;
+const headshot = document.querySelector('.nav-headshot');
+if (headshot) {
+  headshot.addEventListener('touchstart', (e) => {
+    longPressTriggered = false;
+    longPressTimer = setTimeout(() => {
+      longPressTriggered = true;
       unlockAch('konami');
       showAchievements();
-    } else {
-      doubleTapTimer = setTimeout(() => { doubleTapCount = 0; }, 500);
-    }
-    return;
-  }
-  const t = e.changedTouches[0];
-  const dx = t.clientX - touchStartX;
-  const dy = t.clientY - touchStartY;
-  const absDx = Math.abs(dx), absDy = Math.abs(dy);
-  if (absDx < 20 && absDy < 20) { swipePos = 0; return; } // tap, not swipe
-  let dir;
-  if (absDx > absDy) { dir = dx > 0 ? 'right' : 'left'; }
-  else { dir = dy > 0 ? 'down' : 'up'; }
-  if (dir === swipeSeq[swipePos]) {
-    swipePos++;
-  } else {
-    swipePos = 0;
-  }
-}, { passive: true });
+    }, 3000);
+  }, { passive: true });
+  headshot.addEventListener('touchend', () => { clearTimeout(longPressTimer); });
+  headshot.addEventListener('touchmove', () => { clearTimeout(longPressTimer); });
+  headshot.addEventListener('click', (e) => {
+    if (longPressTriggered) { e.preventDefault(); e.stopPropagation(); longPressTriggered = false; }
+  }, true);
+}
 
 // Track theme usage
 let themesUsed = new Set(['classic']);
