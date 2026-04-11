@@ -661,19 +661,29 @@ footer {
   color: var(--accent);
   cursor: pointer;
   transition: opacity 0.6s;
-  animation: eggShimmer 2s ease-in-out infinite;
   letter-spacing: 0.06em;
   padding: 4px 12px;
   border: 1px solid rgba(201,169,110,0.2);
   border-radius: 12px;
   background: rgba(201,169,110,0.04);
+  border-color: color-mix(in srgb, var(--accent) 20%, transparent);
+  background: color-mix(in srgb, var(--accent) 4%, transparent);
 }
 .easter-egg-wrap:hover .easter-egg { opacity: 0.5; }
 .easter-egg.tapped { opacity: 0.5; }
 .easter-egg:hover { opacity: 1 !important; border-color: var(--accent); }
-@keyframes eggShimmer {
-  0%, 100% { filter: brightness(1); }
-  50% { filter: brightness(1.5); }
+
+/* Mobile shimmer hint - pulses every 8s */
+@media (hover: none) {
+  .easter-egg {
+    opacity: 0;
+    animation: eggPulse 8s ease-in-out infinite;
+  }
+}
+@keyframes eggPulse {
+  0%, 90%, 100% { opacity: 0; filter: brightness(1); }
+  93% { opacity: 0.25; filter: brightness(1.4); }
+  96% { opacity: 0.15; filter: brightness(1.2); }
 }
 
 /* --- Game lightbox --- */
@@ -751,23 +761,51 @@ footer {
   line-height: 1.6;
 }
 .dl-swatch-row {
-  display: flex; gap: 10px; margin-bottom: 16px;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.dl-swatch-row > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 .dl-swatch {
-  width: 36px; height: 36px;
+  width: 100%; height: 32px;
   border-radius: 4px;
   border: 1px solid var(--border);
-  position: relative;
 }
 .dl-swatch-label {
-  font-size: 10px;
+  font-size: 9px;
   color: var(--muted);
   text-align: center;
   margin-top: 4px;
   letter-spacing: 0.03em;
+  white-space: nowrap;
 }
 
 /* --- Theme selector --- */
+.theme-picker {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.theme-picker .theme-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--muted);
+  transition: all 0.2s;
+  background: var(--card);
+  font-family: var(--sans);
+}
 .theme-picker .theme-option:hover { border-color: var(--accent) !important; color: var(--fg) !important; }
 .theme-picker .theme-option.active { border-color: var(--accent) !important; color: var(--accent) !important; }
 .theme-option-dot {
@@ -1175,7 +1213,7 @@ body.theme-cosmic .easter-egg { color: #00ff00; border-color: #00ff00; backgroun
       <div class="hero-label">Executive Director of Digital Products & UX Design</div>
       <h1>Building digital<br>experiences at <em>scale</em></h1>
       <div class="easter-egg-wrap"><span class="easter-egg" id="easterEgg" onclick="document.getElementById('gameOverlay').classList.add('active'); initGame();">psst... what's this?</span></div>
-      <p class="hero-bio">Leading a 28-person digital product and design organization focused on web, app, and kiosk across 20+ properties at MGM Resorts International. <a href="https://www.mgmresorts.com/en/company.html" target="_blank" class="inline-link">Learn more about MGM →</a></p>
+      <p class="hero-bio">Leading a 28-person digital product and design organization focused on web, app, and kiosk across 20+ properties at MGM Resorts International. <a href="https://www.mgmresorts.com/en/company.html" target="_blank" rel="noopener noreferrer" class="inline-link">Learn more about MGM →</a></p>
       <div class="hero-rule"></div>
     </div>
   </div>
@@ -1193,7 +1231,7 @@ body.theme-cosmic .easter-egg { color: #00ff00; border-color: #00ff00; backgroun
       <div class="stat-card" onclick="this.classList.toggle('expanded')">
         <div class="stat-number" data-target="1">0</div>
         <div class="stat-label">App Managed</div>
-        <div class="stat-detail">MGM Rewards on <a href="https://apps.apple.com/us/app/mgm-rewards/id1258498498" target="_blank" class="inline-link">iOS</a> & <a href="https://play.google.com/store/apps/details?id=com.mgmresorts.mgmresorts" target="_blank" class="inline-link">Android</a></div>
+        <div class="stat-detail">MGM Rewards on <a href="https://apps.apple.com/us/app/mgm-rewards/id366518979" target="_blank" rel="noopener noreferrer" class="inline-link">iOS</a> & <a href="https://play.google.com/store/apps/details?id=com.mgmresorts.mgmresorts" target="_blank" rel="noopener noreferrer" class="inline-link">Android</a></div>
       </div>
       <div class="stat-card" onclick="this.classList.toggle('expanded')">
         <div class="stat-number" data-target="22">0</div>
@@ -1247,9 +1285,9 @@ body.theme-cosmic .easter-egg { color: #00ff00; border-color: #00ff00; backgroun
     </div>
 
     <p class="reveal" style="margin-top:20px; font-size:13px;">
-      <a href="https://bellagio.mgmresorts.com/en.html" target="_blank" class="inline-link">See a recent website redesign →</a>
+      <a href="https://bellagio.mgmresorts.com/en.html" target="_blank" rel="noopener noreferrer" class="inline-link">See a recent website redesign →</a>
       <span style="color:var(--border); margin:0 12px;">|</span>
-      <a href="https://investors.mgmresorts.com/overview" target="_blank" class="inline-link">MGM Investor Relations →</a>
+      <a href="https://investors.mgmresorts.com/overview" target="_blank" rel="noopener noreferrer" class="inline-link">MGM Investor Relations →</a>
     </p>
   </div>
 </section>
@@ -1525,18 +1563,18 @@ body.theme-cosmic .easter-egg { color: #00ff00; border-color: #00ff00; backgroun
     <div class="section-label reveal" id="dlSectionLabel" style="cursor:default;">Design Language</div>
     <p class="philosophy-text reveal" style="margin-bottom:20px;" id="dlIntro">This site was designed and built in a single session using conversational AI. It supports several visual themes.</p>
 
-    <div class="theme-picker reveal" style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:24px;">
-      <div class="theme-option active" data-theme="classic" style="display:inline-flex; align-items:center; gap:8px; padding:6px 14px; border:1px solid var(--border); border-radius:2px; cursor:pointer; font-size:13px; color:var(--muted); transition:all 0.2s; background:var(--card);"><div class="theme-option-dot" style="background:#c9a96e;"></div>Classic</div>
-      <div class="theme-option" data-theme="cta" style="display:inline-flex; align-items:center; gap:8px; padding:6px 14px; border:1px solid var(--border); border-radius:2px; cursor:pointer; font-size:13px; color:var(--muted); transition:all 0.2s; background:var(--card);"><div class="theme-option-dot" style="background:#ff385c;"></div>CTA Driver</div>
-      <div class="theme-option" data-theme="cyberpunk" style="display:inline-flex; align-items:center; gap:8px; padding:6px 14px; border:1px solid var(--border); border-radius:2px; cursor:pointer; font-size:13px; color:var(--muted); transition:all 0.2s; background:var(--card);"><div class="theme-option-dot" style="background:#ff2d6b;"></div>Cyberpunk</div>
-      <div class="theme-option" data-theme="synth84" style="display:inline-flex; align-items:center; gap:8px; padding:6px 14px; border:1px solid var(--border); border-radius:2px; cursor:pointer; font-size:13px; color:var(--muted); transition:all 0.2s; background:var(--card);"><div class="theme-option-dot" style="background:#ff1744;"></div>Synth '84</div>
+    <div class="theme-picker reveal">
+      <div class="theme-option active" data-theme="classic"><div class="theme-option-dot" style="background:#c9a96e;"></div>Classic</div>
+      <div class="theme-option" data-theme="cta"><div class="theme-option-dot" style="background:#ff385c;"></div>CTA Driver</div>
+      <div class="theme-option" data-theme="cyberpunk"><div class="theme-option-dot" style="background:#ff2d6b;"></div>Cyberpunk</div>
+      <div class="theme-option" data-theme="synth84"><div class="theme-option-dot" style="background:#ff1744;"></div>Synth '84</div>
     </div>
-    <div class="theme-picker reveal" id="hiddenThemes" style="display:none; gap:8px; flex-wrap:wrap; margin-bottom:24px;">
-      <div class="theme-option" data-theme="aol" style="display:inline-flex; align-items:center; gap:8px; padding:6px 14px; border:1px solid var(--border); border-radius:2px; cursor:pointer; font-size:13px; color:var(--muted); transition:all 0.2s; background:var(--card);"><div class="theme-option-dot" style="background:#ffcc00;"></div>Instant Messenger</div>
-      <div class="theme-option" data-theme="cosmic" style="display:inline-flex; align-items:center; gap:8px; padding:6px 14px; border:1px solid var(--border); border-radius:2px; cursor:pointer; font-size:13px; color:var(--muted); transition:all 0.2s; background:var(--card);"><div class="theme-option-dot" style="background:#ffff00;"></div>Cosmic Secrets</div>
-      <div class="theme-option" data-theme="laser" style="display:inline-flex; align-items:center; gap:8px; padding:6px 14px; border:1px solid var(--border); border-radius:2px; cursor:pointer; font-size:13px; color:var(--muted); transition:all 0.2s; background:var(--card);"><div class="theme-option-dot" style="background:#ff3333;"></div>Laser Tag</div>
-      <div class="theme-option" data-theme="matrix" style="display:inline-flex; align-items:center; gap:8px; padding:6px 14px; border:1px solid var(--border); border-radius:2px; cursor:pointer; font-size:13px; color:var(--muted); transition:all 0.2s; background:var(--card);"><div class="theme-option-dot" style="background:#00ff41;"></div>Matrix</div>
-      <div class="theme-option" data-theme="neon" style="display:inline-flex; align-items:center; gap:8px; padding:6px 14px; border:1px solid var(--border); border-radius:2px; cursor:pointer; font-size:13px; color:var(--muted); transition:all 0.2s; background:var(--card);"><div class="theme-option-dot" style="background:#ff2eea;"></div>Neon</div>
+    <div class="theme-picker reveal" id="hiddenThemes" style="display:none;">
+      <div class="theme-option" data-theme="aol"><div class="theme-option-dot" style="background:#ffcc00;"></div>Instant Messenger</div>
+      <div class="theme-option" data-theme="cosmic"><div class="theme-option-dot" style="background:#ffff00;"></div>Cosmic Secrets</div>
+      <div class="theme-option" data-theme="laser"><div class="theme-option-dot" style="background:#ff3333;"></div>Laser Tag</div>
+      <div class="theme-option" data-theme="matrix"><div class="theme-option-dot" style="background:#00ff41;"></div>Matrix</div>
+      <div class="theme-option" data-theme="neon"><div class="theme-option-dot" style="background:#ff2eea;"></div>Neon</div>
     </div>
 
     <div class="dl-grid" id="dlGrid">
@@ -1580,7 +1618,7 @@ body.theme-cosmic .easter-egg { color: #00ff00; border-color: #00ff00; backgroun
   <div class="container">
     <h2 class="reveal">Say hi</h2>
     <p class="reveal">Just keeping this up to date. Feel free to reach out anytime.</p>
-    <a href="https://linkedin.com/in/joshdunlap" class="contact-link reveal" target="_blank">LinkedIn</a>
+    <a href="https://linkedin.com/in/joshdunlap" class="contact-link reveal" target="_blank" rel="noopener noreferrer">LinkedIn</a>
     <a href="mailto:josh@dunl.app" class="contact-link reveal">Email</a>
   </div>
 </section>
@@ -2064,7 +2102,7 @@ if (dlLabel) {
     if (dlClicks >= 15) {
       const hidden = document.getElementById('hiddenThemes');
       if (hidden) {
-        hidden.style.display = 'flex';
+        hidden.style.display = 'grid';
         hidden.style.opacity = '0';
         hidden.style.transition = 'opacity 0.5s';
         requestAnimationFrame(() => { hidden.style.opacity = '1'; });
