@@ -4,6 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
+<meta name="description" content="Josh Dunlap — Executive Director of Digital Products & UX Design at MGM Resorts International. Leading product, design, and digital experience across 30+ properties.">
+<meta property="og:title" content="Josh Dunlap — Digital Products & UX Design">
+<meta property="og:description" content="Executive Director at MGM Resorts International. Leading a 28-person product and design organization across 30+ properties and 9 platforms.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://dunl.app">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Josh Dunlap — Digital Products & UX Design">
+<meta name="twitter:description" content="Executive Director at MGM Resorts. Product, design, and digital experience leadership.">
 <title>Josh Dunlap — Digital Products & UX Design</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
@@ -170,11 +178,27 @@ nav .container {
 .hero-rule {
   width: 100%;
   height: 1px;
-  background: linear-gradient(90deg, transparent, var(--accent), transparent);
-  background-size: 200% 100%;
   margin-top: 24px;
   opacity: 0;
-  animation: ruleExpand 1s ease forwards 0.8s, shimmer 3s ease-in-out 1.8s infinite;
+  animation: fadeUp 0.8s ease forwards 0.8s;
+  position: relative;
+  background: var(--border);
+  overflow: hidden;
+}
+.hero-rule::after {
+  content: '';
+  position: absolute;
+  top: -1px;
+  width: 220px;
+  height: 3px;
+  border-radius: 2px;
+  background: radial-gradient(ellipse at center, var(--accent) 0%, rgba(201,169,110,0.5) 15%, rgba(201,169,110,0.15) 35%, rgba(201,169,110,0.03) 60%, transparent 100%);
+  box-shadow: 0 0 8px rgba(201,169,110,0.3);
+  animation: dotBounce 5s ease-in-out 1.2s infinite;
+}
+@keyframes dotBounce {
+  0%, 100% { left: -110px; }
+  50% { left: calc(100% - 110px); }
 }
 .inline-link {
   color: var(--accent);
@@ -186,14 +210,6 @@ nav .container {
 
 /* --- Sections --- */
 section { padding: 32px 0; }
-.section-label {
-  font-size: 13px;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--accent);
-  margin-bottom: 20px;
-  font-weight: 500;
-}
 
 /* --- Career timeline --- */
 .timeline { position: relative; }
@@ -203,6 +219,15 @@ section { padding: 32px 0; }
   left: 0; top: 8px; bottom: 0;
   width: 1px;
   background: var(--border);
+}
+.timeline::after {
+  content: '';
+  position: absolute;
+  left: 0; top: 8px;
+  width: 1px; height: 0;
+  background: var(--accent);
+  transition: height 0.1s linear;
+  z-index: 1;
 }
 .t-item {
   padding-left: 32px;
@@ -346,6 +371,7 @@ footer {
   border-radius: 2px;
   transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s;
   cursor: pointer;
+  position: relative;
 }
 .article-card:hover {
   border-color: var(--accent);
@@ -417,6 +443,7 @@ footer {
   transition: border-color 0.3s, transform 0.2s, background 0.3s;
   cursor: pointer;
   user-select: none;
+  position: relative;
 }
 .shipped-item:hover {
   border-color: var(--accent);
@@ -520,14 +547,6 @@ footer {
   from { opacity: 0; transform: translateY(16px); }
   to { opacity: 1; transform: translateY(0); }
 }
-@keyframes ruleExpand {
-  from { opacity: 0; width: 0; }
-  to { opacity: 1; width: 100%; }
-}
-@keyframes shimmer {
-  0% { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
-}
 
 /* --- Stats / KPI --- */
 .stats-grid {
@@ -584,6 +603,87 @@ footer {
 }
 .stats-section-label:not(:first-child) { margin-top: 20px; }
 
+/* --- Cursor glow --- */
+.cursor-glow {
+  position: fixed;
+  width: 300px; height: 300px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(201,169,110,0.04) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 1;
+  transform: translate(-50%, -50%);
+  transition: opacity 0.3s;
+  opacity: 0;
+}
+body:hover .cursor-glow { opacity: 1; }
+
+/* --- Section label line --- */
+.section-label {
+  font-size: 13px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 20px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.section-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, var(--border), transparent);
+}
+
+/* --- Card shine effect --- */
+.exp-card, .article-card, .stat-card {
+  overflow: hidden;
+}
+.exp-card::before, .article-card::before, .stat-card::before {
+  content: '';
+  position: absolute;
+  top: -50%; left: -50%;
+  width: 200%; height: 200%;
+  background: linear-gradient(
+    135deg,
+    transparent 40%,
+    rgba(201,169,110,0.03) 45%,
+    rgba(201,169,110,0.06) 50%,
+    rgba(201,169,110,0.03) 55%,
+    transparent 60%
+  );
+  transform: translateX(-100%) translateY(-100%);
+  transition: transform 0.6s ease;
+  pointer-events: none;
+}
+.exp-card:hover::before, .article-card:hover::before, .stat-card:hover::before {
+  transform: translateX(0%) translateY(0%);
+}
+
+/* --- Outcome card left accent --- */
+.article-card {
+  border-left: 2px solid transparent;
+  transition: border-color 0.3s, border-left-color 0.3s, transform 0.3s, box-shadow 0.3s;
+}
+.article-card:hover {
+  border-left-color: var(--accent);
+}
+
+/* --- Shipped item subtle glow on hover --- */
+.shipped-item::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 2px;
+  box-shadow: inset 0 0 20px rgba(201,169,110,0);
+  transition: box-shadow 0.3s;
+  pointer-events: none;
+}
+.shipped-item:hover::after {
+  box-shadow: inset 0 0 20px rgba(201,169,110,0.06);
+}
+
 /* --- Hamburger --- */
 .nav-hamburger {
   display: none;
@@ -605,6 +705,7 @@ footer {
 
 /* --- Mobile --- */
 @media (max-width: 768px) {
+  .cursor-glow { display: none; }
   .container { padding: 0 20px; }
   .hero { padding: 80px 0 24px; }
   .hero h1 { font-size: 32px; }
@@ -663,7 +764,6 @@ footer {
     </div>
     <div class="nav-links" id="navLinks">
       <a href="#experience">Experience</a>
-      <a href="#expertise">Expertise</a>
       <a href="#insights">Outcomes</a>
       <a href="#shipped">Shipped</a>
       <a href="#contact">Contact</a>
@@ -673,6 +773,8 @@ footer {
     </div>
   </div>
 </nav>
+
+<div class="cursor-glow" id="cursorGlow"></div>
 
 <div id="lightbox" class="lightbox" onclick="this.classList.remove('active')">
   <span class="lightbox-close">&times;</span>
@@ -763,6 +865,13 @@ footer {
   </div>
 </section>
 
+<section id="approach">
+  <div class="container">
+    <div class="section-label reveal">Approach</div>
+    <p class="approach-text reveal">Know the business. Build it right, build it fast, <em>measure everything</em>, iterate constantly. Apply that process to roadmaps and organizations — without sacrificing culture. Incorporate AI as far left as you're willing to go.</p>
+  </div>
+</section>
+
 <section id="experience">
   <div class="container">
     <div class="section-label reveal">Career</div>
@@ -831,30 +940,6 @@ footer {
         <div class="t-desc">Platform enabling artists to sell compositions and arrangements, facilitating music commerce and creative collaboration.</div>
       </div>
 
-    </div>
-  </div>
-</section>
-
-<section id="expertise">
-  <div class="container">
-    <div class="section-label reveal">Expertise</div>
-    <div class="exp-grid">
-      <div class="exp-card reveal">
-        <h3>Digital Product Strategy</h3>
-        <p>End-to-end product vision across web, mobile, and kiosk — from discovery and search to booking, check-in, and stay.</p>
-      </div>
-      <div class="exp-card reveal">
-        <h3>UX & Design Leadership</h3>
-        <p>Leading a 28-person UXD and PM organization, building design systems, and driving experience quality at portfolio scale.</p>
-      </div>
-      <div class="exp-card reveal">
-        <h3>AI & Emerging Tech</h3>
-        <p>AI chat, personalization, agentic commerce, GEO strategy, and MCP-based booking infrastructure.</p>
-      </div>
-      <div class="exp-card reveal">
-        <h3>Operations & Growth</h3>
-        <p>P&L ownership, market expansion, process optimization, and cross-functional team leadership across startups and enterprise.</p>
-      </div>
     </div>
   </div>
 </section>
@@ -1033,17 +1118,10 @@ footer {
   </div>
 </section>
 
-<section id="approach">
-  <div class="container">
-    <div class="section-label reveal">Approach</div>
-    <p class="approach-text reveal">Know the business. Build it right, build it fast, <em>measure everything</em>, iterate constantly. Apply that process to roadmaps and organizations — without sacrificing culture. Incorporate AI as far left as you're willing to go.</p>
-  </div>
-</section>
-
 <section class="contact-section" id="contact">
   <div class="container">
-    <h2 class="reveal">Let's connect</h2>
-    <p class="reveal">Open to conversations about product leadership, digital experience, and what's next.</p>
+    <h2 class="reveal">Say hi</h2>
+    <p class="reveal">Just keeping this up to date. Feel free to reach out anytime.</p>
     <a href="https://linkedin.com/in/joshdunlap" class="contact-link reveal" target="_blank">LinkedIn</a>
     <a href="mailto:josh@dunl.app" class="contact-link reveal">Email</a>
   </div>
@@ -1195,6 +1273,36 @@ const counterObserver = new IntersectionObserver((entries) => {
   });
 }, { threshold: 0.3 });
 document.querySelectorAll('.stat-number').forEach(el => counterObserver.observe(el));
+
+// Cursor glow
+const glow = document.getElementById('cursorGlow');
+document.addEventListener('mousemove', e => {
+  glow.style.left = e.clientX + 'px';
+  glow.style.top = e.clientY + 'px';
+});
+
+// Timeline draw on scroll
+const timeline = document.querySelector('.timeline');
+if (timeline) {
+  const drawTimeline = () => {
+    const rect = timeline.getBoundingClientRect();
+    const timelineTop = rect.top + window.scrollY;
+    const timelineHeight = rect.height;
+    const scrolled = window.scrollY + window.innerHeight * 0.5;
+    const progress = Math.min(Math.max((scrolled - timelineTop) / timelineHeight, 0), 1);
+    timeline.style.setProperty('--draw', (progress * timelineHeight) + 'px');
+    const after = timeline.querySelector(':scope')
+    if (timeline.style) {
+      document.documentElement.style.setProperty('--timeline-draw', (progress * timelineHeight) + 'px');
+    }
+  };
+  // Use CSS custom property for the ::after height
+  const style = document.createElement('style');
+  style.textContent = '.timeline::after { height: var(--timeline-draw, 0px) !important; }';
+  document.head.appendChild(style);
+  window.addEventListener('scroll', drawTimeline, { passive: true });
+  drawTimeline();
+}
 
 // Feature modal
 const fm = document.getElementById('featureModal');
