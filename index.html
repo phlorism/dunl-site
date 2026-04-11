@@ -1259,7 +1259,7 @@ body.theme-cosmic .easter-egg { color: #00ff00; border-color: #00ff00; backgroun
 <nav>
   <div class="container">
     <div class="nav-left">
-      <img src="headshot.jpg" alt="Josh Dunlap" class="nav-headshot" onclick="document.getElementById('lightbox').classList.add('active')">
+      <img src="headshot.jpg" alt="Josh Dunlap" class="nav-headshot">
       <div class="nav-logo">Josh Dunlap</div>
     </div>
     <div class="nav-links" id="navLinks">
@@ -2698,6 +2698,7 @@ let longPressTriggered = false;
 const headshot = document.querySelector('.nav-headshot');
 if (headshot) {
   headshot.addEventListener('touchstart', (e) => {
+    e.preventDefault();
     longPressTriggered = false;
     longPressTimer = setTimeout(() => {
       longPressTriggered = true;
@@ -2705,12 +2706,22 @@ if (headshot) {
       showAchievements();
     }, 3000);
   }, { passive: false });
-  headshot.addEventListener('touchend', () => { clearTimeout(longPressTimer); });
+  headshot.addEventListener('touchend', (e) => {
+    clearTimeout(longPressTimer);
+    if (!longPressTriggered) {
+      // Short tap — open lightbox
+      document.getElementById('lightbox').classList.add('active');
+    }
+    longPressTriggered = false;
+  });
   headshot.addEventListener('touchmove', () => { clearTimeout(longPressTimer); });
-  headshot.addEventListener('click', (e) => {
-    if (longPressTriggered) { e.preventDefault(); e.stopPropagation(); longPressTriggered = false; }
-  }, true);
   headshot.addEventListener('contextmenu', (e) => { e.preventDefault(); });
+  // Desktop click — open lightbox
+  headshot.addEventListener('click', () => {
+    if (!longPressTriggered) {
+      document.getElementById('lightbox').classList.add('active');
+    }
+  });
 }
 
 // Track theme usage
