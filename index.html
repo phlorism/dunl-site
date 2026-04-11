@@ -768,44 +768,8 @@ footer {
 }
 
 /* --- Theme selector --- */
-.theme-btn {
-  width: 28px; height: 28px;
-  border-radius: 50%;
-  border: 1px solid var(--border);
-  background: var(--card);
-  cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  transition: border-color 0.3s;
-  position: relative;
-  margin-left: 8px;
-}
-.theme-btn:hover { border-color: var(--accent); }
-.theme-btn svg { width: 14px; height: 14px; }
-.theme-dropdown {
-  position: absolute;
-  top: calc(100% + 12px);
-  right: 0;
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  padding: 8px 0;
-  min-width: 180px;
-  display: none;
-  z-index: 200;
-  box-shadow: 0 12px 40px rgba(0,0,0,0.4);
-}
-.theme-dropdown.open { display: block; }
-.theme-option {
-  display: flex; align-items: center; gap: 10px;
-  padding: 8px 16px;
-  cursor: pointer;
-  font-size: 13px;
-  color: var(--muted);
-  transition: color 0.2s, background 0.2s;
-  font-family: var(--sans);
-}
-.theme-option:hover { color: var(--fg); background: rgba(255,255,255,0.04); }
-.theme-option.active { color: var(--accent); }
+.theme-picker .theme-option:hover { border-color: var(--accent) !important; color: var(--fg) !important; }
+.theme-picker .theme-option.active { border-color: var(--accent) !important; color: var(--accent) !important; }
 .theme-option-dot {
   width: 10px; height: 10px;
   border-radius: 50%;
@@ -1186,20 +1150,6 @@ body.theme-cosmic .easter-egg { color: #00ff00; border-color: #00ff00; backgroun
       <a href="#shipped">Shipped</a>
       <a href="#contact">Contact</a>
     </div>
-    <div class="theme-btn" id="themeBtn" onclick="document.getElementById('themeDropdown').classList.toggle('open'); event.stopPropagation();">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="color:var(--muted)"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
-      <div class="theme-dropdown" id="themeDropdown">
-        <div class="theme-option active" data-theme="classic"><div class="theme-option-dot" style="background:#c9a96e;"></div>Classic</div>
-        <div class="theme-option" data-theme="aol"><div class="theme-option-dot" style="background:#ffcc00;"></div>Instant Messenger</div>
-        <div class="theme-option" data-theme="cosmic"><div class="theme-option-dot" style="background:#ffff00;"></div>Cosmic Secrets</div>
-        <div class="theme-option" data-theme="cta"><div class="theme-option-dot" style="background:#ff385c;"></div>CTA Driver</div>
-        <div class="theme-option" data-theme="cyberpunk"><div class="theme-option-dot" style="background:#ff2d6b;"></div>Cyberpunk</div>
-        <div class="theme-option" data-theme="laser"><div class="theme-option-dot" style="background:#ff3333;"></div>Laser Tag</div>
-        <div class="theme-option" data-theme="matrix"><div class="theme-option-dot" style="background:#00ff41;"></div>Matrix</div>
-        <div class="theme-option" data-theme="neon"><div class="theme-option-dot" style="background:#ff2eea;"></div>Neon</div>
-        <div class="theme-option" data-theme="synth84"><div class="theme-option-dot" style="background:#ff1744;"></div>Synth '84</div>
-      </div>
-    </div>
     <div class="nav-hamburger" id="hamburger" onclick="document.getElementById('navLinks').classList.toggle('open'); this.classList.toggle('active')">
       <span></span><span></span><span></span>
     </div>
@@ -1317,9 +1267,8 @@ body.theme-cosmic .easter-egg { color: #00ff00; border-color: #00ff00; backgroun
     <div class="philosophy-text reveal">
       <p><em>Product and design are the same discipline.</em> The best work happens when the person accountable for what gets built is also accountable for how it looks, feels, and performs. Separating strategy from craft creates handoff culture. Integrating them creates ownership.</p>
       <p><em>Be right, and surround yourself with people who cover the rest.</em> A product or design leader's job is to be right 98% of the time. Prioritize intelligently, learn fast, and build a team capable enough to catch what you miss. Kill or fix what doesn't work, even if the team loved building it.</p>
-      <p><em>Design systems are infrastructure, not artifacts.</em> A component library isn't a deliverable — it's a living platform that either accelerates every team or slowly becomes debt. Govern it like a product: versioned, measured, and maintained by people who use it.</p>
-      <p><em>AI changes the ratio, not the job.</em> AI makes production cheaper and faster. That means the human's job shifts from making things to judging things — evaluating AI output, maintaining quality standards, and making decisions that require context an agent can't have. The team gets smaller, not less skilled.</p>
-      <p><em>Culture is the product you can't A/B test.</em> Process, tools, and rituals all matter — but the thing that actually determines whether a team ships great work is whether people feel safe disagreeing, trusted to make calls, and proud of what they're building.</p>
+      <p><em>Design for the product and the user, not the ego or the opinion.</em> Good design disappears. It doesn't announce itself, win arguments, or protect its territory. Every pixel exists to serve someone using the product — not to express the designer's taste or win a stakeholder debate. When a design decision can't be traced back to a user need or a business outcome, it's decoration.</p>
+      <p><em>AI changes the ratio, not the job.</em> AI makes production cheaper and faster — and design systems are the infrastructure that makes that speed possible. The human's job shifts from making things to judging things: evaluating output, maintaining quality standards, and making decisions that require context an agent can't have. The team gets smaller, not less skilled.</p>
       <p><em>Data tells you what happened. Feedback tells you why.</em> Instrument everything, but don't hide behind dashboards. Talk to the people using what you built — guests, employees, partners. The metrics tell you where to look; the conversations tell you what to do about it.</p>
     </div>
   </div>
@@ -1573,8 +1522,22 @@ body.theme-cosmic .easter-egg { color: #00ff00; border-color: #00ff00; backgroun
 
 <section id="design-language">
   <div class="container">
-    <div class="section-label reveal">Design Language</div>
-    <p class="philosophy-text reveal" style="margin-bottom:24px;" id="dlIntro">This site was designed and built in a single session using conversational AI. Every decision — color, type, spacing, motion — was intentional.</p>
+    <div class="section-label reveal" id="dlSectionLabel" style="cursor:default;">Design Language</div>
+    <p class="philosophy-text reveal" style="margin-bottom:20px;" id="dlIntro">This site was designed and built in a single session using conversational AI. It supports several visual themes.</p>
+
+    <div class="theme-picker reveal" style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:24px;">
+      <div class="theme-option active" data-theme="classic" style="display:inline-flex; align-items:center; gap:8px; padding:6px 14px; border:1px solid var(--border); border-radius:2px; cursor:pointer; font-size:13px; color:var(--muted); transition:all 0.2s; background:var(--card);"><div class="theme-option-dot" style="background:#c9a96e;"></div>Classic</div>
+      <div class="theme-option" data-theme="cta" style="display:inline-flex; align-items:center; gap:8px; padding:6px 14px; border:1px solid var(--border); border-radius:2px; cursor:pointer; font-size:13px; color:var(--muted); transition:all 0.2s; background:var(--card);"><div class="theme-option-dot" style="background:#ff385c;"></div>CTA Driver</div>
+      <div class="theme-option" data-theme="cyberpunk" style="display:inline-flex; align-items:center; gap:8px; padding:6px 14px; border:1px solid var(--border); border-radius:2px; cursor:pointer; font-size:13px; color:var(--muted); transition:all 0.2s; background:var(--card);"><div class="theme-option-dot" style="background:#ff2d6b;"></div>Cyberpunk</div>
+      <div class="theme-option" data-theme="synth84" style="display:inline-flex; align-items:center; gap:8px; padding:6px 14px; border:1px solid var(--border); border-radius:2px; cursor:pointer; font-size:13px; color:var(--muted); transition:all 0.2s; background:var(--card);"><div class="theme-option-dot" style="background:#ff1744;"></div>Synth '84</div>
+    </div>
+    <div class="theme-picker reveal" id="hiddenThemes" style="display:none; gap:8px; flex-wrap:wrap; margin-bottom:24px;">
+      <div class="theme-option" data-theme="aol" style="display:inline-flex; align-items:center; gap:8px; padding:6px 14px; border:1px solid var(--border); border-radius:2px; cursor:pointer; font-size:13px; color:var(--muted); transition:all 0.2s; background:var(--card);"><div class="theme-option-dot" style="background:#ffcc00;"></div>Instant Messenger</div>
+      <div class="theme-option" data-theme="cosmic" style="display:inline-flex; align-items:center; gap:8px; padding:6px 14px; border:1px solid var(--border); border-radius:2px; cursor:pointer; font-size:13px; color:var(--muted); transition:all 0.2s; background:var(--card);"><div class="theme-option-dot" style="background:#ffff00;"></div>Cosmic Secrets</div>
+      <div class="theme-option" data-theme="laser" style="display:inline-flex; align-items:center; gap:8px; padding:6px 14px; border:1px solid var(--border); border-radius:2px; cursor:pointer; font-size:13px; color:var(--muted); transition:all 0.2s; background:var(--card);"><div class="theme-option-dot" style="background:#ff3333;"></div>Laser Tag</div>
+      <div class="theme-option" data-theme="matrix" style="display:inline-flex; align-items:center; gap:8px; padding:6px 14px; border:1px solid var(--border); border-radius:2px; cursor:pointer; font-size:13px; color:var(--muted); transition:all 0.2s; background:var(--card);"><div class="theme-option-dot" style="background:#00ff41;"></div>Matrix</div>
+      <div class="theme-option" data-theme="neon" style="display:inline-flex; align-items:center; gap:8px; padding:6px 14px; border:1px solid var(--border); border-radius:2px; cursor:pointer; font-size:13px; color:var(--muted); transition:all 0.2s; background:var(--card);"><div class="theme-option-dot" style="background:#ff2eea;"></div>Neon</div>
+    </div>
 
     <div class="dl-grid" id="dlGrid">
       <div class="dl-card reveal">
@@ -2086,8 +2049,29 @@ function setTheme(name) {
   document.querySelectorAll('.theme-option').forEach(o => {
     o.classList.toggle('active', o.dataset.theme === name);
   });
-  document.getElementById('themeDropdown').classList.remove('open');
   updateDesignLanguage(name);
+}
+
+// 15-click easter egg for hidden themes
+let dlClicks = 0;
+let dlClickTimer = null;
+const dlLabel = document.getElementById('dlSectionLabel');
+if (dlLabel) {
+  dlLabel.addEventListener('click', () => {
+    dlClicks++;
+    clearTimeout(dlClickTimer);
+    dlClickTimer = setTimeout(() => { dlClicks = 0; }, 800);
+    if (dlClicks >= 15) {
+      const hidden = document.getElementById('hiddenThemes');
+      if (hidden) {
+        hidden.style.display = 'flex';
+        hidden.style.opacity = '0';
+        hidden.style.transition = 'opacity 0.5s';
+        requestAnimationFrame(() => { hidden.style.opacity = '1'; });
+      }
+      dlClicks = 0;
+    }
+  });
 }
 
 document.querySelectorAll('.theme-option').forEach(o => {
@@ -2097,7 +2081,8 @@ document.querySelectorAll('.theme-option').forEach(o => {
   });
 });
 document.addEventListener('click', () => {
-  document.getElementById('themeDropdown').classList.remove('open');
+  const dd = document.getElementById('themeDropdown');
+  if (dd) dd.classList.remove('open');
 });
 
 // Easter egg mobile tap
