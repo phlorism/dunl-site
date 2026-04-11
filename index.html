@@ -603,20 +603,6 @@ footer {
 }
 .stats-section-label:not(:first-child) { margin-top: 20px; }
 
-/* --- Cursor glow --- */
-.cursor-glow {
-  position: fixed;
-  width: 300px; height: 300px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(201,169,110,0.04) 0%, transparent 70%);
-  pointer-events: none;
-  z-index: 1;
-  transform: translate(-50%, -50%);
-  transition: opacity 0.3s;
-  opacity: 0;
-}
-body:hover .cursor-glow { opacity: 1; }
-
 /* --- Section label line --- */
 .section-label {
   font-size: 13px;
@@ -634,31 +620,6 @@ body:hover .cursor-glow { opacity: 1; }
   flex: 1;
   height: 1px;
   background: linear-gradient(90deg, var(--border), transparent);
-}
-
-/* --- Card shine effect --- */
-.exp-card, .article-card, .stat-card {
-  overflow: hidden;
-}
-.exp-card::before, .article-card::before, .stat-card::before {
-  content: '';
-  position: absolute;
-  top: -50%; left: -50%;
-  width: 200%; height: 200%;
-  background: linear-gradient(
-    135deg,
-    transparent 40%,
-    rgba(201,169,110,0.03) 45%,
-    rgba(201,169,110,0.06) 50%,
-    rgba(201,169,110,0.03) 55%,
-    transparent 60%
-  );
-  transform: translateX(-100%) translateY(-100%);
-  transition: transform 0.6s ease;
-  pointer-events: none;
-}
-.exp-card:hover::before, .article-card:hover::before, .stat-card:hover::before {
-  transform: translateX(0%) translateY(0%);
 }
 
 /* --- Outcome card left accent --- */
@@ -705,7 +666,6 @@ body:hover .cursor-glow { opacity: 1; }
 
 /* --- Mobile --- */
 @media (max-width: 768px) {
-  .cursor-glow { display: none; }
   .container { padding: 0 20px; }
   .hero { padding: 80px 0 24px; }
   .hero h1 { font-size: 32px; }
@@ -773,8 +733,6 @@ body:hover .cursor-glow { opacity: 1; }
     </div>
   </div>
 </nav>
-
-<div class="cursor-glow" id="cursorGlow"></div>
 
 <div id="lightbox" class="lightbox" onclick="this.classList.remove('active')">
   <span class="lightbox-close">&times;</span>
@@ -1273,13 +1231,6 @@ const counterObserver = new IntersectionObserver((entries) => {
   });
 }, { threshold: 0.3 });
 document.querySelectorAll('.stat-number').forEach(el => counterObserver.observe(el));
-
-// Cursor glow
-const glow = document.getElementById('cursorGlow');
-document.addEventListener('mousemove', e => {
-  glow.style.left = e.clientX + 'px';
-  glow.style.top = e.clientY + 'px';
-});
 
 // Timeline draw on scroll
 const timeline = document.querySelector('.timeline');
