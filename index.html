@@ -65,6 +65,14 @@ nav .container {
 .nav-left {
   display: flex; align-items: center; gap: 12px;
 }
+.nav-headshot-wrap {
+  display: inline-block;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+  touch-action: manipulation;
+  cursor: pointer;
+}
 .nav-headshot {
   width: 32px; height: 32px;
   border-radius: 50%;
@@ -72,11 +80,10 @@ nav .container {
   border: 1px solid var(--border);
   cursor: pointer;
   transition: border-color 0.3s;
+  pointer-events: none;
   -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  user-select: none;
 }
-.nav-headshot:hover { border-color: var(--accent); }
+.nav-headshot-wrap:hover .nav-headshot { border-color: var(--accent); }
 .nav-logo {
   font-family: var(--serif);
   font-size: 18px;
@@ -1259,7 +1266,7 @@ body.theme-cosmic .easter-egg { color: #00ff00; border-color: #00ff00; backgroun
 <nav>
   <div class="container">
     <div class="nav-left">
-      <img src="headshot.jpg" alt="Josh Dunlap" class="nav-headshot">
+      <div class="nav-headshot-wrap" id="headshotWrap"><img src="headshot.jpg" alt="Josh Dunlap" class="nav-headshot"></div>
       <div class="nav-logo">Josh Dunlap</div>
     </div>
     <div class="nav-links" id="navLinks">
@@ -2695,7 +2702,7 @@ document.addEventListener('keydown', (e) => {
 // Mobile Konami: 3-second long-press on nav headshot
 let longPressTimer = null;
 let longPressTriggered = false;
-const headshot = document.querySelector('.nav-headshot');
+const headshot = document.getElementById('headshotWrap');
 if (headshot) {
   headshot.addEventListener('touchstart', (e) => {
     e.preventDefault();
@@ -2707,17 +2714,17 @@ if (headshot) {
     }, 3000);
   }, { passive: false });
   headshot.addEventListener('touchend', (e) => {
+    e.preventDefault();
     clearTimeout(longPressTimer);
     if (!longPressTriggered) {
-      // Short tap — open lightbox
       document.getElementById('lightbox').classList.add('active');
     }
     longPressTriggered = false;
   });
+  headshot.addEventListener('touchcancel', () => { clearTimeout(longPressTimer); longPressTriggered = false; });
   headshot.addEventListener('touchmove', () => { clearTimeout(longPressTimer); });
   headshot.addEventListener('contextmenu', (e) => { e.preventDefault(); });
-  // Desktop click — open lightbox
-  headshot.addEventListener('click', () => {
+  headshot.addEventListener('click', (e) => {
     if (!longPressTriggered) {
       document.getElementById('lightbox').classList.add('active');
     }
