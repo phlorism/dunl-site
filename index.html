@@ -645,6 +645,120 @@ footer {
   box-shadow: inset 0 0 20px rgba(201,169,110,0.06);
 }
 
+/* --- Easter egg --- */
+.hero-h1-wrap { position: relative; display: inline; }
+.easter-egg {
+  display: inline-block;
+  margin-left: 12px;
+  opacity: 0;
+  font-family: var(--serif);
+  font-style: italic;
+  color: var(--accent);
+  cursor: pointer;
+  transition: opacity 0.6s;
+  animation: eggShimmer 2s ease-in-out infinite;
+  vertical-align: baseline;
+  font-size: 0.6em;
+}
+.hero h1:hover .easter-egg { opacity: 0.6; }
+.easter-egg.tapped { opacity: 0.6; }
+.easter-egg:hover { opacity: 1 !important; }
+@keyframes eggShimmer {
+  0%, 100% { filter: brightness(1); }
+  50% { filter: brightness(1.6); }
+}
+
+/* --- Game lightbox --- */
+.game-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.92);
+  z-index: 10000;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s;
+}
+.game-overlay.active { opacity: 1; pointer-events: all; }
+.game-overlay canvas {
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  max-width: 90vw;
+}
+.game-close {
+  position: absolute;
+  top: 24px; right: 32px;
+  color: var(--muted);
+  font-size: 28px;
+  cursor: pointer;
+  font-family: var(--sans);
+  font-weight: 300;
+  transition: color 0.3s;
+  line-height: 1;
+}
+.game-close:hover { color: var(--fg); }
+.game-hint {
+  color: var(--muted);
+  font-size: 12px;
+  margin-top: 12px;
+  letter-spacing: 0.04em;
+}
+
+/* --- Philosophy & Design Language --- */
+.philosophy-text {
+  font-size: 15px;
+  color: var(--muted);
+  line-height: 1.75;
+  max-width: 720px;
+}
+.philosophy-text em { color: var(--fg); font-style: normal; font-weight: 400; }
+.philosophy-text p { margin-bottom: 14px; }
+.philosophy-text p:last-child { margin-bottom: 0; }
+
+.dl-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+@media (max-width: 600px) { .dl-grid { grid-template-columns: 1fr; } }
+.dl-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  padding: 24px;
+  position: relative;
+  transition: border-color 0.3s;
+}
+.dl-card:hover { border-color: var(--accent); }
+.dl-card h4 {
+  font-family: var(--serif);
+  font-size: 16px;
+  font-weight: 400;
+  margin-bottom: 8px;
+  color: var(--fg);
+}
+.dl-card p {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+.dl-swatch-row {
+  display: flex; gap: 10px; margin-bottom: 16px;
+}
+.dl-swatch {
+  width: 36px; height: 36px;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+  position: relative;
+}
+.dl-swatch-label {
+  font-size: 10px;
+  color: var(--muted);
+  text-align: center;
+  margin-top: 4px;
+  letter-spacing: 0.03em;
+}
+
 /* --- Hamburger --- */
 .nav-hamburger {
   display: none;
@@ -739,11 +853,17 @@ footer {
   <img src="headshot.jpg" alt="Josh Dunlap" onclick="event.stopPropagation()">
 </div>
 
+<div id="gameOverlay" class="game-overlay">
+  <span class="game-close" onclick="document.getElementById('gameOverlay').classList.remove('active')">&times;</span>
+  <canvas id="gameCanvas" width="480" height="200"></canvas>
+  <div class="game-hint">Space or tap to jump</div>
+</div>
+
 <section class="hero">
   <div class="container">
     <div class="hero-inner">
       <div class="hero-label">Executive Director of Digital Products & UX Design</div>
-      <h1>Building digital<br>experiences at <em>scale</em></h1>
+      <h1>Building digital<br>experiences at <em>scale</em><span class="easter-egg" id="easterEgg" onclick="document.getElementById('gameOverlay').classList.add('active'); initGame();">?</span></h1>
       <p class="hero-bio">Leading a 28-person product and design organization across 30+ properties and 9 platforms at MGM Resorts International. <a href="https://www.mgmresorts.com/en/company.html" target="_blank" class="inline-link">Learn more about MGM →</a></p>
       <div class="hero-rule"></div>
     </div>
@@ -827,6 +947,19 @@ footer {
   <div class="container">
     <div class="section-label reveal">Approach</div>
     <p class="approach-text reveal">Know the business. Build it right, build it fast, <em>measure everything</em>, iterate constantly. Apply that process to roadmaps and organizations — without sacrificing culture. Incorporate AI as far left as you're willing to go.</p>
+  </div>
+</section>
+
+<section id="philosophy">
+  <div class="container">
+    <div class="section-label reveal">Product & Design Philosophy</div>
+    <div class="philosophy-text reveal">
+      <p><em>Product and design are the same discipline.</em> The best work happens when the person accountable for what gets built is also accountable for how it looks, feels, and performs. Separating strategy from craft creates handoff culture. Integrating them creates ownership.</p>
+      <p><em>Every feature is a bet.</em> The job isn't to ship features — it's to place smart bets and learn fast. Define the hypothesis before the wireframe. Measure the outcome before celebrating the launch. Kill what doesn't work, even if the team loved building it.</p>
+      <p><em>Design systems are infrastructure, not artifacts.</em> A component library isn't a deliverable — it's a living platform that either accelerates every team or slowly becomes debt. Govern it like a product: versioned, measured, and maintained by people who use it.</p>
+      <p><em>AI changes the ratio, not the job.</em> AI makes production cheaper and faster. That means the human's job shifts from making things to judging things — evaluating AI output, maintaining quality standards, and making decisions that require context an agent can't have. The team gets smaller, not less skilled.</p>
+      <p><em>Culture is the product you can't A/B test.</em> Process, tools, and rituals all matter — but the thing that actually determines whether a team ships great work is whether people feel safe disagreeing, trusted to make calls, and proud of what they're building.</p>
+    </div>
   </div>
 </section>
 
@@ -1076,6 +1209,73 @@ footer {
   </div>
 </section>
 
+<section id="design-language">
+  <div class="container">
+    <div class="section-label reveal">Design Language</div>
+    <p class="philosophy-text reveal" style="margin-bottom:24px;">This site was designed and built in a single session using conversational AI. Every decision — color, type, spacing, motion — was intentional.</p>
+
+    <div class="dl-grid">
+      <div class="dl-card reveal">
+        <h4>Color</h4>
+        <div class="dl-swatch-row">
+          <div>
+            <div class="dl-swatch" style="background:#0c0c0c;"></div>
+            <div class="dl-swatch-label">Background</div>
+          </div>
+          <div>
+            <div class="dl-swatch" style="background:#e8e4df;"></div>
+            <div class="dl-swatch-label">Foreground</div>
+          </div>
+          <div>
+            <div class="dl-swatch" style="background:#c9a96e;"></div>
+            <div class="dl-swatch-label">Accent</div>
+          </div>
+          <div>
+            <div class="dl-swatch" style="background:#8a8580;"></div>
+            <div class="dl-swatch-label">Muted</div>
+          </div>
+          <div>
+            <div class="dl-swatch" style="background:#161614;"></div>
+            <div class="dl-swatch-label">Card</div>
+          </div>
+          <div>
+            <div class="dl-swatch" style="background:#2a2825;"></div>
+            <div class="dl-swatch-label">Border</div>
+          </div>
+        </div>
+        <p>Dark foundation with warm neutrals. Gold accent (#c9a96e) used sparingly for interactive elements, labels, and emphasis — never for backgrounds.</p>
+      </div>
+
+      <div class="dl-card reveal">
+        <h4>Typography</h4>
+        <p style="font-family:var(--serif); font-size:20px; margin-bottom:8px; color:var(--fg);">DM Serif Display</p>
+        <p style="font-family:var(--sans); font-size:14px; margin-bottom:12px; color:var(--fg); font-weight:300;">DM Sans — Light 300</p>
+        <p>Serif for headings and names — warmth and authority. Sans-serif at light weight for body — clean, modern, and readable. No bold in body text; hierarchy comes from size and color, not weight.</p>
+      </div>
+
+      <div class="dl-card reveal">
+        <h4>Motion</h4>
+        <p>Scroll-triggered reveals with staggered delays. Timeline draws itself on scroll. Bouncing gold tracer on the hero divider. Cards lift on hover. All animations use ease-out curves and stay under 600ms. Nothing loops except the tracer — motion should feel responsive, not decorative.</p>
+      </div>
+
+      <div class="dl-card reveal">
+        <h4>Interaction</h4>
+        <p>Everything that looks interactive is interactive. KPI cards expand on click. Outcome cards expand to reveal context. Shipped items open detail modals with impact bars. Photo opens a lightbox. The nav hides on scroll down, returns on scroll up. One easter egg for anyone paying attention.</p>
+      </div>
+
+      <div class="dl-card reveal">
+        <h4>Layout</h4>
+        <p>Single column, 960px max-width. Generous but not wasteful spacing — 32px between sections. Content-first hierarchy: no decorative images, no illustrations, no filler. Section labels use extending lines to create horizontal rhythm across the full width.</p>
+      </div>
+
+      <div class="dl-card reveal">
+        <h4>Texture</h4>
+        <p>Subtle SVG noise overlay at 4% opacity gives the dark background a tactile quality without being visible at a glance. Grain prevents the flat-black-screen feeling common to dark themes. Card surfaces sit one step lighter (#161614) to create depth without shadows.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
 <section class="contact-section" id="contact">
   <div class="container">
     <h2 class="reveal">Say hi</h2>
@@ -1253,6 +1453,175 @@ if (timeline) {
   document.head.appendChild(style);
   window.addEventListener('scroll', drawTimeline, { passive: true });
   drawTimeline();
+}
+
+// Easter egg mobile tap
+const egg = document.getElementById('easterEgg');
+let eggTapCount = 0;
+document.querySelector('.hero h1').addEventListener('click', (e) => {
+  if (e.target !== egg) {
+    egg.classList.add('tapped');
+    setTimeout(() => egg.classList.remove('tapped'), 3000);
+  }
+});
+
+// Game
+function initGame() {
+  const canvas = document.getElementById('gameCanvas');
+  const ctx = canvas.getContext('2d');
+  const W = 480, H = 200;
+  canvas.width = W; canvas.height = H;
+  
+  const GROUND = H - 30;
+  const ACCENT = '#c9a96e';
+  const BG = '#0c0c0c';
+  const BORDER = '#2a2825';
+  const MUTED = '#8a8580';
+  
+  let player = { x: 60, y: GROUND, w: 16, h: 20, vy: 0, grounded: true };
+  let obstacles = [];
+  let score = 0;
+  let speed = 3;
+  let gameOver = false;
+  let started = false;
+  let frame = 0;
+  let lastObstacle = 0;
+  
+  function jump() {
+    if (gameOver) {
+      // restart
+      player = { x: 60, y: GROUND, w: 16, h: 20, vy: 0, grounded: true };
+      obstacles = [];
+      score = 0;
+      speed = 3;
+      gameOver = false;
+      started = true;
+      frame = 0;
+      lastObstacle = 0;
+      return;
+    }
+    if (!started) started = true;
+    if (player.grounded) {
+      player.vy = -8;
+      player.grounded = false;
+    }
+  }
+  
+  document.addEventListener('keydown', (e) => {
+    if (e.code === 'Space' && document.getElementById('gameOverlay').classList.contains('active')) {
+      e.preventDefault();
+      jump();
+    }
+  });
+  canvas.addEventListener('click', jump);
+  canvas.addEventListener('touchstart', (e) => { e.preventDefault(); jump(); }, { passive: false });
+  
+  function update() {
+    if (!started || gameOver) return;
+    frame++;
+    
+    // gravity
+    player.vy += 0.45;
+    player.y += player.vy;
+    if (player.y >= GROUND) {
+      player.y = GROUND;
+      player.vy = 0;
+      player.grounded = true;
+    }
+    
+    // spawn obstacles
+    if (frame - lastObstacle > 70 + Math.random() * 60) {
+      const h = 14 + Math.random() * 18;
+      obstacles.push({ x: W + 10, w: 12 + Math.random() * 8, h: h, y: GROUND - h + player.h });
+      lastObstacle = frame;
+    }
+    
+    // move obstacles
+    for (let i = obstacles.length - 1; i >= 0; i--) {
+      obstacles[i].x -= speed;
+      if (obstacles[i].x + obstacles[i].w < 0) {
+        obstacles.splice(i, 1);
+        score++;
+      }
+    }
+    
+    // collision
+    for (const o of obstacles) {
+      if (player.x + player.w > o.x && player.x < o.x + o.w &&
+          player.y + player.h > o.y && player.y < o.y + o.h) {
+        gameOver = true;
+      }
+    }
+    
+    // speed up
+    speed = 3 + score * 0.15;
+  }
+  
+  function draw() {
+    ctx.fillStyle = BG;
+    ctx.fillRect(0, 0, W, H);
+    
+    // ground line
+    ctx.strokeStyle = BORDER;
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(0, GROUND + player.h + 2);
+    ctx.lineTo(W, GROUND + player.h + 2);
+    ctx.stroke();
+    
+    // ground dots
+    ctx.fillStyle = BORDER;
+    for (let i = 0; i < W; i += 20) {
+      const offset = started ? (frame * speed) % 20 : 0;
+      ctx.fillRect(i - offset, GROUND + player.h + 6, 2, 1);
+    }
+    
+    // player
+    ctx.fillStyle = ACCENT;
+    ctx.fillRect(player.x, player.y, player.w, player.h);
+    // player eye
+    ctx.fillStyle = BG;
+    ctx.fillRect(player.x + 10, player.y + 4, 3, 3);
+    
+    // obstacles
+    ctx.fillStyle = MUTED;
+    for (const o of obstacles) {
+      ctx.fillRect(o.x, o.y, o.w, o.h);
+    }
+    
+    // score
+    ctx.fillStyle = ACCENT;
+    ctx.font = '13px "DM Sans", sans-serif';
+    ctx.textAlign = 'right';
+    ctx.fillText(score, W - 16, 24);
+    
+    if (!started) {
+      ctx.fillStyle = MUTED;
+      ctx.font = '14px "DM Sans", sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('tap or press space to start', W / 2, H / 2);
+    }
+    
+    if (gameOver) {
+      ctx.fillStyle = 'rgba(12,12,12,0.7)';
+      ctx.fillRect(0, 0, W, H);
+      ctx.fillStyle = ACCENT;
+      ctx.font = '20px "DM Serif Display", Georgia, serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(score, W / 2, H / 2 - 8);
+      ctx.fillStyle = MUTED;
+      ctx.font = '12px "DM Sans", sans-serif';
+      ctx.fillText('tap to play again', W / 2, H / 2 + 16);
+    }
+  }
+  
+  function loop() {
+    if (!document.getElementById('gameOverlay').classList.contains('active')) return;
+    update();
+    draw();
+    requestAnimationFrame(loop);
+  }
+  loop();
 }
 
 // Feature modal
