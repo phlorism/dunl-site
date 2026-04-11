@@ -1148,12 +1148,15 @@ body.theme-cosmic .easter-egg { color: #00ff00; border-color: #00ff00; backgroun
   width: 28px; height: 28px;
   flex-shrink: 0;
   display: flex; align-items: center; justify-content: center;
-  font-size: 16px;
+  font-size: 14px;
   border-radius: 4px;
   background: var(--border);
+  color: var(--muted);
+  font-family: var(--sans);
 }
 .ach-item.unlocked .ach-icon {
   background: color-mix(in srgb, var(--accent) 15%, transparent);
+  color: var(--accent);
 }
 .ach-name {
   font-size: 13px;
@@ -1768,7 +1771,7 @@ const featureData = {
   "Transactional Push Notifications & Emails": { tag: "Engagement", desc: "Automated transactional messaging across the guest journey — booking confirmations, check-in reminders, folio updates, and post-stay communications.", impact: 82 },
   "First Time User Experience Redesign": { tag: "Engagement", desc: "Redesigned onboarding flow explaining app capabilities, permission requests, and capturing user intent — with cohort testing for optimization.", impact: 80 },
   "Guided Sign-in / Sign-up": { tag: "Engagement", desc: "Streamlined authentication flow with clearer instructions, password manager support, real-time validation, and MGM Rewards value proposition.", impact: 76 },
-  "Multi-Factor Authentication": { tag: "Security", desc: "SMS, email, and passkey-based MFA rolled out across app and web — initially optional, then mandatory for high-risk actions.", impact: 85 },
+  "Multi-Factor Authentication": { tag: "Security", desc: "SMS, email, and passkey-based MFA rolled out across app and web as an optional security layer for MGM Rewards accounts.", impact: 85 },
   "Digital Account Unlock": { tag: "Operations", desc: "Self-service account unlock flow reducing call center volume by eliminating a high-frequency support request — significant annual labor savings.", impact: 82 },
   "Preferences Center": { tag: "Personalization", desc: "Guest preference management hub enabling users to set dining, entertainment, and stay preferences — powering downstream personalization across all surfaces.", impact: 86 },
   "Rewards Stay Preferences": { tag: "Personalization", desc: "Preferences allowing guests to manage and apply rewards points for automatic redemption at checkout.", impact: 72 },
@@ -2634,13 +2637,13 @@ function initGame() {
 
 // Achievement system
 const achievements = [
-  { id: 'game', icon: '🕹️', name: 'Player One', desc: 'Found the hidden game', clue: 'Some things reveal themselves when you look closely at the hero.' },
-  { id: 'score20', icon: '⚡', name: 'High Voltage', desc: 'Scored 20+ in the game', clue: 'Keep jumping. The diamond helps.' },
-  { id: 'hiddenThemes', icon: '🎨', name: 'Palette Unlocked', desc: 'Revealed the hidden themes', clue: 'Design Language has a persistent header. Very persistent.' },
-  { id: 'allThemes', icon: '🌈', name: 'Chameleon', desc: 'Tried all 9 themes', clue: 'Some themes are hidden. Try every one you can find.' },
-  { id: 'konami', icon: '🔑', name: 'The Door', desc: 'Entered the code', clue: 'Old games had cheat codes. Or hold on to your name long enough.' },
-  { id: 'allFeatures', icon: '📋', name: 'Completionist', desc: 'Opened every shipped feature', clue: '68 features. 68 clicks. Dedication.' },
-  { id: 'copyright', icon: '🔍', name: 'Fine Print', desc: 'Read the fine print', clue: 'Even the footer has a story to tell.' },
+  { id: 'game', icon: '▶', name: 'Player One', desc: 'Found the hidden game', clue: 'Some things reveal themselves when you look closely at the hero.' },
+  { id: 'score20', icon: '∿', name: 'High Voltage', desc: 'Scored 20+ in the game', clue: 'Keep jumping. The diamond helps.' },
+  { id: 'hiddenThemes', icon: '◆', name: 'Palette Unlocked', desc: 'Revealed the hidden themes', clue: 'Design Language has a persistent header. Very persistent.' },
+  { id: 'allThemes', icon: '◉', name: 'Chameleon', desc: 'Tried all 9 themes', clue: 'Some themes are hidden. Try every one you can find.' },
+  { id: 'konami', icon: '※', name: 'The Door', desc: 'Found the achievement gallery', clue: 'Some secrets are at the beginning. This one\'s at the end.' },
+  { id: 'allFeatures', icon: '▣', name: 'Completionist', desc: 'Opened every shipped feature', clue: '68 features. 68 clicks. Dedication.' },
+  { id: 'copyright', icon: '↻', name: 'Fine Print', desc: 'Read the fine print', clue: 'Even the footer has a story to tell.' },
 ];
 
 let achState = {};
@@ -2689,26 +2692,21 @@ document.addEventListener('keydown', (e) => {
   }
 });
 
-// Mobile Konami: 3-second long-press on nav name
-let longPressTimer = null;
-let longPressTriggered = false;
-const navName = document.querySelector('.nav-logo');
-if (navName) {
-  navName.style.webkitTouchCallout = 'none';
-  navName.style.webkitUserSelect = 'none';
-  navName.style.userSelect = 'none';
-  navName.addEventListener('touchstart', (e) => {
-    longPressTriggered = false;
-    longPressTimer = setTimeout(() => {
-      longPressTriggered = true;
-      e.preventDefault();
+// Mobile Konami: triple-tap footer date
+let footerTapCount = 0;
+let footerTapTimer = null;
+const footerDate = document.querySelector('footer div:last-child');
+if (footerDate) {
+  footerDate.addEventListener('click', () => {
+    footerTapCount++;
+    clearTimeout(footerTapTimer);
+    footerTapTimer = setTimeout(() => { footerTapCount = 0; }, 600);
+    if (footerTapCount >= 3) {
+      footerTapCount = 0;
       unlockAch('konami');
       showAchievements();
-    }, 3000);
-  }, { passive: false });
-  navName.addEventListener('touchend', () => { clearTimeout(longPressTimer); });
-  navName.addEventListener('touchmove', () => { clearTimeout(longPressTimer); });
-  navName.addEventListener('contextmenu', (e) => { e.preventDefault(); });
+    }
+  });
 }
 
 // Track theme usage
