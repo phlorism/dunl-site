@@ -849,24 +849,24 @@ body.theme-cta .lightbox { background: rgba(0,0,0,0.6); }
 body.theme-cta .feature-modal { background: rgba(0,0,0,0.5); }
 
 /* --- Neon/Matrix glow overrides --- */
-body.theme-neon .section-label { color: #00ff41; text-shadow: 0 0 8px #00ff41; }
-body.theme-neon .hero-label { color: #00d4ff; text-shadow: 0 0 10px #00d4ff; }
+body.theme-neon .section-label { color: #ff2eea; text-shadow: 0 0 8px #ff2eea; }
+body.theme-neon .hero-label { color: #ff2eea; text-shadow: 0 0 10px #ff2eea; }
 body.theme-neon h1 em { color: #ff2eea; text-shadow: 0 0 20px #ff2eea; }
-body.theme-neon .stat-number { color: #ff6b00; text-shadow: 0 0 12px #ff6b00; }
+body.theme-neon .stat-number { color: #ff2eea; text-shadow: 0 0 12px #ff2eea; }
 body.theme-neon .t-title { color: #ff2eea; }
-body.theme-neon .article-tag { color: #00d4ff; text-shadow: 0 0 6px #00d4ff; }
-body.theme-neon .article-kpi { color: #00ff41; }
-body.theme-neon .stats-section-label { color: #ff2eea; text-shadow: 0 0 8px #ff2eea; }
-body.theme-neon .shipped-category { color: #00d4ff; text-shadow: 0 0 6px #00d4ff; }
-body.theme-neon .approach-text em { color: #ff6b00; text-shadow: 0 0 10px #ff6b00; }
-body.theme-neon .philosophy-text em { color: #ff2eea; text-shadow: 0 0 8px #ff2eea; }
+body.theme-neon .article-tag { color: #ff2eea; text-shadow: 0 0 6px rgba(255,46,234,0.4); }
+body.theme-neon .article-kpi { color: #ff2eea; }
+body.theme-neon .stats-section-label { color: #ff2eea; text-shadow: 0 0 8px rgba(255,46,234,0.4); }
+body.theme-neon .shipped-category { color: #ff2eea; text-shadow: 0 0 6px rgba(255,46,234,0.3); }
+body.theme-neon .approach-text em { color: #ff2eea; text-shadow: 0 0 10px rgba(255,46,234,0.4); }
+body.theme-neon .philosophy-text em { color: #ff2eea; text-shadow: 0 0 8px rgba(255,46,234,0.3); }
 body.theme-neon .inline-link { color: #00d4ff; border-bottom-color: rgba(0,212,255,0.3); }
 body.theme-neon .inline-link:hover { border-bottom-color: #00d4ff; }
-body.theme-neon .section-label::after { background: linear-gradient(90deg, #00ff41, transparent); }
+body.theme-neon .section-label::after { background: linear-gradient(90deg, rgba(255,46,234,0.3), transparent); }
 body.theme-neon .shipped-item:hover { border-color: #ff2eea; box-shadow: 0 0 12px rgba(255,46,234,0.2); }
-body.theme-neon .article-card:hover { border-color: #00d4ff; border-left-color: #00d4ff; }
-body.theme-neon .stat-card:hover { border-color: #ff6b00; }
-body.theme-neon .dl-card:hover { border-color: #00ff41; }
+body.theme-neon .article-card:hover { border-color: #ff2eea; border-left-color: #ff2eea; }
+body.theme-neon .stat-card:hover { border-color: #ff2eea; }
+body.theme-neon .dl-card:hover { border-color: #ff2eea; }
 body.theme-neon .nav-headshot { border-color: #ff2eea; }
 body.theme-neon .nav-links a:hover { color: #00d4ff; }
 body.theme-neon .nav-links a::after { background: #00d4ff; }
@@ -875,8 +875,10 @@ body.theme-neon .contact-link:hover { background: #ff2eea; color: #000; }
 body.theme-neon .t-item::before { background: #ff2eea; }
 body.theme-neon .t-item.current::before { box-shadow: 0 0 0 4px rgba(255,46,234,0.3); }
 body.theme-neon .timeline::after { background: #ff2eea; }
-body.theme-neon .feature-card-bar-fill { background: #00ff41; }
+body.theme-neon .feature-card-bar-fill { background: #ff2eea; }
 body.theme-neon .hero-rule::after { filter: drop-shadow(0 0 6px #ff2eea); }
+body.theme-neon nav { background: rgba(0,0,0,0.9); border-bottom-color: #00d4ff; }
+body.theme-neon footer { color: #00d4ff; }
 
 body.theme-matrix .section-label { text-shadow: 0 0 8px var(--accent); }
 body.theme-matrix .hero-label { text-shadow: 0 0 10px var(--accent); }
@@ -888,26 +890,16 @@ body.theme-matrix .shipped-item:hover {
 body.theme-matrix .nav-headshot { border-color: var(--accent); }
 
 /* Matrix readability */
-body.theme-matrix #effectsCanvas { opacity: 0.4; }
-body.theme-matrix section,
-body.theme-matrix footer {
-  position: relative;
-  z-index: 2;
-  background: rgba(0,0,0,0.88);
-  margin-left: -40px;
-  margin-right: -40px;
-  padding-left: 40px;
-  padding-right: 40px;
-  border-radius: 0;
-}
-body.theme-matrix nav { background: rgba(0,0,0,0.95); z-index: 100; }
-body.theme-matrix .contact-section { background: rgba(0,0,0,0.88); }
-body.theme-matrix h1 { text-shadow: 0 0 20px #00ff41, 0 2px 12px rgba(0,0,0,1); }
+body.theme-matrix #effectsCanvas { opacity: 0.25; }
+body.theme-matrix nav { background: rgba(0,0,0,0.92); z-index: 100; }
+body.theme-matrix h1 { text-shadow: 0 0 20px #00ff41, 0 0 40px rgba(0,255,65,0.3); }
 body.theme-matrix .hero-bio,
 body.theme-matrix .approach-text,
-body.theme-matrix .philosophy-text p,
+body.theme-matrix .philosophy-text,
 body.theme-matrix .t-desc,
 body.theme-matrix .t-date,
+body.theme-matrix .t-company,
+body.theme-matrix .t-title,
 body.theme-matrix .article-card p,
 body.theme-matrix .dl-card p,
 body.theme-matrix .shipped-intro,
@@ -915,25 +907,30 @@ body.theme-matrix .game-hint,
 body.theme-matrix .stat-label,
 body.theme-matrix .stat-detail,
 body.theme-matrix .article-expand-hint,
-body.theme-matrix .contact-section p {
-  text-shadow: 0 1px 6px rgba(0,0,0,1);
+body.theme-matrix .article-detail-inner p,
+body.theme-matrix .contact-section p,
+body.theme-matrix .contact-section h2,
+body.theme-matrix footer {
+  text-shadow: 0 0 8px rgba(0,0,0,1), 0 0 16px rgba(0,0,0,1), 0 0 30px rgba(0,0,0,0.8);
 }
 body.theme-matrix .section-label,
 body.theme-matrix .stats-section-label,
 body.theme-matrix .shipped-category,
 body.theme-matrix .article-tag,
 body.theme-matrix .hero-label {
-  text-shadow: 0 0 10px #00ff41, 0 1px 8px rgba(0,0,0,1);
+  text-shadow: 0 0 10px #00ff41, 0 0 20px rgba(0,0,0,1);
 }
 body.theme-matrix .philosophy-text em,
 body.theme-matrix .approach-text em {
-  text-shadow: 0 0 12px #00ff41, 0 1px 6px rgba(0,0,0,1);
+  text-shadow: 0 0 12px #00ff41, 0 0 20px rgba(0,0,0,1);
 }
 body.theme-matrix .stat-card, body.theme-matrix .article-card,
 body.theme-matrix .dl-card, body.theme-matrix .shipped-item,
 body.theme-matrix .feature-card, body.theme-matrix .exp-card {
-  background: rgba(0,8,0,0.92);
+  background: rgba(0,4,0,0.88);
+  backdrop-filter: blur(2px);
 }
+body.theme-matrix .contact-section { background: rgba(0,4,0,0.7); }
 body.theme-matrix .timeline::before { background: rgba(0,255,65,0.15); }
 body.theme-matrix .timeline::after { background: #00ff41; box-shadow: 0 0 6px #00ff41; }
 
@@ -1496,50 +1493,25 @@ body.theme-synth84 .easter-egg { border-color: rgba(255,23,68,0.3); background: 
 <section id="design-language">
   <div class="container">
     <div class="section-label reveal">Design Language</div>
-    <p class="philosophy-text reveal" style="margin-bottom:24px;">This site was designed and built in a single session using conversational AI. Every decision — color, type, spacing, motion — was intentional.</p>
+    <p class="philosophy-text reveal" style="margin-bottom:24px;" id="dlIntro">This site was designed and built in a single session using conversational AI. Every decision — color, type, spacing, motion — was intentional.</p>
 
-    <div class="dl-grid">
+    <div class="dl-grid" id="dlGrid">
       <div class="dl-card reveal">
         <h4>Color</h4>
-        <div class="dl-swatch-row">
-          <div>
-            <div class="dl-swatch" style="background:#0c0c0c;"></div>
-            <div class="dl-swatch-label">Background</div>
-          </div>
-          <div>
-            <div class="dl-swatch" style="background:#e8e4df;"></div>
-            <div class="dl-swatch-label">Foreground</div>
-          </div>
-          <div>
-            <div class="dl-swatch" style="background:#c9a96e;"></div>
-            <div class="dl-swatch-label">Accent</div>
-          </div>
-          <div>
-            <div class="dl-swatch" style="background:#8a8580;"></div>
-            <div class="dl-swatch-label">Muted</div>
-          </div>
-          <div>
-            <div class="dl-swatch" style="background:#161614;"></div>
-            <div class="dl-swatch-label">Card</div>
-          </div>
-          <div>
-            <div class="dl-swatch" style="background:#2a2825;"></div>
-            <div class="dl-swatch-label">Border</div>
-          </div>
-        </div>
-        <p>Dark foundation with warm neutrals. Gold accent (#c9a96e) used sparingly for interactive elements, labels, and emphasis — never for backgrounds.</p>
+        <div class="dl-swatch-row" id="dlSwatches"></div>
+        <p id="dlColorDesc">Dark foundation with warm neutrals. Gold accent (#c9a96e) used sparingly for interactive elements, labels, and emphasis — never for backgrounds.</p>
       </div>
 
       <div class="dl-card reveal">
         <h4>Typography</h4>
-        <p style="font-family:var(--serif); font-size:20px; margin-bottom:8px; color:var(--fg);">DM Serif Display</p>
+        <p id="dlTypePreview" style="font-family:var(--serif); font-size:20px; margin-bottom:8px; color:var(--fg);">DM Serif Display</p>
         <p style="font-family:var(--sans); font-size:14px; margin-bottom:12px; color:var(--fg); font-weight:300;">DM Sans — Light 300</p>
-        <p>Serif for headings and names — warmth and authority. Sans-serif at light weight for body — clean, modern, and readable. No bold in body text; hierarchy comes from size and color, not weight.</p>
+        <p id="dlTypeDesc">Serif for headings and names — warmth and authority. Sans-serif at light weight for body — clean, modern, and readable. No bold in body text; hierarchy comes from size and color, not weight.</p>
       </div>
 
       <div class="dl-card reveal">
-        <h4>Motion</h4>
-        <p>Scroll-triggered reveals with staggered delays. Timeline draws itself on scroll. Bouncing gold tracer on the hero divider. Cards lift on hover. All animations use ease-out curves and stay under 600ms. Nothing loops except the tracer — motion should feel responsive, not decorative.</p>
+        <h4 id="dlMotionTitle">Motion</h4>
+        <p id="dlMotionDesc">Scroll-triggered reveals with staggered delays. Timeline draws itself on scroll. Bouncing gold tracer on the hero divider. Cards lift on hover. All animations use ease-out curves and stay under 600ms. Nothing loops except the tracer — motion should feel responsive, not decorative.</p>
       </div>
 
       <div class="dl-card reveal">
@@ -1553,8 +1525,8 @@ body.theme-synth84 .easter-egg { border-color: rgba(255,23,68,0.3); background: 
       </div>
 
       <div class="dl-card reveal">
-        <h4>Texture</h4>
-        <p>Subtle SVG noise overlay at 4% opacity gives the dark background a tactile quality without being visible at a glance. Grain prevents the flat-black-screen feeling common to dark themes. Card surfaces sit one step lighter (#161614) to create depth without shadows.</p>
+        <h4 id="dlTextureTitle">Texture</h4>
+        <p id="dlTextureDesc">Subtle SVG noise overlay at 4% opacity gives the dark background a tactile quality without being visible at a glance. Grain prevents the flat-black-screen feeling common to dark themes. Card surfaces sit one step lighter (#161614) to create depth without shadows.</p>
       </div>
     </div>
   </div>
@@ -1883,6 +1855,81 @@ function effectLoop() {
   if (currentEffect) requestAnimationFrame(effectLoop);
 }
 
+const dlContent = {
+  classic: {
+    color: 'Dark foundation with warm neutrals. Gold accent (#c9a96e) used sparingly for interactive elements, labels, and emphasis — never for backgrounds.',
+    type: 'Serif for headings and names — warmth and authority. Sans-serif at light weight for body — clean, modern, and readable.',
+    motion: 'Scroll-triggered reveals with staggered delays. Timeline draws itself on scroll. Bouncing gold tracer on the hero divider. Cards lift on hover.',
+    texture: 'Subtle SVG noise overlay at 4% opacity gives the dark background a tactile quality. Card surfaces sit one step lighter to create depth without shadows.',
+  },
+  cyberpunk: {
+    color: 'Deep indigo foundation with cool blue-grey neutrals. Hot pink accent (#ff2d6b) creates urgency and edge. Dual-tone text shadows (pink + cyan) add a glitch aesthetic.',
+    type: 'Same typographic hierarchy as classic, but the glitch text-shadow on headings changes the character entirely — controlled chaos.',
+    motion: 'Same motion system as classic, plus glitch-style dual color text shadows that give headings a displaced, digital-artifact feel.',
+    texture: 'Grain overlay on deep indigo. The dark blue-black background feels more digital than the warm classic — like looking at a terminal.',
+  },
+  laser: {
+    color: 'Near-black void with pure white text. Red accent (#ff3333) for labels and emphasis. The darkness makes the laser beams pop.',
+    type: 'Standard type hierarchy against maximum contrast — white on near-black. Red accent text cuts through like a targeting laser.',
+    motion: 'Animated laser beams fire across the background at random angles, fading out with glow trails. Each beam has a randomized color, width, and decay rate.',
+    texture: 'No grain — the animated laser canvas provides all the texture. Beams spawn continuously and fade, creating an ever-changing light show behind the content.',
+  },
+  neon: {
+    color: 'Pure black background for maximum neon contrast. Neon pink (#ff2eea) dominates as the primary accent — labels, numbers, emphasis, and interactive states. Cyan blue (#00d4ff) reserved for links and the nav border.',
+    type: 'Light grey body text on pure black. Pink neon glow on headings via text-shadow. The glow effect makes text feel illuminated, like signage.',
+    motion: 'Same scroll-triggered system, but hover states add neon glow box-shadows. The pink tracer on the hero rule pulses against pure black.',
+    texture: 'No grain. Pure black creates the deepest possible contrast for neon glow effects. Card surfaces are barely above black (#0a0a0a) — just enough to define edges.',
+  },
+  matrix: {
+    color: 'Pure black with green (#00ff41) for everything — text, accents, labels. The entire palette is monochrome green, like a CRT terminal.',
+    type: 'Green-on-black monochrome. Text gets heavy black shadows for readability against the falling character rain behind it.',
+    motion: 'Falling katakana and digit rain runs continuously behind all content at reduced opacity. Cards use backdrop-blur to soften the rain beneath them.',
+    texture: 'The matrix rain IS the texture. At 25% opacity it provides constant subtle movement without overwhelming readability. Dark card backgrounds with slight green tint.',
+  },
+  cta: {
+    color: 'Clean white background with dark text. Pink (#ff385c) as the primary brand accent for labels and static elements. Blue (#2563eb) for all interactive elements — links, hovers, and call-to-action buttons.',
+    type: 'Same fonts, but on white the light-weight sans-serif feels more editorial. The contrast shift from dark-on-light changes the entire reading experience.',
+    motion: 'Same animation system, but subtle card shadows replace border glows on hover. The lighter palette makes lift effects more visible.',
+    texture: 'No grain overlay — white backgrounds don\'t need it. Depth comes from subtle box-shadows on cards instead of border-based separation.',
+  },
+  aol: {
+    color: 'White background with AOL blue (#0033cc) and yellow (#ffcc00) — the classic America Online palette. Grey (#c0c0c0) for the Windows 95 card bevels.',
+    type: 'Comic Sans everywhere. No exceptions. This is a feature, not a bug. The font carries the entire 90s personality of the theme.',
+    motion: 'Same scroll reveals, but the beveled card borders and lack of border-radius give everything a static, chunky, pre-CSS3 feeling. Hover states feel like clicking a Windows button.',
+    texture: 'No grain. Flat white with raised 3D outset borders on every card element. Shadows are 1px hard offsets — no blur, no softness. Peak 1998.',
+  },
+  synth84: {
+    color: 'Deep purple-black (#0a0014) foundation. Stranger Things red (#ff1744) for primary headings and accent. Purple (#ba68c8) for secondary emphasis and timeline. Blue (#64b5f6) for tags and links.',
+    type: 'Standard type with heavy red glow text-shadows on headings — the title feels like it\'s lit by neon tubing. Purple glow on secondary text.',
+    motion: 'Retro perspective grid animates behind all content — purple vertical lines converging to a vanishing point with red horizontal lines scrolling toward the viewer. A faint red sun glows at the horizon.',
+    texture: 'The animated synthwave grid provides depth and atmosphere. Card surfaces are deep purple-black. Grain overlay adds analog warmth to the digital aesthetic.',
+  },
+};
+
+function updateDesignLanguage(name) {
+  const dl = dlContent[name];
+  if (!dl) return;
+  const t = themes[name];
+  // Update swatches
+  const swatchEl = document.getElementById('dlSwatches');
+  swatchEl.innerHTML = [
+    { color: t.bg, label: 'Background' },
+    { color: t.fg, label: 'Foreground' },
+    { color: t.accent, label: 'Accent' },
+    { color: t.muted, label: 'Muted' },
+    { color: t.card, label: 'Card' },
+    { color: t.border, label: 'Border' },
+  ].map(s => `<div><div class="dl-swatch" style="background:${s.color};"></div><div class="dl-swatch-label">${s.label}</div></div>`).join('');
+  // Update descriptions
+  document.getElementById('dlColorDesc').textContent = dl.color;
+  document.getElementById('dlTypeDesc').textContent = dl.type;
+  document.getElementById('dlMotionDesc').textContent = dl.motion;
+  document.getElementById('dlTextureDesc').textContent = dl.texture;
+}
+
+// Initialize swatches on load
+updateDesignLanguage('classic');
+
 function setTheme(name) {
   const t = themes[name];
   if (!t) return;
@@ -1916,6 +1963,7 @@ function setTheme(name) {
     o.classList.toggle('active', o.dataset.theme === name);
   });
   document.getElementById('themeDropdown').classList.remove('open');
+  updateDesignLanguage(name);
 }
 
 document.querySelectorAll('.theme-option').forEach(o => {
@@ -1948,7 +1996,6 @@ function initGame() {
   canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
   ctx.scale(dpr, dpr);
 
-  // Colors from current theme
   const getColor = (v) => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
   const ACCENT = getColor('--accent') || '#c9a96e';
   const BG = getColor('--bg') || '#0c0c0c';
@@ -1957,15 +2004,18 @@ function initGame() {
   const FG = getColor('--fg') || '#e8e4df';
 
   const GROUND_Y = H - 36;
-  const PLAYER_W = 14, PLAYER_H = 18;
+  const PW = 14, PH = 18;
+  const BOOST_DURATION = 90; // frames
+  const POWERUP_INTERVAL = 900; // ~15sec at 60fps
 
-  let player, obstacles, particles, bgDots, score, highScore, speed, gameOver, started, frame, lastObs, shakeX, shakeY, flashAlpha;
-  highScore = parseInt(localStorage.getItem('jdGameHigh') || '0');
+  let player, obstacles, particles, bgDots, powerups;
+  let score, speed, gameOver, started, frame, lastObs, shakeX, shakeY, flashAlpha;
+  let boosting, boostTimer, boostFlash;
+  let scores = JSON.parse(localStorage.getItem('jdGameScores') || '[]');
 
   function reset() {
-    player = { x: 70, y: GROUND_Y, w: PLAYER_W, h: PLAYER_H, vy: 0, grounded: true, legPhase: 0 };
-    obstacles = [];
-    particles = [];
+    player = { x: 70, y: GROUND_Y, w: PW, h: PH, vy: 0, grounded: true, legPhase: 0 };
+    obstacles = []; particles = []; powerups = [];
     bgDots = Array.from({length: 40}, () => ({
       x: Math.random() * W, y: Math.random() * (GROUND_Y - 20) + 10,
       size: 0.5 + Math.random() * 1.5, speed: 0.2 + Math.random() * 0.5,
@@ -1973,8 +2023,17 @@ function initGame() {
     }));
     score = 0; speed = 3.2; gameOver = false; started = false;
     frame = 0; lastObs = 0; shakeX = 0; shakeY = 0; flashAlpha = 0;
+    boosting = false; boostTimer = 0; boostFlash = 0;
   }
   reset();
+
+  function addScore(s) {
+    if (s <= 0) return;
+    scores.push({ score: s, date: Date.now() });
+    scores.sort((a, b) => b.score - a.score);
+    scores = scores.slice(0, 10);
+    try { localStorage.setItem('jdGameScores', JSON.stringify(scores)); } catch(e){}
+  }
 
   function spawnParticles(x, y, count, color, spread, life) {
     for (let i = 0; i < count; i++) {
@@ -2009,6 +2068,8 @@ function initGame() {
   function update() {
     if (!started || gameOver) return;
     frame++;
+
+    // Gravity
     player.vy += 0.42;
     player.y += player.vy;
     if (player.y >= GROUND_Y) {
@@ -2017,12 +2078,52 @@ function initGame() {
     }
     if (player.grounded) player.legPhase += 0.25;
 
+    // Boost
+    if (boosting) {
+      boostTimer--;
+      boostFlash = (boostFlash + 0.15) % (Math.PI * 2);
+      if (frame % 2 === 0) {
+        spawnParticles(player.x, player.y + player.h/2, 2, '#ffffff', 3, 0.3);
+      }
+      if (boostTimer <= 0) { boosting = false; }
+    }
+
     // Jump trail
     if (!player.grounded && frame % 3 === 0) {
       particles.push({
         x: player.x + player.w/2, y: player.y + player.h,
-        vx: -0.5, vy: 0.2, life: 0.3, decay: 0.015, size: 1.5, color: ACCENT
+        vx: -0.5, vy: 0.2, life: 0.3, decay: 0.015, size: 1.5, color: boosting ? '#ffffff' : ACCENT
       });
+    }
+
+    // Spawn power-ups
+    if (frame > 0 && frame % POWERUP_INTERVAL === 0) {
+      powerups.push({
+        x: W + 20,
+        y: GROUND_Y - 20 - Math.random() * 30,
+        size: 8,
+        phase: Math.random() * Math.PI * 2
+      });
+    }
+
+    // Move power-ups
+    const curSpeed = boosting ? speed * 2.2 : speed;
+    for (let i = powerups.length - 1; i >= 0; i--) {
+      powerups[i].x -= curSpeed;
+      powerups[i].phase += 0.08;
+      // Collect
+      const pu = powerups[i];
+      if (player.x + player.w > pu.x - pu.size && player.x < pu.x + pu.size &&
+          player.y + player.h > pu.y - pu.size && player.y < pu.y + pu.size) {
+        boosting = true;
+        boostTimer = BOOST_DURATION;
+        spawnParticles(pu.x, pu.y, 12, '#ffffff', 5, 0.5);
+        spawnParticles(pu.x, pu.y, 8, ACCENT, 4, 0.4);
+        flashAlpha = 0.2;
+        powerups.splice(i, 1);
+        continue;
+      }
+      if (pu.x + pu.size < 0) { powerups.splice(i, 1); }
     }
 
     // Spawn obstacles
@@ -2030,34 +2131,44 @@ function initGame() {
     if (frame - lastObs > gap + Math.random() * 40) {
       const type = Math.random();
       if (type < 0.5) {
-        // Tall thin
         const h = 18 + Math.random() * 14;
-        obstacles.push({ x: W + 10, w: 8 + Math.random() * 4, h, y: GROUND_Y + PLAYER_H - h, type: 'rect' });
+        obstacles.push({ x: W + 10, w: 8 + Math.random() * 4, h, y: GROUND_Y + PH - h });
       } else if (type < 0.8) {
-        // Short wide
-        obstacles.push({ x: W + 10, w: 18 + Math.random() * 10, h: 8 + Math.random() * 6, y: GROUND_Y + PLAYER_H - 8, type: 'rect' });
+        obstacles.push({ x: W + 10, w: 18 + Math.random() * 10, h: 8 + Math.random() * 6, y: GROUND_Y + PH - 8 });
       } else {
-        // Double
         const h1 = 12 + Math.random() * 8;
-        obstacles.push({ x: W + 10, w: 7, h: h1, y: GROUND_Y + PLAYER_H - h1, type: 'rect' });
-        obstacles.push({ x: W + 26, w: 7, h: h1 + 6, y: GROUND_Y + PLAYER_H - h1 - 6, type: 'rect' });
+        obstacles.push({ x: W + 10, w: 7, h: h1, y: GROUND_Y + PH - h1 });
+        obstacles.push({ x: W + 26, w: 7, h: h1 + 6, y: GROUND_Y + PH - h1 - 6 });
       }
       lastObs = frame;
     }
 
+    // Move obstacles
     for (let i = obstacles.length - 1; i >= 0; i--) {
-      obstacles[i].x -= speed;
+      obstacles[i].x -= curSpeed;
       if (obstacles[i].x + obstacles[i].w < 0) { obstacles.splice(i, 1); score++; }
     }
 
-    // Collision
-    for (const o of obstacles) {
-      const px = player.x + 2, py = player.y + 2, pw = player.w - 4, ph = player.h - 2;
-      if (px + pw > o.x && px < o.x + o.w && py + ph > o.y && py < o.y + o.h) {
-        gameOver = true;
-        if (score > highScore) { highScore = score; try { localStorage.setItem('jdGameHigh', highScore); } catch(e){} }
-        shakeX = 6; shakeY = 3; flashAlpha = 0.4;
-        spawnParticles(player.x + player.w/2, player.y + player.h/2, 15, ACCENT, 4, 0.6);
+    // Collision (skip if boosting)
+    if (!boosting) {
+      for (const o of obstacles) {
+        const px = player.x + 2, py = player.y + 2, pw = player.w - 4, ph = player.h - 2;
+        if (px + pw > o.x && px < o.x + o.w && py + ph > o.y && py < o.y + o.h) {
+          gameOver = true;
+          addScore(score);
+          shakeX = 6; shakeY = 3; flashAlpha = 0.4;
+          spawnParticles(player.x + player.w/2, player.y + player.h/2, 15, ACCENT, 4, 0.6);
+        }
+      }
+    } else {
+      // Smash through obstacles while boosting
+      for (let i = obstacles.length - 1; i >= 0; i--) {
+        const o = obstacles[i];
+        if (player.x + player.w > o.x && player.x < o.x + o.w) {
+          spawnParticles(o.x + o.w/2, o.y + o.h/2, 6, MUTED, 3, 0.3);
+          obstacles.splice(i, 1);
+          score++;
+        }
       }
     }
 
@@ -2068,9 +2179,9 @@ function initGame() {
       if (p.life <= 0) particles.splice(i, 1);
     }
 
-    // BG dots parallax
+    // BG dots
     for (const d of bgDots) {
-      d.x -= d.speed * (speed / 3);
+      d.x -= d.speed * (curSpeed / 3);
       if (d.x < 0) { d.x = W; d.y = Math.random() * (GROUND_Y - 20) + 10; }
     }
 
@@ -2090,72 +2201,100 @@ function initGame() {
     for (const d of bgDots) {
       ctx.globalAlpha = d.alpha;
       ctx.fillStyle = BORDER;
-      ctx.beginPath();
-      ctx.arc(d.x, d.y, d.size, 0, Math.PI * 2);
-      ctx.fill();
+      ctx.beginPath(); ctx.arc(d.x, d.y, d.size, 0, Math.PI * 2); ctx.fill();
     }
     ctx.globalAlpha = 1;
 
     // Ground
-    const gy = GROUND_Y + PLAYER_H + 2;
-    ctx.strokeStyle = BORDER;
-    ctx.lineWidth = 1;
+    const gy = GROUND_Y + PH + 2;
+    ctx.strokeStyle = BORDER; ctx.lineWidth = 1;
     ctx.beginPath(); ctx.moveTo(0, gy); ctx.lineTo(W, gy); ctx.stroke();
-
-    // Ground texture
     ctx.fillStyle = BORDER;
-    const gOffset = started ? (frame * speed) % 12 : 0;
+    const curSpeed = boosting ? speed * 2.2 : speed;
+    const gOff = started ? (frame * curSpeed) % 12 : 0;
     for (let i = -12; i < W + 12; i += 12) {
-      ctx.fillRect(i - gOffset, gy + 4, Math.random() > 0.5 ? 4 : 2, 1);
-      if (Math.random() > 0.7) ctx.fillRect(i - gOffset + 6, gy + 8, 2, 1);
+      ctx.fillRect(i - gOff, gy + 4, Math.random() > 0.5 ? 4 : 2, 1);
     }
 
-    // Particles (behind player)
+    // Particles (behind)
     for (const p of particles) {
       ctx.globalAlpha = Math.max(0, p.life);
       ctx.fillStyle = p.color;
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, p.size * p.life, 0, Math.PI * 2);
-      ctx.fill();
+      ctx.beginPath(); ctx.arc(p.x, p.y, p.size * p.life, 0, Math.PI * 2); ctx.fill();
     }
     ctx.globalAlpha = 1;
 
-    // Player body
-    ctx.fillStyle = ACCENT;
+    // Power-ups
+    for (const pu of powerups) {
+      const bob = Math.sin(pu.phase) * 3;
+      const glow = 0.5 + Math.sin(pu.phase * 2) * 0.3;
+      // Outer glow
+      ctx.globalAlpha = glow * 0.3;
+      ctx.fillStyle = '#ffffff';
+      ctx.beginPath(); ctx.arc(pu.x, pu.y + bob, pu.size + 4, 0, Math.PI * 2); ctx.fill();
+      // Diamond shape
+      ctx.globalAlpha = glow + 0.2;
+      ctx.fillStyle = '#ffffff';
+      ctx.beginPath();
+      ctx.moveTo(pu.x, pu.y + bob - pu.size);
+      ctx.lineTo(pu.x + pu.size * 0.7, pu.y + bob);
+      ctx.lineTo(pu.x, pu.y + bob + pu.size);
+      ctx.lineTo(pu.x - pu.size * 0.7, pu.y + bob);
+      ctx.closePath(); ctx.fill();
+      // Inner highlight
+      ctx.globalAlpha = 0.8;
+      ctx.fillStyle = ACCENT;
+      ctx.beginPath();
+      ctx.moveTo(pu.x, pu.y + bob - pu.size * 0.5);
+      ctx.lineTo(pu.x + pu.size * 0.35, pu.y + bob);
+      ctx.lineTo(pu.x, pu.y + bob + pu.size * 0.5);
+      ctx.lineTo(pu.x - pu.size * 0.35, pu.y + bob);
+      ctx.closePath(); ctx.fill();
+      ctx.globalAlpha = 1;
+    }
+
+    // Player
     const bx = player.x, by = player.y;
-    // Body
-    ctx.beginPath();
-    ctx.roundRect(bx, by + 2, player.w, player.h - 6, 3);
-    ctx.fill();
-    // Head
-    ctx.beginPath();
-    ctx.arc(bx + player.w/2, by + 1, 5, 0, Math.PI * 2);
-    ctx.fill();
-    // Eye
+    const pColor = boosting ? `hsl(${(boostFlash * 180 / Math.PI * 10) % 360}, 100%, 70%)` : ACCENT;
+    // Boost glow
+    if (boosting) {
+      ctx.globalAlpha = 0.2;
+      ctx.fillStyle = '#ffffff';
+      ctx.beginPath(); ctx.arc(bx + PW/2, by + PH/2, PW + 4, 0, Math.PI * 2); ctx.fill();
+      ctx.globalAlpha = 1;
+    }
+    ctx.fillStyle = pColor;
+    ctx.beginPath(); ctx.roundRect(bx, by + 2, PW, PH - 6, 3); ctx.fill();
+    ctx.beginPath(); ctx.arc(bx + PW/2, by + 1, 5, 0, Math.PI * 2); ctx.fill();
     ctx.fillStyle = BG;
-    ctx.fillRect(bx + player.w/2 + 1, by - 1, 2, 2);
-    // Legs
-    ctx.fillStyle = ACCENT;
+    ctx.fillRect(bx + PW/2 + 1, by - 1, 2, 2);
+    ctx.fillStyle = pColor;
     if (player.grounded && started) {
-      const legOff = Math.sin(player.legPhase) * 3;
-      ctx.fillRect(bx + 3, by + player.h - 5, 3, 5 + legOff);
-      ctx.fillRect(bx + player.w - 6, by + player.h - 5, 3, 5 - legOff);
+      const lo = Math.sin(player.legPhase) * 3;
+      ctx.fillRect(bx + 3, by + PH - 5, 3, 5 + lo);
+      ctx.fillRect(bx + PW - 6, by + PH - 5, 3, 5 - lo);
     } else {
-      ctx.fillRect(bx + 3, by + player.h - 4, 3, 4);
-      ctx.fillRect(bx + player.w - 6, by + player.h - 4, 3, 4);
+      ctx.fillRect(bx + 3, by + PH - 4, 3, 4);
+      ctx.fillRect(bx + PW - 6, by + PH - 4, 3, 4);
     }
 
     // Obstacles
     for (const o of obstacles) {
       ctx.fillStyle = MUTED;
-      ctx.beginPath();
-      ctx.roundRect(o.x, o.y, o.w, o.h, 2);
-      ctx.fill();
-      // Top highlight
-      ctx.fillStyle = FG;
-      ctx.globalAlpha = 0.15;
+      ctx.beginPath(); ctx.roundRect(o.x, o.y, o.w, o.h, 2); ctx.fill();
+      ctx.fillStyle = FG; ctx.globalAlpha = 0.15;
       ctx.fillRect(o.x + 1, o.y, o.w - 2, 1);
       ctx.globalAlpha = 1;
+    }
+
+    // Boost timer bar
+    if (boosting) {
+      const bw = 50;
+      const pct = boostTimer / BOOST_DURATION;
+      ctx.fillStyle = BORDER;
+      ctx.fillRect(W/2 - bw/2, 14, bw, 3);
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(W/2 - bw/2, 14, bw * pct, 3);
     }
 
     // Score
@@ -2163,15 +2302,15 @@ function initGame() {
     ctx.font = '600 14px "DM Sans", sans-serif';
     ctx.textAlign = 'right';
     ctx.fillText(score, W - 18, 26);
-    if (highScore > 0) {
+    if (scores.length > 0) {
       ctx.fillStyle = MUTED;
       ctx.font = '10px "DM Sans", sans-serif';
-      ctx.fillText('best ' + highScore, W - 18, 40);
+      ctx.fillText('best ' + scores[0].score, W - 18, 40);
     }
 
     // Flash
     if (flashAlpha > 0.01) {
-      ctx.fillStyle = ACCENT;
+      ctx.fillStyle = boosting ? '#ffffff' : ACCENT;
       ctx.globalAlpha = flashAlpha;
       ctx.fillRect(0, 0, W, H);
       ctx.globalAlpha = 1;
@@ -2179,39 +2318,61 @@ function initGame() {
 
     // Start screen
     if (!started) {
+      // Leaderboard
+      if (scores.length > 0) {
+        ctx.fillStyle = MUTED;
+        ctx.font = '10px "DM Sans", sans-serif';
+        ctx.textAlign = 'left';
+        ctx.fillText('TOP SCORES', 20, 24);
+        for (let i = 0; i < Math.min(scores.length, 5); i++) {
+          ctx.fillStyle = i === 0 ? ACCENT : MUTED;
+          ctx.font = `${i === 0 ? '12' : '10'}px "DM Sans", sans-serif`;
+          ctx.fillText(`${i + 1}. ${scores[i].score}`, 20, 40 + i * 16);
+        }
+      }
+      ctx.textAlign = 'center';
       ctx.fillStyle = MUTED;
       ctx.font = '13px "DM Sans", sans-serif';
-      ctx.textAlign = 'center';
       ctx.fillText('tap or press space', W/2, H/2 - 4);
-      // Bouncing arrow
       const arrowY = H/2 + 16 + Math.sin(Date.now() / 400) * 3;
       ctx.fillStyle = ACCENT;
       ctx.beginPath();
       ctx.moveTo(W/2 - 6, arrowY); ctx.lineTo(W/2 + 6, arrowY); ctx.lineTo(W/2, arrowY + 6);
       ctx.fill();
+      // Power-up hint
+      ctx.fillStyle = MUTED;
+      ctx.font = '9px "DM Sans", sans-serif';
+      ctx.fillText('collect ◆ for boost', W/2, H - 18);
     }
 
     // Game over
     if (gameOver) {
-      ctx.fillStyle = BG;
-      ctx.globalAlpha = 0.65;
-      ctx.fillRect(0, 0, W, H);
-      ctx.globalAlpha = 1;
+      ctx.fillStyle = BG; ctx.globalAlpha = 0.65;
+      ctx.fillRect(0, 0, W, H); ctx.globalAlpha = 1;
 
       ctx.fillStyle = ACCENT;
       ctx.font = '28px "DM Serif Display", Georgia, serif';
       ctx.textAlign = 'center';
-      ctx.fillText(score, W/2, H/2 - 12);
+      ctx.fillText(score, W/2, H/2 - 20);
 
-      if (score >= highScore && score > 0) {
+      if (scores.length > 0 && score >= scores[0].score && score > 0) {
         ctx.fillStyle = ACCENT;
         ctx.font = '10px "DM Sans", sans-serif';
-        ctx.fillText('new best!', W/2, H/2 + 6);
+        ctx.fillText('new best!', W/2, H/2 - 2);
+      }
+
+      // Mini leaderboard on game over
+      ctx.fillStyle = MUTED;
+      ctx.font = '9px "DM Sans", sans-serif';
+      const top3 = scores.slice(0, 3);
+      for (let i = 0; i < top3.length; i++) {
+        ctx.fillStyle = top3[i].score === score ? ACCENT : MUTED;
+        ctx.fillText(`${i+1}. ${top3[i].score}`, W/2, H/2 + 18 + i * 13);
       }
 
       ctx.fillStyle = MUTED;
       ctx.font = '12px "DM Sans", sans-serif';
-      ctx.fillText('tap to play again', W/2, H/2 + 28);
+      ctx.fillText('tap to play again', W/2, H - 20);
     }
 
     ctx.restore();
@@ -2219,8 +2380,7 @@ function initGame() {
 
   function loop() {
     if (!document.getElementById('gameOverlay').classList.contains('active')) return;
-    update();
-    draw();
+    update(); draw();
     requestAnimationFrame(loop);
   }
   loop();
