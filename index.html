@@ -1148,11 +1148,13 @@ body.theme-cosmic .easter-egg { color: #00ff00; border-color: #00ff00; backgroun
   width: 28px; height: 28px;
   flex-shrink: 0;
   display: flex; align-items: center; justify-content: center;
-  font-size: 14px;
+  font-size: 11px;
+  font-weight: 400;
   border-radius: 4px;
   background: var(--border);
   color: var(--muted);
-  font-family: var(--sans);
+  font-family: var(--serif);
+  letter-spacing: -0.02em;
 }
 .ach-item.unlocked .ach-icon {
   background: color-mix(in srgb, var(--accent) 15%, transparent);
@@ -2637,13 +2639,13 @@ function initGame() {
 
 // Achievement system
 const achievements = [
-  { id: 'game', icon: '▶', name: 'Player One', desc: 'Found the hidden game', clue: 'Some things reveal themselves when you look closely at the hero.' },
-  { id: 'score20', icon: '∿', name: 'High Voltage', desc: 'Scored 20+ in the game', clue: 'Keep jumping. The diamond helps.' },
-  { id: 'hiddenThemes', icon: '◆', name: 'Palette Unlocked', desc: 'Revealed the hidden themes', clue: 'Design Language has a persistent header. Very persistent.' },
-  { id: 'allThemes', icon: '◉', name: 'Chameleon', desc: 'Tried all 9 themes', clue: 'Some themes are hidden. Try every one you can find.' },
-  { id: 'konami', icon: '※', name: 'The Door', desc: 'Found the achievement gallery', clue: 'Some secrets are at the beginning. This one\'s at the end.' },
-  { id: 'allFeatures', icon: '▣', name: 'Completionist', desc: 'Opened every shipped feature', clue: '68 features. 68 clicks. Dedication.' },
-  { id: 'copyright', icon: '↻', name: 'Fine Print', desc: 'Read the fine print', clue: 'Even the footer has a story to tell.' },
+  { id: 'game', icon: 'I', name: 'Player One', desc: 'Found the hidden game', clue: 'Some things reveal themselves when you look closely at the hero.' },
+  { id: 'score20', icon: 'II', name: 'High Voltage', desc: 'Scored 20+ in the game', clue: 'Keep jumping. The diamond helps.' },
+  { id: 'hiddenThemes', icon: 'III', name: 'Palette Unlocked', desc: 'Revealed the hidden themes', clue: 'Design Language has a persistent header. Very persistent.' },
+  { id: 'allThemes', icon: 'IV', name: 'Chameleon', desc: 'Tried all 9 themes', clue: 'Some themes are hidden. Try every one you can find.' },
+  { id: 'konami', icon: 'V', name: 'The Door', desc: 'Found the achievement gallery', clue: 'Some secrets are at the beginning. This one\'s at the end.' },
+  { id: 'allFeatures', icon: 'VI', name: 'Completionist', desc: 'Opened every shipped feature', clue: '68 features. 68 clicks. Dedication.' },
+  { id: 'copyright', icon: 'VII', name: 'Fine Print', desc: 'Read the fine print', clue: 'Even the footer has a story to tell.' },
 ];
 
 let achState = {};
