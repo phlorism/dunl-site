@@ -162,6 +162,7 @@ nav .container {
   margin-bottom: 20px;
   opacity: 0;
   animation: fadeUp 0.8s ease forwards 0.4s;
+  overflow: visible;
 }
 .hero h1 em {
   font-style: italic;
@@ -954,9 +955,9 @@ body.theme-laser .hero-rule::after { background: radial-gradient(ellipse at cent
   <img src="headshot.jpg" alt="Josh Dunlap" onclick="event.stopPropagation()">
 </div>
 
-<div id="gameOverlay" class="game-overlay">
+<div id="gameOverlay" class="game-overlay" onclick="this.classList.remove('active')">
   <span class="game-close" onclick="document.getElementById('gameOverlay').classList.remove('active')">&times;</span>
-  <canvas id="gameCanvas" width="480" height="200"></canvas>
+  <canvas id="gameCanvas" width="480" height="200" onclick="event.stopPropagation()"></canvas>
   <div class="game-hint">Space or tap to jump</div>
 </div>
 
@@ -965,7 +966,7 @@ body.theme-laser .hero-rule::after { background: radial-gradient(ellipse at cent
     <div class="hero-inner">
       <div class="hero-label">Executive Director of Digital Products & UX Design</div>
       <h1>Building digital<br>experiences at <em>scale</em><span class="easter-egg" id="easterEgg" onclick="document.getElementById('gameOverlay').classList.add('active'); initGame();">?</span></h1>
-      <p class="hero-bio">Leading a 28-person product and design organization across 30+ properties and 9 platforms at MGM Resorts International. <a href="https://www.mgmresorts.com/en/company.html" target="_blank" class="inline-link">Learn more about MGM →</a></p>
+      <p class="hero-bio">Leading a 28-person digital product and design organization focused on web, app, and kiosk across 20+ properties at MGM Resorts International. <a href="https://www.mgmresorts.com/en/company.html" target="_blank" class="inline-link">Learn more about MGM →</a></p>
       <div class="hero-rule"></div>
     </div>
   </div>
