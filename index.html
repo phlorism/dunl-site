@@ -849,45 +849,74 @@ body.theme-cta .lightbox { background: rgba(0,0,0,0.6); }
 body.theme-cta .feature-modal { background: rgba(0,0,0,0.5); }
 
 /* --- Neon/Matrix glow overrides --- */
-body.theme-neon .section-label, body.theme-matrix .section-label { text-shadow: 0 0 8px var(--accent); }
-body.theme-neon .hero-label, body.theme-matrix .hero-label { text-shadow: 0 0 10px var(--accent); }
-body.theme-neon h1 em, body.theme-matrix h1 em { text-shadow: 0 0 20px var(--accent); }
-body.theme-neon .stat-number, body.theme-matrix .stat-number { text-shadow: 0 0 12px var(--accent); }
-body.theme-neon .shipped-item:hover, body.theme-matrix .shipped-item:hover {
+body.theme-neon .section-label { color: #00ff41; text-shadow: 0 0 8px #00ff41; }
+body.theme-neon .hero-label { color: #00d4ff; text-shadow: 0 0 10px #00d4ff; }
+body.theme-neon h1 em { color: #ff2eea; text-shadow: 0 0 20px #ff2eea; }
+body.theme-neon .stat-number { color: #ff6b00; text-shadow: 0 0 12px #ff6b00; }
+body.theme-neon .t-title { color: #ff2eea; }
+body.theme-neon .article-tag { color: #00d4ff; text-shadow: 0 0 6px #00d4ff; }
+body.theme-neon .article-kpi { color: #00ff41; }
+body.theme-neon .stats-section-label { color: #ff2eea; text-shadow: 0 0 8px #ff2eea; }
+body.theme-neon .shipped-category { color: #00d4ff; text-shadow: 0 0 6px #00d4ff; }
+body.theme-neon .approach-text em { color: #ff6b00; text-shadow: 0 0 10px #ff6b00; }
+body.theme-neon .philosophy-text em { color: #ff2eea; text-shadow: 0 0 8px #ff2eea; }
+body.theme-neon .inline-link { color: #00d4ff; border-bottom-color: rgba(0,212,255,0.3); }
+body.theme-neon .inline-link:hover { border-bottom-color: #00d4ff; }
+body.theme-neon .section-label::after { background: linear-gradient(90deg, #00ff41, transparent); }
+body.theme-neon .shipped-item:hover { border-color: #ff2eea; box-shadow: 0 0 12px rgba(255,46,234,0.2); }
+body.theme-neon .article-card:hover { border-color: #00d4ff; border-left-color: #00d4ff; }
+body.theme-neon .stat-card:hover { border-color: #ff6b00; }
+body.theme-neon .dl-card:hover { border-color: #00ff41; }
+body.theme-neon .nav-headshot { border-color: #ff2eea; }
+body.theme-neon .nav-links a:hover { color: #00d4ff; }
+body.theme-neon .nav-links a::after { background: #00d4ff; }
+body.theme-neon .contact-link { color: #ff2eea; border-color: #ff2eea; }
+body.theme-neon .contact-link:hover { background: #ff2eea; color: #000; }
+body.theme-neon .t-item::before { background: #ff2eea; }
+body.theme-neon .t-item.current::before { box-shadow: 0 0 0 4px rgba(255,46,234,0.3); }
+body.theme-neon .timeline::after { background: #ff2eea; }
+body.theme-neon .feature-card-bar-fill { background: #00ff41; }
+body.theme-neon .hero-rule::after { filter: drop-shadow(0 0 6px #ff2eea); }
+
+body.theme-matrix .section-label { text-shadow: 0 0 8px var(--accent); }
+body.theme-matrix .hero-label { text-shadow: 0 0 10px var(--accent); }
+body.theme-matrix h1 em { text-shadow: 0 0 20px var(--accent); }
+body.theme-matrix .stat-number { text-shadow: 0 0 12px var(--accent); }
+body.theme-matrix .shipped-item:hover {
   box-shadow: 0 0 12px rgba(0,255,65,0.15);
 }
-body.theme-neon .nav-headshot, body.theme-matrix .nav-headshot { border-color: var(--accent); }
+body.theme-matrix .nav-headshot { border-color: var(--accent); }
 
 /* Matrix readability */
-body.theme-matrix .container {
+body.theme-matrix #effectsCanvas { opacity: 0.4; }
+body.theme-matrix section,
+body.theme-matrix footer {
   position: relative;
   z-index: 2;
+  background: rgba(0,0,0,0.88);
+  margin-left: -40px;
+  margin-right: -40px;
+  padding-left: 40px;
+  padding-right: 40px;
+  border-radius: 0;
 }
-body.theme-matrix section {
-  position: relative;
-}
-body.theme-matrix section::before {
-  content: '';
-  position: absolute;
-  inset: -16px -40px;
-  background: rgba(0,0,0,0.85);
-  border-radius: 8px;
-  z-index: -1;
-  pointer-events: none;
-}
-body.theme-matrix nav { background: rgba(0,0,0,0.95); }
-body.theme-matrix .contact-section::before { inset: -16px -40px; }
+body.theme-matrix nav { background: rgba(0,0,0,0.95); z-index: 100; }
+body.theme-matrix .contact-section { background: rgba(0,0,0,0.88); }
 body.theme-matrix h1 { text-shadow: 0 0 20px #00ff41, 0 2px 12px rgba(0,0,0,1); }
 body.theme-matrix .hero-bio,
 body.theme-matrix .approach-text,
 body.theme-matrix .philosophy-text p,
 body.theme-matrix .t-desc,
+body.theme-matrix .t-date,
 body.theme-matrix .article-card p,
 body.theme-matrix .dl-card p,
 body.theme-matrix .shipped-intro,
 body.theme-matrix .game-hint,
+body.theme-matrix .stat-label,
+body.theme-matrix .stat-detail,
+body.theme-matrix .article-expand-hint,
 body.theme-matrix .contact-section p {
-  text-shadow: 0 1px 6px rgba(0,0,0,1), 0 0 20px rgba(0,0,0,0.8);
+  text-shadow: 0 1px 6px rgba(0,0,0,1);
 }
 body.theme-matrix .section-label,
 body.theme-matrix .stats-section-label,
@@ -896,20 +925,17 @@ body.theme-matrix .article-tag,
 body.theme-matrix .hero-label {
   text-shadow: 0 0 10px #00ff41, 0 1px 8px rgba(0,0,0,1);
 }
-body.theme-matrix .philosophy-text em {
-  text-shadow: 0 0 8px #00ff41, 0 1px 6px rgba(0,0,0,1);
-}
+body.theme-matrix .philosophy-text em,
 body.theme-matrix .approach-text em {
   text-shadow: 0 0 12px #00ff41, 0 1px 6px rgba(0,0,0,1);
 }
 body.theme-matrix .stat-card, body.theme-matrix .article-card,
 body.theme-matrix .dl-card, body.theme-matrix .shipped-item,
 body.theme-matrix .feature-card, body.theme-matrix .exp-card {
-  background: rgba(0,8,0,0.9);
+  background: rgba(0,8,0,0.92);
 }
 body.theme-matrix .timeline::before { background: rgba(0,255,65,0.15); }
 body.theme-matrix .timeline::after { background: #00ff41; box-shadow: 0 0 6px #00ff41; }
-body.theme-matrix footer { position: relative; z-index: 2; }
 
 /* --- Cyberpunk glitch --- */
 body.theme-cyberpunk h1 { text-shadow: 2px 0 #ff2d6b, -2px 0 #00d4ff; }
@@ -919,6 +945,86 @@ body.theme-cyberpunk .shipped-item:hover { box-shadow: 0 0 10px rgba(255,45,107,
 
 /* --- Laser flashes --- */
 body.theme-laser .hero-rule::after { background: radial-gradient(ellipse at center, #ff3333 0%, rgba(255,51,51,0.5) 15%, rgba(255,51,51,0.1) 40%, transparent 100%); }
+
+/* --- 90s AOL --- */
+body.theme-aol { font-family: 'Comic Sans MS', 'Comic Sans', cursive !important; }
+body.theme-aol::after { opacity: 0; }
+body.theme-aol * { font-family: inherit !important; }
+body.theme-aol nav {
+  background: #0033cc;
+  border-bottom: 3px solid #ffcc00;
+}
+body.theme-aol .nav-logo { color: #fff; }
+body.theme-aol .nav-links a { color: #fff; }
+body.theme-aol .nav-links a:hover { color: #ffcc00; }
+body.theme-aol .nav-links a::after { background: #ffcc00; }
+body.theme-aol .section-label { color: #0033cc; }
+body.theme-aol .section-label::after { background: linear-gradient(90deg, #808080, transparent); }
+body.theme-aol .hero-label { color: #0033cc; }
+body.theme-aol h1 em { color: #cc6600; }
+body.theme-aol .stat-number { color: #0033cc; }
+body.theme-aol .stats-section-label { color: #cc6600; }
+body.theme-aol .t-title { color: #0033cc; }
+body.theme-aol .article-tag { color: #cc6600; }
+body.theme-aol .shipped-category { color: #cc6600; }
+body.theme-aol .inline-link { color: #0033cc; text-decoration: underline; border-bottom: none; }
+body.theme-aol .approach-text em { color: #0033cc; }
+body.theme-aol .philosophy-text em { color: #0033cc; }
+body.theme-aol .article-kpi { color: #008800; }
+body.theme-aol .contact-link { color: #0033cc; border: 2px outset #c0c0c0; border-radius: 0; }
+body.theme-aol .contact-link:hover { background: #0033cc; color: #ffcc00; }
+body.theme-aol .shipped-item, body.theme-aol .stat-card,
+body.theme-aol .article-card, body.theme-aol .dl-card {
+  border: 2px outset #c0c0c0;
+  border-radius: 0;
+  box-shadow: 1px 1px 0 #808080;
+}
+body.theme-aol .shipped-item:hover { border-color: #0033cc; background: #ddeeff; }
+body.theme-aol .stat-card:hover { border-color: #0033cc; }
+body.theme-aol .article-card:hover { border-color: #0033cc; border-left-color: #0033cc; }
+body.theme-aol .hero-rule { background: #808080; }
+body.theme-aol .hero-rule::after { filter: drop-shadow(0 0 4px #0033cc); }
+body.theme-aol .feature-card { border: 2px outset #c0c0c0; border-radius: 0; }
+body.theme-aol .feature-card-bar-fill { background: #0033cc; }
+body.theme-aol .t-item::before { background: #0033cc; }
+body.theme-aol .t-item.current::before { box-shadow: 0 0 0 4px rgba(0,51,204,0.3); }
+body.theme-aol .timeline::after { background: #0033cc; }
+body.theme-aol .easter-egg { border: 2px outset #c0c0c0; border-radius: 0; background: #ececec; }
+
+/* --- Synth '84 --- */
+body.theme-synth84 h1 {
+  text-shadow: 0 0 30px rgba(255,23,68,0.5), 0 0 60px rgba(255,23,68,0.2);
+}
+body.theme-synth84 h1 em { color: #ff1744; text-shadow: 0 0 20px #ff1744, 0 0 40px rgba(255,23,68,0.4); }
+body.theme-synth84 .hero-label { color: #ba68c8; text-shadow: 0 0 10px rgba(186,104,200,0.5); }
+body.theme-synth84 .section-label { color: #ff1744; text-shadow: 0 0 6px rgba(255,23,68,0.4); }
+body.theme-synth84 .section-label::after { background: linear-gradient(90deg, rgba(255,23,68,0.3), transparent); }
+body.theme-synth84 .stat-number { color: #ff1744; text-shadow: 0 0 12px rgba(255,23,68,0.5); }
+body.theme-synth84 .stats-section-label { color: #ba68c8; text-shadow: 0 0 8px rgba(186,104,200,0.4); }
+body.theme-synth84 .t-title { color: #ba68c8; }
+body.theme-synth84 .article-tag { color: #64b5f6; text-shadow: 0 0 6px rgba(100,181,246,0.3); }
+body.theme-synth84 .article-kpi { color: #ba68c8; }
+body.theme-synth84 .shipped-category { color: #64b5f6; text-shadow: 0 0 6px rgba(100,181,246,0.3); }
+body.theme-synth84 .approach-text em { color: #ff1744; text-shadow: 0 0 10px rgba(255,23,68,0.4); }
+body.theme-synth84 .philosophy-text em { color: #ba68c8; text-shadow: 0 0 8px rgba(186,104,200,0.3); }
+body.theme-synth84 .inline-link { color: #64b5f6; border-bottom-color: rgba(100,181,246,0.3); }
+body.theme-synth84 .inline-link:hover { border-bottom-color: #64b5f6; }
+body.theme-synth84 .nav-links a:hover { color: #ff1744; }
+body.theme-synth84 .nav-links a::after { background: #ff1744; }
+body.theme-synth84 .shipped-item:hover { border-color: #ba68c8; box-shadow: 0 0 10px rgba(186,104,200,0.2); }
+body.theme-synth84 .article-card:hover { border-color: #ff1744; border-left-color: #ff1744; }
+body.theme-synth84 .stat-card:hover { border-color: #ff1744; }
+body.theme-synth84 .dl-card:hover { border-color: #ba68c8; }
+body.theme-synth84 .contact-link { color: #ff1744; border-color: #ff1744; }
+body.theme-synth84 .contact-link:hover { background: #ff1744; color: #0a0014; }
+body.theme-synth84 .t-item::before { background: #ba68c8; }
+body.theme-synth84 .t-item.current::before { box-shadow: 0 0 0 4px rgba(186,104,200,0.3); }
+body.theme-synth84 .timeline::after { background: #ba68c8; box-shadow: 0 0 6px #ba68c8; }
+body.theme-synth84 .nav-headshot { border-color: #ff1744; }
+body.theme-synth84 .feature-card-bar-fill { background: linear-gradient(90deg, #ff1744, #ba68c8); }
+body.theme-synth84 .hero-rule::after { filter: drop-shadow(0 0 8px #ff1744); }
+body.theme-synth84 nav { background: rgba(10,0,20,0.92); border-bottom-color: #2a1a44; }
+body.theme-synth84 .easter-egg { border-color: rgba(255,23,68,0.3); background: rgba(255,23,68,0.04); }
 
 /* --- Hamburger --- */
 .nav-hamburger {
@@ -1012,6 +1118,8 @@ body.theme-laser .hero-rule::after { background: radial-gradient(ellipse at cent
         <div class="theme-option" data-theme="neon"><div class="theme-option-dot" style="background:#00ff41;"></div>Neon</div>
         <div class="theme-option" data-theme="matrix"><div class="theme-option-dot" style="background:#00ff41;"></div>Matrix</div>
         <div class="theme-option" data-theme="cta"><div class="theme-option-dot" style="background:#ff385c;"></div>CTA Driver</div>
+        <div class="theme-option" data-theme="aol"><div class="theme-option-dot" style="background:#0033cc;"></div>90s AOL</div>
+        <div class="theme-option" data-theme="synth84"><div class="theme-option-dot" style="background:#ff1744;"></div>Synth '84</div>
       </div>
     </div>
     <div class="nav-hamburger" id="hamburger" onclick="document.getElementById('navLinks').classList.toggle('open'); this.classList.toggle('active')">
@@ -1639,9 +1747,11 @@ const themes = {
   classic: { bg:'#0c0c0c', fg:'#e8e4df', muted:'#8a8580', accent:'#c9a96e', card:'#161614', border:'#2a2825', effect: null },
   cyberpunk: { bg:'#0a0a1a', fg:'#e0e0ff', muted:'#7070a0', accent:'#ff2d6b', card:'#12122a', border:'#2a2a4a', effect: null },
   laser: { bg:'#050510', fg:'#ffffff', muted:'#8888aa', accent:'#ff3333', card:'#0a0a20', border:'#1a1a3a', effect: 'laser' },
-  neon: { bg:'#000000', fg:'#00ff41', muted:'#007a22', accent:'#00ff41', card:'#060f06', border:'#003d12', effect: null },
+  neon: { bg:'#000000', fg:'#f0f0f0', muted:'#888888', accent:'#ff2eea', card:'#0a0a0a', border:'#1a1a1a', effect: null },
   matrix: { bg:'#000000', fg:'#00ff41', muted:'#005500', accent:'#00ff41', card:'#001100', border:'#003300', effect: 'matrix' },
   cta: { bg:'#ffffff', fg:'#1a1a1a', muted:'#6b6b6b', accent:'#ff385c', card:'#f7f7f7', border:'#e8e8e8', effect: null },
+  aol: { bg:'#ffffff', fg:'#000000', muted:'#555555', accent:'#0033cc', card:'#ececec', border:'#808080', effect: null },
+  synth84: { bg:'#0a0014', fg:'#e8d8ff', muted:'#7a6a9a', accent:'#ff1744', card:'#140024', border:'#2a1a44', effect: 'grid' },
 };
 
 let currentEffect = null;
@@ -1720,9 +1830,56 @@ function drawLasers() {
   ectx.shadowBlur = 0;
 }
 
+// Synth grid
+let gridOffset = 0;
+function drawGrid() {
+  const W = effectsCanvas.width, H = effectsCanvas.height;
+  ectx.clearRect(0, 0, W, H);
+  
+  // Horizon line
+  const horizon = H * 0.55;
+  
+  // Vertical lines (perspective)
+  const numLines = 20;
+  const vanishX = W / 2;
+  ectx.strokeStyle = 'rgba(186,104,200,0.15)';
+  ectx.lineWidth = 1;
+  for (let i = 0; i <= numLines; i++) {
+    const x = (i / numLines) * W * 1.5 - W * 0.25;
+    ectx.beginPath();
+    ectx.moveTo(x, H);
+    ectx.lineTo(vanishX + (x - vanishX) * 0.05, horizon);
+    ectx.stroke();
+  }
+  
+  // Horizontal lines (moving toward viewer)
+  gridOffset += 0.003;
+  const numH = 16;
+  for (let i = 0; i < numH; i++) {
+    const t = ((i / numH) + gridOffset) % 1;
+    const y = horizon + (H - horizon) * (t * t);
+    const alpha = t * 0.2;
+    ectx.strokeStyle = `rgba(255,23,68,${alpha})`;
+    ectx.lineWidth = 1;
+    ectx.beginPath();
+    ectx.moveTo(0, y);
+    ectx.lineTo(W, y);
+    ectx.stroke();
+  }
+  
+  // Sun/glow at horizon
+  const gradient = ectx.createRadialGradient(vanishX, horizon, 0, vanishX, horizon, H * 0.3);
+  gradient.addColorStop(0, 'rgba(255,23,68,0.08)');
+  gradient.addColorStop(0.5, 'rgba(186,104,200,0.03)');
+  gradient.addColorStop(1, 'transparent');
+  ectx.fillStyle = gradient;
+  ectx.fillRect(0, 0, W, H);
+}
+
 function effectLoop() {
   if (currentEffect === 'matrix') drawMatrix();
   else if (currentEffect === 'laser') drawLasers();
+  else if (currentEffect === 'grid') drawGrid();
   if (currentEffect) requestAnimationFrame(effectLoop);
 }
 
@@ -1747,6 +1904,7 @@ function setTheme(name) {
     effectsCanvas.classList.add('active');
     if (t.effect === 'matrix') { ectx.clearRect(0,0,effectsCanvas.width,effectsCanvas.height); initMatrix(); }
     if (t.effect === 'laser') { ectx.clearRect(0,0,effectsCanvas.width,effectsCanvas.height); lasers = []; }
+    if (t.effect === 'grid') { ectx.clearRect(0,0,effectsCanvas.width,effectsCanvas.height); gridOffset = 0; }
     effectLoop();
   } else {
     effectsCanvas.classList.remove('active');
