@@ -759,6 +759,94 @@ footer {
   letter-spacing: 0.03em;
 }
 
+/* --- Theme selector --- */
+.theme-btn {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--card);
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: border-color 0.3s;
+  position: relative;
+  margin-left: 8px;
+}
+.theme-btn:hover { border-color: var(--accent); }
+.theme-btn svg { width: 14px; height: 14px; }
+.theme-dropdown {
+  position: absolute;
+  top: calc(100% + 12px);
+  right: 0;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 8px 0;
+  min-width: 180px;
+  display: none;
+  z-index: 200;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+}
+.theme-dropdown.open { display: block; }
+.theme-option {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 16px;
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--muted);
+  transition: color 0.2s, background 0.2s;
+  font-family: var(--sans);
+}
+.theme-option:hover { color: var(--fg); background: rgba(255,255,255,0.04); }
+.theme-option.active { color: var(--accent); }
+.theme-option-dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+/* --- Effects canvas --- */
+#effectsCanvas {
+  position: fixed; inset: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0;
+  transition: opacity 0.5s;
+}
+#effectsCanvas.active { opacity: 1; }
+
+/* --- CTA Driver overrides --- */
+body.theme-cta::after { opacity: 0; }
+body.theme-cta nav { background: rgba(255,255,255,0.9); }
+body.theme-cta .nav-links a::after { background: var(--accent); }
+body.theme-cta .hero-rule { background: var(--border); }
+body.theme-cta .shipped-item { box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+body.theme-cta .article-card { box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+body.theme-cta .stat-card { box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+body.theme-cta .dl-card { box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+body.theme-cta .lightbox { background: rgba(0,0,0,0.6); }
+body.theme-cta .feature-modal { background: rgba(0,0,0,0.5); }
+
+/* --- Neon/Matrix glow overrides --- */
+body.theme-neon .section-label, body.theme-matrix .section-label { text-shadow: 0 0 8px var(--accent); }
+body.theme-neon .hero-label, body.theme-matrix .hero-label { text-shadow: 0 0 10px var(--accent); }
+body.theme-neon h1 em, body.theme-matrix h1 em { text-shadow: 0 0 20px var(--accent); }
+body.theme-neon .stat-number, body.theme-matrix .stat-number { text-shadow: 0 0 12px var(--accent); }
+body.theme-neon .shipped-item:hover, body.theme-matrix .shipped-item:hover {
+  box-shadow: 0 0 12px rgba(0,255,65,0.15);
+}
+body.theme-neon .nav-headshot, body.theme-matrix .nav-headshot { border-color: var(--accent); }
+
+/* --- Cyberpunk glitch --- */
+body.theme-cyberpunk h1 { text-shadow: 2px 0 #ff2d6b, -2px 0 #00d4ff; }
+body.theme-cyberpunk .section-label { text-shadow: 1px 0 #ff2d6b, -1px 0 #00d4ff; }
+body.theme-cyberpunk .stat-number { text-shadow: 0 0 15px var(--accent); }
+body.theme-cyberpunk .shipped-item:hover { box-shadow: 0 0 10px rgba(255,45,107,0.2); }
+
+/* --- Laser flashes --- */
+body.theme-laser .hero-rule::after { background: radial-gradient(ellipse at center, #ff3333 0%, rgba(255,51,51,0.5) 15%, rgba(255,51,51,0.1) 40%, transparent 100%); }
+
 /* --- Hamburger --- */
 .nav-hamburger {
   display: none;
@@ -842,11 +930,24 @@ footer {
       <a href="#shipped">Shipped</a>
       <a href="#contact">Contact</a>
     </div>
+    <div class="theme-btn" id="themeBtn" onclick="document.getElementById('themeDropdown').classList.toggle('open'); event.stopPropagation();">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="color:var(--muted)"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+      <div class="theme-dropdown" id="themeDropdown">
+        <div class="theme-option active" data-theme="classic"><div class="theme-option-dot" style="background:#c9a96e;"></div>Classic</div>
+        <div class="theme-option" data-theme="cyberpunk"><div class="theme-option-dot" style="background:#ff2d6b;"></div>Cyberpunk</div>
+        <div class="theme-option" data-theme="laser"><div class="theme-option-dot" style="background:#ff3333;"></div>Laser Tag</div>
+        <div class="theme-option" data-theme="neon"><div class="theme-option-dot" style="background:#00ff41;"></div>Neon</div>
+        <div class="theme-option" data-theme="matrix"><div class="theme-option-dot" style="background:#00ff41;"></div>Matrix</div>
+        <div class="theme-option" data-theme="cta"><div class="theme-option-dot" style="background:#ff385c;"></div>CTA Driver</div>
+      </div>
+    </div>
     <div class="nav-hamburger" id="hamburger" onclick="document.getElementById('navLinks').classList.toggle('open'); this.classList.toggle('active')">
       <span></span><span></span><span></span>
     </div>
   </div>
 </nav>
+
+<canvas id="effectsCanvas"></canvas>
 
 <div id="lightbox" class="lightbox" onclick="this.classList.remove('active')">
   <span class="lightbox-close">&times;</span>
@@ -1454,6 +1555,142 @@ if (timeline) {
   window.addEventListener('scroll', drawTimeline, { passive: true });
   drawTimeline();
 }
+
+// Theme system
+const themes = {
+  classic: { bg:'#0c0c0c', fg:'#e8e4df', muted:'#8a8580', accent:'#c9a96e', card:'#161614', border:'#2a2825', effect: null },
+  cyberpunk: { bg:'#0a0a1a', fg:'#e0e0ff', muted:'#7070a0', accent:'#ff2d6b', card:'#12122a', border:'#2a2a4a', effect: null },
+  laser: { bg:'#050510', fg:'#ffffff', muted:'#8888aa', accent:'#ff3333', card:'#0a0a20', border:'#1a1a3a', effect: 'laser' },
+  neon: { bg:'#000000', fg:'#00ff41', muted:'#007a22', accent:'#00ff41', card:'#060f06', border:'#003d12', effect: null },
+  matrix: { bg:'#000000', fg:'#00ff41', muted:'#005500', accent:'#00ff41', card:'#001100', border:'#003300', effect: 'matrix' },
+  cta: { bg:'#ffffff', fg:'#1a1a1a', muted:'#6b6b6b', accent:'#ff385c', card:'#f7f7f7', border:'#e8e8e8', effect: null },
+};
+
+let currentEffect = null;
+const effectsCanvas = document.getElementById('effectsCanvas');
+const ectx = effectsCanvas.getContext('2d');
+
+function resizeEffects() {
+  effectsCanvas.width = window.innerWidth;
+  effectsCanvas.height = window.innerHeight;
+}
+window.addEventListener('resize', resizeEffects);
+resizeEffects();
+
+// Matrix rain
+const matrixChars = 'アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン0123456789';
+let matrixDrops = [];
+function initMatrix() {
+  const cols = Math.floor(effectsCanvas.width / 16);
+  matrixDrops = Array.from({length: cols}, () => Math.random() * -100);
+}
+function drawMatrix() {
+  ectx.fillStyle = 'rgba(0,0,0,0.05)';
+  ectx.fillRect(0, 0, effectsCanvas.width, effectsCanvas.height);
+  ectx.fillStyle = '#00ff41';
+  ectx.font = '14px monospace';
+  for (let i = 0; i < matrixDrops.length; i++) {
+    const char = matrixChars[Math.floor(Math.random() * matrixChars.length)];
+    const x = i * 16;
+    const y = matrixDrops[i] * 16;
+    ectx.globalAlpha = 0.4 + Math.random() * 0.3;
+    ectx.fillText(char, x, y);
+    if (y > effectsCanvas.height && Math.random() > 0.975) {
+      matrixDrops[i] = 0;
+    }
+    matrixDrops[i]++;
+  }
+  ectx.globalAlpha = 1;
+}
+
+// Laser beams
+let lasers = [];
+function spawnLaser() {
+  const angle = Math.random() * Math.PI * 2;
+  const cx = Math.random() * effectsCanvas.width;
+  const cy = Math.random() * effectsCanvas.height;
+  const len = 200 + Math.random() * 400;
+  const colors = ['#ff3333','#ff5555','#ff1111','#ff6666','#cc0000'];
+  lasers.push({
+    x1: cx, y1: cy,
+    x2: cx + Math.cos(angle) * len,
+    y2: cy + Math.sin(angle) * len,
+    life: 1,
+    decay: 0.015 + Math.random() * 0.025,
+    color: colors[Math.floor(Math.random() * colors.length)],
+    width: 1 + Math.random() * 2,
+  });
+}
+function drawLasers() {
+  ectx.clearRect(0, 0, effectsCanvas.width, effectsCanvas.height);
+  if (Math.random() < 0.06) spawnLaser();
+  for (let i = lasers.length - 1; i >= 0; i--) {
+    const l = lasers[i];
+    ectx.globalAlpha = l.life * 0.6;
+    ectx.strokeStyle = l.color;
+    ectx.lineWidth = l.width;
+    ectx.shadowColor = l.color;
+    ectx.shadowBlur = 8;
+    ectx.beginPath();
+    ectx.moveTo(l.x1, l.y1);
+    ectx.lineTo(l.x2, l.y2);
+    ectx.stroke();
+    l.life -= l.decay;
+    if (l.life <= 0) lasers.splice(i, 1);
+  }
+  ectx.globalAlpha = 1;
+  ectx.shadowBlur = 0;
+}
+
+function effectLoop() {
+  if (currentEffect === 'matrix') drawMatrix();
+  else if (currentEffect === 'laser') drawLasers();
+  if (currentEffect) requestAnimationFrame(effectLoop);
+}
+
+function setTheme(name) {
+  const t = themes[name];
+  if (!t) return;
+  const root = document.documentElement.style;
+  root.setProperty('--bg', t.bg);
+  root.setProperty('--fg', t.fg);
+  root.setProperty('--muted', t.muted);
+  root.setProperty('--accent', t.accent);
+  root.setProperty('--card', t.card);
+  root.setProperty('--border', t.border);
+  
+  // body class
+  document.body.className = '';
+  if (name !== 'classic') document.body.classList.add('theme-' + name);
+  
+  // effects
+  currentEffect = t.effect;
+  if (t.effect) {
+    effectsCanvas.classList.add('active');
+    if (t.effect === 'matrix') { ectx.clearRect(0,0,effectsCanvas.width,effectsCanvas.height); initMatrix(); }
+    if (t.effect === 'laser') { ectx.clearRect(0,0,effectsCanvas.width,effectsCanvas.height); lasers = []; }
+    effectLoop();
+  } else {
+    effectsCanvas.classList.remove('active');
+    ectx.clearRect(0, 0, effectsCanvas.width, effectsCanvas.height);
+  }
+  
+  // update active state
+  document.querySelectorAll('.theme-option').forEach(o => {
+    o.classList.toggle('active', o.dataset.theme === name);
+  });
+  document.getElementById('themeDropdown').classList.remove('open');
+}
+
+document.querySelectorAll('.theme-option').forEach(o => {
+  o.addEventListener('click', (e) => {
+    e.stopPropagation();
+    setTheme(o.dataset.theme);
+  });
+});
+document.addEventListener('click', () => {
+  document.getElementById('themeDropdown').classList.remove('open');
+});
 
 // Easter egg mobile tap
 const egg = document.getElementById('easterEgg');
