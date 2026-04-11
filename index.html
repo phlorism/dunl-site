@@ -193,8 +193,8 @@ nav .container {
   width: 220px;
   height: 3px;
   border-radius: 2px;
-  background: radial-gradient(ellipse at center, var(--accent) 0%, rgba(201,169,110,0.5) 15%, rgba(201,169,110,0.15) 35%, rgba(201,169,110,0.03) 60%, transparent 100%);
-  box-shadow: 0 0 8px rgba(201,169,110,0.3);
+  background: radial-gradient(ellipse at center, var(--accent) 0%, color-mix(in srgb, var(--accent) 50%, transparent) 15%, color-mix(in srgb, var(--accent) 15%, transparent) 35%, transparent 100%);
+  filter: drop-shadow(0 0 6px var(--accent));
   animation: dotBounce 5s ease-in-out 1.2s infinite;
 }
 @keyframes dotBounce {
@@ -647,26 +647,30 @@ footer {
 }
 
 /* --- Easter egg --- */
-.hero-h1-wrap { position: relative; display: inline; }
 .easter-egg {
   display: inline-block;
-  margin-left: 12px;
   opacity: 0;
-  font-family: var(--serif);
-  font-style: italic;
+  font-family: var(--sans);
+  font-style: normal;
+  font-size: 11px;
+  font-weight: 400;
   color: var(--accent);
   cursor: pointer;
   transition: opacity 0.6s;
   animation: eggShimmer 2s ease-in-out infinite;
-  vertical-align: baseline;
-  font-size: 0.6em;
+  letter-spacing: 0.06em;
+  margin-top: 8px;
+  padding: 4px 12px;
+  border: 1px solid rgba(201,169,110,0.2);
+  border-radius: 12px;
+  background: rgba(201,169,110,0.04);
 }
-.hero h1:hover .easter-egg { opacity: 0.6; }
-.easter-egg.tapped { opacity: 0.6; }
-.easter-egg:hover { opacity: 1 !important; }
+.hero-inner:hover .easter-egg { opacity: 0.5; }
+.easter-egg.tapped { opacity: 0.5; }
+.easter-egg:hover { opacity: 1 !important; border-color: var(--accent); }
 @keyframes eggShimmer {
   0%, 100% { filter: brightness(1); }
-  50% { filter: brightness(1.6); }
+  50% { filter: brightness(1.5); }
 }
 
 /* --- Game lightbox --- */
@@ -819,9 +823,32 @@ footer {
 
 /* --- CTA Driver overrides --- */
 body.theme-cta::after { opacity: 0; }
-body.theme-cta nav { background: rgba(255,255,255,0.9); }
-body.theme-cta .nav-links a::after { background: var(--accent); }
-body.theme-cta .hero-rule { background: var(--border); }
+body.theme-cta nav { background: rgba(255,255,255,0.92); border-bottom-color: #e8e8e8; }
+body.theme-cta .nav-links a { color: #6b6b6b; }
+body.theme-cta .nav-links a:hover { color: #2563eb; }
+body.theme-cta .nav-links a::after { background: #2563eb; }
+body.theme-cta .inline-link { color: #2563eb; border-bottom-color: rgba(37,99,235,0.3); }
+body.theme-cta .inline-link:hover { border-bottom-color: #2563eb; }
+body.theme-cta .section-label { color: #2563eb; }
+body.theme-cta .section-label::after { background: linear-gradient(90deg, #e8e8e8, transparent); }
+body.theme-cta .hero-label { color: #2563eb; }
+body.theme-cta .t-item::before { background: #2563eb; }
+body.theme-cta .t-item.current::before { box-shadow: 0 0 0 4px rgba(37,99,235,0.2); }
+body.theme-cta .t-title { color: #2563eb; }
+body.theme-cta .article-tag { color: #2563eb; }
+body.theme-cta .article-card:hover { border-left-color: #2563eb; }
+body.theme-cta .article-kpi { color: #2563eb; }
+body.theme-cta .stats-section-label { color: #2563eb; }
+body.theme-cta .stat-number { color: #2563eb; }
+body.theme-cta .shipped-category { color: #2563eb; }
+body.theme-cta .shipped-item:hover { border-color: #2563eb; background: rgba(37,99,235,0.04); }
+body.theme-cta .feature-card-tag { color: #2563eb; }
+body.theme-cta .feature-card-bar-fill { background: #2563eb; }
+body.theme-cta .dl-swatch-label { color: #6b6b6b; }
+body.theme-cta .hero-rule { background: #e8e8e8; }
+body.theme-cta .hero-rule::after { filter: drop-shadow(0 0 6px #2563eb); }
+body.theme-cta .contact-link { color: #ff385c; border-color: #ff385c; }
+body.theme-cta .contact-link:hover { background: #ff385c; color: #fff; }
 body.theme-cta .shipped-item { box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
 body.theme-cta .article-card { box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
 body.theme-cta .stat-card { box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
@@ -838,6 +865,36 @@ body.theme-neon .shipped-item:hover, body.theme-matrix .shipped-item:hover {
   box-shadow: 0 0 12px rgba(0,255,65,0.15);
 }
 body.theme-neon .nav-headshot, body.theme-matrix .nav-headshot { border-color: var(--accent); }
+
+/* Matrix readability */
+body.theme-matrix .container {
+  position: relative;
+  z-index: 2;
+}
+body.theme-matrix section {
+  position: relative;
+}
+body.theme-matrix section::before {
+  content: '';
+  position: absolute;
+  inset: -8px -24px;
+  background: rgba(0,0,0,0.75);
+  border-radius: 8px;
+  z-index: -1;
+  pointer-events: none;
+}
+body.theme-matrix nav { background: rgba(0,0,0,0.92); }
+body.theme-matrix h1 { text-shadow: 0 0 20px #00ff41, 0 2px 8px rgba(0,0,0,0.9); }
+body.theme-matrix .hero-bio { text-shadow: 0 1px 6px rgba(0,0,0,0.9); }
+body.theme-matrix .t-desc, body.theme-matrix .article-card p,
+body.theme-matrix .philosophy-text p, body.theme-matrix .dl-card p {
+  text-shadow: 0 1px 4px rgba(0,0,0,0.8);
+}
+body.theme-matrix .stat-card, body.theme-matrix .article-card,
+body.theme-matrix .dl-card, body.theme-matrix .shipped-item,
+body.theme-matrix .feature-card {
+  background: rgba(0,8,0,0.85);
+}
 
 /* --- Cyberpunk glitch --- */
 body.theme-cyberpunk h1 { text-shadow: 2px 0 #ff2d6b, -2px 0 #00d4ff; }
@@ -965,7 +1022,8 @@ body.theme-laser .hero-rule::after { background: radial-gradient(ellipse at cent
   <div class="container">
     <div class="hero-inner">
       <div class="hero-label">Executive Director of Digital Products & UX Design</div>
-      <h1>Building digital<br>experiences at <em>scale</em><span class="easter-egg" id="easterEgg" onclick="document.getElementById('gameOverlay').classList.add('active'); initGame();">?</span></h1>
+      <h1>Building digital<br>experiences at <em>scale</em></h1>
+      <span class="easter-egg" id="easterEgg" onclick="document.getElementById('gameOverlay').classList.add('active'); initGame();">psst... what's this?</span>
       <p class="hero-bio">Leading a 28-person digital product and design organization focused on web, app, and kiosk across 20+ properties at MGM Resorts International. <a href="https://www.mgmresorts.com/en/company.html" target="_blank" class="inline-link">Learn more about MGM →</a></p>
       <div class="hero-rule"></div>
     </div>
@@ -1061,6 +1119,7 @@ body.theme-laser .hero-rule::after { background: radial-gradient(ellipse at cent
       <p><em>Design systems are infrastructure, not artifacts.</em> A component library isn't a deliverable — it's a living platform that either accelerates every team or slowly becomes debt. Govern it like a product: versioned, measured, and maintained by people who use it.</p>
       <p><em>AI changes the ratio, not the job.</em> AI makes production cheaper and faster. That means the human's job shifts from making things to judging things — evaluating AI output, maintaining quality standards, and making decisions that require context an agent can't have. The team gets smaller, not less skilled.</p>
       <p><em>Culture is the product you can't A/B test.</em> Process, tools, and rituals all matter — but the thing that actually determines whether a team ships great work is whether people feel safe disagreeing, trusted to make calls, and proud of what they're building.</p>
+      <p><em>Data tells you what happened. Feedback tells you why.</em> Instrument everything, but don't hide behind dashboards. Talk to the people using what you built — guests, employees, partners. The metrics tell you where to look; the conversations tell you what to do about it.</p>
     </div>
   </div>
 </section>
@@ -1564,7 +1623,7 @@ const themes = {
   laser: { bg:'#050510', fg:'#ffffff', muted:'#8888aa', accent:'#ff3333', card:'#0a0a20', border:'#1a1a3a', effect: 'laser' },
   neon: { bg:'#000000', fg:'#00ff41', muted:'#007a22', accent:'#00ff41', card:'#060f06', border:'#003d12', effect: null },
   matrix: { bg:'#000000', fg:'#00ff41', muted:'#005500', accent:'#00ff41', card:'#001100', border:'#003300', effect: 'matrix' },
-  cta: { bg:'#ffffff', fg:'#1a1a1a', muted:'#6b6b6b', accent:'#ff385c', card:'#f7f7f7', border:'#e8e8e8', effect: null },
+  cta: { bg:'#ffffff', fg:'#1a1a1a', muted:'#6b6b6b', accent:'#2563eb', card:'#f7f7f7', border:'#e8e8e8', effect: null },
 };
 
 let currentEffect = null;
@@ -1695,11 +1754,10 @@ document.addEventListener('click', () => {
 
 // Easter egg mobile tap
 const egg = document.getElementById('easterEgg');
-let eggTapCount = 0;
-document.querySelector('.hero h1').addEventListener('click', (e) => {
-  if (e.target !== egg) {
+document.querySelector('.hero-inner').addEventListener('click', (e) => {
+  if (e.target !== egg && !egg.classList.contains('tapped')) {
     egg.classList.add('tapped');
-    setTimeout(() => egg.classList.remove('tapped'), 3000);
+    setTimeout(() => egg.classList.remove('tapped'), 4000);
   }
 });
 
