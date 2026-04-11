@@ -829,26 +829,15 @@ body.theme-cta .nav-links a:hover { color: #2563eb; }
 body.theme-cta .nav-links a::after { background: #2563eb; }
 body.theme-cta .inline-link { color: #2563eb; border-bottom-color: rgba(37,99,235,0.3); }
 body.theme-cta .inline-link:hover { border-bottom-color: #2563eb; }
-body.theme-cta .section-label { color: #2563eb; }
-body.theme-cta .section-label::after { background: linear-gradient(90deg, #e8e8e8, transparent); }
-body.theme-cta .hero-label { color: #2563eb; }
-body.theme-cta .t-item::before { background: #2563eb; }
-body.theme-cta .t-item.current::before { box-shadow: 0 0 0 4px rgba(37,99,235,0.2); }
-body.theme-cta .t-title { color: #2563eb; }
-body.theme-cta .article-tag { color: #2563eb; }
-body.theme-cta .article-card:hover { border-left-color: #2563eb; }
-body.theme-cta .article-kpi { color: #2563eb; }
-body.theme-cta .stats-section-label { color: #2563eb; }
-body.theme-cta .stat-number { color: #2563eb; }
-body.theme-cta .shipped-category { color: #2563eb; }
 body.theme-cta .shipped-item:hover { border-color: #2563eb; background: rgba(37,99,235,0.04); }
-body.theme-cta .feature-card-tag { color: #2563eb; }
-body.theme-cta .feature-card-bar-fill { background: #2563eb; }
-body.theme-cta .dl-swatch-label { color: #6b6b6b; }
+body.theme-cta .article-card:hover { border-left-color: #2563eb; border-color: #2563eb; }
+body.theme-cta .stat-card:hover { border-color: #2563eb; }
+body.theme-cta .stat-card.expanded { border-color: #2563eb; }
+body.theme-cta .dl-card:hover { border-color: #2563eb; }
+body.theme-cta .exp-card:hover { border-color: #2563eb; }
+body.theme-cta .contact-link { color: #2563eb; border-color: #2563eb; }
+body.theme-cta .contact-link:hover { background: #2563eb; color: #fff; }
 body.theme-cta .hero-rule { background: #e8e8e8; }
-body.theme-cta .hero-rule::after { filter: drop-shadow(0 0 6px #2563eb); }
-body.theme-cta .contact-link { color: #ff385c; border-color: #ff385c; }
-body.theme-cta .contact-link:hover { background: #ff385c; color: #fff; }
 body.theme-cta .shipped-item { box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
 body.theme-cta .article-card { box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
 body.theme-cta .stat-card { box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
@@ -877,24 +866,47 @@ body.theme-matrix section {
 body.theme-matrix section::before {
   content: '';
   position: absolute;
-  inset: -8px -24px;
-  background: rgba(0,0,0,0.75);
+  inset: -16px -40px;
+  background: rgba(0,0,0,0.85);
   border-radius: 8px;
   z-index: -1;
   pointer-events: none;
 }
-body.theme-matrix nav { background: rgba(0,0,0,0.92); }
-body.theme-matrix h1 { text-shadow: 0 0 20px #00ff41, 0 2px 8px rgba(0,0,0,0.9); }
-body.theme-matrix .hero-bio { text-shadow: 0 1px 6px rgba(0,0,0,0.9); }
-body.theme-matrix .t-desc, body.theme-matrix .article-card p,
-body.theme-matrix .philosophy-text p, body.theme-matrix .dl-card p {
-  text-shadow: 0 1px 4px rgba(0,0,0,0.8);
+body.theme-matrix nav { background: rgba(0,0,0,0.95); }
+body.theme-matrix .contact-section::before { inset: -16px -40px; }
+body.theme-matrix h1 { text-shadow: 0 0 20px #00ff41, 0 2px 12px rgba(0,0,0,1); }
+body.theme-matrix .hero-bio,
+body.theme-matrix .approach-text,
+body.theme-matrix .philosophy-text p,
+body.theme-matrix .t-desc,
+body.theme-matrix .article-card p,
+body.theme-matrix .dl-card p,
+body.theme-matrix .shipped-intro,
+body.theme-matrix .game-hint,
+body.theme-matrix .contact-section p {
+  text-shadow: 0 1px 6px rgba(0,0,0,1), 0 0 20px rgba(0,0,0,0.8);
+}
+body.theme-matrix .section-label,
+body.theme-matrix .stats-section-label,
+body.theme-matrix .shipped-category,
+body.theme-matrix .article-tag,
+body.theme-matrix .hero-label {
+  text-shadow: 0 0 10px #00ff41, 0 1px 8px rgba(0,0,0,1);
+}
+body.theme-matrix .philosophy-text em {
+  text-shadow: 0 0 8px #00ff41, 0 1px 6px rgba(0,0,0,1);
+}
+body.theme-matrix .approach-text em {
+  text-shadow: 0 0 12px #00ff41, 0 1px 6px rgba(0,0,0,1);
 }
 body.theme-matrix .stat-card, body.theme-matrix .article-card,
 body.theme-matrix .dl-card, body.theme-matrix .shipped-item,
-body.theme-matrix .feature-card {
-  background: rgba(0,8,0,0.85);
+body.theme-matrix .feature-card, body.theme-matrix .exp-card {
+  background: rgba(0,8,0,0.9);
 }
+body.theme-matrix .timeline::before { background: rgba(0,255,65,0.15); }
+body.theme-matrix .timeline::after { background: #00ff41; box-shadow: 0 0 6px #00ff41; }
+body.theme-matrix footer { position: relative; z-index: 2; }
 
 /* --- Cyberpunk glitch --- */
 body.theme-cyberpunk h1 { text-shadow: 2px 0 #ff2d6b, -2px 0 #00d4ff; }
@@ -1623,7 +1635,7 @@ const themes = {
   laser: { bg:'#050510', fg:'#ffffff', muted:'#8888aa', accent:'#ff3333', card:'#0a0a20', border:'#1a1a3a', effect: 'laser' },
   neon: { bg:'#000000', fg:'#00ff41', muted:'#007a22', accent:'#00ff41', card:'#060f06', border:'#003d12', effect: null },
   matrix: { bg:'#000000', fg:'#00ff41', muted:'#005500', accent:'#00ff41', card:'#001100', border:'#003300', effect: 'matrix' },
-  cta: { bg:'#ffffff', fg:'#1a1a1a', muted:'#6b6b6b', accent:'#2563eb', card:'#f7f7f7', border:'#e8e8e8', effect: null },
+  cta: { bg:'#ffffff', fg:'#1a1a1a', muted:'#6b6b6b', accent:'#ff385c', card:'#f7f7f7', border:'#e8e8e8', effect: null },
 };
 
 let currentEffect = null;
