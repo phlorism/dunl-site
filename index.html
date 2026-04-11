@@ -943,50 +943,68 @@ body.theme-cyberpunk .shipped-item:hover { box-shadow: 0 0 10px rgba(255,45,107,
 /* --- Laser flashes --- */
 body.theme-laser .hero-rule::after { background: radial-gradient(ellipse at center, #ff3333 0%, rgba(255,51,51,0.5) 15%, rgba(255,51,51,0.1) 40%, transparent 100%); }
 
-/* --- 90s AOL --- */
-body.theme-aol { font-family: 'Comic Sans MS', 'Comic Sans', cursive !important; }
+/* --- Instant Messenger (AIM) --- */
+body.theme-aol { font-family: Tahoma, Verdana, Geneva, sans-serif !important; }
 body.theme-aol::after { opacity: 0; }
 body.theme-aol * { font-family: inherit !important; }
 body.theme-aol nav {
-  background: #0033cc;
-  border-bottom: 3px solid #ffcc00;
+  background: linear-gradient(180deg, #4a80b4, #336699);
+  border-bottom: 1px solid #2a5a8a;
 }
-body.theme-aol .nav-logo { color: #fff; }
-body.theme-aol .nav-links a { color: #fff; }
+body.theme-aol .nav-logo { color: #ffcc00; font-weight: 700; }
+body.theme-aol .nav-links a { color: #ffffff; }
 body.theme-aol .nav-links a:hover { color: #ffcc00; }
 body.theme-aol .nav-links a::after { background: #ffcc00; }
-body.theme-aol .section-label { color: #0033cc; }
-body.theme-aol .section-label::after { background: linear-gradient(90deg, #808080, transparent); }
-body.theme-aol .hero-label { color: #0033cc; }
-body.theme-aol h1 em { color: #cc6600; }
-body.theme-aol .stat-number { color: #0033cc; }
-body.theme-aol .stats-section-label { color: #cc6600; }
-body.theme-aol .t-title { color: #0033cc; }
-body.theme-aol .article-tag { color: #cc6600; }
-body.theme-aol .shipped-category { color: #cc6600; }
-body.theme-aol .inline-link { color: #0033cc; text-decoration: underline; border-bottom: none; }
-body.theme-aol .approach-text em { color: #0033cc; }
-body.theme-aol .philosophy-text em { color: #0033cc; }
-body.theme-aol .article-kpi { color: #008800; }
-body.theme-aol .contact-link { color: #0033cc; border: 2px outset #c0c0c0; border-radius: 0; }
-body.theme-aol .contact-link:hover { background: #0033cc; color: #ffcc00; }
-body.theme-aol .shipped-item, body.theme-aol .stat-card,
-body.theme-aol .article-card, body.theme-aol .dl-card {
-  border: 2px outset #c0c0c0;
-  border-radius: 0;
-  box-shadow: 1px 1px 0 #808080;
+body.theme-aol .hero-label { color: #336699; font-weight: 700; }
+body.theme-aol h1 em { color: #336699; }
+body.theme-aol .section-label { color: #336699; font-weight: 700; }
+body.theme-aol .section-label::after { background: linear-gradient(90deg, #b0b0b0, transparent); }
+body.theme-aol .stat-number { color: #336699; font-family: Tahoma, Verdana, sans-serif !important; }
+body.theme-aol .stats-section-label { color: #336699; font-weight: 700; }
+body.theme-aol .t-title { color: #336699; }
+body.theme-aol .t-company { font-family: Tahoma, Verdana, sans-serif !important; }
+body.theme-aol .article-tag { color: #336699; font-weight: 700; }
+body.theme-aol .article-card h3 { font-family: Tahoma, Verdana, sans-serif !important; }
+body.theme-aol .article-kpi { color: #336699; font-weight: 700; }
+body.theme-aol .shipped-category { color: #336699; font-weight: 700; }
+body.theme-aol .inline-link { color: #336699; text-decoration: underline; border-bottom: none; }
+body.theme-aol .inline-link:hover { color: #ffcc00; }
+body.theme-aol .approach-text { font-family: Tahoma, Verdana, sans-serif !important; }
+body.theme-aol .approach-text em { color: #336699; }
+body.theme-aol .philosophy-text em { color: #336699; }
+body.theme-aol .contact-section h2 { font-family: Tahoma, Verdana, sans-serif !important; }
+body.theme-aol .contact-link { color: #fff; border: none; background: linear-gradient(180deg, #4a80b4, #336699); border-radius: 3px; }
+body.theme-aol .contact-link:hover { background: linear-gradient(180deg, #ffdd44, #ffcc00); color: #333; }
+body.theme-aol .stat-card, body.theme-aol .article-card,
+body.theme-aol .dl-card {
+  border: 1px solid #b0b0b0;
+  border-radius: 3px;
+  box-shadow: 1px 1px 2px rgba(0,0,0,0.1);
 }
-body.theme-aol .shipped-item:hover { border-color: #0033cc; background: #ddeeff; }
-body.theme-aol .stat-card:hover { border-color: #0033cc; }
-body.theme-aol .article-card:hover { border-color: #0033cc; border-left-color: #0033cc; }
-body.theme-aol .hero-rule { background: #808080; }
-body.theme-aol .hero-rule::after { filter: drop-shadow(0 0 4px #0033cc); }
-body.theme-aol .feature-card { border: 2px outset #c0c0c0; border-radius: 0; }
-body.theme-aol .feature-card-bar-fill { background: #0033cc; }
-body.theme-aol .t-item::before { background: #0033cc; }
-body.theme-aol .t-item.current::before { box-shadow: 0 0 0 4px rgba(0,51,204,0.3); }
-body.theme-aol .timeline::after { background: #0033cc; }
-body.theme-aol .easter-egg { border: 2px outset #c0c0c0; border-radius: 0; background: #ececec; }
+body.theme-aol .shipped-item {
+  border: 1px solid #b0b0b0;
+  border-radius: 3px;
+  background: #ffffff;
+  box-shadow: 1px 1px 2px rgba(0,0,0,0.08);
+}
+body.theme-aol .shipped-item:hover { border-color: #336699; background: #e8f0fa; }
+body.theme-aol .stat-card:hover { border-color: #336699; }
+body.theme-aol .article-card:hover { border-color: #336699; border-left-color: #ffcc00; border-left-width: 3px; }
+body.theme-aol .hero-rule { background: #b0b0b0; }
+body.theme-aol .hero-rule::after { filter: drop-shadow(0 0 4px #336699); }
+body.theme-aol .feature-card { border: 1px solid #b0b0b0; border-radius: 3px; }
+body.theme-aol .feature-card-bar-fill { background: linear-gradient(90deg, #336699, #4a80b4); }
+body.theme-aol .feature-card-tag { color: #336699; }
+body.theme-aol .feature-card h3 { font-family: Tahoma, Verdana, sans-serif !important; }
+body.theme-aol .t-item::before { background: #ffcc00; }
+body.theme-aol .t-item.current::before { box-shadow: 0 0 0 4px rgba(255,204,0,0.3); }
+body.theme-aol .timeline::before { background: #b0b0b0; }
+body.theme-aol .timeline::after { background: #ffcc00; }
+body.theme-aol .dl-card h4 { font-family: Tahoma, Verdana, sans-serif !important; }
+body.theme-aol .dl-card:hover { border-color: #336699; }
+body.theme-aol .nav-headshot { border: 2px solid #ffcc00; }
+body.theme-aol .easter-egg { border: 1px solid #b0b0b0; border-radius: 3px; background: #ffffff; color: #336699; }
+body.theme-aol footer { color: #888; }
 
 /* --- Synth '84 --- */
 body.theme-synth84 h1 {
@@ -1172,7 +1190,7 @@ body.theme-cosmic .easter-egg { color: #00ff00; border-color: #00ff00; backgroun
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="color:var(--muted)"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
       <div class="theme-dropdown" id="themeDropdown">
         <div class="theme-option active" data-theme="classic"><div class="theme-option-dot" style="background:#c9a96e;"></div>Classic</div>
-        <div class="theme-option" data-theme="aol"><div class="theme-option-dot" style="background:#0033cc;"></div>90s AOL</div>
+        <div class="theme-option" data-theme="aol"><div class="theme-option-dot" style="background:#ffcc00;"></div>Instant Messenger</div>
         <div class="theme-option" data-theme="cosmic"><div class="theme-option-dot" style="background:#ffff00;"></div>Cosmic Secrets</div>
         <div class="theme-option" data-theme="cta"><div class="theme-option-dot" style="background:#ff385c;"></div>CTA Driver</div>
         <div class="theme-option" data-theme="cyberpunk"><div class="theme-option-dot" style="background:#ff2d6b;"></div>Cyberpunk</div>
@@ -1785,7 +1803,7 @@ const themes = {
   neon: { bg:'#000000', fg:'#f0f0f0', muted:'#888888', accent:'#ff2eea', card:'#0a0a0a', border:'#1a1a1a', effect: null },
   matrix: { bg:'#000000', fg:'#00ff41', muted:'#005500', accent:'#00ff41', card:'#001100', border:'#003300', effect: 'matrix' },
   cta: { bg:'#ffffff', fg:'#1a1a1a', muted:'#6b6b6b', accent:'#ff385c', card:'#f7f7f7', border:'#e8e8e8', effect: null },
-  aol: { bg:'#ffffff', fg:'#000000', muted:'#555555', accent:'#0033cc', card:'#ececec', border:'#808080', effect: null },
+  aol: { bg:'#e8e4df', fg:'#000000', muted:'#555555', accent:'#336699', card:'#ffffff', border:'#b0b0b0', effect: null },
   synth84: { bg:'#0a0014', fg:'#e8d8ff', muted:'#7a6a9a', accent:'#ff1744', card:'#140024', border:'#2a1a44', effect: 'grid' },
   cosmic: { bg:'#000000', fg:'#00ffff', muted:'#ffff00', accent:'#00ff00', card:'#000033', border:'#333399', effect: 'stars' },
 };
@@ -1992,10 +2010,10 @@ const dlContent = {
     texture: 'No grain overlay — white backgrounds don\'t need it. Depth comes from subtle box-shadows on cards instead of border-based separation.',
   },
   aol: {
-    color: 'White background with AOL blue (#0033cc) and yellow (#ffcc00) — the classic America Online palette. Grey (#c0c0c0) for the Windows 95 card bevels.',
-    type: 'Comic Sans everywhere. No exceptions. This is a feature, not a bug. The font carries the entire 90s personality of the theme.',
-    motion: 'Same scroll reveals, but the beveled card borders and lack of border-radius give everything a static, chunky, pre-CSS3 feeling. Hover states feel like clicking a Windows button.',
-    texture: 'No grain. Flat white with raised 3D outset borders on every card element. Shadows are 1px hard offsets — no blur, no softness. Peak 1998.',
+    color: 'Windows system grey (#e8e4df) background with white card surfaces. Steel blue (#336699) as the primary accent — the exact shade from AIM\'s buddy list headers. Yellow (#ffcc00) for the running man highlights — timeline dots, nav logo, hover states.',
+    type: 'Tahoma — the system font of every AIM chat window. Clean, compact, and unmistakably late-90s Microsoft. No serifs anywhere. Bold used freely because Tahoma was built for it.',
+    motion: 'Same scroll-triggered reveals, but the gradient nav bar, subtle card shadows, and rounded corners give everything a Windows XP-era softness. Hover states feel like selecting a buddy.',
+    texture: 'No grain. White cards on system grey. Subtle 1px shadows instead of hard bevels. The AIM aesthetic was cleaner than most people remember — this is the 2003 era, not 1997.',
   },
   synth84: {
     color: 'Deep purple-black (#0a0014) foundation. Stranger Things red (#ff1744) for primary headings and accent. Purple (#ba68c8) for secondary emphasis and timeline. Blue (#64b5f6) for tags and links.',
