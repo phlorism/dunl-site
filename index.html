@@ -65,14 +65,6 @@ nav .container {
 .nav-left {
   display: flex; align-items: center; gap: 12px;
 }
-.nav-headshot-wrap {
-  display: inline-block;
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  user-select: none;
-  touch-action: manipulation;
-  cursor: pointer;
-}
 .nav-headshot {
   width: 32px; height: 32px;
   border-radius: 50%;
@@ -80,10 +72,8 @@ nav .container {
   border: 1px solid var(--border);
   cursor: pointer;
   transition: border-color 0.3s;
-  pointer-events: none;
-  -webkit-touch-callout: none;
 }
-.nav-headshot-wrap:hover .nav-headshot { border-color: var(--accent); }
+.nav-headshot:hover { border-color: var(--accent); }
 .nav-logo {
   font-family: var(--serif);
   font-size: 18px;
@@ -1266,7 +1256,7 @@ body.theme-cosmic .easter-egg { color: #00ff00; border-color: #00ff00; backgroun
 <nav>
   <div class="container">
     <div class="nav-left">
-      <div class="nav-headshot-wrap" id="headshotWrap"><img src="headshot.jpg" alt="Josh Dunlap" class="nav-headshot"></div>
+      <img src="headshot.jpg" alt="Josh Dunlap" class="nav-headshot" onclick="document.getElementById('lightbox').classList.add('active')">
       <div class="nav-logo">Josh Dunlap</div>
     </div>
     <div class="nav-links" id="navLinks">
@@ -1700,7 +1690,7 @@ body.theme-cosmic .easter-egg { color: #00ff00; border-color: #00ff00; backgroun
 
       <div class="dl-card reveal">
         <h4>Interaction</h4>
-        <p>Everything that looks interactive is interactive. KPI cards expand on click. Outcome cards expand to reveal context. Shipped items open detail modals with impact bars. Photo opens a lightbox. The nav hides on scroll down, returns on scroll up. One easter egg for anyone paying attention.</p>
+        <p>KPI cards expand on click. Outcome cards expand to reveal context. Shipped items open detail modals with impact bars. Photo opens a lightbox. The nav hides on scroll down, returns on scroll up. Several secrets are hidden for anyone paying attention.</p>
       </div>
 
       <div class="dl-card reveal">
@@ -2648,7 +2638,7 @@ const achievements = [
   { id: 'score20', icon: '⚡', name: 'High Voltage', desc: 'Scored 20+ in the game', clue: 'Keep jumping. The diamond helps.' },
   { id: 'hiddenThemes', icon: '🎨', name: 'Palette Unlocked', desc: 'Revealed the hidden themes', clue: 'Design Language has a persistent header. Very persistent.' },
   { id: 'allThemes', icon: '🌈', name: 'Chameleon', desc: 'Tried all 9 themes', clue: 'Some themes are hidden. Try every one you can find.' },
-  { id: 'konami', icon: '🔑', name: 'The Door', desc: 'Entered the code', clue: 'Old games had cheat codes. Some doors open when you hold on long enough.' },
+  { id: 'konami', icon: '🔑', name: 'The Door', desc: 'Entered the code', clue: 'Old games had cheat codes. Or hold on to your name long enough.' },
   { id: 'allFeatures', icon: '📋', name: 'Completionist', desc: 'Opened every shipped feature', clue: '68 features. 68 clicks. Dedication.' },
   { id: 'copyright', icon: '🔍', name: 'Fine Print', desc: 'Read the fine print', clue: 'Even the footer has a story to tell.' },
 ];
@@ -2699,36 +2689,26 @@ document.addEventListener('keydown', (e) => {
   }
 });
 
-// Mobile Konami: 3-second long-press on nav headshot
+// Mobile Konami: 3-second long-press on nav name
 let longPressTimer = null;
 let longPressTriggered = false;
-const headshot = document.getElementById('headshotWrap');
-if (headshot) {
-  headshot.addEventListener('touchstart', (e) => {
-    e.preventDefault();
+const navName = document.querySelector('.nav-logo');
+if (navName) {
+  navName.style.webkitTouchCallout = 'none';
+  navName.style.webkitUserSelect = 'none';
+  navName.style.userSelect = 'none';
+  navName.addEventListener('touchstart', (e) => {
     longPressTriggered = false;
     longPressTimer = setTimeout(() => {
       longPressTriggered = true;
+      e.preventDefault();
       unlockAch('konami');
       showAchievements();
     }, 3000);
   }, { passive: false });
-  headshot.addEventListener('touchend', (e) => {
-    e.preventDefault();
-    clearTimeout(longPressTimer);
-    if (!longPressTriggered) {
-      document.getElementById('lightbox').classList.add('active');
-    }
-    longPressTriggered = false;
-  });
-  headshot.addEventListener('touchcancel', () => { clearTimeout(longPressTimer); longPressTriggered = false; });
-  headshot.addEventListener('touchmove', () => { clearTimeout(longPressTimer); });
-  headshot.addEventListener('contextmenu', (e) => { e.preventDefault(); });
-  headshot.addEventListener('click', (e) => {
-    if (!longPressTriggered) {
-      document.getElementById('lightbox').classList.add('active');
-    }
-  });
+  navName.addEventListener('touchend', () => { clearTimeout(longPressTimer); });
+  navName.addEventListener('touchmove', () => { clearTimeout(longPressTimer); });
+  navName.addEventListener('contextmenu', (e) => { e.preventDefault(); });
 }
 
 // Track theme usage
