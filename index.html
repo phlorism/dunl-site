@@ -877,78 +877,11 @@ body.theme-void .void-bg { display: block; }
   pointer-events: none;
   overflow: hidden;
 }
-
-/* Concentric ripples from offset origins */
-.void-ripples {
-  position: absolute; inset: 0;
-}
-.void-ripples::before {
-  content: '';
+.void-bg svg {
   position: absolute;
-  top: 15%; left: -10%;
-  width: 1200px; height: 1200px;
-  border-radius: 50%;
-  background: transparent;
-  box-shadow:
-    0 0 0 1px rgba(255,255,255,0.04),
-    0 0 0 80px transparent,
-    0 0 0 81px rgba(255,255,255,0.035),
-    0 0 0 180px transparent,
-    0 0 0 181px rgba(255,255,255,0.03),
-    0 0 0 300px transparent,
-    0 0 0 301px rgba(255,255,255,0.025),
-    0 0 0 440px transparent,
-    0 0 0 441px rgba(255,255,255,0.02),
-    0 0 0 600px transparent,
-    0 0 0 601px rgba(255,255,255,0.015);
+  width: 100%;
+  height: 100%;
 }
-.void-ripples::after {
-  content: '';
-  position: absolute;
-  bottom: -20%; right: -15%;
-  width: 1000px; height: 1000px;
-  border-radius: 50%;
-  background: transparent;
-  box-shadow:
-    0 0 0 1px rgba(255,255,255,0.035),
-    0 0 0 100px transparent,
-    0 0 0 101px rgba(255,255,255,0.03),
-    0 0 0 220px transparent,
-    0 0 0 221px rgba(255,255,255,0.025),
-    0 0 0 360px transparent,
-    0 0 0 361px rgba(255,255,255,0.02),
-    0 0 0 520px transparent,
-    0 0 0 521px rgba(255,255,255,0.015);
-}
-
-/* Dot grid */
-.void-dots {
-  position: absolute; inset: 0;
-  background-image: radial-gradient(circle, rgba(255,255,255,0.06) 1px, transparent 1px);
-  background-size: 32px 32px;
-}
-
-/* Soft neutral light pools */
-.void-pools {
-  position: absolute; inset: 0;
-}
-.void-pools::before {
-  content: '';
-  position: absolute;
-  top: 5%; right: 10%;
-  width: 600px; height: 600px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(255,255,255,0.025) 0%, transparent 70%);
-}
-.void-pools::after {
-  content: '';
-  position: absolute;
-  bottom: 15%; left: 5%;
-  width: 500px; height: 500px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(255,255,255,0.02) 0%, transparent 70%);
-}
-
 /* --- Effects canvas --- */
 #effectsCanvas {
   position: fixed; inset: 0;
@@ -1519,9 +1452,20 @@ body.theme-void .impact-scale > div:nth-child(4) .shipped-item:hover { border-le
 <body class="theme-void">
 
 <div class="void-bg">
-  <div class="void-ripples"></div>
-  <div class="void-dots"></div>
-  <div class="void-pools"></div>
+  <svg viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="200" cy="150" r="120" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+    <circle cx="200" cy="150" r="240" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+    <circle cx="200" cy="150" r="380" fill="none" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
+    <circle cx="200" cy="150" r="540" fill="none" stroke="rgba(255,255,255,0.025)" stroke-width="1"/>
+    <circle cx="200" cy="150" r="720" fill="none" stroke="rgba(255,255,255,0.02)" stroke-width="1"/>
+    <circle cx="1300" cy="700" r="100" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+    <circle cx="1300" cy="700" r="200" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+    <circle cx="1300" cy="700" r="340" fill="none" stroke="rgba(255,255,255,0.035)" stroke-width="1"/>
+    <circle cx="1300" cy="700" r="500" fill="none" stroke="rgba(255,255,255,0.025)" stroke-width="1"/>
+    <circle cx="1300" cy="700" r="680" fill="none" stroke="rgba(255,255,255,0.02)" stroke-width="1"/>
+    <circle cx="700" cy="450" r="300" fill="none" stroke="rgba(255,255,255,0.02)" stroke-width="1"/>
+    <circle cx="700" cy="450" r="500" fill="none" stroke="rgba(255,255,255,0.015)" stroke-width="1"/>
+  </svg>
 </div>
 
 <nav>
