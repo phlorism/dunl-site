@@ -1211,7 +1211,13 @@ body.theme-void .dl-card:hover, body.theme-void .shipped-item:hover {
 }
 body.theme-void .article-card:hover { border-left-color: #2dd4bf; }
 body.theme-void .section-label { color: #2dd4bf; }
-body.theme-void .section-label::after { background: linear-gradient(90deg, rgba(45,212,191,0.2), transparent); }
+body.theme-void .section-label::after { 
+  flex: none;
+  width: 24px;
+  height: 2px;
+  background: #2dd4bf;
+  border-radius: 1px;
+}
 body.theme-void .stat-number { color: #2dd4bf; }
 body.theme-void .stats-section-label { color: #2dd4bf; }
 body.theme-void .hero-label { color: #2dd4bf; font-family: 'JetBrains Mono', monospace !important; font-size: 11px; }
