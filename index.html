@@ -886,7 +886,7 @@ body.theme-void .void-bg { display: block; }
   height: 100%;
 }
 .void-tracer {
-  filter: drop-shadow(0 0 2px rgba(45,212,191,0.7)) drop-shadow(0 0 6px rgba(45,212,191,0.4)) drop-shadow(0 0 14px rgba(45,212,191,0.2));
+  filter: drop-shadow(0 0 3px rgba(45,212,191,0.5)) drop-shadow(0 0 8px rgba(45,212,191,0.25));
   will-change: filter;
 }
 /* --- Effects canvas --- */
@@ -1482,22 +1482,46 @@ body.theme-void .impact-scale > div:nth-child(4) .shipped-item:hover { border-le
     <circle cx="700" cy="450" r="300" fill="none" stroke="rgba(255,255,255,0.035)" stroke-width="1"/>
     <circle cx="700" cy="450" r="500" fill="none" stroke="rgba(255,255,255,0.025)" stroke-width="1"/>
 
-    <!-- Animated tracers with CSS filter (GPU-accelerated) -->
+    <!--
+      Tracers: 3 total, one per origin group.
+      Each tracer = 3 stacked layers simulating the radial gradient falloff:
+        - Wide soft halo (10px stroke, very dim, long dash)
+        - Mid glow (4px stroke, medium opacity)
+        - Bright core (1.5px stroke, bright, short dash)
+      round linecaps soften edges. Same speed per group so layers stay aligned.
+    -->
     <g class="void-tracer">
-      <circle cx="200" cy="150" r="120" fill="none" stroke="rgba(45,212,191,0.5)" stroke-width="2" stroke-linecap="round" stroke-dasharray="60 694">
-        <animate attributeName="stroke-dashoffset" from="0" to="-754" dur="14s" repeatCount="indefinite"/>
+      <!-- Origin 1: cx=200 cy=150 r=120, c≈754 -->
+      <circle cx="200" cy="150" r="120" fill="none" stroke="rgba(45,212,191,0.04)" stroke-width="12" stroke-linecap="round" stroke-dasharray="100 654">
+        <animate attributeName="stroke-dashoffset" from="0" to="-754" dur="16s" repeatCount="indefinite"/>
       </circle>
-      <circle cx="200" cy="150" r="380" fill="none" stroke="rgba(45,212,191,0.35)" stroke-width="2" stroke-linecap="round" stroke-dasharray="80 2308">
-        <animate attributeName="stroke-dashoffset" from="0" to="-2388" dur="28s" repeatCount="indefinite"/>
+      <circle cx="200" cy="150" r="120" fill="none" stroke="rgba(45,212,191,0.12)" stroke-width="4" stroke-linecap="round" stroke-dasharray="80 674">
+        <animate attributeName="stroke-dashoffset" from="10" to="-744" dur="16s" repeatCount="indefinite"/>
       </circle>
-      <circle cx="1300" cy="700" r="100" fill="none" stroke="rgba(45,212,191,0.5)" stroke-width="2" stroke-linecap="round" stroke-dasharray="50 578">
-        <animate attributeName="stroke-dashoffset" from="0" to="-628" dur="12s" repeatCount="indefinite"/>
+      <circle cx="200" cy="150" r="120" fill="none" stroke="rgba(45,212,191,0.4)" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="50 704">
+        <animate attributeName="stroke-dashoffset" from="25" to="-729" dur="16s" repeatCount="indefinite"/>
       </circle>
-      <circle cx="1300" cy="700" r="340" fill="none" stroke="rgba(45,212,191,0.35)" stroke-width="2" stroke-linecap="round" stroke-dasharray="80 2056">
-        <animate attributeName="stroke-dashoffset" from="0" to="-2136" dur="26s" repeatCount="indefinite"/>
+
+      <!-- Origin 2: cx=1300 cy=700 r=100, c≈628 -->
+      <circle cx="1300" cy="700" r="100" fill="none" stroke="rgba(45,212,191,0.04)" stroke-width="12" stroke-linecap="round" stroke-dasharray="100 528">
+        <animate attributeName="stroke-dashoffset" from="0" to="628" dur="14s" repeatCount="indefinite"/>
       </circle>
-      <circle cx="700" cy="450" r="300" fill="none" stroke="rgba(45,212,191,0.3)" stroke-width="2" stroke-linecap="round" stroke-dasharray="70 1815">
-        <animate attributeName="stroke-dashoffset" from="0" to="-1885" dur="32s" repeatCount="indefinite"/>
+      <circle cx="1300" cy="700" r="100" fill="none" stroke="rgba(45,212,191,0.12)" stroke-width="4" stroke-linecap="round" stroke-dasharray="80 548">
+        <animate attributeName="stroke-dashoffset" from="10" to="638" dur="14s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="1300" cy="700" r="100" fill="none" stroke="rgba(45,212,191,0.4)" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="50 578">
+        <animate attributeName="stroke-dashoffset" from="25" to="653" dur="14s" repeatCount="indefinite"/>
+      </circle>
+
+      <!-- Origin 3: cx=700 cy=450 r=300, c≈1885 -->
+      <circle cx="700" cy="450" r="300" fill="none" stroke="rgba(45,212,191,0.03)" stroke-width="12" stroke-linecap="round" stroke-dasharray="120 1765">
+        <animate attributeName="stroke-dashoffset" from="0" to="-1885" dur="36s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="700" cy="450" r="300" fill="none" stroke="rgba(45,212,191,0.10)" stroke-width="4" stroke-linecap="round" stroke-dasharray="90 1795">
+        <animate attributeName="stroke-dashoffset" from="15" to="-1870" dur="36s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="700" cy="450" r="300" fill="none" stroke="rgba(45,212,191,0.35)" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="50 1835">
+        <animate attributeName="stroke-dashoffset" from="35" to="-1850" dur="36s" repeatCount="indefinite"/>
       </circle>
     </g>
   </svg>
