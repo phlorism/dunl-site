@@ -1462,12 +1462,7 @@ body.theme-void .impact-scale > div:nth-child(4) .shipped-item:hover { border-le
 
 <div class="void-bg">
   <svg viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
-    <defs>
-      <filter id="glow">
-        <feGaussianBlur stdDeviation="3" result="blur"/>
-        <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-      </filter>
-    </defs>
+    <defs/>
 
     <!-- Static circles -->
     <circle cx="200" cy="150" r="120" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
@@ -1483,31 +1478,37 @@ body.theme-void .impact-scale > div:nth-child(4) .shipped-item:hover { border-le
     <circle cx="700" cy="450" r="300" fill="none" stroke="rgba(255,255,255,0.035)" stroke-width="1"/>
     <circle cx="700" cy="450" r="500" fill="none" stroke="rgba(255,255,255,0.025)" stroke-width="1"/>
 
-    <!-- Glowing tracers on circles (stroke-dasharray animated) -->
-    <!-- c=2πr. Dash=60, gap=rest. Animate dashoffset over full circumference -->
-
-    <!-- r=120, c≈754 -->
-    <circle cx="200" cy="150" r="120" fill="none" stroke="rgba(45,212,191,0.5)" stroke-width="2" stroke-linecap="round" filter="url(#glow)" stroke-dasharray="60 694">
+    <!-- Glow layer (thicker, dimmer - simulates blur) -->
+    <circle cx="200" cy="150" r="120" fill="none" stroke="rgba(45,212,191,0.12)" stroke-width="6" stroke-linecap="round" stroke-dasharray="60 694">
       <animate attributeName="stroke-dashoffset" from="0" to="-754" dur="14s" repeatCount="indefinite"/>
     </circle>
-
-    <!-- r=380, c≈2388 -->
-    <circle cx="200" cy="150" r="380" fill="none" stroke="rgba(45,212,191,0.35)" stroke-width="2" stroke-linecap="round" filter="url(#glow)" stroke-dasharray="80 2308">
+    <circle cx="200" cy="150" r="380" fill="none" stroke="rgba(45,212,191,0.08)" stroke-width="6" stroke-linecap="round" stroke-dasharray="80 2308">
       <animate attributeName="stroke-dashoffset" from="0" to="-2388" dur="28s" repeatCount="indefinite"/>
     </circle>
-
-    <!-- r=100, c≈628 -->
-    <circle cx="1300" cy="700" r="100" fill="none" stroke="rgba(45,212,191,0.5)" stroke-width="2" stroke-linecap="round" filter="url(#glow)" stroke-dasharray="50 578">
+    <circle cx="1300" cy="700" r="100" fill="none" stroke="rgba(45,212,191,0.12)" stroke-width="6" stroke-linecap="round" stroke-dasharray="50 578">
       <animate attributeName="stroke-dashoffset" from="0" to="-628" dur="12s" repeatCount="indefinite"/>
     </circle>
-
-    <!-- r=340, c≈2136 -->
-    <circle cx="1300" cy="700" r="340" fill="none" stroke="rgba(45,212,191,0.35)" stroke-width="2" stroke-linecap="round" filter="url(#glow)" stroke-dasharray="80 2056">
+    <circle cx="1300" cy="700" r="340" fill="none" stroke="rgba(45,212,191,0.08)" stroke-width="6" stroke-linecap="round" stroke-dasharray="80 2056">
       <animate attributeName="stroke-dashoffset" from="0" to="-2136" dur="26s" repeatCount="indefinite"/>
     </circle>
+    <circle cx="700" cy="450" r="300" fill="none" stroke="rgba(45,212,191,0.08)" stroke-width="6" stroke-linecap="round" stroke-dasharray="70 1815">
+      <animate attributeName="stroke-dashoffset" from="0" to="-1885" dur="32s" repeatCount="indefinite"/>
+    </circle>
 
-    <!-- r=300, c≈1885 -->
-    <circle cx="700" cy="450" r="300" fill="none" stroke="rgba(45,212,191,0.3)" stroke-width="2" stroke-linecap="round" filter="url(#glow)" stroke-dasharray="70 1815">
+    <!-- Core layer (thinner, brighter - the visible tracer) -->
+    <circle cx="200" cy="150" r="120" fill="none" stroke="rgba(45,212,191,0.5)" stroke-width="2" stroke-linecap="round" stroke-dasharray="60 694">
+      <animate attributeName="stroke-dashoffset" from="0" to="-754" dur="14s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="200" cy="150" r="380" fill="none" stroke="rgba(45,212,191,0.35)" stroke-width="2" stroke-linecap="round" stroke-dasharray="80 2308">
+      <animate attributeName="stroke-dashoffset" from="0" to="-2388" dur="28s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="1300" cy="700" r="100" fill="none" stroke="rgba(45,212,191,0.5)" stroke-width="2" stroke-linecap="round" stroke-dasharray="50 578">
+      <animate attributeName="stroke-dashoffset" from="0" to="-628" dur="12s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="1300" cy="700" r="340" fill="none" stroke="rgba(45,212,191,0.35)" stroke-width="2" stroke-linecap="round" stroke-dasharray="80 2056">
+      <animate attributeName="stroke-dashoffset" from="0" to="-2136" dur="26s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="700" cy="450" r="300" fill="none" stroke="rgba(45,212,191,0.3)" stroke-width="2" stroke-linecap="round" stroke-dasharray="70 1815">
       <animate attributeName="stroke-dashoffset" from="0" to="-1885" dur="32s" repeatCount="indefinite"/>
     </circle>
   </svg>
