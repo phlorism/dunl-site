@@ -4,16 +4,16 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
-<meta name="description" content="Josh Dunlap — Executive Director of Digital Products & UX Design at MGM Resorts International. Leading product, design, and digital experience across 30+ properties.">
-<meta property="og:title" content="Josh Dunlap — Digital Products & UX Design">
-<meta property="og:description" content="Executive Director at MGM Resorts International. Leading a 28-person product and design organization across 30+ properties and 9 platforms.">
+<meta name="description" content="Josh Dunlap — 16 years leading product and design organizations across startups, automotive, and hospitality. From founding a company to managing enterprise-scale digital experiences.">
+<meta property="og:title" content="Josh Dunlap — Product & Design Leadership">
+<meta property="og:description" content="16 years leading product and design organizations. 100+ features shipped, 9 platforms, 18 countries, 5 companies.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://dunl.app">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Josh Dunlap — Digital Products & UX Design">
-<meta name="twitter:description" content="Executive Director at MGM Resorts. Product, design, and digital experience leadership.">
-<title>Josh Dunlap — Digital Products & UX Design</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<meta name="twitter:title" content="Josh Dunlap — Product & Design Leadership">
+<meta name="twitter:description" content="16 years leading product and design. Startups to enterprise. 100+ features shipped.">
+<title>Josh Dunlap — Product & Design Leadership</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500;600&family=Syne:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root {
   --bg: #0c0c0c;
@@ -1154,6 +1154,79 @@ body.theme-cosmic .feature-card p { color: #00ffff; }
 body.theme-cosmic footer { color: #ff00ff; }
 body.theme-cosmic .easter-egg { color: #00ff00; border-color: #00ff00; background: #000033; font-weight: 700; }
 
+/* --- VOID --- */
+body.theme-void { --serif: 'Syne', sans-serif; --mono: 'JetBrains Mono', monospace; }
+body.theme-void h1, body.theme-void .t-company, body.theme-void .contact-section h2,
+body.theme-void .article-card h3, body.theme-void .dl-card h4,
+body.theme-void .feature-card h3, body.theme-void .ach-title {
+  font-family: 'Syne', sans-serif !important;
+  font-weight: 600;
+}
+body.theme-void .nav-logo { font-family: 'Syne', sans-serif !important; font-weight: 600; }
+body.theme-void .section-label, body.theme-void .stats-section-label,
+body.theme-void .shipped-category, body.theme-void .impact-tier-label,
+body.theme-void .article-tag, body.theme-void .impact-scale-header,
+body.theme-void .feature-card-tag, body.theme-void .dl-swatch-label,
+body.theme-void .t-role-date, body.theme-void .t-date {
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+}
+body.theme-void::after { opacity: 0; }
+body.theme-void nav { background: rgba(8,8,12,0.85); backdrop-filter: blur(12px); border-bottom-color: rgba(255,255,255,0.06); }
+body.theme-void .stat-card, body.theme-void .article-card,
+body.theme-void .dl-card, body.theme-void .shipped-item,
+body.theme-void .feature-card, body.theme-void .exp-card {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 20px;
+  border-top-color: rgba(255,255,255,0.12);
+  backdrop-filter: blur(8px);
+}
+body.theme-void .stat-card:hover, body.theme-void .article-card:hover,
+body.theme-void .dl-card:hover, body.theme-void .shipped-item:hover {
+  border-color: rgba(45,212,191,0.3);
+  background: rgba(45,212,191,0.04);
+}
+body.theme-void .article-card:hover { border-left-color: #2dd4bf; }
+body.theme-void .section-label { color: #2dd4bf; }
+body.theme-void .section-label::after { background: linear-gradient(90deg, rgba(45,212,191,0.2), transparent); }
+body.theme-void .stat-number { color: #2dd4bf; }
+body.theme-void .stats-section-label { color: #2dd4bf; }
+body.theme-void .hero-label { color: #2dd4bf; font-family: 'JetBrains Mono', monospace !important; font-size: 11px; }
+body.theme-void h1 em { color: #2dd4bf; }
+body.theme-void .approach-text em { color: #2dd4bf; }
+body.theme-void .philosophy-text em { color: #2dd4bf; }
+body.theme-void .t-role-title { color: #2dd4bf; }
+body.theme-void .article-tag { color: #f59e0b; }
+body.theme-void .article-result { color: #2dd4bf; }
+body.theme-void .article-kpi { color: #2dd4bf; }
+body.theme-void .shipped-category { color: #f59e0b; }
+body.theme-void .impact-tier-label { color: #f59e0b; }
+body.theme-void .inline-link { color: #2dd4bf; border-bottom-color: rgba(45,212,191,0.3); }
+body.theme-void .inline-link:hover { border-bottom-color: #2dd4bf; }
+body.theme-void .nav-links a:hover { color: #2dd4bf; }
+body.theme-void .nav-links a::after { background: #2dd4bf; }
+body.theme-void .nav-headshot { border-color: rgba(45,212,191,0.3); }
+body.theme-void .contact-link { color: #2dd4bf; border-color: rgba(45,212,191,0.3); border-radius: 20px; }
+body.theme-void .contact-link:hover { background: #2dd4bf; color: #08080c; }
+body.theme-void .t-item::before { background: #2dd4bf; }
+body.theme-void .t-item.current::before { box-shadow: 0 0 0 4px rgba(45,212,191,0.2); }
+body.theme-void .timeline::before { background: rgba(255,255,255,0.06); }
+body.theme-void .timeline::after { background: #2dd4bf; }
+body.theme-void .hero-rule { background: rgba(255,255,255,0.06); }
+body.theme-void .hero-rule::after { filter: drop-shadow(0 0 6px #2dd4bf); }
+body.theme-void .feature-card-bar-fill { background: linear-gradient(90deg, #2dd4bf, #14b8a6); border-radius: 4px; }
+body.theme-void .feature-card-tag { color: #f59e0b; }
+body.theme-void .feature-card { border-radius: 20px; }
+body.theme-void .theme-picker .theme-option { border-radius: 20px; }
+body.theme-void .easter-egg { border-radius: 20px; border-color: rgba(45,212,191,0.2); background: rgba(45,212,191,0.04); }
+body.theme-void .lightbox img { border-radius: 20px; }
+body.theme-void .ach-panel { border-radius: 20px; }
+body.theme-void .ach-icon { border-radius: 8px; }
+body.theme-void .see-more-toggle { color: #2dd4bf; }
+body.theme-void .game-overlay canvas { border-radius: 20px; }
+
 /* --- Achievements --- */
 .ach-overlay {
   position: fixed; inset: 0;
@@ -1465,18 +1538,21 @@ body.theme-cosmic .easter-egg { color: #00ff00; border-color: #00ff00; backgroun
         <div class="t-company">Good Uncle</div>
         <div class="t-date">Mar 2017 – Aug 2018 · New York City</div>
         <div class="t-roles">
-          <div class="t-role"><span class="t-role-title">Director of Operations → Head of Expansion</span></div>
+          <div class="t-role"><span class="t-role-title">Director of Operations</span> <span class="t-role-date">2018</span></div>
+          <div class="t-role"><span class="t-role-title">Head of Expansion Operations</span> <span class="t-role-date">2017–2018</span></div>
         </div>
         <div class="t-desc">All new market standup — market analysis, leasing, construction, hiring, operational development. P&L and FP&A ownership.</div>
       </div>
 
       <div class="t-item reveal">
         <div class="t-company">Luxe</div>
-        <div class="t-date">Nov 2015 – Mar 2017</div>
+        <div class="t-date">May 2014 – Mar 2017 · San Francisco</div>
         <div class="t-roles">
-          <div class="t-role"><span class="t-role-title">General Manager — San Francisco & Austin</span></div>
+          <div class="t-role"><span class="t-role-title">General Manager</span> <span class="t-role-date">2015–2017</span></div>
+          <div class="t-role"><span class="t-role-title">City Launcher</span> <span class="t-role-date">2015</span></div>
+          <div class="t-role"><span class="t-role-title">Training & Logistics Coordinator</span> <span class="t-role-date">2014–2015</span></div>
         </div>
-        <div class="t-desc">Market P&L, city operations, strategy, consumer marketing, sales. Built Austin market from scratch. Acquired by Volvo Cars.</div>
+        <div class="t-desc">Three promotions in three years. Managed San Francisco and Austin markets — P&L, operations, strategy, marketing, sales. Built Austin from scratch. Company later acquired by Volvo Cars.</div>
       </div>
 
       <div class="t-item reveal">
@@ -1485,7 +1561,7 @@ body.theme-cosmic .easter-egg { color: #00ff00; border-color: #00ff00; backgroun
         <div class="t-roles">
           <div class="t-role"><span class="t-role-title">Founder</span></div>
         </div>
-        <div class="t-desc">Platform enabling artists to sell compositions and arrangements, facilitating music commerce and creative collaboration.</div>
+        <div class="t-desc">Platform enabling artists to sell compositions and arrangements, facilitate tour logistics, and contract musicians to groups.</div>
       </div>
 
     </div>
@@ -1545,7 +1621,7 @@ body.theme-cosmic .easter-egg { color: #00ff00; border-color: #00ff00; backgroun
 
     <div class="article-list" id="outcomeMore" style="display:none; margin-top:14px;">
 
-      <div class="article-card reveal visible" onclick="this.classList.toggle('expanded')">
+      <div class="article-card reveal" onclick="this.classList.toggle('expanded')">
         <div class="article-tag">Revenue — Web</div>
         <h3>Product Detail Page System</h3>
         <div class="article-result">→ Consistent conversion lift across every content vertical</div>
@@ -1556,7 +1632,7 @@ body.theme-cosmic .easter-egg { color: #00ff00; border-color: #00ff00; backgroun
         </div></div>
       </div>
 
-      <div class="article-card reveal visible" onclick="this.classList.toggle('expanded')">
+      <div class="article-card reveal" onclick="this.classList.toggle('expanded')">
         <div class="article-tag">Engagement</div>
         <h3>Discovery, Search & Content Merchandising</h3>
         <div class="article-result">→ Strong CTR improvements · Dramatically higher engagement</div>
@@ -1567,7 +1643,7 @@ body.theme-cosmic .easter-egg { color: #00ff00; border-color: #00ff00; backgroun
         </div></div>
       </div>
 
-      <div class="article-card reveal visible" onclick="this.classList.toggle('expanded')">
+      <div class="article-card reveal" onclick="this.classList.toggle('expanded')">
         <div class="article-tag">AI & Operations</div>
         <h3>AI-Native Team Transition & Operating Model</h3>
         <div class="article-result">→ Targeting 30–50% effort reduction in Year 1</div>
@@ -1581,7 +1657,7 @@ body.theme-cosmic .easter-egg { color: #00ff00; border-color: #00ff00; backgroun
     </div>
 
     <div class="reveal" style="margin-top:16px;">
-      <span class="see-more-toggle" id="outcomeToggle" onclick="const m=document.getElementById('outcomeMore'); const s=m.style.display!=='none'; m.style.display=s?'none':'block'; this.textContent=s?'See 3 more ↓':'Show less ↑';">See 3 more ↓</span>
+      <span class="see-more-toggle" id="outcomeToggle" onclick="const m=document.getElementById('outcomeMore'); const s=m.style.display!=='none'; m.style.display=s?'none':'block'; this.textContent=s?'See 3 more ↓':'Show less ↑'; if(!s){m.querySelectorAll('.reveal').forEach(el=>{el.classList.add('visible');})}">See 3 more ↓</span>
     </div>
 
   </div>
@@ -1673,6 +1749,7 @@ body.theme-cosmic .easter-egg { color: #00ff00; border-color: #00ff00; backgroun
       <div class="theme-option" data-theme="cta"><div class="theme-option-dot" style="background:#ff385c;"></div>CTA Driver</div>
       <div class="theme-option" data-theme="cyberpunk"><div class="theme-option-dot" style="background:#ff2d6b;"></div>Cyberpunk</div>
       <div class="theme-option" data-theme="synth84"><div class="theme-option-dot" style="background:#ff1744;"></div>Synth '84</div>
+      <div class="theme-option" data-theme="void"><div class="theme-option-dot" style="background:#2dd4bf;"></div>VOID</div>
     </div>
     <div class="theme-picker reveal" id="hiddenThemes" style="display:none;">
       <div class="theme-option" data-theme="aol"><div class="theme-option-dot" style="background:#ffcc00;"></div>Instant Messenger</div>
@@ -1925,6 +2002,7 @@ const themes = {
   cta: { bg:'#ffffff', fg:'#1a1a1a', muted:'#6b6b6b', accent:'#ff385c', card:'#f7f7f7', border:'#e8e8e8', effect: null },
   aol: { bg:'#e8e4df', fg:'#000000', muted:'#555555', accent:'#336699', card:'#ffffff', border:'#b0b0b0', effect: null },
   synth84: { bg:'#0a0014', fg:'#e8d8ff', muted:'#7a6a9a', accent:'#ff1744', card:'#140024', border:'#2a1a44', effect: 'grid' },
+  void: { bg:'#08080c', fg:'#e4e4e8', muted:'#6b6b78', accent:'#2dd4bf', card:'rgba(255,255,255,0.03)', border:'rgba(255,255,255,0.08)', effect: null },
   cosmic: { bg:'#000000', fg:'#00ffff', muted:'#ffff00', accent:'#00ff00', card:'#000033', border:'#333399', effect: 'stars' },
 };
 
@@ -2094,10 +2172,10 @@ function effectLoop() {
 
 const dlContent = {
   classic: {
-    color: 'Dark foundation with warm neutrals. Gold accent (#c9a96e) used sparingly for interactive elements, labels, and emphasis — never for backgrounds.',
-    type: 'Serif for headings and names — warmth and authority. Sans-serif at light weight for body — clean, modern, and readable.',
-    motion: 'Scroll-triggered reveals with staggered delays. Timeline draws itself on scroll. Bouncing gold tracer on the hero divider. Cards lift on hover.',
-    texture: 'Subtle SVG noise overlay at 4% opacity gives the dark background a tactile quality. Card surfaces sit one step lighter to create depth without shadows.',
+    color: 'Dark foundation with warm neutrals. Gold accent (#c9a96e) for interactive elements, labels, and results — never for backgrounds.',
+    type: 'Serif for headings — warmth and authority. Sans-serif at light weight for body. Hierarchy from size and color, not weight.',
+    motion: 'Scroll-triggered reveals. Timeline draws on scroll. Tracer bounces on the hero divider. Cards lift on hover. All under 600ms.',
+    texture: 'SVG noise at 4% opacity gives the dark background grain. Cards sit one step lighter to create depth without shadows.',
   },
   cyberpunk: {
     color: 'Deep indigo foundation with cool blue-grey neutrals. Hot pink accent (#ff2d6b) creates urgency and edge. Dual-tone text shadows (pink + cyan) add a glitch aesthetic.',
@@ -2118,10 +2196,10 @@ const dlContent = {
     texture: 'No grain. Pure black creates the deepest possible contrast for neon glow effects. Card surfaces are barely above black (#0a0a0a) — just enough to define edges.',
   },
   matrix: {
-    color: 'Pure black with green (#00ff41) for everything — text, accents, labels. The entire palette is monochrome green, like a CRT terminal.',
-    type: 'Green-on-black monochrome. Text gets heavy black shadows for readability against the falling character rain behind it.',
-    motion: 'Falling katakana and digit rain runs continuously behind all content at reduced opacity. Cards use backdrop-blur to soften the rain beneath them.',
-    texture: 'The matrix rain IS the texture. At 25% opacity it provides constant subtle movement without overwhelming readability. Dark card backgrounds with slight green tint.',
+    color: 'Pure black with green (#00ff41) for everything. Monochrome CRT terminal aesthetic. Bright white and light green highlights flash through the rain.',
+    type: 'Green-on-black monochrome. Text gets layered black shadows for readability against the falling character rain.',
+    motion: 'Katakana and digit rain at 35% opacity with brightness accents — white flashes simulate column leading edges. Cards use backdrop-blur to soften the rain.',
+    texture: 'The rain IS the texture. Translucent dark-green card backgrounds let it bleed through. Constant subtle movement without overwhelming readability.',
   },
   cta: {
     color: 'Clean white background with dark text. Pink (#ff385c) as the primary brand accent for labels and static elements. Blue (#2563eb) for all interactive elements — links, hovers, and call-to-action buttons.',
@@ -2137,9 +2215,15 @@ const dlContent = {
   },
   synth84: {
     color: 'Deep purple-black (#0a0014) foundation. Stranger Things red (#ff1744) for primary headings and accent. Purple (#ba68c8) for secondary emphasis and timeline. Blue (#64b5f6) for tags and links.',
-    type: 'Standard type with heavy red glow text-shadows on headings — the title feels like it\'s lit by neon tubing. Purple glow on secondary text.',
-    motion: 'Retro perspective grid animates behind all content — purple vertical lines converging to a vanishing point with red horizontal lines scrolling toward the viewer. A faint red sun glows at the horizon.',
+    type: 'Syne for headings with heavy red glow text-shadows — the title feels like neon tubing. Purple glow on secondary text.',
+    motion: 'Retro perspective grid animates behind all content — purple vertical lines converging to a vanishing point with red horizontal lines scrolling toward the viewer.',
     texture: 'The animated synthwave grid provides depth and atmosphere. Card surfaces are deep purple-black. Grain overlay adds analog warmth to the digital aesthetic.',
+  },
+  void: {
+    color: 'Near-black (#08080c) void. Teal (#2dd4bf) as the sole interactive accent. Amber (#f59e0b) reserved for categorical labels only. No competing colors — the void is the canvas.',
+    type: 'Syne for display headings — geometric, modern, confident. DM Sans for body. JetBrains Mono for labels and metadata — giving structural text a code-like precision.',
+    motion: 'Same scroll-triggered system, but glass cards with backdrop-filter blur create depth through transparency. The void behind the glass is the motion — content floats over nothing.',
+    texture: 'Glass-over-void. Cards are translucent (3% white) with directional top borders (12% white) creating a specular highlight. 20px radius on everything. No grain — the darkness is the texture.',
   },
   cosmic: {
     color: 'Pure black void. Cyan (#00ffff) for body text. Yellow (#ffff00) for headings and emphasis. Green (#00ff00) for interactive elements and links. Magenta (#ff00ff) for dates, tags, and labels. Every color glows.',
