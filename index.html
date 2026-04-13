@@ -1642,7 +1642,7 @@ body.theme-void .impact-scale > div:nth-child(4) .shipped-item:hover { border-le
 
 <section id="insights">
   <div class="container">
-    <div class="section-label reveal">Selected Outcomes</div>
+    <div class="section-label reveal">Outcomes</div>
     <div class="article-list">
 
       <div class="article-card reveal" onclick="this.classList.toggle('expanded')">
@@ -1691,6 +1691,10 @@ body.theme-void .impact-scale > div:nth-child(4) .shipped-item:hover { border-le
 
     </div>
 
+    <div class="reveal" style="margin-top:10px;">
+      <span class="see-more-toggle" id="outcomeToggle" onclick="const m=document.getElementById('outcomeMore'); const s=m.style.display!=='none'; m.style.display=s?'none':'flex'; this.textContent=s?'Expand ↓':'Collapse ↑'; if(!s){m.querySelectorAll('.reveal').forEach(el=>{el.classList.add('visible');})}">Expand ↓</span>
+    </div>
+
     <div class="article-list" id="outcomeMore" style="display:none; margin-top:10px;">
 
       <div class="article-card reveal" onclick="this.classList.toggle('expanded')">
@@ -1726,10 +1730,6 @@ body.theme-void .impact-scale > div:nth-child(4) .shipped-item:hover { border-le
         </div></div>
       </div>
 
-    </div>
-
-    <div class="reveal" style="margin-top:10px;">
-      <span class="see-more-toggle" id="outcomeToggle" onclick="const m=document.getElementById('outcomeMore'); const s=m.style.display!=='none'; m.style.display=s?'none':'block'; this.textContent=s?'See 3 more ↓':'Show less ↑'; if(!s){m.querySelectorAll('.reveal').forEach(el=>{el.classList.add('visible');})}">See 3 more ↓</span>
     </div>
 
   </div>
