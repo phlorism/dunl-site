@@ -1248,7 +1248,7 @@ body.theme-void .t-item.current::before { box-shadow: 0 0 0 4px rgba(45,212,191,
 body.theme-void .timeline::before { background: rgba(255,255,255,0.06); }
 body.theme-void .timeline::after { background: #2dd4bf; }
 body.theme-void .hero-rule { background: rgba(255,255,255,0.06); }
-body.theme-void .hero-rule::after { filter: drop-shadow(0 0 6px #2dd4bf); }
+body.theme-void .hero-rule::after { display: none; }
 body.theme-void .feature-card-bar-fill { background: linear-gradient(90deg, #2dd4bf, #14b8a6); border-radius: 4px; }
 body.theme-void .feature-card-tag { color: #e8a317; }
 body.theme-void .feature-card { border-radius: 20px; }
@@ -1463,21 +1463,10 @@ body.theme-void .impact-scale > div:nth-child(4) .shipped-item:hover { border-le
 <div class="void-bg">
   <svg viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
     <defs>
-      <radialGradient id="tracer">
-        <stop offset="0%" stop-color="rgba(45,212,191,0.8)"/>
-        <stop offset="30%" stop-color="rgba(45,212,191,0.3)"/>
-        <stop offset="100%" stop-color="transparent"/>
-      </radialGradient>
       <filter id="glow">
-        <feGaussianBlur stdDeviation="4" result="blur"/>
+        <feGaussianBlur stdDeviation="3" result="blur"/>
         <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
       </filter>
-      <!-- Motion paths (circles as path arcs) -->
-      <path id="p1" d="M320,150 A120,120 0 1,1 319.99,150 Z" fill="none"/>
-      <path id="p3" d="M580,150 A380,380 0 1,1 579.99,150 Z" fill="none"/>
-      <path id="p6" d="M1400,700 A100,100 0 1,1 1399.99,700 Z" fill="none"/>
-      <path id="p8" d="M1640,700 A340,340 0 1,1 1639.99,700 Z" fill="none"/>
-      <path id="p11" d="M1000,450 A300,300 0 1,1 999.99,450 Z" fill="none"/>
     </defs>
 
     <!-- Static circles -->
@@ -1494,21 +1483,32 @@ body.theme-void .impact-scale > div:nth-child(4) .shipped-item:hover { border-le
     <circle cx="700" cy="450" r="300" fill="none" stroke="rgba(255,255,255,0.035)" stroke-width="1"/>
     <circle cx="700" cy="450" r="500" fill="none" stroke="rgba(255,255,255,0.025)" stroke-width="1"/>
 
-    <!-- Orbiting tracers -->
-    <circle r="8" fill="url(#tracer)" filter="url(#glow)">
-      <animateMotion dur="12s" repeatCount="indefinite" begin="-2s"><mpath href="#p1"/></animateMotion>
+    <!-- Glowing tracers on circles (stroke-dasharray animated) -->
+    <!-- c=2πr. Dash=60, gap=rest. Animate dashoffset over full circumference -->
+
+    <!-- r=120, c≈754 -->
+    <circle cx="200" cy="150" r="120" fill="none" stroke="rgba(45,212,191,0.5)" stroke-width="2" stroke-linecap="round" filter="url(#glow)" stroke-dasharray="60 694">
+      <animate attributeName="stroke-dashoffset" from="0" to="-754" dur="14s" repeatCount="indefinite"/>
     </circle>
-    <circle r="10" fill="url(#tracer)" filter="url(#glow)">
-      <animateMotion dur="24s" repeatCount="indefinite" begin="-8s"><mpath href="#p3"/></animateMotion>
+
+    <!-- r=380, c≈2388 -->
+    <circle cx="200" cy="150" r="380" fill="none" stroke="rgba(45,212,191,0.35)" stroke-width="2" stroke-linecap="round" filter="url(#glow)" stroke-dasharray="80 2308">
+      <animate attributeName="stroke-dashoffset" from="0" to="-2388" dur="28s" repeatCount="indefinite"/>
     </circle>
-    <circle r="8" fill="url(#tracer)" filter="url(#glow)">
-      <animateMotion dur="10s" repeatCount="indefinite" begin="-3s"><mpath href="#p6"/></animateMotion>
+
+    <!-- r=100, c≈628 -->
+    <circle cx="1300" cy="700" r="100" fill="none" stroke="rgba(45,212,191,0.5)" stroke-width="2" stroke-linecap="round" filter="url(#glow)" stroke-dasharray="50 578">
+      <animate attributeName="stroke-dashoffset" from="0" to="-628" dur="12s" repeatCount="indefinite"/>
     </circle>
-    <circle r="10" fill="url(#tracer)" filter="url(#glow)">
-      <animateMotion dur="26s" repeatCount="indefinite" begin="-14s"><mpath href="#p8"/></animateMotion>
+
+    <!-- r=340, c≈2136 -->
+    <circle cx="1300" cy="700" r="340" fill="none" stroke="rgba(45,212,191,0.35)" stroke-width="2" stroke-linecap="round" filter="url(#glow)" stroke-dasharray="80 2056">
+      <animate attributeName="stroke-dashoffset" from="0" to="-2136" dur="26s" repeatCount="indefinite"/>
     </circle>
-    <circle r="9" fill="url(#tracer)" filter="url(#glow)">
-      <animateMotion dur="32s" repeatCount="indefinite" begin="-5s"><mpath href="#p11"/></animateMotion>
+
+    <!-- r=300, c≈1885 -->
+    <circle cx="700" cy="450" r="300" fill="none" stroke="rgba(45,212,191,0.3)" stroke-width="2" stroke-linecap="round" filter="url(#glow)" stroke-dasharray="70 1815">
+      <animate attributeName="stroke-dashoffset" from="0" to="-1885" dur="32s" repeatCount="indefinite"/>
     </circle>
   </svg>
 </div>
