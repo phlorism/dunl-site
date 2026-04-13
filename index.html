@@ -17,8 +17,8 @@
 <style>
 :root {
   --bg: #08080c;
-  --fg: #e4e4e8;
-  --muted: #6b6b78;
+  --fg: #dcdce0;
+  --muted: #6b6b76;
   --accent: #2dd4bf;
   --card: rgba(255,255,255,0.03);
   --border: rgba(255,255,255,0.08);
@@ -867,9 +867,9 @@ footer {
   border: 1px solid rgba(255,255,255,0.1);
 }
 
-/* --- VOID background orbs (CSS) --- */
-body.theme-void .void-orbs { display: block; }
-.void-orbs {
+/* --- VOID background atmosphere --- */
+body.theme-void .void-bg { display: block; }
+.void-bg {
   display: none;
   position: fixed;
   inset: 0;
@@ -877,52 +877,76 @@ body.theme-void .void-orbs { display: block; }
   pointer-events: none;
   overflow: hidden;
 }
-.void-orb {
+
+/* Concentric ripples from offset origins */
+.void-ripples {
+  position: absolute; inset: 0;
+}
+.void-ripples::before {
+  content: '';
   position: absolute;
+  top: 15%; left: -10%;
+  width: 1200px; height: 1200px;
   border-radius: 50%;
-  filter: blur(80px);
-  animation: orbFloat linear infinite;
+  background: transparent;
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.04),
+    0 0 0 80px transparent,
+    0 0 0 81px rgba(255,255,255,0.035),
+    0 0 0 180px transparent,
+    0 0 0 181px rgba(255,255,255,0.03),
+    0 0 0 300px transparent,
+    0 0 0 301px rgba(255,255,255,0.025),
+    0 0 0 440px transparent,
+    0 0 0 441px rgba(255,255,255,0.02),
+    0 0 0 600px transparent,
+    0 0 0 601px rgba(255,255,255,0.015);
 }
-.void-orb:nth-child(1) {
-  width: 500px; height: 500px;
-  background: rgba(45,212,191,0.07);
-  top: 10%; left: -5%;
-  animation-duration: 45s;
+.void-ripples::after {
+  content: '';
+  position: absolute;
+  bottom: -20%; right: -15%;
+  width: 1000px; height: 1000px;
+  border-radius: 50%;
+  background: transparent;
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.035),
+    0 0 0 100px transparent,
+    0 0 0 101px rgba(255,255,255,0.03),
+    0 0 0 220px transparent,
+    0 0 0 221px rgba(255,255,255,0.025),
+    0 0 0 360px transparent,
+    0 0 0 361px rgba(255,255,255,0.02),
+    0 0 0 520px transparent,
+    0 0 0 521px rgba(255,255,255,0.015);
 }
-.void-orb:nth-child(2) {
-  width: 400px; height: 400px;
-  background: rgba(45,212,191,0.05);
-  top: 50%; right: -10%;
-  animation-duration: 55s;
-  animation-delay: -15s;
+
+/* Dot grid */
+.void-dots {
+  position: absolute; inset: 0;
+  background-image: radial-gradient(circle, rgba(255,255,255,0.06) 1px, transparent 1px);
+  background-size: 32px 32px;
 }
-.void-orb:nth-child(3) {
+
+/* Soft neutral light pools */
+.void-pools {
+  position: absolute; inset: 0;
+}
+.void-pools::before {
+  content: '';
+  position: absolute;
+  top: 5%; right: 10%;
   width: 600px; height: 600px;
-  background: rgba(45,212,191,0.04);
-  bottom: 10%; left: 30%;
-  animation-duration: 65s;
-  animation-delay: -30s;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,255,255,0.025) 0%, transparent 70%);
 }
-.void-orb:nth-child(4) {
-  width: 350px; height: 350px;
-  background: rgba(45,212,191,0.06);
-  top: 30%; right: 20%;
-  animation-duration: 50s;
-  animation-delay: -10s;
-}
-.void-orb:nth-child(5) {
-  width: 450px; height: 450px;
-  background: rgba(45,212,191,0.03);
-  top: 70%; left: -8%;
-  animation-duration: 60s;
-  animation-delay: -25s;
-}
-@keyframes orbFloat {
-  0% { transform: translate(0, 0) scale(1); }
-  25% { transform: translate(80px, -60px) scale(1.1); }
-  50% { transform: translate(30px, 50px) scale(0.9); }
-  75% { transform: translate(-50px, -20px) scale(1.05); }
-  100% { transform: translate(0, 0) scale(1); }
+.void-pools::after {
+  content: '';
+  position: absolute;
+  bottom: 15%; left: 5%;
+  width: 500px; height: 500px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,255,255,0.02) 0%, transparent 70%);
 }
 
 /* --- Effects canvas --- */
@@ -1261,11 +1285,11 @@ body.theme-void h1 em { color: #2dd4bf; }
 body.theme-void .approach-text em { color: #2dd4bf; }
 body.theme-void .philosophy-text em { color: #2dd4bf; }
 body.theme-void .t-role-title { color: #2dd4bf; }
-body.theme-void .article-tag { color: #f59e0b; }
+body.theme-void .article-tag { color: #e8a317; }
 body.theme-void .article-result { color: #2dd4bf; }
 body.theme-void .article-kpi { color: #2dd4bf; }
-body.theme-void .shipped-category { color: #f59e0b; }
-body.theme-void .impact-tier-label { color: #f59e0b; }
+body.theme-void .shipped-category { color: #e8a317; }
+body.theme-void .impact-tier-label { color: #e8a317; }
 body.theme-void .impact-scale > div:nth-child(1) .impact-tier-label { color: rgba(45,212,191,0.35); }
 body.theme-void .impact-scale > div:nth-child(2) .impact-tier-label { color: rgba(45,212,191,0.55); }
 body.theme-void .impact-scale > div:nth-child(3) .impact-tier-label { color: rgba(45,212,191,0.75); }
@@ -1284,7 +1308,7 @@ body.theme-void .timeline::after { background: #2dd4bf; }
 body.theme-void .hero-rule { background: rgba(255,255,255,0.06); }
 body.theme-void .hero-rule::after { filter: drop-shadow(0 0 6px #2dd4bf); }
 body.theme-void .feature-card-bar-fill { background: linear-gradient(90deg, #2dd4bf, #14b8a6); border-radius: 4px; }
-body.theme-void .feature-card-tag { color: #f59e0b; }
+body.theme-void .feature-card-tag { color: #e8a317; }
 body.theme-void .feature-card { border-radius: 20px; }
 body.theme-void .theme-picker .theme-option { border-radius: 20px; }
 body.theme-void .easter-egg { border-radius: 20px; border-color: rgba(45,212,191,0.2); background: rgba(45,212,191,0.04); }
@@ -1494,12 +1518,10 @@ body.theme-void .impact-scale > div:nth-child(4) .shipped-item:hover { border-le
 </head>
 <body class="theme-void">
 
-<div class="void-orbs">
-  <div class="void-orb"></div>
-  <div class="void-orb"></div>
-  <div class="void-orb"></div>
-  <div class="void-orb"></div>
-  <div class="void-orb"></div>
+<div class="void-bg">
+  <div class="void-ripples"></div>
+  <div class="void-dots"></div>
+  <div class="void-pools"></div>
 </div>
 
 <nav>
@@ -2105,7 +2127,7 @@ const themes = {
   cta: { bg:'#ffffff', fg:'#1a1a1a', muted:'#6b6b6b', accent:'#ff385c', card:'#f7f7f7', border:'#e8e8e8', effect: null },
   aol: { bg:'#e8e4df', fg:'#000000', muted:'#555555', accent:'#336699', card:'#ffffff', border:'#b0b0b0', effect: null },
   synth84: { bg:'#0a0014', fg:'#e8d8ff', muted:'#7a6a9a', accent:'#ff1744', card:'#140024', border:'#2a1a44', effect: 'grid' },
-  void: { bg:'#08080c', fg:'#e4e4e8', muted:'#6b6b78', accent:'#2dd4bf', card:'rgba(255,255,255,0.03)', border:'rgba(255,255,255,0.08)', effect: null },
+  void: { bg:'#08080c', fg:'#dcdce0', muted:'#6b6b76', accent:'#2dd4bf', card:'rgba(255,255,255,0.03)', border:'rgba(255,255,255,0.08)', effect: null },
   cosmic: { bg:'#000000', fg:'#00ffff', muted:'#ffff00', accent:'#00ff00', card:'#000033', border:'#333399', effect: 'stars' },
 };
 
@@ -2363,10 +2385,10 @@ const dlContent = {
     texture: 'The animated synthwave grid provides depth and atmosphere. Card surfaces are deep purple-black. Grain overlay adds analog warmth to the digital aesthetic.',
   },
   void: {
-    color: 'Near-black (#08080c) void. Teal (#2dd4bf) as the sole interactive accent. Amber (#f59e0b) reserved for categorical labels only. No competing colors – the void is the canvas.',
+    color: 'Near-black (#08080c) void. Teal (#2dd4bf) as the sole interactive accent. Amber (#e8a317) for categorical labels only. No competing colors – the void is the canvas.',
     type: 'Syne for display headings – geometric, modern, confident. DM Sans for body. JetBrains Mono for labels and metadata – giving structural text a code-like precision.',
-    motion: 'Floating teal orbs drift and pulse behind the content, creating depth through slow parallax. Glass cards with backdrop-blur sit above the void. Everything feels suspended.',
-    texture: 'Glass-over-void. Cards are translucent (3% white) with directional top borders (12% white) creating a specular highlight. 20px radius on everything. Orbs provide ambient depth.',
+    motion: 'Entrances decelerate. Exits accelerate. Staggered reveals cascade with delay. Hover shifts depth via translateY. Glass cards float above the void atmosphere.',
+    texture: 'Concentric ripple rings from offset origins. Dot grid at 32px intervals. Neutral white light pools. Background is always monochrome – color lives in the content layer only.',
   },
   cosmic: {
     color: 'Pure black void. Cyan (#00ffff) for body text. Yellow (#ffff00) for headings and emphasis. Green (#00ff00) for interactive elements and links. Magenta (#ff00ff) for dates, tags, and labels. Every color glows.',
