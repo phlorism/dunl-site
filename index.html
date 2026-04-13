@@ -1172,6 +1172,8 @@ body.theme-void .t-role-date, body.theme-void .t-date {
   font-size: 11px;
   letter-spacing: 0.08em;
 }
+body.theme-void .impact-scale-header { color: rgba(45,212,191,0.4); }
+body.theme-void .impact-scale-header span:last-child { color: #2dd4bf; }
 body.theme-void::after { opacity: 0; }
 body.theme-void nav { background: rgba(8,8,12,0.85); backdrop-filter: blur(12px); border-bottom-color: rgba(255,255,255,0.06); }
 body.theme-void .stat-card, body.theme-void .article-card,
@@ -1203,6 +1205,10 @@ body.theme-void .article-result { color: #2dd4bf; }
 body.theme-void .article-kpi { color: #2dd4bf; }
 body.theme-void .shipped-category { color: #f59e0b; }
 body.theme-void .impact-tier-label { color: #f59e0b; }
+body.theme-void .impact-scale > div:nth-child(1) .impact-tier-label { color: rgba(45,212,191,0.35); }
+body.theme-void .impact-scale > div:nth-child(2) .impact-tier-label { color: rgba(45,212,191,0.55); }
+body.theme-void .impact-scale > div:nth-child(3) .impact-tier-label { color: rgba(45,212,191,0.75); }
+body.theme-void .impact-scale > div:nth-child(4) .impact-tier-label { color: #2dd4bf; }
 body.theme-void .inline-link { color: #2dd4bf; border-bottom-color: rgba(45,212,191,0.3); }
 body.theme-void .inline-link:hover { border-bottom-color: #2dd4bf; }
 body.theme-void .nav-links a:hover { color: #2dd4bf; }
@@ -1226,6 +1232,29 @@ body.theme-void .ach-panel { border-radius: 20px; }
 body.theme-void .ach-icon { border-radius: 8px; }
 body.theme-void .see-more-toggle { color: #2dd4bf; }
 body.theme-void .game-overlay canvas { border-radius: 20px; }
+
+/* VOID impact gradient — left to right across tiers */
+body.theme-void .impact-scale > div:nth-child(1) .shipped-item {
+  border-left: 2px solid rgba(45,212,191,0.06);
+  background: rgba(45,212,191,0.01);
+}
+body.theme-void .impact-scale > div:nth-child(2) .shipped-item {
+  border-left: 2px solid rgba(45,212,191,0.15);
+  background: rgba(45,212,191,0.02);
+}
+body.theme-void .impact-scale > div:nth-child(3) .shipped-item {
+  border-left: 2px solid rgba(45,212,191,0.3);
+  background: rgba(45,212,191,0.04);
+}
+body.theme-void .impact-scale > div:nth-child(4) .shipped-item {
+  border-left: 2px solid rgba(45,212,191,0.6);
+  background: rgba(45,212,191,0.07);
+  border-top-color: rgba(45,212,191,0.15);
+}
+body.theme-void .impact-scale > div:nth-child(1) .shipped-item:hover { border-left-color: rgba(45,212,191,0.2); }
+body.theme-void .impact-scale > div:nth-child(2) .shipped-item:hover { border-left-color: rgba(45,212,191,0.35); }
+body.theme-void .impact-scale > div:nth-child(3) .shipped-item:hover { border-left-color: rgba(45,212,191,0.5); }
+body.theme-void .impact-scale > div:nth-child(4) .shipped-item:hover { border-left-color: #2dd4bf; background: rgba(45,212,191,0.1); }
 
 /* --- Achievements --- */
 .ach-overlay {
