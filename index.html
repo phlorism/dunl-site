@@ -4,15 +4,15 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
-<meta name="description" content="Josh Dunlap — End-to-end product and design leadership. From building the org to shipping the product.">
-<meta property="og:title" content="Josh Dunlap — Product & Design Leadership">
+<meta name="description" content="Josh Dunlap – End-to-end product and design leadership. From building the org to shipping the product.">
+<meta property="og:title" content="Josh Dunlap – Product & Design Leadership">
 <meta property="og:description" content="16 years leading product and design organizations. 100+ features shipped, 9 platforms, 18 countries, 5 companies.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://dunl.app">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Josh Dunlap — Product & Design Leadership">
+<meta name="twitter:title" content="Josh Dunlap – Product & Design Leadership">
 <meta name="twitter:description" content="16 years leading product and design. Startups to enterprise. 100+ features shipped.">
-<title>Josh Dunlap — Product & Design Leadership</title>
+<title>Josh Dunlap – Product & Design Leadership</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500;600&family=Syne:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -867,6 +867,64 @@ footer {
   border: 1px solid rgba(255,255,255,0.1);
 }
 
+/* --- VOID background orbs (CSS) --- */
+body.theme-void .void-orbs { display: block; }
+.void-orbs {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+.void-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  animation: orbFloat linear infinite;
+}
+.void-orb:nth-child(1) {
+  width: 500px; height: 500px;
+  background: rgba(45,212,191,0.07);
+  top: 10%; left: -5%;
+  animation-duration: 45s;
+}
+.void-orb:nth-child(2) {
+  width: 400px; height: 400px;
+  background: rgba(45,212,191,0.05);
+  top: 50%; right: -10%;
+  animation-duration: 55s;
+  animation-delay: -15s;
+}
+.void-orb:nth-child(3) {
+  width: 600px; height: 600px;
+  background: rgba(45,212,191,0.04);
+  bottom: 10%; left: 30%;
+  animation-duration: 65s;
+  animation-delay: -30s;
+}
+.void-orb:nth-child(4) {
+  width: 350px; height: 350px;
+  background: rgba(45,212,191,0.06);
+  top: 30%; right: 20%;
+  animation-duration: 50s;
+  animation-delay: -10s;
+}
+.void-orb:nth-child(5) {
+  width: 450px; height: 450px;
+  background: rgba(45,212,191,0.03);
+  top: 70%; left: -8%;
+  animation-duration: 60s;
+  animation-delay: -25s;
+}
+@keyframes orbFloat {
+  0% { transform: translate(0, 0) scale(1); }
+  25% { transform: translate(80px, -60px) scale(1.1); }
+  50% { transform: translate(30px, 50px) scale(0.9); }
+  75% { transform: translate(-50px, -20px) scale(1.05); }
+  100% { transform: translate(0, 0) scale(1); }
+}
+
 /* --- Effects canvas --- */
 #effectsCanvas {
   position: fixed; inset: 0;
@@ -1237,7 +1295,7 @@ body.theme-void .see-more-toggle { color: #2dd4bf; }
 body.theme-void .dl-swatch { border-radius: 10px; border-color: rgba(45,212,191,0.12); }
 body.theme-void .game-overlay canvas { border-radius: 20px; }
 
-/* VOID impact gradient — left to right across tiers */
+/* VOID impact gradient – left to right across tiers */
 body.theme-void .impact-scale > div:nth-child(1) .shipped-item {
   border-left: 2px solid rgba(45,212,191,0.06);
   background: rgba(45,212,191,0.01);
@@ -1436,6 +1494,14 @@ body.theme-void .impact-scale > div:nth-child(4) .shipped-item:hover { border-le
 </head>
 <body class="theme-void">
 
+<div class="void-orbs">
+  <div class="void-orb"></div>
+  <div class="void-orb"></div>
+  <div class="void-orb"></div>
+  <div class="void-orb"></div>
+  <div class="void-orb"></div>
+</div>
+
 <nav>
   <div class="container">
     <div class="nav-left">
@@ -1454,7 +1520,7 @@ body.theme-void .impact-scale > div:nth-child(4) .shipped-item:hover { border-le
   </div>
 </nav>
 
-<canvas id="effectsCanvas" class="active"></canvas>
+<canvas id="effectsCanvas"></canvas>
 
 <div id="lightbox" class="lightbox" onclick="this.classList.remove('active')">
   <span class="lightbox-close">&times;</span>
@@ -1483,7 +1549,7 @@ body.theme-void .impact-scale > div:nth-child(4) .shipped-item:hover { border-le
       <div class="hero-label">Executive Director of Digital Products & UX Design</div>
       <h1>Building digital<br>experiences at <em>scale</em></h1>
       <div class="easter-egg-wrap"><span class="easter-egg" id="easterEgg" onclick="document.getElementById('gameOverlay').classList.add('active'); unlockAch('game'); initGame();">psst... what's this?</span></div>
-      <p class="hero-bio">End-to-end product, design, and engineering leadership — from building the org to shipping the product. AI-forward.</p>
+      <p class="hero-bio">End-to-end product, design, and engineering leadership – from building the org to shipping the product. AI-forward.</p>
       <div class="hero-rule"></div>
     </div>
   </div>
@@ -1500,7 +1566,7 @@ body.theme-void .impact-scale > div:nth-child(4) .shipped-item:hover { border-le
       <div class="stat-card" onclick="this.classList.toggle('expanded')">
         <div class="stat-number" data-target="5">0</div>
         <div class="stat-label">Companies</div>
-        <div class="stat-detail">Startup to enterprise — from founding to Fortune 500</div>
+        <div class="stat-detail">Startup to enterprise – from founding to Fortune 500</div>
       </div>
       <div class="stat-card" onclick="this.classList.toggle('expanded')">
         <div class="stat-number" data-target="100" data-suffix="+">0</div>
@@ -1533,8 +1599,8 @@ body.theme-void .impact-scale > div:nth-child(4) .shipped-item:hover { border-le
     <div class="philosophy-text reveal" style="margin-top:20px;">
       <p><em>Product and design are the same discipline.</em> Own what gets built and how it looks, feels, and performs. Integrated accountability creates ownership. Separation creates handoffs.</p>
       <p><em>Be right 98% of the time.</em> Prioritize intelligently, learn fast, build a team that covers the rest. Kill or fix what doesn't work, even if the team loved building it.</p>
-      <p><em>Design for the product, the user, and the brand — in that order.</em> When it works, the user doesn't notice it and the dashboard does. KPIs are the voice of design. Brand is the consistency that earns trust.</p>
-      <p><em>AI changes the ratio, not the job.</em> Production gets cheaper. The human's job shifts to judging, not making — maintaining quality, making decisions that require context. Smaller teams, higher standards.</p>
+      <p><em>Design for the product, the user, and the brand – in that order.</em> When it works, the user doesn't notice it and the dashboard does. KPIs are the voice of design. Brand is the consistency that earns trust.</p>
+      <p><em>AI changes the ratio, not the job.</em> Production gets cheaper. The human's job shifts to judging, not making – maintaining quality, making decisions that require context. Smaller teams, higher standards.</p>
       <p><em>Data tells you what. Feedback tells you why.</em> Instrument everything, then go talk to the people using it. Metrics show where to look. Conversations show what to do.</p>
     </div>
   </div>
@@ -1549,12 +1615,12 @@ body.theme-void .impact-scale > div:nth-child(4) .shipped-item:hover { border-le
         <div class="t-company">MGM Resorts International</div>
         <div class="t-date">Aug 2020 – Present · San Francisco Bay Area</div>
         <div class="t-roles">
-          <div class="t-role t-role-current"><span class="t-role-title">Executive Director — Product, Digital Experience, & UX Design</span> <span class="t-role-date">2024–Present</span></div>
-          <div class="t-role"><span class="t-role-title">Director of Product — Platform Experience</span> <span class="t-role-date">2024</span></div>
+          <div class="t-role t-role-current"><span class="t-role-title">Executive Director – Product, Digital Experience, & UX Design</span> <span class="t-role-date">2024–Present</span></div>
+          <div class="t-role"><span class="t-role-title">Director of Product – Platform Experience</span> <span class="t-role-date">2024</span></div>
           <div class="t-role"><span class="t-role-title">Director of Product Management</span> <span class="t-role-date">2022–2024</span></div>
           <div class="t-role"><span class="t-role-title">Senior Product Manager</span> <span class="t-role-date">2020–2022</span></div>
         </div>
-        <div class="t-desc">Four promotions in four years. Currently leading a 28-person product and UX design organization across web, app, and kiosk — spanning discovery, personalization, and the full digital guest experience.</div>
+        <div class="t-desc">Four promotions in four years. Currently leading a 28-person product and UX design organization across web, app, and kiosk – spanning discovery, personalization, and the full digital guest experience.</div>
       </div>
 
       <div class="t-item reveal">
@@ -1574,7 +1640,7 @@ body.theme-void .impact-scale > div:nth-child(4) .shipped-item:hover { border-le
           <div class="t-role"><span class="t-role-title">Director of Operations</span> <span class="t-role-date">2018</span></div>
           <div class="t-role"><span class="t-role-title">Head of Expansion Operations</span> <span class="t-role-date">2017–2018</span></div>
         </div>
-        <div class="t-desc">All new market standup — market analysis, leasing, construction, hiring, operational development. P&L and FP&A ownership.</div>
+        <div class="t-desc">All new market standup – market analysis, leasing, construction, hiring, operational development. P&L and FP&A ownership.</div>
       </div>
 
       <div class="t-item reveal">
@@ -1585,7 +1651,7 @@ body.theme-void .impact-scale > div:nth-child(4) .shipped-item:hover { border-le
           <div class="t-role"><span class="t-role-title">City Launcher</span> <span class="t-role-date">2015</span></div>
           <div class="t-role"><span class="t-role-title">Training & Logistics Coordinator</span> <span class="t-role-date">2014–2015</span></div>
         </div>
-        <div class="t-desc">Three promotions in three years. Managed San Francisco and Austin markets — P&L, operations, strategy, marketing, sales. Built Austin from scratch. Company later acquired by Volvo Cars.</div>
+        <div class="t-desc">Three promotions in three years. Managed San Francisco and Austin markets – P&L, operations, strategy, marketing, sales. Built Austin from scratch. Company later acquired by Volvo Cars.</div>
       </div>
 
       <div class="t-item reveal">
@@ -1607,24 +1673,24 @@ body.theme-void .impact-scale > div:nth-child(4) .shipped-item:hover { border-le
     <div class="article-list">
 
       <div class="article-card reveal" onclick="this.classList.toggle('expanded')">
-        <div class="article-tag">Revenue — Web</div>
+        <div class="article-tag">Revenue – Web</div>
         <h3>Enterprise-wide Homepage & Navigation Redesign</h3>
         <div class="article-result">→ Largest annualized revenue lift in the digital portfolio</div>
         <p>Redesigned homepage and navigation across 20+ property websites, A/B tested and rolled out enterprise-wide.</p>
         <div class="article-expand-hint">Tap to expand ↓</div>
         <div class="article-detail"><div class="article-detail-inner">
-          <p>Rolled out in batches — A/B tested first, then enterprise-wide. Measured <span class="article-kpi">improvements in traffic-to-booking, conversion, AOV, and bounce</span>. Top navigation shipped simultaneously with significant conversion lift.</p>
+          <p>Rolled out in batches – A/B tested first, then enterprise-wide. Measured <span class="article-kpi">improvements in traffic-to-booking, conversion, AOV, and bounce</span>. Top navigation shipped simultaneously with significant conversion lift.</p>
         </div></div>
       </div>
 
       <div class="article-card reveal" onclick="this.classList.toggle('expanded')">
-        <div class="article-tag">Revenue — App</div>
+        <div class="article-tag">Revenue – App</div>
         <h3>Personalization Engine & Trip-State Architecture</h3>
         <div class="article-result">→ Conversion and revenue gains across every personalized surface</div>
         <p>Rebuilt mobile app IA around trip state. Launched rules-based personalization engine powering content across every surface.</p>
         <div class="article-expand-hint">Tap to expand ↓</div>
         <div class="article-detail"><div class="article-detail-inner">
-          <p>Trip Recommendations, Cross-sell, and Booking Flow each delivered <span class="article-kpi">meaningful conversion and revenue gains</span>. Rules Service built from scratch — replacing hardcoded logic with configurable personalization.</p>
+          <p>Trip Recommendations, Cross-sell, and Booking Flow each delivered <span class="article-kpi">meaningful conversion and revenue gains</span>. Rules Service built from scratch – replacing hardcoded logic with configurable personalization.</p>
         </div></div>
       </div>
 
@@ -1632,7 +1698,7 @@ body.theme-void .impact-scale > div:nth-child(4) .shipped-item:hover { border-le
         <div class="article-tag">Guest Experience</div>
         <h3>Digital Arrival: Check-in, Key & Concierge</h3>
         <div class="article-result">→ Near-perfect digital key success rate · Significant labor cost savings</div>
-        <p>Full digital arrival experience — check-in, digital key, AI concierge chat. Reduced front desk dependency, enabled self-service.</p>
+        <p>Full digital arrival experience – check-in, digital key, AI concierge chat. Reduced front desk dependency, enabled self-service.</p>
         <div class="article-expand-hint">Tap to expand ↓</div>
         <div class="article-detail"><div class="article-detail-inner">
           <p>Digital Key redesigned to <span class="article-kpi">near-perfect success rates</span>. Digital Account Unlock eliminated a top call center request, delivering <span class="article-kpi">meaningful annual labor savings</span>.</p>
@@ -1643,7 +1709,7 @@ body.theme-void .impact-scale > div:nth-child(4) .shipped-item:hover { border-le
         <div class="article-tag">Brand</div>
         <h3>Premium Property Websites</h3>
         <div class="article-result">→ Strong conversion lift · Now the template for 2026 property launches</div>
-        <p>Premium web tier for luxury properties — distinct brand, immersive video, curated content hierarchy.</p>
+        <p>Premium web tier for luxury properties – distinct brand, immersive video, curated content hierarchy.</p>
         <div class="article-expand-hint">Tap to expand ↓</div>
         <div class="article-detail"><div class="article-detail-inner">
           <p>Launched with bespoke identity per property. Both showed <span class="article-kpi">strong traffic-to-booking and conversion improvements</span>. Established that luxury properties deserve differentiated digital identities.</p>
@@ -1655,10 +1721,10 @@ body.theme-void .impact-scale > div:nth-child(4) .shipped-item:hover { border-le
     <div class="article-list" id="outcomeMore" style="display:none; margin-top:14px;">
 
       <div class="article-card reveal" onclick="this.classList.toggle('expanded')">
-        <div class="article-tag">Revenue — Web</div>
+        <div class="article-tag">Revenue – Web</div>
         <h3>Product Detail Page System</h3>
         <div class="article-result">→ Consistent conversion lift across every content vertical</div>
-        <p>Complete PDP system across dining, entertainment, pools, spas — each A/B tested and measured.</p>
+        <p>Complete PDP system across dining, entertainment, pools, spas – each A/B tested and measured.</p>
         <div class="article-expand-hint">Tap to expand ↓</div>
         <div class="article-detail"><div class="article-detail-inner">
           <p><span class="article-kpi">Consistent conversion improvements</span> across every vertical. Repeatable template for new content types with built-in measurement.</p>
@@ -1669,7 +1735,7 @@ body.theme-void .impact-scale > div:nth-child(4) .shipped-item:hover { border-le
         <div class="article-tag">Engagement</div>
         <h3>Discovery, Search & Content Merchandising</h3>
         <div class="article-result">→ Strong CTR improvements · Dramatically higher engagement</div>
-        <p>Discovery layer across app and web — global search, gallery browsing, video content, Wi-Fi-to-discovery flows.</p>
+        <p>Discovery layer across app and web – global search, gallery browsing, video content, Wi-Fi-to-discovery flows.</p>
         <div class="article-expand-hint">Tap to expand ↓</div>
         <div class="article-detail"><div class="article-detail-inner">
           <p>Each surface showed <span class="article-kpi">strong CTR and conversion improvements</span>. Preference Center launched with <span class="article-kpi">dramatically higher engagement</span> than previous experience.</p>
@@ -1680,7 +1746,7 @@ body.theme-void .impact-scale > div:nth-child(4) .shipped-item:hover { border-le
         <div class="article-tag">AI & Operations</div>
         <h3>AI-Native Team Transition & Operating Model</h3>
         <div class="article-result">→ Targeting 30–50% effort reduction in Year 1</div>
-        <p>Framework for transitioning a 28-person org to AI-augmented workflows — hybrid team structures, compressed cycles.</p>
+        <p>Framework for transitioning a 28-person org to AI-augmented workflows – hybrid team structures, compressed cycles.</p>
         <div class="article-expand-hint">Tap to expand ↓</div>
         <div class="article-detail"><div class="article-detail-inner">
           <p>AI-DLC operating model with Centaur Pod team structures. 30+ initiative competitive roadmap benchmarked across industries.</p>
@@ -1699,7 +1765,7 @@ body.theme-void .impact-scale > div:nth-child(4) .shipped-item:hover { border-le
 <section id="shipped">
   <div class="container">
     <div class="section-label reveal">Shipped</div>
-    <p class="shipped-intro reveal">Features and products taken from zero to production — organized by impact.</p>
+    <p class="shipped-intro reveal">Features and products taken from zero to production – organized by impact.</p>
 
     <div class="impact-scale-header reveal">
       <span>◂ Foundational</span>
@@ -1730,7 +1796,7 @@ body.theme-void .impact-scale > div:nth-child(4) .shipped-item:hover { border-le
           <div class="shipped-item">Preferences Center</div>
           <div class="shipped-item">Push Notifications & Emails</div>
           <div class="shipped-item">Meetings & Events Navigation</div>
-          <div class="shipped-item">Packages — Dynamic Pricing</div>
+          <div class="shipped-item">Packages – Dynamic Pricing</div>
           <div class="shipped-item">Digital Account Unlock</div>
         </div>
       </div>
@@ -1775,7 +1841,7 @@ body.theme-void .impact-scale > div:nth-child(4) .shipped-item:hover { border-le
 <section id="design-language">
   <div class="container">
     <div class="section-label reveal" id="dlSectionLabel" style="cursor:default;">Design Language</div>
-    <p class="philosophy-text reveal" style="margin-bottom:20px;" id="dlIntro">Every decision on this site — color, type, spacing, motion — was intentional. It supports several visual themes.</p>
+    <p class="philosophy-text reveal" style="margin-bottom:20px;" id="dlIntro">Every decision on this site – color, type, spacing, motion – was intentional. It supports several visual themes.</p>
 
     <div class="theme-picker reveal">
       <div class="theme-option active" data-theme="void"><div class="theme-option-dot" style="background:#2dd4bf;"></div>VOID</div>
@@ -1796,19 +1862,19 @@ body.theme-void .impact-scale > div:nth-child(4) .shipped-item:hover { border-le
       <div class="dl-card reveal">
         <h4>Color</h4>
         <div class="dl-swatch-row" id="dlSwatches"></div>
-        <p id="dlColorDesc">Dark foundation with warm neutrals. Gold accent (#c9a96e) used sparingly for interactive elements, labels, and emphasis — never for backgrounds.</p>
+        <p id="dlColorDesc">Dark foundation with warm neutrals. Gold accent (#c9a96e) used sparingly for interactive elements, labels, and emphasis – never for backgrounds.</p>
       </div>
 
       <div class="dl-card reveal">
         <h4>Typography</h4>
         <p id="dlTypePreview" style="font-family:var(--serif); font-size:20px; margin-bottom:8px; color:var(--fg);">DM Serif Display</p>
-        <p style="font-family:var(--sans); font-size:14px; margin-bottom:12px; color:var(--fg); font-weight:300;">DM Sans — Light 300</p>
-        <p id="dlTypeDesc">Serif for headings and names — warmth and authority. Sans-serif at light weight for body — clean, modern, and readable. No bold in body text; hierarchy comes from size and color, not weight.</p>
+        <p style="font-family:var(--sans); font-size:14px; margin-bottom:12px; color:var(--fg); font-weight:300;">DM Sans – Light 300</p>
+        <p id="dlTypeDesc">Serif for headings and names – warmth and authority. Sans-serif at light weight for body – clean, modern, and readable. No bold in body text; hierarchy comes from size and color, not weight.</p>
       </div>
 
       <div class="dl-card reveal">
         <h4 id="dlMotionTitle">Motion</h4>
-        <p id="dlMotionDesc">Scroll-triggered reveals with staggered delays. Timeline draws itself on scroll. Bouncing gold tracer on the hero divider. Cards lift on hover. All animations use ease-out curves and stay under 600ms. Nothing loops except the tracer — motion should feel responsive, not decorative.</p>
+        <p id="dlMotionDesc">Scroll-triggered reveals with staggered delays. Timeline draws itself on scroll. Bouncing gold tracer on the hero divider. Cards lift on hover. All animations use ease-out curves and stay under 600ms. Nothing loops except the tracer – motion should feel responsive, not decorative.</p>
       </div>
 
       <div class="dl-card reveal">
@@ -1818,7 +1884,7 @@ body.theme-void .impact-scale > div:nth-child(4) .shipped-item:hover { border-le
 
       <div class="dl-card reveal">
         <h4>Layout</h4>
-        <p>Single column, 960px max-width. Generous but purposeful spacing — 32px between sections. Content-first hierarchy: every element earns its place. Section labels use extending lines to create horizontal rhythm across the full width.</p>
+        <p>Single column, 960px max-width. Generous but purposeful spacing – 32px between sections. Content-first hierarchy: every element earns its place. Section labels use extending lines to create horizontal rhythm across the full width.</p>
       </div>
 
       <div class="dl-card reveal">
@@ -1859,51 +1925,51 @@ body.theme-void .impact-scale > div:nth-child(4) .shipped-item:hover { border-le
 <script>
 const featureData = {
   // --- MOBILE APP ---
-  "Mobile Check-in": { tag: "Guest Experience", desc: "End-to-end mobile check-in flow enabling guests to bypass the front desk entirely — from ID verification to room assignment to digital key delivery.", impact: 95 },
+  "Mobile Check-in": { tag: "Guest Experience", desc: "End-to-end mobile check-in flow enabling guests to bypass the front desk entirely – from ID verification to room assignment to digital key delivery.", impact: 95 },
   "Digital Key & Redesign": { tag: "Guest Experience", desc: "Full-screen digital key with redesigned UX, animated unlock experience, error handling, and support for convention-sponsored branding overlays.", impact: 90 },
   "Sponsored Digital Key": { tag: "Revenue", desc: "Monetized digital key screen real estate by enabling convention and event sponsors to display branded overlays to guests during their stay.", impact: 70 },
   "Personalized Home Screen": { tag: "Personalization", desc: "Dynamically assembled app home screen that adapts content, carousels, and modules based on the guest's trip state, loyalty tier, and behavioral signals.", impact: 96 },
   "Personalized App Architecture by Trip State": { tag: "Platform", desc: "Rebuilt the app's information architecture to surface different content and navigation based on whether a guest is pre-trip, in-trip, or post-trip.", impact: 88 },
   "Experiences You'll Love Carousel": { tag: "Personalization", desc: "Image-forward personalized carousel powered by recommendation models, surfacing dining and entertainment tailored to each guest's preferences.", impact: 80 },
   "Personalized Dining Recommendations": { tag: "Personalization", desc: "Data science-powered dining recommendations populating the home screen carousel based on guest preference signals and property context.", impact: 82 },
-  "Upcoming Trip Recommendations": { tag: "Revenue", desc: "Pre-trip recommendation engine surfacing relevant dining, entertainment, and spa experiences for upcoming reservations — driving significant conversion and AOV lift.", impact: 85 },
+  "Upcoming Trip Recommendations": { tag: "Revenue", desc: "Pre-trip recommendation engine surfacing relevant dining, entertainment, and spa experiences for upcoming reservations – driving significant conversion and AOV lift.", impact: 85 },
   "Cross-sell Entertainment × Dining": { tag: "Revenue", desc: "Contextual cross-sell system recommending dining options on entertainment PDPs and vice versa, powered by the Rules Service.", impact: 78 },
   "Global Search": { tag: "Discovery", desc: "Unified search experience across the mobile app, enabling guests to find rooms, dining, entertainment, and property information from a single entry point.", impact: 88 },
   "Search History": { tag: "Discovery", desc: "Persistent search history allowing guests to quickly return to previous queries without retyping, reducing friction in the discovery flow.", impact: 65 },
-  "Room Booking Flow Optimization": { tag: "Revenue", desc: "Iterative optimization of the room booking funnel — improving CTR and conversion through UX refinements, carousel logic, and pricing display.", impact: 93 },
+  "Room Booking Flow Optimization": { tag: "Revenue", desc: "Iterative optimization of the room booking funnel – improving CTR and conversion through UX refinements, carousel logic, and pricing display.", impact: 93 },
   "Native Room PDP": { tag: "Guest Experience", desc: "Redesigned room product detail page with improved information hierarchy, aligned to the Vega design system, with booking-state-aware positioning.", impact: 80 },
   "Native Pools & Spas PDPs": { tag: "Guest Experience", desc: "Native product detail pages for pools and spas, replacing webview experiences with performant native screens and improved conversion.", impact: 72 },
   "Native Resort PDPs": { tag: "Revenue", desc: "Fully native resort-level product detail pages driving significant incremental revenue through improved browsing and booking conversion.", impact: 85 },
   "Resort Tab App Hero": { tag: "Revenue", desc: "Redesigned hero component on the Resort tab driving measurable CTR and incremental revenue improvements.", impact: 78 },
   "Dining & Entertainment PDPs": { tag: "Guest Experience", desc: "Native product detail pages for dining and entertainment venues, replacing webviews with faster, richer native experiences.", impact: 82 },
-  "Dining Category Pages": { tag: "Discovery", desc: "Category-level browsing pages for dining with filtering, sorting, and property-scoped results — driving traffic to booking.", impact: 80 },
+  "Dining Category Pages": { tag: "Discovery", desc: "Category-level browsing pages for dining with filtering, sorting, and property-scoped results – driving traffic to booking.", impact: 80 },
   "Entertainment Calendar / Showtimes": { tag: "Discovery", desc: "Calendar view for entertainment and concert showtimes, giving guests a time-based way to browse and book upcoming performances.", impact: 75 },
   "Venue Calendar": { tag: "Discovery", desc: "Property-level venue calendar enabling guests to see all upcoming events and shows at a specific venue.", impact: 72 },
   "Purchasable Room Upgrades": { tag: "Revenue", desc: "In-app room upgrade purchasing flow allowing guests to upgrade their room type after initial booking, creating incremental upsell revenue.", impact: 88 },
-  "Early Check-in & Late Checkout": { tag: "Revenue", desc: "Purchasable stay enhancement options enabling guests to extend their stay window — generating ancillary revenue with zero inventory cost.", impact: 82 },
-  "Event Packages (F1)": { tag: "Revenue", desc: "Bundled event package experience for Formula 1 and other tentpole events — combining room, tickets, and dining into purchasable packages.", impact: 76 },
+  "Early Check-in & Late Checkout": { tag: "Revenue", desc: "Purchasable stay enhancement options enabling guests to extend their stay window – generating ancillary revenue with zero inventory cost.", impact: 82 },
+  "Event Packages (F1)": { tag: "Revenue", desc: "Bundled event package experience for Formula 1 and other tentpole events – combining room, tickets, and dining into purchasable packages.", impact: 76 },
   "Discover Tab Full-screen Gallery": { tag: "Revenue", desc: "Immersive full-screen gallery tiles on the Discover tab, projected to drive significant annualized incremental revenue through improved visual merchandising.", impact: 84 },
   "Mobile Ordering Module": { tag: "Guest Experience", desc: "Home screen module promoting mobile dining ordering for in-trip guests, with pre-filtered restaurant results based on property location.", impact: 74 },
-  "Digital Concierge Chat": { tag: "Guest Experience", desc: "AI-powered chat experience for housekeeping requests, trip planning, booking activities, and answering guest questions — deployed across app and web.", impact: 90 },
+  "Digital Concierge Chat": { tag: "Guest Experience", desc: "AI-powered chat experience for housekeeping requests, trip planning, booking activities, and answering guest questions – deployed across app and web.", impact: 90 },
   "Folio & Stay Summary": { tag: "Guest Experience", desc: "Digital folio and stay summary giving guests a clear view of charges, activity, and trip details throughout and after their stay.", impact: 70 },
   "Checkout Experiences": { tag: "Guest Experience", desc: "Streamlined digital checkout flow reducing front desk congestion and giving guests control over their departure experience.", impact: 78 },
   "Carbon Offsetting Offers": { tag: "Guest Experience", desc: "Optional carbon offset purchasing integrated into the booking and stay flow, supporting MGM's sustainability positioning.", impact: 55 },
-  "Transactional Push Notifications & Emails": { tag: "Engagement", desc: "Automated transactional messaging across the guest journey — booking confirmations, check-in reminders, folio updates, and post-stay communications.", impact: 82 },
-  "First Time User Experience Redesign": { tag: "Engagement", desc: "Redesigned onboarding flow explaining app capabilities, permission requests, and capturing user intent — with cohort testing for optimization.", impact: 80 },
+  "Transactional Push Notifications & Emails": { tag: "Engagement", desc: "Automated transactional messaging across the guest journey – booking confirmations, check-in reminders, folio updates, and post-stay communications.", impact: 82 },
+  "First Time User Experience Redesign": { tag: "Engagement", desc: "Redesigned onboarding flow explaining app capabilities, permission requests, and capturing user intent – with cohort testing for optimization.", impact: 80 },
   "Guided Sign-in / Sign-up": { tag: "Engagement", desc: "Streamlined authentication flow with clearer instructions, password manager support, real-time validation, and MGM Rewards value proposition.", impact: 76 },
   "Multi-Factor Authentication": { tag: "Security", desc: "SMS, email, and passkey-based MFA rolled out across app and web as an optional security layer for MGM Rewards accounts.", impact: 85 },
-  "Digital Account Unlock": { tag: "Operations", desc: "Self-service account unlock flow reducing call center volume by eliminating a high-frequency support request — significant annual labor savings.", impact: 82 },
-  "Preferences Center": { tag: "Personalization", desc: "Guest preference management hub enabling users to set dining, entertainment, and stay preferences — powering downstream personalization across all surfaces.", impact: 86 },
+  "Digital Account Unlock": { tag: "Operations", desc: "Self-service account unlock flow reducing call center volume by eliminating a high-frequency support request – significant annual labor savings.", impact: 82 },
+  "Preferences Center": { tag: "Personalization", desc: "Guest preference management hub enabling users to set dining, entertainment, and stay preferences – powering downstream personalization across all surfaces.", impact: 86 },
   "Rewards Stay Preferences": { tag: "Personalization", desc: "Preferences allowing guests to manage and apply rewards points for automatic redemption at checkout.", impact: 72 },
   "Profile Navigation Redesign": { tag: "Guest Experience", desc: "Relocated profile access from a dedicated tab to a persistent header element, freeing bottom navigation space for higher-value destinations.", impact: 68 },
 
   // --- WEB ---
-  "Bellagio Premium Homepage": { tag: "Brand", desc: "Premium homepage redesign for Bellagio featuring immersive video, distinctive brand identity, and curated content hierarchy — the template for luxury property web experiences.", impact: 96 },
+  "Bellagio Premium Homepage": { tag: "Brand", desc: "Premium homepage redesign for Bellagio featuring immersive video, distinctive brand identity, and curated content hierarchy – the template for luxury property web experiences.", impact: 96 },
   "The Cosmopolitan Premium Homepage": { tag: "Brand", desc: "Bespoke premium homepage for The Cosmopolitan of Las Vegas with unique brand expression, video content, and differentiated product merchandising.", impact: 90 },
   "TCOLV Discovery Navigation": { tag: "Discovery", desc: "Custom discovery-optimized navigation for The Cosmopolitan, redesigning how guests browse dining, entertainment, and nightlife.", impact: 78 },
-  "Enterprise Homepage Redesign (Vega)": { tag: "Revenue", desc: "Enterprise-wide homepage redesign rolled out across all properties — driving significant lifts in traffic-to-booking, conversion, and average order value.", impact: 95 },
+  "Enterprise Homepage Redesign (Vega)": { tag: "Revenue", desc: "Enterprise-wide homepage redesign rolled out across all properties – driving significant lifts in traffic-to-booking, conversion, and average order value.", impact: 95 },
   "Top Navigation Optimization": { tag: "Revenue", desc: "Redesigned top navigation rolled out enterprise-wide with measurable improvements in click-through rate and conversion across all properties.", impact: 93 },
-  "Global Footer Redesign": { tag: "Brand", desc: "Consistent global footer deployed across MGMRI and property sites — unifying branding, app download CTAs, and navigational structure.", impact: 62 },
+  "Global Footer Redesign": { tag: "Brand", desc: "Consistent global footer deployed across MGMRI and property sites – unifying branding, app download CTAs, and navigational structure.", impact: 62 },
   "Sizzle Shorts Video Reels": { tag: "Engagement", desc: "Short-form vertical video content integrated into property pages, bringing social-style immersive content to the web experience.", impact: 75 },
   "Video in Mobile Web Hero": { tag: "Revenue", desc: "Video hero treatment on mobile web driving significant improvements in CTR and conversion over static imagery.", impact: 82 },
   "Dining Product Detail Pages": { tag: "Revenue", desc: "Redesigned dining PDPs driving substantial traffic-to-booking and conversion improvements across the portfolio.", impact: 88 },
@@ -1912,38 +1978,38 @@ const featureData = {
   "Spas & Salons PDPs": { tag: "Revenue", desc: "Redesigned spa and salon product detail pages with improved CTR and measurable annualized revenue lift.", impact: 76 },
   "Private & Group Dining Pages": { tag: "Revenue", desc: "Dedicated pages for private and group dining experiences, driving higher email CTR and incremental revenue.", impact: 74 },
   "Premium Package PDPs": { tag: "Revenue", desc: "Enhanced product detail pages for premium packages with improved CTR, reduced bounce rate, and measurable revenue lift.", impact: 78 },
-  "Packages — Dynamic Pricing": { tag: "Revenue", desc: "Dynamic pricing display on package category and detail pages, pulling real-time rates including sold-out states and error handling.", impact: 80 },
-  "Wi-Fi Connection-to-Discovery Flow": { tag: "Engagement", desc: "Post-Wi-Fi-connection flow directing guests to app discovery content — driving significant CTR and app install improvements.", impact: 76 },
+  "Packages – Dynamic Pricing": { tag: "Revenue", desc: "Dynamic pricing display on package category and detail pages, pulling real-time rates including sold-out states and error handling.", impact: 80 },
+  "Wi-Fi Connection-to-Discovery Flow": { tag: "Engagement", desc: "Post-Wi-Fi-connection flow directing guests to app discovery content – driving significant CTR and app install improvements.", impact: 76 },
   "Web Chat (Digital Concierge)": { tag: "Guest Experience", desc: "Web-based digital concierge chat rolled out across property homepages, with NPS feedback collection and notification badges.", impact: 80 },
   "Web Check-in on Homepage": { tag: "Guest Experience", desc: "Prominent check-in entry point on property homepages, making it easier for guests to start the check-in process from web.", impact: 70 },
   "Meetings & Events Navigation": { tag: "Discovery", desc: "Added Meetings & Events to top navigation, driving significantly increased clicks to group and event booking content.", impact: 68 },
   "Embedded Schema for SEO": { tag: "Discovery", desc: "Structured data markup (schema.org) added to entertainment and restaurant PDPs, improving search engine visibility and rich result eligibility.", impact: 75 },
-  "CA Fee Transparency Pricing": { tag: "Compliance", desc: "Updated price displays across entertainment to comply with California fee transparency law — showing total price inclusive of fees.", impact: 60 },
-  "MFA on Web via Okta": { tag: "Security", desc: "Multi-factor authentication deployed on web via Okta — supporting SMS, email, and passkey methods for MGM Rewards account security.", impact: 82 },
+  "CA Fee Transparency Pricing": { tag: "Compliance", desc: "Updated price displays across entertainment to comply with California fee transparency law – showing total price inclusive of fees.", impact: 60 },
+  "MFA on Web via Okta": { tag: "Security", desc: "Multi-factor authentication deployed on web via Okta – supporting SMS, email, and passkey methods for MGM Rewards account security.", impact: 82 },
   "Blog Platform": { tag: "Discovery", desc: "Content marketing platform enabling editorial content to drive organic traffic and support SEO strategy across the portfolio.", impact: 70 },
-  "Miscellaneous Page Redesigns & A/B Tests": { tag: "Revenue", desc: "Ongoing cycle of page-level redesigns and A/B tests across the portfolio — each measured against traffic-to-booking, conversion, and revenue KPIs.", impact: 85 },
+  "Miscellaneous Page Redesigns & A/B Tests": { tag: "Revenue", desc: "Ongoing cycle of page-level redesigns and A/B tests across the portfolio – each measured against traffic-to-booking, conversion, and revenue KPIs.", impact: 85 },
 
   // --- PLATFORM & EMPLOYEE TOOLS ---
-  "Employee Tools Platform (Backstage)": { tag: "Operations", desc: "Internal platform consolidating employee-facing tools — homescreen builder, digital key manager, guest services, and content management — into a unified application.", impact: 88 },
+  "Employee Tools Platform (Backstage)": { tag: "Operations", desc: "Internal platform consolidating employee-facing tools – homescreen builder, digital key manager, guest services, and content management – into a unified application.", impact: 88 },
   "In-Lobby Hosted Digital Check-in App": { tag: "Operations", desc: "Employee-facing tablet application enabling lobby ambassadors to facilitate guest check-in, reducing front desk queues and improving the arrival experience.", impact: 82 },
   "Homescreen Experience Builder": { tag: "Operations", desc: "Internal tool enabling non-technical operators to configure and reorder mobile app home screen modules based on trip state, network, and login status.", impact: 78 },
   "Digital Key Manager": { tag: "Operations", desc: "Back-office tool for managing digital key backgrounds for standard and VIP guests, including sponsored convention overlays.", impact: 68 },
-  "Backend for Frontend (BFF) Architecture": { tag: "Platform", desc: "API orchestration layer decoupling the mobile app from backend services — enabling faster feature development, better performance, and independent deployability.", impact: 90 },
+  "Backend for Frontend (BFF) Architecture": { tag: "Platform", desc: "API orchestration layer decoupling the mobile app from backend services – enabling faster feature development, better performance, and independent deployability.", impact: 90 },
   "Rules Service / Personalization Engine": { tag: "Platform", desc: "Centralized rules engine powering content personalization, cross-sell logic, and dynamic module assembly across app and web surfaces.", impact: 92 },
 
   // --- Renamed/combined entries for impact scale ---
-  "Wi-Fi Connection-to-Discovery": { tag: "Engagement", desc: "Post-Wi-Fi-connection flow directing guests to app discovery content — driving significant CTR and app install improvements.", impact: 76 },
-  "Backend for Frontend (BFF)": { tag: "Platform", desc: "API orchestration layer decoupling the mobile app from backend services — enabling faster feature development and independent deployability.", impact: 90 },
-  "Push Notifications & Emails": { tag: "Engagement", desc: "Automated transactional messaging across the guest journey — booking confirmations, check-in reminders, folio updates, and post-stay communications.", impact: 82 },
+  "Wi-Fi Connection-to-Discovery": { tag: "Engagement", desc: "Post-Wi-Fi-connection flow directing guests to app discovery content – driving significant CTR and app install improvements.", impact: 76 },
+  "Backend for Frontend (BFF)": { tag: "Platform", desc: "API orchestration layer decoupling the mobile app from backend services – enabling faster feature development and independent deployability.", impact: 90 },
+  "Push Notifications & Emails": { tag: "Engagement", desc: "Automated transactional messaging across the guest journey – booking confirmations, check-in reminders, folio updates, and post-stay communications.", impact: 82 },
   "Pools & Spas PDPs": { tag: "Revenue", desc: "Dedicated product detail pages for pool and spa experiences, driving increased traffic to booking across resort wellness venues.", impact: 74 },
   "Discover Tab Gallery": { tag: "Revenue", desc: "Immersive full-screen gallery tiles on the Discover tab, driving significant incremental revenue through improved visual merchandising.", impact: 84 },
   "Cosmopolitan Premium Homepage": { tag: "Brand", desc: "Bespoke premium homepage for The Cosmopolitan of Las Vegas with unique brand expression, video content, and differentiated merchandising.", impact: 90 },
-  "Enterprise Homepage Redesign": { tag: "Revenue", desc: "Enterprise-wide homepage redesign rolled out across all properties — driving significant lifts in traffic-to-booking, conversion, and AOV.", impact: 100 },
+  "Enterprise Homepage Redesign": { tag: "Revenue", desc: "Enterprise-wide homepage redesign rolled out across all properties – driving significant lifts in traffic-to-booking, conversion, and AOV.", impact: 100 },
   "Trip-State App Architecture": { tag: "Platform", desc: "Rebuilt the app's information architecture to surface different content and navigation based on pre-trip, in-trip, or post-trip state.", impact: 88 },
-  "Mobile Check-in & Digital Key": { tag: "Guest Experience", desc: "End-to-end mobile check-in and digital key — from ID verification to room assignment to animated unlock, enabling guests to bypass the front desk.", impact: 100 },
-  "Room Booking Optimization": { tag: "Revenue", desc: "Iterative optimization of the room booking funnel — improving CTR and conversion through UX refinements, carousel logic, and pricing display.", impact: 98 },
+  "Mobile Check-in & Digital Key": { tag: "Guest Experience", desc: "End-to-end mobile check-in and digital key – from ID verification to room assignment to animated unlock, enabling guests to bypass the front desk.", impact: 100 },
+  "Room Booking Optimization": { tag: "Revenue", desc: "Iterative optimization of the room booking funnel – improving CTR and conversion through UX refinements, carousel logic, and pricing display.", impact: 98 },
   "Rules Service / Personalization": { tag: "Platform", desc: "Centralized rules engine powering content personalization, cross-sell logic, and dynamic module assembly across app and web.", impact: 96 },
-  "Employee Tools Platform": { tag: "Operations", desc: "Internal platform consolidating employee-facing tools — homescreen builder, digital key manager, guest services — into a unified application.", impact: 88 },
+  "Employee Tools Platform": { tag: "Operations", desc: "Internal platform consolidating employee-facing tools – homescreen builder, digital key manager, guest services – into a unified application.", impact: 88 },
 };
 
 // Scroll reveal
@@ -2039,7 +2105,7 @@ const themes = {
   cta: { bg:'#ffffff', fg:'#1a1a1a', muted:'#6b6b6b', accent:'#ff385c', card:'#f7f7f7', border:'#e8e8e8', effect: null },
   aol: { bg:'#e8e4df', fg:'#000000', muted:'#555555', accent:'#336699', card:'#ffffff', border:'#b0b0b0', effect: null },
   synth84: { bg:'#0a0014', fg:'#e8d8ff', muted:'#7a6a9a', accent:'#ff1744', card:'#140024', border:'#2a1a44', effect: 'grid' },
-  void: { bg:'#08080c', fg:'#e4e4e8', muted:'#6b6b78', accent:'#2dd4bf', card:'rgba(255,255,255,0.03)', border:'rgba(255,255,255,0.08)', effect: 'orbs' },
+  void: { bg:'#08080c', fg:'#e4e4e8', muted:'#6b6b78', accent:'#2dd4bf', card:'rgba(255,255,255,0.03)', border:'rgba(255,255,255,0.08)', effect: null },
   cosmic: { bg:'#000000', fg:'#00ffff', muted:'#ffff00', accent:'#00ff00', card:'#000033', border:'#333399', effect: 'stars' },
 };
 
@@ -2053,12 +2119,6 @@ function resizeEffects() {
 }
 window.addEventListener('resize', resizeEffects);
 resizeEffects();
-
-// Start VOID orbs on load
-currentEffect = 'orbs';
-initOrbs();
-effectsCanvas.classList.add('active');
-effectLoop();
 
 // Matrix rain
 const matrixChars = 'アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン0123456789';
@@ -2255,64 +2315,64 @@ function effectLoop() {
 
 const dlContent = {
   classic: {
-    color: 'Dark foundation with warm neutrals. Gold accent (#c9a96e) for interactive elements, labels, and results — never for backgrounds.',
-    type: 'Serif for headings — warmth and authority. Sans-serif at light weight for body. Hierarchy from size and color, not weight.',
+    color: 'Dark foundation with warm neutrals. Gold accent (#c9a96e) for interactive elements, labels, and results – never for backgrounds.',
+    type: 'Serif for headings – warmth and authority. Sans-serif at light weight for body. Hierarchy from size and color, not weight.',
     motion: 'Scroll-triggered reveals. Timeline draws on scroll. Tracer bounces on the hero divider. Cards lift on hover. All under 600ms.',
     texture: 'SVG noise at 4% opacity gives the dark background grain. Cards sit one step lighter to create depth without shadows.',
   },
   cyberpunk: {
     color: 'Deep indigo foundation with cool blue-grey neutrals. Hot pink accent (#ff2d6b) creates urgency and edge. Dual-tone text shadows (pink + cyan) add a glitch aesthetic.',
-    type: 'Same typographic hierarchy as classic, but the glitch text-shadow on headings changes the character entirely — controlled chaos.',
+    type: 'Same typographic hierarchy as classic, but the glitch text-shadow on headings changes the character entirely – controlled chaos.',
     motion: 'Same motion system as classic, plus glitch-style dual color text shadows that give headings a displaced, digital-artifact feel.',
-    texture: 'Grain overlay on deep indigo. The dark blue-black background feels more digital than the warm classic — like looking at a terminal.',
+    texture: 'Grain overlay on deep indigo. The dark blue-black background feels more digital than the warm classic – like looking at a terminal.',
   },
   laser: {
     color: 'Near-black void with pure white text. Red accent (#ff3333) for labels and emphasis. The darkness makes the laser beams pop.',
-    type: 'Standard type hierarchy against maximum contrast — white on near-black. Red accent text cuts through like a targeting laser.',
+    type: 'Standard type hierarchy against maximum contrast – white on near-black. Red accent text cuts through like a targeting laser.',
     motion: 'Animated laser beams fire across the background at random angles, fading out with glow trails. Each beam has a randomized color, width, and decay rate.',
-    texture: 'No grain — the animated laser canvas provides all the texture. Beams spawn continuously and fade, creating an ever-changing light show behind the content.',
+    texture: 'No grain – the animated laser canvas provides all the texture. Beams spawn continuously and fade, creating an ever-changing light show behind the content.',
   },
   neon: {
-    color: 'Pure black background for maximum neon contrast. Neon pink (#ff2eea) dominates as the primary accent — labels, numbers, emphasis, and interactive states. Cyan blue (#00d4ff) reserved for links and the nav border.',
+    color: 'Pure black background for maximum neon contrast. Neon pink (#ff2eea) dominates as the primary accent – labels, numbers, emphasis, and interactive states. Cyan blue (#00d4ff) reserved for links and the nav border.',
     type: 'Light grey body text on pure black. Pink neon glow on headings via text-shadow. The glow effect makes text feel illuminated, like signage.',
     motion: 'Same scroll-triggered system, but hover states add neon glow box-shadows. The pink tracer on the hero rule pulses against pure black.',
-    texture: 'No grain. Pure black creates the deepest possible contrast for neon glow effects. Card surfaces are barely above black (#0a0a0a) — just enough to define edges.',
+    texture: 'No grain. Pure black creates the deepest possible contrast for neon glow effects. Card surfaces are barely above black (#0a0a0a) – just enough to define edges.',
   },
   matrix: {
     color: 'Pure black with green (#00ff41) for everything. Monochrome CRT terminal aesthetic. Bright white and light green highlights flash through the rain.',
     type: 'Green-on-black monochrome. Text gets layered black shadows for readability against the falling character rain.',
-    motion: 'Katakana and digit rain at 35% opacity with brightness accents — white flashes simulate column leading edges. Cards use backdrop-blur to soften the rain.',
+    motion: 'Katakana and digit rain at 35% opacity with brightness accents – white flashes simulate column leading edges. Cards use backdrop-blur to soften the rain.',
     texture: 'The rain IS the texture. Translucent dark-green card backgrounds let it bleed through. Constant subtle movement without overwhelming readability.',
   },
   cta: {
-    color: 'Clean white background with dark text. Pink (#ff385c) as the primary brand accent for labels and static elements. Blue (#2563eb) for all interactive elements — links, hovers, and call-to-action buttons.',
+    color: 'Clean white background with dark text. Pink (#ff385c) as the primary brand accent for labels and static elements. Blue (#2563eb) for all interactive elements – links, hovers, and call-to-action buttons.',
     type: 'Same fonts, but on white the light-weight sans-serif feels more editorial. The contrast shift from dark-on-light changes the entire reading experience.',
     motion: 'Same animation system, but subtle card shadows replace border glows on hover. The lighter palette makes lift effects more visible.',
-    texture: 'No grain overlay — white backgrounds don\'t need it. Depth comes from subtle box-shadows on cards instead of border-based separation.',
+    texture: 'No grain overlay – white backgrounds don\'t need it. Depth comes from subtle box-shadows on cards instead of border-based separation.',
   },
   aol: {
-    color: 'Windows system grey (#e8e4df) background with white card surfaces. Steel blue (#336699) as the primary accent — the exact shade from AIM\'s buddy list headers. Yellow (#ffcc00) for the running man highlights — timeline dots, nav logo, hover states.',
-    type: 'Tahoma — the system font of every AIM chat window. Clean, compact, and unmistakably late-90s Microsoft. No serifs anywhere. Bold used freely because Tahoma was built for it.',
+    color: 'Windows system grey (#e8e4df) background with white card surfaces. Steel blue (#336699) as the primary accent – the exact shade from AIM\'s buddy list headers. Yellow (#ffcc00) for the running man highlights – timeline dots, nav logo, hover states.',
+    type: 'Tahoma – the system font of every AIM chat window. Clean, compact, and unmistakably late-90s Microsoft. No serifs anywhere. Bold used freely because Tahoma was built for it.',
     motion: 'Same scroll-triggered reveals, but the gradient nav bar, subtle card shadows, and rounded corners give everything a Windows XP-era softness. Hover states feel like selecting a buddy.',
-    texture: 'No grain. White cards on system grey. Subtle 1px shadows instead of hard bevels. The AIM aesthetic was cleaner than most people remember — this is the 2003 era, not 1997.',
+    texture: 'No grain. White cards on system grey. Subtle 1px shadows instead of hard bevels. The AIM aesthetic was cleaner than most people remember – this is the 2003 era, not 1997.',
   },
   synth84: {
     color: 'Deep purple-black (#0a0014) foundation. Stranger Things red (#ff1744) for primary headings and accent. Purple (#ba68c8) for secondary emphasis and timeline. Blue (#64b5f6) for tags and links.',
-    type: 'Syne for headings with heavy red glow text-shadows — the title feels like neon tubing. Purple glow on secondary text.',
-    motion: 'Retro perspective grid animates behind all content — purple vertical lines converging to a vanishing point with red horizontal lines scrolling toward the viewer.',
+    type: 'Syne for headings with heavy red glow text-shadows – the title feels like neon tubing. Purple glow on secondary text.',
+    motion: 'Retro perspective grid animates behind all content – purple vertical lines converging to a vanishing point with red horizontal lines scrolling toward the viewer.',
     texture: 'The animated synthwave grid provides depth and atmosphere. Card surfaces are deep purple-black. Grain overlay adds analog warmth to the digital aesthetic.',
   },
   void: {
-    color: 'Near-black (#08080c) void. Teal (#2dd4bf) as the sole interactive accent. Amber (#f59e0b) reserved for categorical labels only. No competing colors — the void is the canvas.',
-    type: 'Syne for display headings — geometric, modern, confident. DM Sans for body. JetBrains Mono for labels and metadata — giving structural text a code-like precision.',
+    color: 'Near-black (#08080c) void. Teal (#2dd4bf) as the sole interactive accent. Amber (#f59e0b) reserved for categorical labels only. No competing colors – the void is the canvas.',
+    type: 'Syne for display headings – geometric, modern, confident. DM Sans for body. JetBrains Mono for labels and metadata – giving structural text a code-like precision.',
     motion: 'Floating teal orbs drift and pulse behind the content, creating depth through slow parallax. Glass cards with backdrop-blur sit above the void. Everything feels suspended.',
     texture: 'Glass-over-void. Cards are translucent (3% white) with directional top borders (12% white) creating a specular highlight. 20px radius on everything. Orbs provide ambient depth.',
   },
   cosmic: {
     color: 'Pure black void. Cyan (#00ffff) for body text. Yellow (#ffff00) for headings and emphasis. Green (#00ff00) for interactive elements and links. Magenta (#ff00ff) for dates, tags, and labels. Every color glows.',
-    type: 'Times New Roman everywhere — the official font of "I discovered something NASA doesn\'t want you to know." Bold on everything. No subtlety. The truth doesn\'t need kerning.',
+    type: 'Times New Roman everywhere – the official font of "I discovered something NASA doesn\'t want you to know." Bold on everything. No subtlety. The truth doesn\'t need kerning.',
     motion: '120 twinkling stars in five colors animate continuously across the background. Brightest stars get cross-shaped sparkle effects. Everything glows with colored text-shadows. The void is alive.',
-    texture: 'No grain — the animated starfield IS the texture. Navy card backgrounds (#000033) with purple borders (#333399) evoke late-90s HTML tables. Every hover adds a green glow, because space is green apparently.',
+    texture: 'No grain – the animated starfield IS the texture. Navy card backgrounds (#000033) with purple borders (#333399) evoke late-90s HTML tables. Every hover adds a green glow, because space is green apparently.',
   },
 };
 
