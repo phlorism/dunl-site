@@ -559,7 +559,7 @@ footer {
 /* --- Stats / KPI --- */
 .stats-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 16px;
 }
 @media (max-width: 768px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } }
@@ -1809,7 +1809,7 @@ body.theme-void .impact-scale > div:nth-child(4) .shipped-item:hover { border-le
 
       <div class="dl-card reveal">
         <h4>Interaction</h4>
-        <p>KPI cards expand on click. Outcome cards expand to reveal context. Shipped items open detail modals with impact bars. Photo opens a lightbox. The nav hides on scroll down, returns on scroll up. Several secrets are hidden for anyone paying attention.</p>
+        <p>KPI cards expand on click. Outcome cards expand to reveal context. Shipped items open detail modals with impact bars. Photo opens a lightbox. The nav stays persistent on desktop, hides on scroll on mobile. Several secrets are hidden for anyone paying attention.</p>
       </div>
 
       <div class="dl-card reveal">
@@ -1858,7 +1858,7 @@ const featureData = {
   "Mobile Check-in": { tag: "Guest Experience", desc: "End-to-end mobile check-in flow enabling guests to bypass the front desk entirely — from ID verification to room assignment to digital key delivery.", impact: 95 },
   "Digital Key & Redesign": { tag: "Guest Experience", desc: "Full-screen digital key with redesigned UX, animated unlock experience, error handling, and support for convention-sponsored branding overlays.", impact: 90 },
   "Sponsored Digital Key": { tag: "Revenue", desc: "Monetized digital key screen real estate by enabling convention and event sponsors to display branded overlays to guests during their stay.", impact: 70 },
-  "Personalized Home Screen": { tag: "Personalization", desc: "Dynamically assembled app home screen that adapts content, carousels, and modules based on the guest's trip state, loyalty tier, and behavioral signals.", impact: 92 },
+  "Personalized Home Screen": { tag: "Personalization", desc: "Dynamically assembled app home screen that adapts content, carousels, and modules based on the guest's trip state, loyalty tier, and behavioral signals.", impact: 96 },
   "Personalized App Architecture by Trip State": { tag: "Platform", desc: "Rebuilt the app's information architecture to surface different content and navigation based on whether a guest is pre-trip, in-trip, or post-trip.", impact: 88 },
   "Experiences You'll Love Carousel": { tag: "Personalization", desc: "Image-forward personalized carousel powered by recommendation models, surfacing dining and entertainment tailored to each guest's preferences.", impact: 80 },
   "Personalized Dining Recommendations": { tag: "Personalization", desc: "Data science-powered dining recommendations populating the home screen carousel based on guest preference signals and property context.", impact: 82 },
@@ -1894,7 +1894,7 @@ const featureData = {
   "Profile Navigation Redesign": { tag: "Guest Experience", desc: "Relocated profile access from a dedicated tab to a persistent header element, freeing bottom navigation space for higher-value destinations.", impact: 68 },
 
   // --- WEB ---
-  "Bellagio Premium Homepage": { tag: "Brand", desc: "Premium homepage redesign for Bellagio featuring immersive video, distinctive brand identity, and curated content hierarchy — the template for luxury property web experiences.", impact: 92 },
+  "Bellagio Premium Homepage": { tag: "Brand", desc: "Premium homepage redesign for Bellagio featuring immersive video, distinctive brand identity, and curated content hierarchy — the template for luxury property web experiences.", impact: 96 },
   "The Cosmopolitan Premium Homepage": { tag: "Brand", desc: "Bespoke premium homepage for The Cosmopolitan of Las Vegas with unique brand expression, video content, and differentiated product merchandising.", impact: 90 },
   "TCOLV Discovery Navigation": { tag: "Discovery", desc: "Custom discovery-optimized navigation for The Cosmopolitan, redesigning how guests browse dining, entertainment, and nightlife.", impact: 78 },
   "Enterprise Homepage Redesign (Vega)": { tag: "Revenue", desc: "Enterprise-wide homepage redesign rolled out across all properties — driving significant lifts in traffic-to-booking, conversion, and average order value.", impact: 95 },
@@ -1934,11 +1934,11 @@ const featureData = {
   "Pools & Spas PDPs": { tag: "Revenue", desc: "Dedicated product detail pages for pool and spa experiences, driving increased traffic to booking across resort wellness venues.", impact: 74 },
   "Discover Tab Gallery": { tag: "Revenue", desc: "Immersive full-screen gallery tiles on the Discover tab, driving significant incremental revenue through improved visual merchandising.", impact: 84 },
   "Cosmopolitan Premium Homepage": { tag: "Brand", desc: "Bespoke premium homepage for The Cosmopolitan of Las Vegas with unique brand expression, video content, and differentiated merchandising.", impact: 90 },
-  "Enterprise Homepage Redesign": { tag: "Revenue", desc: "Enterprise-wide homepage redesign rolled out across all properties — driving significant lifts in traffic-to-booking, conversion, and AOV.", impact: 95 },
+  "Enterprise Homepage Redesign": { tag: "Revenue", desc: "Enterprise-wide homepage redesign rolled out across all properties — driving significant lifts in traffic-to-booking, conversion, and AOV.", impact: 100 },
   "Trip-State App Architecture": { tag: "Platform", desc: "Rebuilt the app's information architecture to surface different content and navigation based on pre-trip, in-trip, or post-trip state.", impact: 88 },
-  "Mobile Check-in & Digital Key": { tag: "Guest Experience", desc: "End-to-end mobile check-in and digital key — from ID verification to room assignment to animated unlock, enabling guests to bypass the front desk.", impact: 95 },
-  "Room Booking Optimization": { tag: "Revenue", desc: "Iterative optimization of the room booking funnel — improving CTR and conversion through UX refinements, carousel logic, and pricing display.", impact: 93 },
-  "Rules Service / Personalization": { tag: "Platform", desc: "Centralized rules engine powering content personalization, cross-sell logic, and dynamic module assembly across app and web.", impact: 92 },
+  "Mobile Check-in & Digital Key": { tag: "Guest Experience", desc: "End-to-end mobile check-in and digital key — from ID verification to room assignment to animated unlock, enabling guests to bypass the front desk.", impact: 100 },
+  "Room Booking Optimization": { tag: "Revenue", desc: "Iterative optimization of the room booking funnel — improving CTR and conversion through UX refinements, carousel logic, and pricing display.", impact: 98 },
+  "Rules Service / Personalization": { tag: "Platform", desc: "Centralized rules engine powering content personalization, cross-sell logic, and dynamic module assembly across app and web.", impact: 96 },
   "Employee Tools Platform": { tag: "Operations", desc: "Internal platform consolidating employee-facing tools — homescreen builder, digital key manager, guest services — into a unified application.", impact: 88 },
 };
 
@@ -1956,10 +1956,14 @@ const observer = new IntersectionObserver((entries) => {
 }, { threshold: 0.1 });
 document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-// Nav hide/show on scroll
+// Nav hide/show on scroll (mobile only)
 let lastScroll = 0;
 const nav = document.querySelector('nav');
 window.addEventListener('scroll', () => {
+  if (window.innerWidth > 768) {
+    nav.classList.remove('nav-hidden');
+    return;
+  }
   const cur = window.scrollY;
   if (cur > lastScroll && cur > 80) {
     nav.classList.add('nav-hidden');
