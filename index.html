@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
-<meta name="description" content="Josh Dunlap — 16 years leading product and design organizations across startups, automotive, and hospitality. From founding a company to managing enterprise-scale digital experiences.">
+<meta name="description" content="Josh Dunlap — End-to-end product and design leadership. From building the org to shipping the product.">
 <meta property="og:title" content="Josh Dunlap — Product & Design Leadership">
 <meta property="og:description" content="16 years leading product and design organizations. 100+ features shipped, 9 platforms, 18 countries, 5 companies.">
 <meta property="og:type" content="website">
@@ -16,12 +16,12 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500;600&family=Syne:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #0c0c0c;
-  --fg: #e8e4df;
-  --muted: #8a8580;
-  --accent: #c9a96e;
-  --card: #161614;
-  --border: #2a2825;
+  --bg: #08080c;
+  --fg: #e4e4e8;
+  --muted: #6b6b78;
+  --accent: #2dd4bf;
+  --card: rgba(255,255,255,0.03);
+  --border: rgba(255,255,255,0.08);
   --serif: 'DM Serif Display', Georgia, serif;
   --sans: 'DM Sans', sans-serif;
 }
@@ -812,8 +812,8 @@ footer {
 .dl-swatch-row {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
-  gap: 8px;
-  margin-bottom: 16px;
+  gap: 12px;
+  margin-bottom: 20px;
 }
 .dl-swatch-row > div {
   display: flex;
@@ -821,15 +821,15 @@ footer {
   align-items: center;
 }
 .dl-swatch {
-  width: 100%; height: 32px;
-  border-radius: 4px;
-  border: 1px solid var(--border);
+  width: 100%; height: 36px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.1);
 }
 .dl-swatch-label {
   font-size: 9px;
   color: var(--muted);
   text-align: center;
-  margin-top: 4px;
+  margin-top: 6px;
   letter-spacing: 0.03em;
   white-space: nowrap;
 }
@@ -1231,6 +1231,7 @@ body.theme-void .lightbox img { border-radius: 20px; }
 body.theme-void .ach-panel { border-radius: 20px; }
 body.theme-void .ach-icon { border-radius: 8px; }
 body.theme-void .see-more-toggle { color: #2dd4bf; }
+body.theme-void .dl-swatch { border-radius: 10px; border-color: rgba(45,212,191,0.12); }
 body.theme-void .game-overlay canvas { border-radius: 20px; }
 
 /* VOID impact gradient — left to right across tiers */
@@ -1430,7 +1431,7 @@ body.theme-void .impact-scale > div:nth-child(4) .shipped-item:hover { border-le
 }
 </style>
 </head>
-<body>
+<body class="theme-void">
 
 <nav>
   <div class="container">
@@ -1479,7 +1480,7 @@ body.theme-void .impact-scale > div:nth-child(4) .shipped-item:hover { border-le
       <div class="hero-label">Executive Director of Digital Products & UX Design</div>
       <h1>Building digital<br>experiences at <em>scale</em></h1>
       <div class="easter-egg-wrap"><span class="easter-egg" id="easterEgg" onclick="document.getElementById('gameOverlay').classList.add('active'); unlockAch('game'); initGame();">psst... what's this?</span></div>
-      <p class="hero-bio">16 years leading product and design organizations across startups, automotive, and hospitality — from founding a company to managing 28-person teams across web, app, and kiosk at enterprise scale.</p>
+      <p class="hero-bio">End-to-end product and design leadership — from building the org to shipping the product.</p>
       <div class="hero-rule"></div>
     </div>
   </div>
@@ -1774,13 +1775,13 @@ body.theme-void .impact-scale > div:nth-child(4) .shipped-item:hover { border-le
     <p class="philosophy-text reveal" style="margin-bottom:20px;" id="dlIntro">Every decision on this site — color, type, spacing, motion — was intentional. It supports several visual themes.</p>
 
     <div class="theme-picker reveal">
-      <div class="theme-option active" data-theme="classic"><div class="theme-option-dot" style="background:#c9a96e;"></div>Classic</div>
+      <div class="theme-option active" data-theme="void"><div class="theme-option-dot" style="background:#2dd4bf;"></div>VOID</div>
       <div class="theme-option" data-theme="cta"><div class="theme-option-dot" style="background:#ff385c;"></div>CTA Driver</div>
       <div class="theme-option" data-theme="cyberpunk"><div class="theme-option-dot" style="background:#ff2d6b;"></div>Cyberpunk</div>
       <div class="theme-option" data-theme="synth84"><div class="theme-option-dot" style="background:#ff1744;"></div>Synth '84</div>
-      <div class="theme-option" data-theme="void"><div class="theme-option-dot" style="background:#2dd4bf;"></div>VOID</div>
     </div>
     <div class="theme-picker reveal" id="hiddenThemes" style="display:none;">
+      <div class="theme-option" data-theme="classic"><div class="theme-option-dot" style="background:#c9a96e;"></div>Classic</div>
       <div class="theme-option" data-theme="aol"><div class="theme-option-dot" style="background:#ffcc00;"></div>Instant Messenger</div>
       <div class="theme-option" data-theme="cosmic"><div class="theme-option-dot" style="background:#ffff00;"></div>Cosmic Secrets</div>
       <div class="theme-option" data-theme="laser"><div class="theme-option-dot" style="background:#ff3333;"></div>Laser Tag</div>
@@ -2035,7 +2036,7 @@ const themes = {
   cta: { bg:'#ffffff', fg:'#1a1a1a', muted:'#6b6b6b', accent:'#ff385c', card:'#f7f7f7', border:'#e8e8e8', effect: null },
   aol: { bg:'#e8e4df', fg:'#000000', muted:'#555555', accent:'#336699', card:'#ffffff', border:'#b0b0b0', effect: null },
   synth84: { bg:'#0a0014', fg:'#e8d8ff', muted:'#7a6a9a', accent:'#ff1744', card:'#140024', border:'#2a1a44', effect: 'grid' },
-  void: { bg:'#08080c', fg:'#e4e4e8', muted:'#6b6b78', accent:'#2dd4bf', card:'rgba(255,255,255,0.03)', border:'rgba(255,255,255,0.08)', effect: null },
+  void: { bg:'#08080c', fg:'#e4e4e8', muted:'#6b6b78', accent:'#2dd4bf', card:'rgba(255,255,255,0.03)', border:'rgba(255,255,255,0.08)', effect: 'orbs' },
   cosmic: { bg:'#000000', fg:'#00ffff', muted:'#ffff00', accent:'#00ff00', card:'#000033', border:'#333399', effect: 'stars' },
 };
 
@@ -2049,6 +2050,12 @@ function resizeEffects() {
 }
 window.addEventListener('resize', resizeEffects);
 resizeEffects();
+
+// Start VOID orbs on load
+currentEffect = 'orbs';
+initOrbs();
+effectsCanvas.classList.add('active');
+effectLoop();
 
 // Matrix rain
 const matrixChars = 'アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン0123456789';
@@ -2195,11 +2202,51 @@ function drawStars() {
   ectx.globalAlpha = 1;
 }
 
+// VOID orbs
+let orbs = [];
+function initOrbs() {
+  const W = effectsCanvas.width, H = effectsCanvas.height;
+  orbs = Array.from({length: 8}, () => ({
+    x: Math.random() * W,
+    y: Math.random() * H,
+    r: 60 + Math.random() * 180,
+    vx: (Math.random() - 0.5) * 0.3,
+    vy: (Math.random() - 0.5) * 0.2,
+    phase: Math.random() * Math.PI * 2,
+    pulseSpeed: 0.005 + Math.random() * 0.008,
+    hue: Math.random() < 0.7 ? 170 : (Math.random() < 0.5 ? 160 : 180),
+  }));
+}
+function drawOrbs() {
+  const W = effectsCanvas.width, H = effectsCanvas.height;
+  ectx.clearRect(0, 0, W, H);
+  for (const o of orbs) {
+    o.x += o.vx;
+    o.y += o.vy;
+    o.phase += o.pulseSpeed;
+    if (o.x < -o.r) o.x = W + o.r;
+    if (o.x > W + o.r) o.x = -o.r;
+    if (o.y < -o.r) o.y = H + o.r;
+    if (o.y > H + o.r) o.y = -o.r;
+    const pulse = 0.6 + Math.sin(o.phase) * 0.4;
+    const alpha = 0.025 * pulse;
+    const grad = ectx.createRadialGradient(o.x, o.y, 0, o.x, o.y, o.r * pulse);
+    grad.addColorStop(0, `hsla(${o.hue}, 70%, 60%, ${alpha * 1.5})`);
+    grad.addColorStop(0.4, `hsla(${o.hue}, 70%, 50%, ${alpha})`);
+    grad.addColorStop(1, 'transparent');
+    ectx.fillStyle = grad;
+    ectx.beginPath();
+    ectx.arc(o.x, o.y, o.r * pulse, 0, Math.PI * 2);
+    ectx.fill();
+  }
+}
+
 function effectLoop() {
   if (currentEffect === 'matrix') drawMatrix();
   else if (currentEffect === 'laser') drawLasers();
   else if (currentEffect === 'grid') drawGrid();
   else if (currentEffect === 'stars') drawStars();
+  else if (currentEffect === 'orbs') drawOrbs();
   if (currentEffect) requestAnimationFrame(effectLoop);
 }
 
@@ -2255,8 +2302,8 @@ const dlContent = {
   void: {
     color: 'Near-black (#08080c) void. Teal (#2dd4bf) as the sole interactive accent. Amber (#f59e0b) reserved for categorical labels only. No competing colors — the void is the canvas.',
     type: 'Syne for display headings — geometric, modern, confident. DM Sans for body. JetBrains Mono for labels and metadata — giving structural text a code-like precision.',
-    motion: 'Same scroll-triggered system, but glass cards with backdrop-filter blur create depth through transparency. The void behind the glass is the motion — content floats over nothing.',
-    texture: 'Glass-over-void. Cards are translucent (3% white) with directional top borders (12% white) creating a specular highlight. 20px radius on everything. No grain — the darkness is the texture.',
+    motion: 'Floating teal orbs drift and pulse behind the content, creating depth through slow parallax. Glass cards with backdrop-blur sit above the void. Everything feels suspended.',
+    texture: 'Glass-over-void. Cards are translucent (3% white) with directional top borders (12% white) creating a specular highlight. 20px radius on everything. Orbs provide ambient depth.',
   },
   cosmic: {
     color: 'Pure black void. Cyan (#00ffff) for body text. Yellow (#ffff00) for headings and emphasis. Green (#00ff00) for interactive elements and links. Magenta (#ff00ff) for dates, tags, and labels. Every color glows.',
@@ -2272,13 +2319,18 @@ function updateDesignLanguage(name) {
   const t = themes[name];
   // Update swatches
   const swatchEl = document.getElementById('dlSwatches');
+  // Display-safe colors for swatches (rgba doesn't render well as solid blocks)
+  const displayColors = {
+    void: { card: '#0d0d12', border: '#1a1a22' },
+  };
+  const dc = displayColors[name] || {};
   swatchEl.innerHTML = [
     { color: t.bg, label: 'Background' },
     { color: t.fg, label: 'Foreground' },
     { color: t.accent, label: 'Accent' },
     { color: t.muted, label: 'Muted' },
-    { color: t.card, label: 'Card' },
-    { color: t.border, label: 'Border' },
+    { color: dc.card || t.card, label: 'Card' },
+    { color: dc.border || t.border, label: 'Border' },
   ].map(s => `<div><div class="dl-swatch" style="background:${s.color};"></div><div class="dl-swatch-label">${s.label}</div></div>`).join('');
   // Update descriptions
   document.getElementById('dlColorDesc').textContent = dl.color;
@@ -2288,7 +2340,7 @@ function updateDesignLanguage(name) {
 }
 
 // Initialize swatches on load
-updateDesignLanguage('classic');
+updateDesignLanguage('void');
 
 function setTheme(name) {
   const t = themes[name];
@@ -2313,6 +2365,7 @@ function setTheme(name) {
     if (t.effect === 'laser') { ectx.clearRect(0,0,effectsCanvas.width,effectsCanvas.height); lasers = []; }
     if (t.effect === 'grid') { ectx.clearRect(0,0,effectsCanvas.width,effectsCanvas.height); gridOffset = 0; }
     if (t.effect === 'stars') { ectx.clearRect(0,0,effectsCanvas.width,effectsCanvas.height); initStars(); }
+    if (t.effect === 'orbs') { ectx.clearRect(0,0,effectsCanvas.width,effectsCanvas.height); initOrbs(); }
     effectLoop();
   } else {
     effectsCanvas.classList.remove('active');
@@ -2851,9 +2904,9 @@ if (footerDate) {
 }
 
 // Track theme usage
-let themesUsed = new Set(['classic']);
+let themesUsed = new Set(['void']);
 try {
-  const saved = JSON.parse(localStorage.getItem('jdThemesUsed') || '["classic"]');
+  const saved = JSON.parse(localStorage.getItem('jdThemesUsed') || '["void"]');
   themesUsed = new Set(saved);
 } catch(e) {}
 
