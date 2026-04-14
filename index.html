@@ -1994,11 +1994,6 @@ body.theme-chaos .dl-swatch { border-color: #333 !important; border-radius: 0 !i
     <div class="section-label reveal">Shipped</div>
     <p class="shipped-intro reveal">Features and products taken from zero to production – organized by impact.</p>
 
-    <div class="impact-scale-header reveal">
-      <span>◂ Foundational</span>
-      <span>Flagship ▸</span>
-    </div>
-
     <div class="impact-scale reveal">
 
       <div>
@@ -2006,25 +2001,24 @@ body.theme-chaos .dl-swatch { border-color: #333 !important; border-radius: 0 !i
         <div class="impact-tier-items">
           <div class="shipped-item">Embedded Schema for SEO</div>
           <div class="shipped-item">CA Fee Transparency Pricing</div>
-          <div class="shipped-item">Blog Platform</div>
           <div class="shipped-item">Wi-Fi Connection-to-Discovery</div>
-          <div class="shipped-item">Carbon Offsetting Offers</div>
-          <div class="shipped-item">Backend for Frontend (BFF)</div>
+          <div class="shipped-item">Web Check-in on Homepage</div>
           <div class="shipped-item">MFA on Web via Okta</div>
+          <div class="shipped-item">Backend for Frontend (BFF)</div>
+          <div class="shipped-item">Global Footer Redesign</div>
         </div>
       </div>
 
       <div>
         <div class="impact-tier-label">Supporting</div>
         <div class="impact-tier-items">
-          <div class="shipped-item">Global Footer Redesign</div>
           <div class="shipped-item">Guided Sign-in / Sign-up</div>
-          <div class="shipped-item">Multi-Factor Authentication</div>
           <div class="shipped-item">Preferences Center</div>
           <div class="shipped-item">Push Notifications & Emails</div>
-          <div class="shipped-item">Meetings & Events Navigation</div>
           <div class="shipped-item">Packages – Dynamic Pricing</div>
           <div class="shipped-item">Digital Account Unlock</div>
+          <div class="shipped-item">Short Video Reels</div>
+          <div class="shipped-item">Pools & Spas Product Detail Pages</div>
         </div>
       </div>
 
@@ -2032,15 +2026,13 @@ body.theme-chaos .dl-swatch { border-color: #333 !important; border-radius: 0 !i
         <div class="impact-tier-label">High Visibility</div>
         <div class="impact-tier-items">
           <div class="shipped-item">Dining Product Detail Pages</div>
-          <div class="shipped-item">Entertainment & Attractions PDPs</div>
-          <div class="shipped-item">Pools & Spas PDPs</div>
+          <div class="shipped-item">Entertainment & Attractions Product Detail Pages</div>
           <div class="shipped-item">Global Search</div>
-          <div class="shipped-item">Cross-sell Entertainment × Dining</div>
+          <div class="shipped-item">Cross-sell on Product Detail Pages</div>
+          <div class="shipped-item">Multi-Factor Authentication</div>
+          <div class="shipped-item">Discover Tab Gallery View</div>
           <div class="shipped-item">Digital Concierge Chat</div>
-          <div class="shipped-item">Top Navigation Optimization</div>
-          <div class="shipped-item">Sizzle Shorts Video Reels</div>
-          <div class="shipped-item">Discover Tab Gallery</div>
-          <div class="shipped-item">Web Check-in on Homepage</div>
+          <div class="shipped-item">Employee Tools Platform</div>
         </div>
       </div>
 
@@ -2049,14 +2041,12 @@ body.theme-chaos .dl-swatch { border-color: #333 !important; border-radius: 0 !i
         <div class="impact-tier-items">
           <div class="shipped-item">Bellagio Premium Homepage</div>
           <div class="shipped-item">Cosmopolitan Premium Homepage</div>
-          <div class="shipped-item">TCOLV Discovery Navigation</div>
-          <div class="shipped-item">Enterprise Homepage Redesign</div>
           <div class="shipped-item">Personalized Home Screen</div>
           <div class="shipped-item">Trip-State App Architecture</div>
-          <div class="shipped-item">Mobile Check-in & Digital Key</div>
-          <div class="shipped-item">Room Booking Optimization</div>
-          <div class="shipped-item">Rules Service / Personalization</div>
-          <div class="shipped-item">Employee Tools Platform</div>
+          <div class="shipped-item">Mobile Check-in</div>
+          <div class="shipped-item">Digital Key</div>
+          <div class="shipped-item">Room Booking Funnel Redesign</div>
+          <div class="shipped-item">Rules & Personalization API</div>
         </div>
       </div>
 
@@ -2230,15 +2220,19 @@ const featureData = {
   "Wi-Fi Connection-to-Discovery": { tag: "Engagement", desc: "Post-Wi-Fi-connection flow directing guests to app discovery content – driving significant CTR and app install improvements.", impact: 76 },
   "Backend for Frontend (BFF)": { tag: "Platform", desc: "API orchestration layer decoupling the mobile app from backend services – enabling faster feature development and independent deployability.", impact: 90 },
   "Push Notifications & Emails": { tag: "Engagement", desc: "Automated transactional messaging across the guest journey – booking confirmations, check-in reminders, folio updates, and post-stay communications.", impact: 82 },
-  "Pools & Spas PDPs": { tag: "Revenue", desc: "Dedicated product detail pages for pool and spa experiences, driving increased traffic to booking across resort wellness venues.", impact: 74 },
-  "Discover Tab Gallery": { tag: "Revenue", desc: "Immersive full-screen gallery tiles on the Discover tab, driving significant incremental revenue through improved visual merchandising.", impact: 84 },
+  "Pools & Spas Product Detail Pages": { tag: "Revenue", desc: "Dedicated product detail pages for pool and spa experiences, driving increased traffic to booking across resort wellness venues.", impact: 74 },
+  "Discover Tab Gallery View": { tag: "Revenue", desc: "Immersive full-screen gallery view on the Discover tab, driving significant incremental revenue through improved visual merchandising.", impact: 84 },
   "Cosmopolitan Premium Homepage": { tag: "Brand", desc: "Bespoke premium homepage for The Cosmopolitan of Las Vegas with unique brand expression, video content, and differentiated merchandising.", impact: 90 },
-  "Enterprise Homepage Redesign": { tag: "Revenue", desc: "Enterprise-wide homepage redesign rolled out across all properties – driving significant lifts in traffic-to-booking, conversion, and AOV.", impact: 100 },
   "Trip-State App Architecture": { tag: "Platform", desc: "Rebuilt the app's information architecture to surface different content and navigation based on pre-trip, in-trip, or post-trip state.", impact: 88 },
-  "Mobile Check-in & Digital Key": { tag: "Guest Experience", desc: "End-to-end mobile check-in and digital key – from ID verification to room assignment to animated unlock, enabling guests to bypass the front desk.", impact: 100 },
-  "Room Booking Optimization": { tag: "Revenue", desc: "Iterative optimization of the room booking funnel – improving CTR and conversion through UX refinements, carousel logic, and pricing display.", impact: 98 },
-  "Rules Service / Personalization": { tag: "Platform", desc: "Centralized rules engine powering content personalization, cross-sell logic, and dynamic module assembly across app and web.", impact: 96 },
+  "Mobile Check-in": { tag: "Guest Experience", desc: "End-to-end mobile check-in flow – from ID verification to room assignment. Multi-room check-in enables guests with multiple reservations to check in to all rooms in a single flow.", impact: 100 },
+  "Digital Key": { tag: "Guest Experience", desc: "Full-screen animated digital key enabling guests to unlock their room via mobile – with redesigned UX, error handling, and support for convention-sponsored branding overlays.", impact: 100 },
+  "Room Booking Funnel Redesign": { tag: "Revenue", desc: "Iterative redesign of the room booking funnel – improving CTR and conversion through UX refinements, carousel logic, and pricing display.", impact: 98 },
+  "Rules & Personalization API": { tag: "Platform", desc: "Centralized rules engine and API powering content personalization, cross-sell logic, and dynamic module assembly across app and web.", impact: 96 },
   "Employee Tools Platform": { tag: "Operations", desc: "Internal platform consolidating employee-facing tools – homescreen builder, digital key manager, guest services – into a unified application.", impact: 88 },
+  "Entertainment & Attractions Product Detail Pages": { tag: "Revenue", desc: "Product detail page redesign for entertainment and attractions, significantly increasing traffic-to-booking and conversion.", impact: 88 },
+  "Cross-sell on Product Detail Pages": { tag: "Revenue", desc: "Contextual cross-sell system recommending related experiences on product detail pages – dining on entertainment pages and vice versa.", impact: 78 },
+  "Short Video Reels": { tag: "Engagement", desc: "Short-form vertical video content integrated into property and venue pages, bringing immersive social-style content to the web experience.", impact: 75 },
+  "Global Footer Redesign": { tag: "Platform", desc: "Redesigned global footer deployed across all properties – improving navigation consistency and SEO internal linking.", impact: 62 },
 };
 
 // Scroll reveal
