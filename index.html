@@ -2031,12 +2031,14 @@ body.theme-chaos .dl-swatch { border-color: #333 !important; border-radius: 0 !i
           <div class="shipped-item">Employee Tools Platform</div>
           <div class="shipped-item">Global Search</div>
           <div class="shipped-item">Multi-Factor Authentication</div>
+          <div class="shipped-item">Offline-First App Architecture</div>
         </div>
       </div>
 
       <div>
         <div class="impact-tier-label">Flagship</div>
         <div class="impact-tier-items">
+          <div class="shipped-item">AI Agent Escalation Framework</div>
           <div class="shipped-item">Bellagio Premium Homepage</div>
           <div class="shipped-item">Cosmopolitan Premium Homepage</div>
           <div class="shipped-item">Digital Key</div>
@@ -2056,10 +2058,10 @@ body.theme-chaos .dl-swatch { border-color: #333 !important; border-radius: 0 !i
 <section id="design-language">
   <div class="container">
     <div class="section-label reveal" id="dlSectionLabel" style="cursor:default;">Design Language</div>
-    <p class="philosophy-text reveal" style="margin-bottom:20px;" id="dlIntro">Every decision on this site – color, type, spacing, motion – was intentional. It supports several visual themes.</p>
+    <p class="philosophy-text reveal" style="margin-bottom:20px;" id="dlIntro">The design system behind this site – and a few alternatives.</p>
 
     <div class="theme-picker reveal">
-      <div class="theme-option active" data-theme="void"><div class="theme-option-dot" style="background:#2dd4bf;"></div>VOID</div>
+      <div class="theme-option active" data-theme="void"><div class="theme-option-dot" style="background:#2dd4bf;"></div>Concentric</div>
       <div class="theme-option" data-theme="cta"><div class="theme-option-dot" style="background:#ff385c;"></div>CTA Driver</div>
       <div class="theme-option" data-theme="chaos"><div class="theme-option-dot" style="background:#FF003C;"></div>Chaos</div>
       <div class="theme-option" data-theme="synth84"><div class="theme-option-dot" style="background:#ff1744;"></div>Synth '84</div>
@@ -2233,6 +2235,8 @@ const featureData = {
   "Global Footer Redesign": { tag: "Platform", desc: "Redesigned global footer deployed across all properties – improving navigation consistency and SEO internal linking.", impact: 62 },
   "Multi-Factor Authentication (App & Web)": { tag: "Security", desc: "SMS, email, and passkey-based MFA rolled out across both mobile app and web via Okta as an optional security layer for MGM Rewards accounts.", impact: 85 },
   "Dining & Entertainment Product Detail Pages": { tag: "Revenue", desc: "Product detail page system across dining, entertainment, and attractions – each A/B tested and measured, driving significant traffic-to-booking and conversion improvements.", impact: 90 },
+  "Offline-First App Architecture": { tag: "Platform", desc: "Rebuilt core app data layer for offline-first operation – caching reservations, digital keys, and trip details locally so guests retain full functionality during connectivity gaps on property.", impact: 85 },
+  "AI Agent Escalation Framework": { tag: "AI & Operations", desc: "Tiered AI agent architecture for guest interactions. Automated responses handle routine requests, AI agents resolve complex queries with context-aware reasoning, and human agents receive warm handoffs with full conversation history for edge cases. Reduces human agent volume while improving resolution quality at every tier.", impact: 96 },
 };
 
 // Scroll reveal
@@ -2607,7 +2611,7 @@ const dlContent = {
   },
   commerce: {
     color: 'Cool blue-white (#F8FAFB) canvas. Neon teal (#00CCBB) as the primary CTA color. Rose (#D94878) as a secondary accent for tags and categories. Cool neutrals only – no warm greys anywhere.',
-    type: 'Plus Jakarta Sans carries everything – headlines, body, UI, prices. Instrument Serif italic for display headlines, creating editorial tension against the geometric sans. JetBrains Mono for labels – shared DNA with VOID.',
+    type: 'Plus Jakarta Sans carries everything – headlines, body, UI, prices. Instrument Serif italic for display headlines, creating editorial tension against the geometric sans. JetBrains Mono for labels – shared DNA with Concentric.',
     motion: 'None. Content appears. No scroll animations, no parallax, no staggered reveals. Only hover transitions at 0.2s ease. The anti-pattern is decorative motion.',
     texture: 'Whitespace is the texture. No grain, no glass, no background patterns. Cards exist only when content demands enclosure. Subtle box-shadows provide depth. Cool neutral borders at low contrast.',
   },
