@@ -1288,6 +1288,122 @@ body.theme-void .impact-scale > div:nth-child(2) .shipped-item:hover { border-le
 body.theme-void .impact-scale > div:nth-child(3) .shipped-item:hover { border-left-color: rgba(45,212,191,0.5); }
 body.theme-void .impact-scale > div:nth-child(4) .shipped-item:hover { border-left-color: #2dd4bf; background: rgba(45,212,191,0.06); }
 
+/* --- Commerce --- */
+body.theme-commerce { background: #F8FAFB; color: #141B21; }
+body.theme-commerce::after { display: none; }
+body.theme-commerce .void-bg { display: none; }
+
+/* Typography */
+body.theme-commerce h1 { font-family: 'Instrument Serif', serif !important; font-weight: 400; font-style: italic; color: #141B21; }
+body.theme-commerce h1 em { color: #00CCBB; font-style: normal; }
+body.theme-commerce .nav-logo { font-family: 'Plus Jakarta Sans', sans-serif !important; font-weight: 700; letter-spacing: -0.02em; }
+body.theme-commerce .t-company { font-family: 'Plus Jakarta Sans', sans-serif !important; font-weight: 700; color: #141B21; }
+body.theme-commerce .article-card h3 { font-family: 'Plus Jakarta Sans', sans-serif !important; font-weight: 700; color: #141B21; }
+body.theme-commerce .dl-card h4 { font-family: 'Plus Jakarta Sans', sans-serif !important; font-weight: 700; color: #141B21; }
+body.theme-commerce .stat-number { font-family: 'Plus Jakarta Sans', sans-serif !important; font-weight: 800; color: #00CCBB; }
+body.theme-commerce .stat-label { font-family: 'Plus Jakarta Sans', sans-serif !important; color: #5A6670; }
+body.theme-commerce .feature-card h3 { font-family: 'Plus Jakarta Sans', sans-serif !important; font-weight: 700; }
+body.theme-commerce .contact-section h2 { font-family: 'Instrument Serif', serif !important; font-weight: 400; font-style: italic; color: #141B21; }
+body.theme-commerce .approach-text { font-family: 'Plus Jakarta Sans', sans-serif !important; color: #141B21; }
+body.theme-commerce .approach-text em { color: #00CCBB; }
+body.theme-commerce .philosophy-text { color: #141B21; }
+body.theme-commerce .philosophy-text em { color: #00CCBB; }
+body.theme-commerce .hero-label { font-family: 'JetBrains Mono', monospace !important; font-size: 11px !important; color: #00CCBB; }
+body.theme-commerce .hero-bio { color: #5A6670; font-family: 'Plus Jakarta Sans', sans-serif !important; }
+body.theme-commerce .section-label { font-family: 'JetBrains Mono', monospace !important; font-size: 11px !important; color: #00CCBB; }
+body.theme-commerce .article-tag { font-family: 'JetBrains Mono', monospace !important; color: #D94878; }
+body.theme-commerce .impact-tier-label { font-family: 'JetBrains Mono', monospace !important; color: #8C949C; }
+body.theme-commerce .shipped-category { font-family: 'JetBrains Mono', monospace !important; color: #D94878; }
+body.theme-commerce .t-role-date, body.theme-commerce .t-date { font-family: 'JetBrains Mono', monospace !important; color: #8C949C; }
+body.theme-commerce .t-desc { color: #5A6670; }
+body.theme-commerce .t-role-title { color: #00CCBB; }
+body.theme-commerce .shipped-item { font-family: 'Plus Jakarta Sans', sans-serif !important; }
+body.theme-commerce footer { color: #8C949C; }
+
+/* Nav */
+body.theme-commerce nav { background: rgba(248,250,251,0.92); backdrop-filter: blur(20px); border-bottom: 1px solid #DDE3E8; }
+body.theme-commerce .nav-links a { color: #5A6670; }
+body.theme-commerce .nav-links a:hover { color: #00CCBB; }
+body.theme-commerce .nav-links a::after { background: #00CCBB; }
+body.theme-commerce .nav-headshot { border-color: #DDE3E8; }
+
+/* Section dividers */
+body.theme-commerce .section-label::after { background: linear-gradient(90deg, rgba(0,204,187,0.3), transparent) !important; flex: 1 !important; width: auto !important; }
+body.theme-commerce .hero-rule { background: #DDE3E8; }
+body.theme-commerce .hero-rule::after { display: none; }
+
+/* Cards — whitespace carries structure, no visible cards */
+body.theme-commerce .stat-card { background: transparent; border: 1px solid #EBF0F3; border-radius: 12px; }
+body.theme-commerce .stat-card:hover { border-color: #00CCBB; background: rgba(0,204,187,0.04); }
+body.theme-commerce .article-card { background: #FFFFFF; border: 1px solid #EBF0F3; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+body.theme-commerce .article-card:hover { border-color: #00CCBB; box-shadow: 0 4px 12px rgba(0,0,0,0.08); border-left-color: #00CCBB; }
+body.theme-commerce .article-card.expanded { border-color: #00CCBB; }
+body.theme-commerce .dl-card { background: #FFFFFF; border: 1px solid #EBF0F3; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+body.theme-commerce .dl-card:hover { border-color: #00CCBB; }
+body.theme-commerce .shipped-item { background: #FFFFFF; border: 1px solid #EBF0F3; border-radius: 10px; box-shadow: 0 1px 2px rgba(0,0,0,0.04); }
+body.theme-commerce .shipped-item:hover { border-color: #00CCBB; background: rgba(0,204,187,0.04); }
+body.theme-commerce .exp-card { background: #FFFFFF; border: 1px solid #EBF0F3; border-radius: 12px; }
+body.theme-commerce .exp-card:hover { border-color: #00CCBB; }
+body.theme-commerce .feature-card { background: #FFFFFF; border: 1px solid #EBF0F3; border-radius: 12px; }
+
+/* Results and KPIs */
+body.theme-commerce .article-result { color: #00CCBB; }
+body.theme-commerce .article-kpi { color: #00CCBB; }
+body.theme-commerce .article-detail-inner { border-top-color: #EBF0F3; }
+body.theme-commerce .article-card p { color: #5A6670; }
+body.theme-commerce .article-expand-hint { color: #8C949C; }
+
+/* Timeline */
+body.theme-commerce .timeline::before { background: #DDE3E8; }
+body.theme-commerce .timeline::after { background: #00CCBB; }
+body.theme-commerce .t-item::before { background: #00CCBB; }
+body.theme-commerce .t-item.current::before { box-shadow: 0 0 0 4px rgba(0,204,187,0.2); }
+
+/* Impact scale */
+body.theme-commerce .impact-scale-header { color: #8C949C; }
+body.theme-commerce .feature-card-bar-fill { background: linear-gradient(90deg, #00CCBB, #00B3A3); border-radius: 4px; }
+body.theme-commerce .feature-card-tag { color: #D94878; }
+
+/* Contact */
+body.theme-commerce .contact-link { color: #00CCBB; border-color: #00CCBB; border-radius: 10px; }
+body.theme-commerce .contact-link:hover { background: #00CCBB; color: #FFF; }
+body.theme-commerce .inline-link { color: #00CCBB; border-bottom-color: rgba(0,204,187,0.3); }
+body.theme-commerce .inline-link:hover { border-bottom-color: #00CCBB; }
+body.theme-commerce .see-more-toggle { color: #00CCBB; }
+
+/* Modals and overlays */
+body.theme-commerce .lightbox { background: rgba(0,0,0,0.5); }
+body.theme-commerce .feature-modal { background: rgba(0,0,0,0.4); }
+body.theme-commerce .feature-card { background: #FFFFFF; color: #141B21; }
+body.theme-commerce .feature-card p { color: #5A6670; }
+body.theme-commerce .feature-card-bar { background: #EBF0F3; }
+
+/* DL swatches */
+body.theme-commerce .dl-swatch { border-color: #DDE3E8; border-radius: 8px; }
+body.theme-commerce .dl-swatch-label { color: #8C949C; }
+body.theme-commerce .dl-card p { color: #5A6670; }
+
+/* Theme picker */
+body.theme-commerce .theme-picker .theme-option { border-color: #DDE3E8; color: #141B21; border-radius: 10px; }
+body.theme-commerce .theme-picker .theme-option.active { border-color: #00CCBB; }
+
+/* Easter egg */
+body.theme-commerce .easter-egg { border-color: rgba(0,204,187,0.2); background: rgba(0,204,187,0.04); color: #00CCBB; border-radius: 12px; }
+
+/* Achievements */
+body.theme-commerce .ach-overlay { background: rgba(0,0,0,0.5); }
+body.theme-commerce .ach-panel { background: #FFFFFF; color: #141B21; border-radius: 16px; }
+body.theme-commerce .ach-title { color: #141B21; }
+body.theme-commerce .ach-subtitle { color: #5A6670; }
+body.theme-commerce .ach-item { border-color: #EBF0F3; }
+body.theme-commerce .ach-icon { background: #EBF0F3; color: #8C949C; }
+body.theme-commerce .ach-item.unlocked .ach-icon { background: #E0FAF7; color: #00CCBB; }
+
+/* No animations — content just appears */
+body.theme-commerce .reveal { opacity: 1 !important; transform: none !important; transition: none !important; }
+body.theme-commerce .hero-label, body.theme-commerce .hero h1,
+body.theme-commerce .hero-bio, body.theme-commerce .hero-rule { opacity: 1 !important; animation: none !important; }
+
 /* --- Chaos --- */
 body.theme-chaos { background: #0a0a0a; }
 body.theme-chaos::after { display: none; }
@@ -1968,6 +2084,7 @@ body.theme-chaos .dl-swatch { border-color: #333 !important; border-radius: 0 !i
       <div class="theme-option" data-theme="laser"><div class="theme-option-dot" style="background:#ff3333;"></div>Laser Tag</div>
       <div class="theme-option" data-theme="matrix"><div class="theme-option-dot" style="background:#00ff41;"></div>Matrix</div>
       <div class="theme-option" data-theme="neon"><div class="theme-option-dot" style="background:#ff2eea;"></div>Neon</div>
+      <div class="theme-option" data-theme="commerce"><div class="theme-option-dot" style="background:#00CCBB;"></div>Commerce</div>
     </div>
 
     <div class="dl-grid" id="dlGrid">
@@ -2220,6 +2337,7 @@ const themes = {
   void: { bg:'#08080c', fg:'#dcdce0', muted:'#6b6b76', accent:'#2dd4bf', card:'rgba(255,255,255,0.03)', border:'rgba(255,255,255,0.08)', effect: null },
   cosmic: { bg:'#000000', fg:'#00ffff', muted:'#ffff00', accent:'#00ff00', card:'#000033', border:'#333399', effect: 'stars' },
   chaos: { bg:'#0a0a0a', fg:'#ffffff', muted:'#888888', accent:'#FF003C', card:'transparent', border:'#FF003C', effect: null },
+  commerce: { bg:'#F8FAFB', fg:'#141B21', muted:'#5A6670', accent:'#00CCBB', card:'#FFFFFF', border:'#DDE3E8', effect: null },
 };
 
 let currentEffect = null;
@@ -2490,8 +2608,14 @@ const dlContent = {
   chaos: {
     color: 'Ten neon colors. No roles. No system. Any color, any time, any element. Red (#FF003C), green (#00FF87), blue (#3D00FF), yellow (#FFE600), orange, cyan, magenta, lime, white, black. If it screams, let it scream.',
     type: 'Six fonts, all in play at once. Rubik Glitch for glitch headings. Impact for LOUD. Silkscreen for pixel labels. Space Mono for structure. Instrument Serif for ironic elegance. Plus Jakarta Sans exists to be disrupted.',
-    motion: 'Chromatic aberration glitch on the hero – red and cyan split layers with random jitter. Cards snap-rotate on hover, no easing. Nothing is ease-in-out. Motion should startle, not soothe.',
-    texture: 'No texture. No grain. No glass. Cards are bordered, not filled – 2px neon strokes on black void. Every card picks a different rotation, border color, and radius. No two look alike.',
+    motion: 'Chromatic aberration glitch on the hero – red and cyan split layers with random jitter. Cards snap-rotate on hover, no easing. Everything re-randomizes every 5 seconds. Nothing is ease-in-out. Motion should startle, not soothe.',
+    texture: 'No texture. No grain. No glass. Cards are bordered, not filled – 2px neon strokes on black void. Every card picks a different rotation, border color, and radius. No two look alike. Stickers are scattered across the page.',
+  },
+  commerce: {
+    color: 'Cool blue-white (#F8FAFB) canvas. Neon teal (#00CCBB) as the primary CTA color. Rose (#D94878) as a secondary accent for tags and categories. Cool neutrals only – no warm greys anywhere.',
+    type: 'Plus Jakarta Sans carries everything – headlines, body, UI, prices. Instrument Serif italic for display headlines, creating editorial tension against the geometric sans. JetBrains Mono for labels – shared DNA with VOID.',
+    motion: 'None. Content appears. No scroll animations, no parallax, no staggered reveals. Only hover transitions at 0.2s ease. The anti-pattern is decorative motion.',
+    texture: 'Whitespace is the texture. No grain, no glass, no background patterns. Cards exist only when content demands enclosure. Subtle box-shadows provide depth. Cool neutral borders at low contrast.',
   },
 };
 
@@ -2505,15 +2629,21 @@ function updateDesignLanguage(name) {
   const displayColors = {
     void: { card: '#0d0d12', border: '#1a1a22' },
     chaos: { bg: '#FF003C', fg: '#00FF87', accent: '#FFE600', muted: '#3D00FF', card: '#FF00C8', border: '#00D4FF' },
+    commerce: { bg: '#F8FAFB', fg: '#141B21', accent: '#00CCBB', muted: '#5A6670', card: '#D94878', border: '#DDE3E8' },
   };
   const dc = displayColors[name] || {};
+  const swatchLabels = {
+    chaos: ['Red', 'Green', 'Yellow', 'Blue', 'Magenta', 'Cyan'],
+    commerce: ['Canvas', 'Text', 'Teal', 'Secondary', 'Rose', 'Border'],
+  };
+  const labels = swatchLabels[name] || ['Background', 'Foreground', 'Accent', 'Muted', 'Card', 'Border'];
   swatchEl.innerHTML = [
-    { color: dc.bg || t.bg, label: name === 'chaos' ? 'Red' : 'Background' },
-    { color: dc.fg || t.fg, label: name === 'chaos' ? 'Green' : 'Foreground' },
-    { color: dc.accent || t.accent, label: name === 'chaos' ? 'Yellow' : 'Accent' },
-    { color: dc.muted || t.muted, label: name === 'chaos' ? 'Blue' : 'Muted' },
-    { color: dc.card || t.card, label: name === 'chaos' ? 'Magenta' : 'Card' },
-    { color: dc.border || t.border, label: name === 'chaos' ? 'Cyan' : 'Border' },
+    { color: dc.bg || t.bg, label: labels[0] },
+    { color: dc.fg || t.fg, label: labels[1] },
+    { color: dc.accent || t.accent, label: labels[2] },
+    { color: dc.muted || t.muted, label: labels[3] },
+    { color: dc.card || t.card, label: labels[4] },
+    { color: dc.border || t.border, label: labels[5] },
   ].map(s => `<div><div class="dl-swatch" style="background:${s.color};"></div><div class="dl-swatch-label">${s.label}</div></div>`).join('');
   // Update descriptions
   document.getElementById('dlColorDesc').textContent = dl.color;
