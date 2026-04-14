@@ -15,7 +15,7 @@
 <meta name="twitter:title" content="Josh Dunlap – Product & Design Leadership">
 <meta name="twitter:description" content="16 years leading product and design. Startups to enterprise. 100+ features shipped.">
 <title>Josh Dunlap – Product & Design Leadership</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500;600&family=Syne:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500;600&family=Syne:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Rubik+Glitch&family=Space+Mono:wght@400;700&family=Instrument+Serif:ital@0;1&family=Silkscreen&family=Plus+Jakarta+Sans:wght@300;400;700;800&display=swap" rel="stylesheet">
 <style>
 :root {
   --bg: #08080c;
@@ -1288,6 +1288,92 @@ body.theme-void .impact-scale > div:nth-child(2) .shipped-item:hover { border-le
 body.theme-void .impact-scale > div:nth-child(3) .shipped-item:hover { border-left-color: rgba(45,212,191,0.5); }
 body.theme-void .impact-scale > div:nth-child(4) .shipped-item:hover { border-left-color: #2dd4bf; background: rgba(45,212,191,0.06); }
 
+/* --- Chaos --- */
+body.theme-chaos { background: #0a0a0a; }
+body.theme-chaos::after { display: none; }
+body.theme-chaos .void-bg { display: none; }
+
+/* Typography: deliberate clashing */
+body.theme-chaos h1 { font-family: 'Rubik Glitch', system-ui !important; font-weight: 400; }
+body.theme-chaos .nav-logo { font-family: 'Silkscreen', monospace !important; font-weight: 400; font-size: 14px !important; letter-spacing: 0.05em; text-transform: uppercase; }
+body.theme-chaos .t-company { font-family: Impact, sans-serif !important; text-transform: uppercase; letter-spacing: 0.02em; }
+body.theme-chaos .section-label { font-family: 'Silkscreen', monospace !important; font-size: 10px !important; }
+body.theme-chaos .stat-number { font-family: Impact, sans-serif !important; }
+body.theme-chaos .stat-label { font-family: 'Space Mono', monospace !important; }
+body.theme-chaos .article-card h3 { font-family: 'Instrument Serif', serif !important; font-style: italic; }
+body.theme-chaos .article-tag { font-family: 'Silkscreen', monospace !important; font-size: 9px !important; }
+body.theme-chaos .dl-card h4 { font-family: Impact, sans-serif !important; text-transform: uppercase; }
+body.theme-chaos .hero-label { font-family: 'Silkscreen', monospace !important; font-size: 9px !important; }
+body.theme-chaos .hero-bio { font-family: 'Space Mono', monospace !important; font-size: 13px !important; border-left: 3px solid #FFE600; padding-left: 16px; }
+body.theme-chaos .t-role-title { font-family: 'Plus Jakarta Sans', sans-serif !important; }
+body.theme-chaos .t-desc { font-family: 'Space Mono', monospace !important; font-size: 12px !important; }
+body.theme-chaos .contact-section h2 { font-family: 'Rubik Glitch', system-ui !important; font-weight: 400; }
+body.theme-chaos .shipped-item { font-family: 'Space Mono', monospace !important; font-size: 12px !important; }
+body.theme-chaos .feature-card h3 { font-family: Impact, sans-serif !important; text-transform: uppercase; }
+body.theme-chaos .impact-tier-label { font-family: 'Silkscreen', monospace !important; }
+body.theme-chaos .philosophy-text { font-family: 'Instrument Serif', serif !important; font-style: italic; }
+body.theme-chaos .approach-text { font-family: Impact, sans-serif !important; font-size: 28px !important; text-transform: uppercase; }
+body.theme-chaos .approach-text em { font-family: 'Instrument Serif', serif !important; text-transform: none; font-style: italic; }
+body.theme-chaos footer { font-family: 'Silkscreen', monospace !important; }
+
+/* Glitch animation on hero h1 */
+body.theme-chaos h1 { animation: chaosGlitch 3s infinite linear; opacity: 1 !important; transform: none !important; }
+body.theme-chaos h1 em { color: #FFE600 !important; font-style: normal !important; }
+@keyframes chaosGlitch {
+  0%, 92%, 100% { text-shadow: none; }
+  93% { text-shadow: -3px 2px 0 #FF003C, 3px -1px 0 #00D4FF; }
+  95% { text-shadow: 2px -2px 0 #FF003C, -2px 1px 0 #00D4FF; }
+  97% { text-shadow: -1px 1px 0 #FF003C, 2px -2px 0 #00D4FF; }
+}
+
+/* Cards: bordered not filled — JS handles rotation, color, radius */
+body.theme-chaos .stat-card, body.theme-chaos .article-card,
+body.theme-chaos .dl-card, body.theme-chaos .shipped-item,
+body.theme-chaos .exp-card {
+  background: transparent !important;
+  border-width: 2px !important;
+  border-style: solid !important;
+  backdrop-filter: none !important;
+  transition: transform 0.15s linear !important;
+}
+
+/* Neon accent colors — JS re-rolls stat-number, article-tag, article-result, section-label, t-role-title every 5s */
+/* Pseudo-elements and nav stay in CSS since JS can't reach them */
+body.theme-chaos .section-label::after { width: 48px !important; flex: none !important; background: currentColor !important; }
+body.theme-chaos .t-item::before { background: var(--chaos-dot, #FF00C8) !important; }
+body.theme-chaos .t-item.current::before { box-shadow: 0 0 0 4px rgba(255,0,200,0.3) !important; }
+body.theme-chaos .timeline::before { background: #333 !important; }
+body.theme-chaos .timeline::after { background: #FF003C !important; }
+body.theme-chaos .hero-rule { background: #FF003C !important; }
+body.theme-chaos .hero-rule::after { display: none; }
+body.theme-chaos .nav-links a:hover { color: #FF003C !important; }
+body.theme-chaos .nav-links a::after { background: #FF003C !important; }
+body.theme-chaos .nav-headshot { border-color: #FF003C !important; }
+body.theme-chaos .contact-link { border-color: #00FF87 !important; color: #00FF87 !important; border-radius: 0 !important; border-width: 3px !important; font-family: 'Silkscreen', monospace !important; }
+body.theme-chaos .contact-link:hover { background: #00FF87 !important; color: #000 !important; }
+body.theme-chaos .inline-link { color: #00D4FF !important; border-bottom-color: #00D4FF !important; }
+body.theme-chaos .see-more-toggle { color: #FFE600 !important; font-family: 'Silkscreen', monospace !important; }
+body.theme-chaos .impact-scale-header { color: #FF003C !important; }
+body.theme-chaos .feature-card-bar-fill { background: linear-gradient(90deg, #FF003C, #FFE600) !important; }
+body.theme-chaos .feature-card-tag { color: #8AFF00 !important; }
+body.theme-chaos .article-kpi { color: #FFE600 !important; }
+
+/* Nav */
+body.theme-chaos nav { background: rgba(10,10,10,0.9) !important; border-bottom: 2px solid #FF003C !important; backdrop-filter: none !important; }
+
+/* Theme picker */
+body.theme-chaos .theme-picker .theme-option { border-radius: 0 !important; border-width: 2px !important; }
+body.theme-chaos .theme-picker .theme-option.active { border-color: #FFE600 !important; }
+
+/* Easter egg */
+body.theme-chaos .easter-egg { border-color: #FF003C !important; background: transparent !important; color: #FF003C !important; border-radius: 0 !important; font-family: 'Silkscreen', monospace !important; }
+
+/* Philosophy emphasis */
+body.theme-chaos .philosophy-text em { color: #FFE600 !important; }
+
+/* Swatch border */
+body.theme-chaos .dl-swatch { border-color: #333 !important; border-radius: 0 !important; }
+
 /* --- Achievements --- */
 .ach-overlay {
   position: fixed; inset: 0;
@@ -1492,36 +1578,36 @@ body.theme-void .impact-scale > div:nth-child(4) .shipped-item:hover { border-le
     -->
     <g class="void-tracer">
       <!-- Origin 1: cx=200 cy=150 r=120, c≈754 -->
-      <circle cx="200" cy="150" r="120" fill="none" stroke="rgba(45,212,191,0.04)" stroke-width="12" stroke-linecap="round" stroke-dasharray="100 654">
+      <circle cx="200" cy="150" r="120" fill="none" stroke="rgba(45,212,191,0.04)" stroke-width="12" stroke-linecap="round" stroke-dasharray="80 674">
         <animate attributeName="stroke-dashoffset" from="0" to="-754" dur="16s" repeatCount="indefinite"/>
       </circle>
       <circle cx="200" cy="150" r="120" fill="none" stroke="rgba(45,212,191,0.12)" stroke-width="4" stroke-linecap="round" stroke-dasharray="80 674">
-        <animate attributeName="stroke-dashoffset" from="10" to="-744" dur="16s" repeatCount="indefinite"/>
+        <animate attributeName="stroke-dashoffset" from="0" to="-754" dur="16s" repeatCount="indefinite"/>
       </circle>
-      <circle cx="200" cy="150" r="120" fill="none" stroke="rgba(45,212,191,0.4)" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="50 704">
-        <animate attributeName="stroke-dashoffset" from="25" to="-729" dur="16s" repeatCount="indefinite"/>
+      <circle cx="200" cy="150" r="120" fill="none" stroke="rgba(45,212,191,0.4)" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="80 674">
+        <animate attributeName="stroke-dashoffset" from="0" to="-754" dur="16s" repeatCount="indefinite"/>
       </circle>
 
-      <!-- Origin 2: cx=1300 cy=700 r=100, c≈628 -->
-      <circle cx="1300" cy="700" r="100" fill="none" stroke="rgba(45,212,191,0.04)" stroke-width="12" stroke-linecap="round" stroke-dasharray="100 528">
+      <!-- Origin 2: cx=1300 cy=700 r=100, c≈628 (counter-clockwise) -->
+      <circle cx="1300" cy="700" r="100" fill="none" stroke="rgba(45,212,191,0.04)" stroke-width="12" stroke-linecap="round" stroke-dasharray="80 548">
         <animate attributeName="stroke-dashoffset" from="0" to="628" dur="14s" repeatCount="indefinite"/>
       </circle>
       <circle cx="1300" cy="700" r="100" fill="none" stroke="rgba(45,212,191,0.12)" stroke-width="4" stroke-linecap="round" stroke-dasharray="80 548">
-        <animate attributeName="stroke-dashoffset" from="10" to="638" dur="14s" repeatCount="indefinite"/>
+        <animate attributeName="stroke-dashoffset" from="0" to="628" dur="14s" repeatCount="indefinite"/>
       </circle>
-      <circle cx="1300" cy="700" r="100" fill="none" stroke="rgba(45,212,191,0.4)" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="50 578">
-        <animate attributeName="stroke-dashoffset" from="25" to="653" dur="14s" repeatCount="indefinite"/>
+      <circle cx="1300" cy="700" r="100" fill="none" stroke="rgba(45,212,191,0.4)" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="80 548">
+        <animate attributeName="stroke-dashoffset" from="0" to="628" dur="14s" repeatCount="indefinite"/>
       </circle>
 
       <!-- Origin 3: cx=700 cy=450 r=300, c≈1885 -->
-      <circle cx="700" cy="450" r="300" fill="none" stroke="rgba(45,212,191,0.03)" stroke-width="12" stroke-linecap="round" stroke-dasharray="120 1765">
+      <circle cx="700" cy="450" r="300" fill="none" stroke="rgba(45,212,191,0.03)" stroke-width="12" stroke-linecap="round" stroke-dasharray="100 1785">
         <animate attributeName="stroke-dashoffset" from="0" to="-1885" dur="36s" repeatCount="indefinite"/>
       </circle>
-      <circle cx="700" cy="450" r="300" fill="none" stroke="rgba(45,212,191,0.10)" stroke-width="4" stroke-linecap="round" stroke-dasharray="90 1795">
-        <animate attributeName="stroke-dashoffset" from="15" to="-1870" dur="36s" repeatCount="indefinite"/>
+      <circle cx="700" cy="450" r="300" fill="none" stroke="rgba(45,212,191,0.10)" stroke-width="4" stroke-linecap="round" stroke-dasharray="100 1785">
+        <animate attributeName="stroke-dashoffset" from="0" to="-1885" dur="36s" repeatCount="indefinite"/>
       </circle>
-      <circle cx="700" cy="450" r="300" fill="none" stroke="rgba(45,212,191,0.35)" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="50 1835">
-        <animate attributeName="stroke-dashoffset" from="35" to="-1850" dur="36s" repeatCount="indefinite"/>
+      <circle cx="700" cy="450" r="300" fill="none" stroke="rgba(45,212,191,0.35)" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="100 1785">
+        <animate attributeName="stroke-dashoffset" from="0" to="-1885" dur="36s" repeatCount="indefinite"/>
       </circle>
     </g>
   </svg>
@@ -1878,6 +1964,7 @@ body.theme-void .impact-scale > div:nth-child(4) .shipped-item:hover { border-le
       <div class="theme-option" data-theme="classic"><div class="theme-option-dot" style="background:#c9a96e;"></div>Classic</div>
       <div class="theme-option" data-theme="aol"><div class="theme-option-dot" style="background:#ffcc00;"></div>Instant Messenger</div>
       <div class="theme-option" data-theme="cosmic"><div class="theme-option-dot" style="background:#ffff00;"></div>Cosmic Secrets</div>
+      <div class="theme-option" data-theme="chaos"><div class="theme-option-dot" style="background:#FF003C;"></div>Chaos</div>
       <div class="theme-option" data-theme="laser"><div class="theme-option-dot" style="background:#ff3333;"></div>Laser Tag</div>
       <div class="theme-option" data-theme="matrix"><div class="theme-option-dot" style="background:#00ff41;"></div>Matrix</div>
       <div class="theme-option" data-theme="neon"><div class="theme-option-dot" style="background:#ff2eea;"></div>Neon</div>
@@ -2132,6 +2219,7 @@ const themes = {
   synth84: { bg:'#0a0014', fg:'#e8d8ff', muted:'#7a6a9a', accent:'#ff1744', card:'#140024', border:'#2a1a44', effect: 'grid' },
   void: { bg:'#08080c', fg:'#dcdce0', muted:'#6b6b76', accent:'#2dd4bf', card:'rgba(255,255,255,0.03)', border:'rgba(255,255,255,0.08)', effect: null },
   cosmic: { bg:'#000000', fg:'#00ffff', muted:'#ffff00', accent:'#00ff00', card:'#000033', border:'#333399', effect: 'stars' },
+  chaos: { bg:'#0a0a0a', fg:'#ffffff', muted:'#888888', accent:'#FF003C', card:'transparent', border:'#FF003C', effect: null },
 };
 
 let currentEffect = null;
@@ -2399,6 +2487,12 @@ const dlContent = {
     motion: '120 twinkling stars in five colors animate continuously across the background. Brightest stars get cross-shaped sparkle effects. Everything glows with colored text-shadows. The void is alive.',
     texture: 'No grain – the animated starfield IS the texture. Navy card backgrounds (#000033) with purple borders (#333399) evoke late-90s HTML tables. Every hover adds a green glow, because space is green apparently.',
   },
+  chaos: {
+    color: 'Ten neon colors. No roles. No system. Any color, any time, any element. Red (#FF003C), green (#00FF87), blue (#3D00FF), yellow (#FFE600), orange, cyan, magenta, lime, white, black. If it screams, let it scream.',
+    type: 'Six fonts, all in play at once. Rubik Glitch for glitch headings. Impact for LOUD. Silkscreen for pixel labels. Space Mono for structure. Instrument Serif for ironic elegance. Plus Jakarta Sans exists to be disrupted.',
+    motion: 'Chromatic aberration glitch on the hero – red and cyan split layers with random jitter. Cards snap-rotate on hover, no easing. Nothing is ease-in-out. Motion should startle, not soothe.',
+    texture: 'No texture. No grain. No glass. Cards are bordered, not filled – 2px neon strokes on black void. Every card picks a different rotation, border color, and radius. No two look alike.',
+  },
 };
 
 function updateDesignLanguage(name) {
@@ -2410,15 +2504,16 @@ function updateDesignLanguage(name) {
   // Display-safe colors for swatches (rgba doesn't render well as solid blocks)
   const displayColors = {
     void: { card: '#0d0d12', border: '#1a1a22' },
+    chaos: { bg: '#FF003C', fg: '#00FF87', accent: '#FFE600', muted: '#3D00FF', card: '#FF00C8', border: '#00D4FF' },
   };
   const dc = displayColors[name] || {};
   swatchEl.innerHTML = [
-    { color: t.bg, label: 'Background' },
-    { color: t.fg, label: 'Foreground' },
-    { color: t.accent, label: 'Accent' },
-    { color: t.muted, label: 'Muted' },
-    { color: dc.card || t.card, label: 'Card' },
-    { color: dc.border || t.border, label: 'Border' },
+    { color: dc.bg || t.bg, label: name === 'chaos' ? 'Red' : 'Background' },
+    { color: dc.fg || t.fg, label: name === 'chaos' ? 'Green' : 'Foreground' },
+    { color: dc.accent || t.accent, label: name === 'chaos' ? 'Yellow' : 'Accent' },
+    { color: dc.muted || t.muted, label: name === 'chaos' ? 'Blue' : 'Muted' },
+    { color: dc.card || t.card, label: name === 'chaos' ? 'Magenta' : 'Card' },
+    { color: dc.border || t.border, label: name === 'chaos' ? 'Cyan' : 'Border' },
   ].map(s => `<div><div class="dl-swatch" style="background:${s.color};"></div><div class="dl-swatch-label">${s.label}</div></div>`).join('');
   // Update descriptions
   document.getElementById('dlColorDesc').textContent = dl.color;
@@ -2465,6 +2560,10 @@ function setTheme(name) {
     o.classList.toggle('active', o.dataset.theme === name);
   });
   updateDesignLanguage(name);
+
+  // Chaos system
+  chaosDestroy(); // always clean up first
+  if (name === 'chaos') chaosInit();
 }
 
 // 15-click easter egg for hidden themes
@@ -3055,6 +3154,155 @@ document.querySelectorAll('.shipped-item').forEach(item => {
     }
   });
 });
+// === CHAOS SYSTEM ===
+const CHAOS_COLORS = ['#FF003C','#00FF87','#3D00FF','#FFE600','#FF6B00','#00D4FF','#FF00C8','#8AFF00'];
+const CHAOS_FONTS = ["'Rubik Glitch',system-ui","'Space Mono',monospace","'Instrument Serif',serif","Impact,sans-serif","'Silkscreen',monospace","'Plus Jakarta Sans',sans-serif"];
+const CHAOS_STICKER_TEXTS = ['NOT A DESIGN SYSTEM','RULES ARE SUGGESTIONS','BREAK GLASS','ctrl+z won\'t save you','ENTROPY','EXIT ↗','LOUD ON PURPOSE','NO EASING','RANDOMIZE','PUSH HARDER'];
+
+let chaosInterval = null;
+let chaosStickers = [];
+
+function chaosRand(min, max) { return Math.random() * (max - min) + min; }
+function chaosPick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+
+function chaosRoll() {
+  if (!document.body.classList.contains('theme-chaos')) return;
+
+  // Randomize all card-like elements
+  const cards = document.querySelectorAll('.stat-card, .article-card, .dl-card, .shipped-item, .exp-card');
+  cards.forEach(el => {
+    const rot = chaosRand(-3, 3);
+    const color = chaosPick(CHAOS_COLORS);
+    const radius = Math.random() > 0.5 ? '0px' : Math.floor(chaosRand(4, 24)) + 'px';
+    el.style.transform = `rotate(${rot}deg)`;
+    el.style.borderColor = color;
+    el.style.borderRadius = radius;
+    el.style.borderWidth = '2px';
+    el.style.borderStyle = 'solid';
+    el.style.background = 'transparent';
+    el.style.backdropFilter = 'none';
+    el.style.transition = 'transform 0.15s linear';
+
+    // Store rotation for hover doubling
+    el.dataset.chaosRot = rot;
+  });
+
+  // Randomize fonts on select elements
+  document.querySelectorAll('.article-card h3').forEach(el => {
+    el.style.fontFamily = chaosPick(CHAOS_FONTS);
+  });
+  document.querySelectorAll('.dl-card h4').forEach(el => {
+    el.style.fontFamily = chaosPick(CHAOS_FONTS);
+    el.style.textTransform = Math.random() > 0.5 ? 'uppercase' : 'none';
+  });
+  document.querySelectorAll('.t-company').forEach(el => {
+    el.style.fontFamily = chaosPick(CHAOS_FONTS);
+  });
+
+  // Randomize accent colors on various elements
+  document.querySelectorAll('.stat-number').forEach(el => {
+    el.style.color = chaosPick(CHAOS_COLORS);
+  });
+  document.querySelectorAll('.article-tag').forEach(el => {
+    el.style.color = chaosPick(CHAOS_COLORS);
+  });
+  document.querySelectorAll('.article-result').forEach(el => {
+    el.style.color = chaosPick(CHAOS_COLORS);
+  });
+  document.querySelectorAll('.section-label').forEach(el => {
+    el.style.color = chaosPick(CHAOS_COLORS);
+  });
+  document.querySelectorAll('.t-item::before').forEach && document.querySelectorAll('.t-role-title').forEach(el => {
+    el.style.color = chaosPick(CHAOS_COLORS);
+  });
+  // Timeline dots via CSS var
+  document.querySelectorAll('.t-item').forEach(el => {
+    el.style.setProperty('--chaos-dot', chaosPick(CHAOS_COLORS));
+  });
+  // Shipped categories
+  document.querySelectorAll('.shipped-category').forEach(el => {
+    el.style.color = chaosPick(CHAOS_COLORS);
+  });
+  document.querySelectorAll('.impact-tier-label').forEach(el => {
+    el.style.color = chaosPick(CHAOS_COLORS);
+  });
+  // Hero h1 em (the word "scale")
+  const heroEm = document.querySelector('.hero h1 em');
+  if (heroEm) { heroEm.style.color = chaosPick(CHAOS_COLORS); heroEm.style.fontStyle = 'normal'; }
+
+  // Re-randomize sticker positions
+  chaosStickers.forEach(s => {
+    s.style.top = chaosRand(5, 90) + '%';
+    s.style.left = chaosRand(5, 92) + '%';
+    s.style.transform = `rotate(${chaosRand(-12, 12)}deg)`;
+    s.style.background = chaosPick(CHAOS_COLORS);
+    const bg = s.style.background;
+    s.style.color = (bg === '#FFE600' || bg === '#8AFF00' || bg === '#00FF87') ? '#000' : '#FFF';
+    s.textContent = chaosPick(CHAOS_STICKER_TEXTS);
+  });
+}
+
+function chaosInit() {
+  // Add stickers
+  for (let i = 0; i < 6; i++) {
+    const s = document.createElement('div');
+    s.className = 'chaos-sticker';
+    s.style.cssText = `position:fixed;z-index:50;padding:5px 12px;font-family:'Silkscreen',monospace;font-size:9px;font-weight:400;white-space:nowrap;pointer-events:none;`;
+    document.body.appendChild(s);
+    chaosStickers.push(s);
+  }
+
+  // Add hover listeners for rotation doubling
+  document.querySelectorAll('.stat-card, .article-card, .dl-card, .shipped-item, .exp-card').forEach(el => {
+    el.addEventListener('mouseenter', function() {
+      if (!document.body.classList.contains('theme-chaos')) return;
+      const rot = parseFloat(this.dataset.chaosRot || 0);
+      this.style.transform = `rotate(${rot * 2}deg)`;
+      const bc = this.style.borderColor;
+      this.style.background = bc.replace(')', ',0.15)').replace('rgb(', 'rgba(');
+    });
+    el.addEventListener('mouseleave', function() {
+      if (!document.body.classList.contains('theme-chaos')) return;
+      const rot = parseFloat(this.dataset.chaosRot || 0);
+      this.style.transform = `rotate(${rot}deg)`;
+      this.style.background = 'transparent';
+    });
+  });
+
+  // Initial roll
+  chaosRoll();
+
+  // Re-chaos every 5 seconds
+  chaosInterval = setInterval(chaosRoll, 5000);
+}
+
+function chaosDestroy() {
+  if (chaosInterval) { clearInterval(chaosInterval); chaosInterval = null; }
+  chaosStickers.forEach(s => s.remove());
+  chaosStickers = [];
+
+  // Clear all inline styles chaos applied
+  document.querySelectorAll('.stat-card, .article-card, .dl-card, .shipped-item, .exp-card, .stat-number, .article-tag, .article-result, .section-label, .t-role-title, .article-card h3, .dl-card h4, .t-company, .shipped-category, .impact-tier-label').forEach(el => {
+    el.style.transform = '';
+    el.style.borderColor = '';
+    el.style.borderRadius = '';
+    el.style.borderWidth = '';
+    el.style.borderStyle = '';
+    el.style.background = '';
+    el.style.backdropFilter = '';
+    el.style.transition = '';
+    el.style.fontFamily = '';
+    el.style.textTransform = '';
+    el.style.color = '';
+    delete el.dataset.chaosRot;
+  });
+  document.querySelectorAll('.t-item').forEach(el => {
+    el.style.removeProperty('--chaos-dot');
+  });
+  const heroEm = document.querySelector('.hero h1 em');
+  if (heroEm) { heroEm.style.color = ''; heroEm.style.fontStyle = ''; }
+}
+
 </script>
 
 </body>
