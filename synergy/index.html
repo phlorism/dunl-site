@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -18,11 +18,12 @@
   --red:#FF4D3D; --blu:#4D8DF0; --mag:#FF5FD2; --manila:#C9A227;
   --mono:ui-monospace,'SF Mono',Menlo,Consolas,'Courier New',monospace;
 }
-*{box-sizing:border-box;margin:0;padding:0}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
 img,canvas{image-rendering:pixelated;image-rendering:crisp-edges;display:block}
 html,body{min-height:100%;background:var(--void)}
 body{font-family:var(--mono);color:var(--ink);-webkit-font-smoothing:none;
-  touch-action:manipulation;overflow-x:hidden}
+  touch-action:manipulation;overflow-x:hidden;
+  -webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
 /* CRT */
 #crt{position:fixed;inset:0;pointer-events:none;z-index:99}
 #crt::before{content:'';position:absolute;inset:0;
@@ -1505,6 +1506,24 @@ window.addEventListener('pointerup',()=>{
   if(!p.moved&&!S.busy&&!S.modal)tapCell(p.r,p.c);
 });
 
+/* iOS zoom killers. Safari ignores parts of the viewport meta, so block the
+   gestures directly: pinch via Apple's gesture events, double-tap by eating
+   the second touchend inside 350ms. The second tap is re-dispatched as a
+   click so fast UI mashing (dialogue skipping, tile taps) still lands. */
+document.addEventListener('gesturestart',e=>e.preventDefault(),{passive:false});
+document.addEventListener('gesturechange',e=>e.preventDefault(),{passive:false});
+document.addEventListener('dblclick',e=>e.preventDefault());
+let _lastTE=0;
+document.addEventListener('touchend',e=>{
+  const now=Date.now();
+  if(now-_lastTE<350){
+    e.preventDefault();
+    const t=e.target;
+    if(t&&t.isConnected&&typeof t.click==='function')t.click();
+  }
+  _lastTE=now;
+},{passive:false});
+
 /* ---------------- level generation ---------------------------------------- */
 function shufR(r,a){
   for(let i=a.length-1;i>0;i--){const j=(r()*(i+1))|0;const t=a[i];a[i]=a[j];a[j]=t}
@@ -1605,7 +1624,7 @@ function showModal(html){
   S.modal=true;
   hydrate(modalEl);
 }
-function hideModal(){overlayEl.classList.add('hidden');S.modal=false}
+function hideModal(){overlayEl.classList.add('hidden');modalEl.innerHTML='';S.modal=false}
 function typeText(el,text){
   return new Promise(res=>{
     let i=0,done=false;
