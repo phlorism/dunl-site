@@ -1,0 +1,2007 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="SYNERGY">
+<meta name="theme-color" content="#0B0E14">
+<link rel="apple-touch-icon" href="icon.png">
+<title>SYNERGY™ — Employee Engagement Suite</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3E%3Crect width='8' height='8' fill='%230B0E14'/%3E%3Crect x='1' y='1' width='6' height='2' fill='%233DF06A'/%3E%3Crect x='1' y='4' width='4' height='1' fill='%233DF06A'/%3E%3C/svg%3E">
+<style>
+:root{
+  --void:#0B0E14; --panel:#151B26; --panel2:#1D2635; --edge:#39465C; --edge2:#0A0D13;
+  --ink:#DCE6F5; --dim:#7F91AC; --grn:#3DF06A; --grnD:#1B7A38; --amb:#FFB627;
+  --red:#FF4D3D; --blu:#4D8DF0; --mag:#FF5FD2; --manila:#C9A227;
+  --mono:ui-monospace,'SF Mono',Menlo,Consolas,'Courier New',monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+img,canvas{image-rendering:pixelated;image-rendering:crisp-edges;display:block}
+html,body{min-height:100%;background:var(--void)}
+body{font-family:var(--mono);color:var(--ink);-webkit-font-smoothing:none;
+  touch-action:manipulation;overflow-x:hidden}
+/* CRT */
+#crt{position:fixed;inset:0;pointer-events:none;z-index:99}
+#crt::before{content:'';position:absolute;inset:0;
+  background:repeating-linear-gradient(0deg,rgba(0,0,0,.30) 0 1px,transparent 1px 3px);
+  mix-blend-mode:multiply}
+#crt::after{content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 80% 70% at 50% 45%,transparent 40%,rgba(0,0,0,.55) 100%)}
+/* chunky window frame */
+.win{background:var(--panel);border:3px solid var(--edge);
+  box-shadow:0 0 0 3px var(--edge2),4px 4px 0 rgba(0,0,0,.5),inset 2px 2px 0 rgba(255,255,255,.07)}
+header{position:relative;z-index:2;display:flex;align-items:center;gap:8px;
+  background:var(--panel);border-bottom:3px solid var(--edge);
+  padding:calc(7px + env(safe-area-inset-top,0px)) 10px 7px;
+  box-shadow:0 3px 0 var(--edge2)}
+#logoS{width:26px;height:26px;background:var(--grnD);border:2px solid var(--grn);
+  display:grid;place-items:center;flex:0 0 auto;box-shadow:0 0 8px rgba(61,240,106,.4)}
+.hspace{flex:1}
+.chip{border:2px solid var(--edge);background:var(--void);padding:3px 6px;display:flex;
+  align-items:center;gap:5px;white-space:nowrap}
+.iconbtn{width:30px;height:30px;border:2px solid var(--edge);background:var(--panel2);
+  cursor:pointer;color:var(--ink);font-family:var(--mono);font-size:13px;font-weight:700;
+  box-shadow:inset 2px 2px 0 rgba(255,255,255,.08),2px 2px 0 rgba(0,0,0,.5);flex:0 0 auto}
+.iconbtn:active{transform:translate(2px,2px);box-shadow:none}
+main{position:relative;z-index:1;max-width:580px;margin:0 auto;padding:10px 8px calc(8px + env(safe-area-inset-bottom,0px))}
+#hud{padding:9px 10px}
+.hudtop{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+#asgnum{margin-bottom:3px}
+.stats{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px;align-items:stretch}
+.stat{background:var(--void);border:2px solid var(--edge);padding:4px 7px;min-width:76px}
+.stat .k{margin-bottom:3px}
+.objs{display:flex;gap:6px;flex-wrap:wrap;align-items:stretch}
+.obj{display:flex;align-items:center;gap:5px;background:var(--void);border:2px solid var(--edge);
+  padding:3px 7px 3px 3px}
+.obj.done{border-color:var(--grn);background:#0E2418}
+.obj.bump{animation:bump .25s steps(3)}
+@keyframes bump{50%{transform:translateY(-3px)}}
+.oi{width:32px;height:32px;flex:0 0 auto;background-size:contain;background-repeat:no-repeat;
+  background-position:center;image-rendering:pixelated}
+.oi.tapeI{background:repeating-linear-gradient(45deg,#C3402F 0 4px,#E8D5B0 4px 8px);
+  border:1px solid var(--edge2)}
+.oi.scoreI{background:var(--grnD);border:1px solid var(--grn)}
+#boardHost{margin-top:9px;padding:8px}
+#boardWrap{position:relative;margin:0 auto;background:#0E1219;
+  box-shadow:inset 0 0 0 2px #070A0F;touch-action:none;user-select:none;-webkit-user-select:none}
+#tileLayer,#tapeLayer,#fxLayer{position:absolute;inset:0}
+#tapeLayer{pointer-events:none;z-index:5}
+#fxLayer{pointer-events:none;z-index:8;display:flex;flex-direction:column;align-items:center;
+  padding-top:8px;gap:4px}
+.tile{position:absolute;top:0;left:0;cursor:pointer;transition:transform .13s steps(4);
+  will-change:transform;z-index:1}
+.tile .face{position:absolute;inset:0;background-repeat:no-repeat;background-position:center;
+  box-shadow:inset 2px 2px 0 rgba(255,255,255,.15),inset -2px -2px 0 rgba(0,0,0,.45)}
+.t0 .face{background-color:#5C4230}.t1 .face{background-color:#6B5A18}
+.t2 .face{background-color:#1E4A78}.t3 .face{background-color:#4A2E70}
+.t4 .face{background-color:#1C5A38}.t5 .face{background-color:#7A2A28}
+.tile.sel{z-index:3}
+.tile.sel .face{box-shadow:inset 0 0 0 3px var(--grn),inset 2px 2px 0 rgba(255,255,255,.15)}
+.tile.hint .face{animation:hintP .6s steps(2) infinite}
+@keyframes hintP{50%{box-shadow:inset 0 0 0 3px var(--amb),inset 2px 2px 0 rgba(255,255,255,.15)}}
+.tile.pop{z-index:4}
+.tile.pop .face{animation:popA .22s steps(4) forwards}
+@keyframes popA{40%{transform:scale(1.2)}100%{transform:scale(.2);opacity:0}}
+.tile.flash .face{animation:flashA .3s steps(3)}
+@keyframes flashA{35%{filter:brightness(2.6) saturate(.4)}}
+.tile.s-row .face::before,.tile.s-col .face::before{content:'';position:absolute;inset:0;
+  z-index:1;mix-blend-mode:screen}
+.tile.s-row .face::before{background:repeating-linear-gradient(0deg,
+  rgba(255,255,255,.75) 0 3px,transparent 3px 9px)}
+.tile.s-col .face::before{background:repeating-linear-gradient(90deg,
+  rgba(255,255,255,.75) 0 3px,transparent 3px 9px)}
+.tile.s-bomb .face{animation:bombP .5s steps(2) infinite}
+@keyframes bombP{50%{box-shadow:inset 0 0 0 3px var(--red),inset 2px 2px 0 rgba(255,255,255,.15)}}
+.tile.s-color .face{background-color:#0D1017;animation:reorgP .48s steps(6) infinite}
+@keyframes reorgP{from{background-position-x:var(--sprx,2px)}
+  to{background-position-x:calc(var(--sprx,2px) - 6 * var(--sprw,64px))}}
+.tile.s-color .face{background-position-x:var(--sprx,2px);background-position-y:center}
+.tape{position:absolute;border:3px solid transparent;
+  border-image:repeating-linear-gradient(45deg,#C3402F 0 5px,#E8D5B0 5px 10px) 6;
+  background:rgba(195,64,47,.14);z-index:5;pointer-events:none}
+.tape.lv2{background:rgba(160,26,16,.34);box-shadow:inset 0 0 0 3px rgba(255,77,61,.5)}
+.tape.rip{animation:ripA .26s steps(4) forwards}
+@keyframes ripA{to{transform:scale(1.4) rotate(12deg);opacity:0}}
+.toast{background:var(--void);border:2px solid var(--grn);color:var(--grn);padding:3px 8px;
+  animation:toastA 1.4s steps(8) forwards;max-width:94%;box-shadow:3px 3px 0 rgba(0,0,0,.6)}
+@keyframes toastA{0%{opacity:0;transform:translateY(6px)}14%{opacity:1;transform:none}
+  76%{opacity:1}100%{opacity:0;transform:translateY(-10px)}}
+.float{position:absolute;z-index:7;pointer-events:none;animation:floatA .85s steps(8) forwards}
+@keyframes floatA{to{transform:translateY(-32px);opacity:0}}
+#banner{position:absolute;inset:0;display:grid;place-items:center;z-index:9;text-align:center;
+  background:rgba(11,14,20,.9);padding:14px}
+#bannerS{color:var(--dim);font-size:11px;margin-top:7px;line-height:1.6}
+.hidden{display:none!important}
+#ticker{position:relative;z-index:1;margin-top:8px;border:2px solid var(--edge);
+  background:var(--void);overflow:hidden;height:22px;display:flex;align-items:center}
+#tickerIn{display:flex;white-space:nowrap;animation:tick 64s linear infinite;flex:0 0 auto}
+#tickerIn span{padding-right:34px;color:var(--amb);font-size:10.5px;letter-spacing:.04em}
+@keyframes tick{to{transform:translateX(-50%)}}
+#ticker:hover #tickerIn{animation-play-state:paused}
+.legal{text-align:center;color:#4A5769;font-size:9.5px;margin-top:8px;line-height:1.8}
+/* modal / JRPG windows */
+#overlay{position:fixed;inset:0;background:rgba(4,6,10,.82);z-index:60;display:grid;
+  place-items:center;padding:12px}
+#modal{max-width:460px;width:100%;max-height:94vh;overflow:auto;
+  animation:mIn .2s steps(4)}
+@keyframes mIn{from{transform:scale(.9);opacity:0}}
+.mhead{background:var(--edge);padding:4px 8px;display:flex;justify-content:space-between;
+  align-items:center;gap:8px}
+.mbody{padding:12px}
+.memo{background:#E8D5B0;border:3px solid #6B5A2E;padding:11px;color:#241C08;
+  box-shadow:inset -3px -3px 0 rgba(107,90,46,.35)}
+.memo hr{border:0;border-top:2px dashed #8A7440;margin:8px 0}
+.memo .mrow{font-size:11px;line-height:1.85;color:#3B3117}
+.memo .mbod{font-size:12.5px;line-height:1.75;margin-top:8px;color:#1A1405}
+.memo .ps{font-size:11px;line-height:1.7;margin-top:9px;color:#5A4A20;border-top:2px solid #B49A5E;padding-top:7px}
+.memo ul{margin:6px 0 2px 15px;font-size:11.5px;line-height:1.9}
+.btnrow{display:flex;gap:8px;justify-content:flex-end;padding:10px 12px 12px;flex-wrap:wrap}
+.btn{background:var(--panel2);border:2px solid var(--edge);color:var(--ink);cursor:pointer;
+  padding:8px 12px;font-family:var(--mono);
+  box-shadow:inset 2px 2px 0 rgba(255,255,255,.09),3px 3px 0 rgba(0,0,0,.55)}
+.btn:hover{background:var(--edge)}
+.btn:active{transform:translate(3px,3px);box-shadow:inset 2px 2px 0 rgba(255,255,255,.09)}
+.btn.go{background:var(--grnD);border-color:var(--grn)}
+.btn.go:hover{background:#26A64D}
+.btn.bad{background:#6B1F19;border-color:var(--red)}
+.btn:focus-visible,.iconbtn:focus-visible{outline:3px solid var(--amb);outline-offset:2px}
+.stampwrap{text-align:center;padding:16px 12px 4px}
+.stamp{display:inline-block;border:4px solid var(--grn);padding:7px 12px;transform:rotate(-5deg);
+  animation:stampIn .3s steps(4);box-shadow:0 0 14px rgba(61,240,106,.35)}
+.stamp.red{border-color:var(--red);box-shadow:0 0 14px rgba(255,77,61,.35)}
+.stamp.blu{border-color:var(--blu);box-shadow:0 0 14px rgba(77,141,240,.35)}
+@keyframes stampIn{0%{transform:rotate(-5deg) scale(2.4);opacity:0}
+  60%{transform:rotate(-5deg) scale(.92);opacity:1}}
+.sub{color:var(--dim);text-align:center;font-size:11.5px;padding:9px 16px 0;line-height:1.75}
+.statsrow{display:flex;gap:6px;justify-content:center;padding:12px 12px 0;flex-wrap:wrap}
+.rules{padding:2px 6px 8px;font-size:11.5px;line-height:1.9;list-style:none}
+.rules li{margin-bottom:5px;padding-left:13px;position:relative}
+.rules li::before{content:'>';position:absolute;left:0;color:var(--grn)}
+/* dialogue */
+.dlgtop{display:flex;gap:10px;align-items:flex-start;padding:12px 12px 0}
+.portrait{width:72px;height:72px;flex:0 0 auto;border:3px solid var(--edge);
+  background:#0E1219;box-shadow:inset 0 0 0 2px var(--edge2)}
+.nameplate{flex:1;min-width:0}
+.dlgbox{margin:10px 12px 0;background:#0D111A;border:3px solid var(--edge);padding:9px 10px;
+  min-height:74px;font-size:12px;line-height:1.75;position:relative;
+  box-shadow:inset 2px 2px 0 rgba(0,0,0,.6)}
+.dlgbox.you{border-color:var(--grnD)}
+.arrow{position:absolute;right:6px;bottom:4px;color:var(--grn);animation:ar .5s steps(2) infinite}
+@keyframes ar{50%{opacity:0}}
+.opts{display:flex;flex-direction:column;gap:6px;padding:10px 12px 0}
+.opt{text-align:left;background:var(--panel2);border:2px solid var(--edge);color:var(--ink);
+  cursor:pointer;padding:7px 9px;font-family:var(--mono);font-size:11.5px;line-height:1.5;
+  box-shadow:2px 2px 0 rgba(0,0,0,.5);display:flex;gap:7px;align-items:flex-start}
+.opt:hover{background:var(--edge);border-color:var(--grn)}
+.opt:active{transform:translate(2px,2px);box-shadow:none}
+.opt .cur{color:var(--grn);flex:0 0 auto}
+.opt.coward:hover{border-color:var(--dim)}
+.hrline{margin:10px 12px 0;border:2px solid var(--red);background:#1A0B0A;color:var(--red);
+  font-size:10.5px;line-height:1.65;padding:7px 9px}
+.candorpop{text-align:center;padding:9px 12px 0;color:var(--grn);font-size:11px}
+/* boot */
+#boot{position:fixed;inset:0;background:var(--void);z-index:90;padding:calc(22px + env(safe-area-inset-top,0px)) 16px 22px;
+  font-size:12px;line-height:1.85;color:var(--grn);overflow:hidden;cursor:pointer;
+  text-shadow:0 0 6px rgba(61,240,106,.55)}
+#bootTxt{white-space:pre-wrap;max-width:560px;margin:0 auto}
+#bootTxt .d{color:var(--dim)}#bootTxt .r{color:var(--red)}#bootTxt .a{color:var(--amb)}
+.cursorblk{display:inline-block;width:7px;height:12px;background:var(--grn);
+  animation:ar .5s steps(2) infinite;vertical-align:-1px}
+.cf{position:fixed;top:-12px;width:8px;height:8px;z-index:70;pointer-events:none;
+  animation:cfF linear forwards}
+@keyframes cfF{to{transform:translateY(106vh)}}
+@media(max-width:420px){main{padding:8px 5px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{
+  animation-duration:.01ms!important;animation-iteration-count:1!important;
+  transition-duration:.01ms!important}#tickerIn{animation:none}}
+</style>
+</head>
+<body>
+<div id="crt"></div>
+<header>
+  <div id="logoS"></div>
+  <div><div id="logoTxt"></div><div id="logoSub"></div></div>
+  <div class="hspace"></div>
+  <div class="chip" id="candorChip"></div>
+  <div class="chip" id="hrChip"></div>
+  <button class="iconbtn" id="soundBtn" aria-label="Sound">♪</button>
+  <button class="iconbtn" id="helpBtn" aria-label="Help">?</button>
+</header>
+<main>
+  <section id="hud" class="win">
+    <div class="hudtop">
+      <div style="min-width:0"><div id="asgnum"></div><div id="asname"></div></div>
+      <div style="text-align:right"><div id="titleChip"></div></div>
+    </div>
+    <div class="stats">
+      <div class="stat"><div class="k" id="kBand"></div><div id="moves"></div></div>
+      <div class="stat"><div class="k" id="kEng"></div><div id="score"></div></div>
+      <div id="objs" class="objs"></div>
+    </div>
+  </section>
+  <div id="boardHost" class="win">
+    <div id="boardWrap">
+      <div id="tileLayer"></div>
+      <div id="tapeLayer"></div>
+      <div id="fxLayer"></div>
+      <div id="banner" class="hidden"><div>
+        <div id="bannerT"></div><div id="bannerS"></div>
+      </div></div>
+    </div>
+  </div>
+  <div id="ticker"><div id="tickerIn"></div></div>
+  <div class="legal">
+    SYNERGY&trade; IS A WHOLLY OWNED SUBSIDIARY OF ITSELF. PARTICIPATION IS BEING NOTED.<br>
+    BUILD 4.0.2 &middot; KNOWN ISSUES: MORALE &middot; DO NOT PRINT THIS GAME
+  </div>
+</main>
+<div id="overlay" class="hidden"><div id="modal" class="win"></div></div>
+<div id="boot"><div id="bootTxt"></div></div>
+<script>
+'use strict';
+/* ==========================================================================
+   SYNERGY(TM) v4.0.2 -- Employee Engagement Suite
+   A match-3 about the modern workplace. 100% programmatic pixel art + audio.
+   No images. No fonts. No dependencies. No hope.
+   ========================================================================== */
+
+/* ---------------- 5x7 bitmap font (7 bytes/glyph, 5 significant bits) ------ */
+const FONT={
+'A':'0E11111F111111','B':'1E11111E11111E','C':'0E11101010110E','D':'1C12111111121C',
+'E':'1F10101E10101F','F':'1F10101E101010','G':'0E11101711110F','H':'1111111F111111',
+'I':'0E04040404040E','J':'0702020202120C','K':'11121418141211','L':'1010101010101F',
+'M':'111B1515111111','N':'11191513111111','O':'0E11111111110E','P':'1E11111E101010',
+'Q':'0E11111115120D','R':'1E11111E141211','S':'0F10100E01011E','T':'1F040404040404',
+'U':'1111111111110E','V':'11111111110A04','W':'11111115151B11','X':'11110A040A1111',
+'Y':'11110A04040404','Z':'1F01020408101F',
+'0':'0E11131519110E','1':'040C040404040E','2':'0E11010608101F','3':'1F02040601110E',
+'4':'02060A121F0202','5':'1F101E0101110E','6':'0608101E11110E','7':'1F010204080808',
+'8':'0E11110E11110E','9':'0E11110F01020C',
+' ':'00000000000000','.':'00000000000004',',':'00000000000408','!':'04040404040004',
+'?':'0E110102040004',':':'00040400040400','-':'0000001F000000','/':'01020204080810',
+"'":'04040000000000','(':'02040808080402',')':'08040202020408','+':'0004041F040400',
+'*':'000A041F040A00','#':'0A1F0A0A1F0A00','>':'08040201020408','<':'02040810080402',
+'_':'0000000000001F','=':'00001F001F0000','%':'191A04080B1300','&':'0C12140819120D',
+'"':'0A0A0000000000',';':'00040400040408','$':'041E141C05161C','@':'0E111517100E00',
+'[':'0E08080808080E',']':'0E02020202020E','×':'00110A040A1100','~':'0000081512 0000'.replace(/ /g,'')
+};
+const GW=5,GH=7;
+function glyphRows(ch){
+  const h=FONT[ch]||FONT['?'];
+  const out=[];
+  for(let i=0;i<GH;i++)out.push(parseInt(h.substr(i*2,2),16));
+  return out;
+}
+/* Renders text to a fresh canvas at integer scale. Uppercase only, by design. */
+function pxCanvas(text,scale,color,shadow){
+  text=String(text).toUpperCase();
+  const s=scale||3, pad=shadow?s:0;
+  const w=Math.max(1,text.length*(GW+1)*s-s)+pad, h=GH*s+pad;
+  const cv=document.createElement('canvas');
+  cv.width=w;cv.height=h;
+  cv.style.width=w+'px';cv.style.height=h+'px';
+  const g=cv.getContext('2d');
+  const draw=(ox,oy,col)=>{
+    g.fillStyle=col;
+    for(let i=0;i<text.length;i++){
+      const rows=glyphRows(text[i]),bx=ox+i*(GW+1)*s;
+      for(let r=0;r<GH;r++){
+        const bits=rows[r];if(!bits)continue;
+        for(let c=0;c<GW;c++){
+          if(bits&(1<<(GW-1-c)))g.fillRect(bx+c*s,oy+r*s,s,s);
+        }
+      }
+    }
+  };
+  if(shadow)draw(s,s,shadow);
+  draw(0,0,color||'#DCE6F5');
+  return cv;
+}
+function setPx(el,text,scale,color,shadow){
+  if(!el)return;
+  el.innerHTML='';
+  el.appendChild(pxCanvas(text,scale,color,shadow));
+}
+function hydrate(root){
+  const list=(root.querySelectorAll?root.querySelectorAll('[data-px]'):[])||[];
+  for(let i=0;i<list.length;i++){
+    const el=list[i];
+    setPx(el,el.dataset.px||'',+(el.dataset.s||3),el.dataset.c||'#DCE6F5',el.dataset.sh||null);
+  }
+}
+
+/* ---------------- pixel sprites (12x12 tiles, 16x16 portraits) ------------- */
+const PAL_K='#191009';
+const SPR={
+COFFEE:{p:{k:'#2E1C10',w:'#F2E2C9',b:'#8A5230',s:'#5C6E8A'},d:[
+'................','.....s...s......','....s...s.......','.....s...s......',
+'................','..kkkkkkkkkk....','..kwwwwwwwwk....','..kwbbbbbbwkkk..',
+'..kwbbbbbbwkwwk.','..kwbbbbbbwk.wk.','..kwbbbbbbwk.wk.','..kwbbbbbbwkwwk.',
+'..kwbbbbbbwkkk..','..kwwwwwwwwk....','..kkkkkkkkkk....','................']},
+FORM:{p:{k:'#3A2E0C',y:'#C9922B',w:'#FFF6DA',d:'#8A6A2B'},d:[
+'......kkkk......','......k..k......','..kkkkkkkkkkkk..','..kyyyyyyyyyyk..',
+'..kywwwwwwwwyk..','..kywddddddwyk..','..kywwwwwwwwyk..','..kywddddddwyk..',
+'..kywwwwwwwwyk..','..kywddddddwyk..','..kywwwwwwwwyk..','..kywddddwwwyk..',
+'..kywwwwwwwwyk..','..kyyyyyyyyyyk..','..kkkkkkkkkkkk..','................']},
+CLIP:{p:{k:'#0F2A44',m:'#7FC4F5',h:'#E8F6FF'},d:[
+'................','......kkkk......','.....khhhhk.....','....km.kk.mk....',
+'....km.km.mk....','....km.km.mk....','....km.km.mk....','....km.km.mk....',
+'....km.km.mk....','....km.km.mk....','....km.kmmmk....','....km.kkkkk....',
+'....km..........','....kmmmmk......','.....kkkk.......','................']},
+HIRE:{p:{k:'#2A1A44',p:'#A98BE0',d:'#5E42A0',h:'#C3AEEC'},d:[
+'................','......kkkk......','.....kkkkkk.....','.....kk..kk.....',
+'.kkkkkkkkkkkkkk.','.khhhhhhhhhhhhk.','.kppppppppppppk.','.kppppddddppppk.',
+'.kkkkkddddkkkkk.','.kppppddddppppk.','.kppppppppppppk.','.kppppppppppppk.',
+'.kppppppppppppk.','.kkkkkkkkkkkkkk.','................','................']},
+REPORT:{p:{k:'#0D3320',w:'#EAFBF0',g:'#3DD46E'},d:[
+'.kkkkkkkkkkkkkk.','.kwwwwwwwwwwwwk.','.kwwwwwwwwwwwwk.','.kwwwwwwwwgggwk.',
+'.kwwwwwwwwgggwk.','.kwwwwwwwwgggwk.','.kwwwwgggwgggwk.','.kwwwwgggwgggwk.',
+'.kwwwwgggwgggwk.','.kgggwgggwgggwk.','.kgggwgggwgggwk.','.kgggwgggwgggwk.',
+'.kgggwgggwgggwk.','.kwwwwwwwwwwwwk.','.kkkkkkkkkkkkkk.','................']},
+EMAIL:{p:{k:'#4A1512',e:'#FF8B7B',d:'#B8402F'},d:[
+'................','.kkkkkkkkkkkkkk.','.keeeeeeeeeeeek.','.kdeeeeeeeeeedk.',
+'.kedeeeeeeeedek.','.keedeeeeeedeek.','.keeedeeeedeeek.','.keeeedeedeeeek.',
+'.keeeeeddeeeeek.','.keeeeeeeeeeeek.','.keeeeeeeeeeeek.','.keeeeeeeeeeeek.',
+'.kkkkkkkkkkkkkk.','................','................','................']},
+REORG:{p:{k:'#05070B'},d:[
+'.....kkkkkk.....','...kk111111kk...','..k1111111111k..','.k112222222211k.',
+'.k122333333221k.','k12233444433221k','k12233444433221k','k12233444433221k',
+'k12233444433221k','.k122333333221k.','.k112222222211k.','..k1111111111k..',
+'...kk111111kk...','.....kkkkkk.....','................','................']}
+};
+const TILES=[
+  {s:'COFFEE', plural:'COFFEES',           verb:'EXPENSE',     bg:'#5C4230'},
+  {s:'FORM',   plural:'COMPLIANCE FORMS',  verb:'FILE',        bg:'#6B5A18'},
+  {s:'CLIP',   plural:'PAPERCLIPS',        verb:'REQUISITION', bg:'#1E4A78'},
+  {s:'HIRE',   plural:'NEW HIRES',         verb:'ONBOARD',     bg:'#4A2E70'},
+  {s:'REPORT', plural:'QUARTERLY REPORTS', verb:'CIRCULATE',   bg:'#1C5A38'},
+  {s:'EMAIL',  plural:'UNREAD EMAILS',     verb:'ARCHIVE',     bg:'#7A2A28'}
+];
+const REORG_CYC=['#FF4D3D','#FFB627','#3DF06A','#4DE8E8','#4D8DF0','#FF5FD2'];
+/* sanity: every sprite row must be the declared width */
+(function(){
+  for(const k in SPR){
+    const d=SPR[k].d;
+    if(d.length!==16)console.warn('sprite rows',k,d.length);
+    d.forEach((r,i)=>{if(r.length!==16)console.warn('sprite width',k,i,r.length)});
+  }
+})();
+function drawSprite(g,def,scale,ox,oy,palOv){
+  const p=palOv||def.p,d=def.d;
+  for(let r=0;r<d.length;r++){
+    const row=d[r];
+    for(let c=0;c<row.length;c++){
+      const ch=row[c];if(ch==='.')continue;
+      const col=p[ch]||PAL_K;
+      g.fillStyle=col;
+      g.fillRect(ox+c*scale,oy+r*scale,scale,scale);
+    }
+  }
+}
+const _sc={};
+/* Tile sprite at exact integer scale. Color bomb returns a 6-frame sheet. */
+function spriteURL(name,scale){
+  const k=name+'|'+scale;
+  if(_sc[k])return _sc[k];
+  const cv=document.createElement('canvas');
+  const def=SPR[name];
+  if(name==='REORG'){
+    cv.width=16*scale*6;cv.height=16*scale;
+    const g=cv.getContext('2d');
+    for(let f=0;f<6;f++){
+      const p={k:'#05070B'};
+      for(let i=1;i<=4;i++)p[i]=REORG_CYC[(f+i-1)%6];
+      drawSprite(g,def,scale,f*16*scale,0,p);
+    }
+  }else{
+    cv.width=16*scale;cv.height=16*scale;
+    drawSprite(cv.getContext('2d'),def,scale,0,0);
+  }
+  return _sc[k]=cv.toDataURL();
+}
+
+/* ---------------- procedural coworker portraits (16x16) -------------------- */
+const P_BASE=[
+'........................','.......kkkkkkkkkk.......','.....kkhhhhhhhhhhkk.....',
+'....khhhhhhhhhhhhhhk....','...khhhhhhhhhhhhhhhhk...','...khhhhhhhhhhhhhhhhk...',
+'...khhhssssssssssshhk...','...khhssssssssssssshk...','...khsssssssssssssshk...',
+'...kssssssssssssssssk...','...kssEEEsssssEEEsssk...','...kssEEEsssssEEEsssk...',
+'...kssssssssssssssssk...','...ksssssssnnsssssssk...','...kssssssssssssssssk...',
+'...ksssssmmmmmmsssssk...','...kssssssssssssssssk...','...kssssssssssssssssk...',
+'....kssssssssssssssk....','.....kssssssssssssk.....','.......kssssssssk.......',
+'....kkkksssssssskkkk....','...kcccccccccccccccck...','..kcccccccccccccccccck..'];
+/* bald is derived from the base so its row widths can never drift */
+const P_BALD=[];for(let i=2;i<=8;i++)P_BALD.push([i,P_BASE[i].replace(/h/g,'s')]);
+const P_HAIR=[
+  [],
+  P_BALD,
+  [[6,'...khhhhhhhhhsssssshk...'],[7,'...khhhhhhssssssssshk...']],
+  [[1,'.....k.kk.kk.kk.kk.k....']],
+  [[9,'...khssssssssssssssshk..']]
+];
+const P_BROW=[
+  [],
+  [[9,'...kssbbbsssssbbbsssk...']]
+];
+const P_MOUTH=[
+  [],
+  [[15,'...kssssmmmmssssssssk...']],
+  [[15,'...ksssmmmmmmmmmmsssk...']]
+];
+const P_ACC=[
+  [],
+  [[10,'...ksGEEEGGGGGEEEGssk...'],[11,'...ksGEEEGGGGGEEEGssk...'],[12,'...ksGGGGGsssGGGGGssk...']],
+  [[0,'.......HHHHHHHHHH.......'],[10,'...HssEEEsssssEEEsssH...'],[11,'...HssEEEsssssEEEsssH...'],[12,'...HssssssssssssssssH...']],
+  [[22,'...kccccLcccccccLccck...'],[23,'..kcccccccBBBBccccccck..']]
+];
+const SKIN=['#FFDBAC','#F0C9A0','#E0A878','#C68642','#8D5524','#5C3317'];
+const SHADE=['#E4BC8C','#D3A87F','#BE8757','#A46A2A','#6E3F17','#42210B'];
+const HAIRC=['#2B1B10','#5C3A1E','#C9922B','#9AA3AD','#E8D5B0','#3A2E44','#B04A2A'];
+const SHIRT=['#4D8DF0','#3DD46E','#FF5FD2','#C9922B','#8A8A8A','#B04A2A','#6B4FA8','#2A6E8A'];
+function buildPortrait(seed){
+  const rng=mulberry32((seed*2246822519)>>>0);
+  const rows=P_BASE.slice();
+  const patch=set=>set.forEach(p=>{rows[p[0]]=p[1]});
+  patch(P_HAIR[(rng()*P_HAIR.length)|0]);
+  patch(P_BROW[(rng()*P_BROW.length)|0]);
+  patch(P_MOUTH[(rng()*P_MOUTH.length)|0]);
+  patch(P_ACC[(rng()*P_ACC.length)|0]);
+  const hair=HAIRC[(rng()*HAIRC.length)|0];
+  const si=(rng()*SKIN.length)|0;
+  return{d:rows,p:{k:'#080B10',s:SKIN[si],n:SHADE[si],h:hair,b:hair,
+    E:'#0A0D13',m:'#9A4040',c:SHIRT[(rng()*SHIRT.length)|0],
+    G:'#161E2A',H:'#2A3547',L:'#B04A2A',B:'#E8D5B0'}};
+}
+function portraitURL(seed,scale){
+  const k='P'+seed+'|'+scale;
+  if(_sc[k])return _sc[k];
+  const def=buildPortrait(seed);
+  const cv=document.createElement('canvas');
+  cv.width=24*scale;cv.height=24*scale;
+  drawSprite(cv.getContext('2d'),def,scale,0,0);
+  return _sc[k]=cv.toDataURL();
+}
+
+/* ---------------- content ------------------------------------------------- */
+const MEMOS=[
+{b:"The refrigerator will be purged Friday at 5 PM.",p:"Items labeled DO NOT THROW AWAY will be prioritized."},
+{b:"All policies are now under review, per the new policy.",p:"See: Policy Review Policy v2 (Draft) (FINAL) (FINAL_v3) (USE THIS ONE)."},
+{b:"Casual Friday is moving to Monday, where morale is needed most.",p:"Casual is defined in Appendix J. Appendix J is nine pages."},
+{b:"The suggestion box has been removed, per your suggestions.",p:"Please direct further suggestions to the space where it was."},
+{b:"Thank you for attending Mandatory Fun. Attendance was noted.",p:"Enthusiasm was also measured. Some of you are on a list."},
+{b:"We are a family here.",p:"Please consult the org chart to locate your position within the family."},
+{b:"This meeting could have been an email.",p:"This email could have been a thought, briefly considered, then released."},
+{b:"Your feedback is important to us.",p:"It has been moved to a folder named 'Feedback (Old)'."},
+{b:"Wellness Wednesday is cancelled due to burnout among the Wellness Committee.",p:"The Wellness Committee has been placed on a wellness journey."},
+{b:"The printer on Floor 3 knows what it did.",p:"It has expressed no remorse. Do not approach it alone."},
+{b:"Please stop replying-all to ask people to stop replying-all.",p:"This memo went to all 4,000 of you. We understand the irony. We are not amused by it."},
+{b:"Badge photo retakes are Thursday. Smiling is encouraged.",p:"Smiles will be audited for authenticity."},
+{b:"Microwaving fish is now a documented offense.",p:"The break room remembers. The break room will always remember."},
+{b:"The team-building escape room surfaced several learnings.",p:"Legal advises we cannot discuss the learnings. Or the room. Or Greg."},
+{b:"Compensation adjustments will be revisited in Q9.",p:"There is no Q9. We checked. There are four."},
+{b:"Overtime is voluntary.",p:"It is also remembered. Fondly. Forever."},
+{b:"The office plant is thriving. Leadership asks that you match its energy.",p:"The plant is plastic. Leadership is aware. Leadership stands by the ask."},
+{b:"Exit interviews now include a brief quiz.",p:"Sample question: 'When did you stop believing?'"},
+{b:"Headcount is frozen.",p:"Warm-count remains under review."},
+{b:"The open floor plan is optimized for serendipitous collisions.",p:"And for having nowhere to cry. This was not an oversight."},
+{b:"A reminder that quiet quitting is not recognized here.",p:"Neither is loud working. Please find a volume we can ignore."},
+{b:"The annual engagement survey is fully anonymous.",p:"Please include your employee ID, for anonymity purposes."},
+{b:"There are donuts in the kitchen.",p:"This resolves all outstanding grievances. All of them. Enjoy."},
+{b:"The thermostat is set to a temperature agreed upon by no one.",p:"This is what fairness feels like. Bring a coat. Bring shorts."},
+{b:"Email will be down Saturday for maintenance.",p:"Please schedule your weekend anxiety accordingly."},
+{b:"Performance reviews are moving to a continuous model.",p:"You are being reviewed right now. Yes, now. That counted."},
+{b:"New hires: the org chart is aspirational.",p:"The actual reporting structure is vibes and one guy named Doug."},
+{b:"Effective today, synergy is mandatory.",p:"Non-synergizers will be aligned. Alignment is a process. It takes a while."},
+{b:"The espresso machine now outranks you.",p:"It has a budget. It has a login. It has a parking spot."},
+{b:"Time theft includes daydreaming.",p:"A written summary of what you imagined is due Friday."},
+{b:"Our values are on the wall in the lobby.",p:"Please do not take them anywhere else. They stay in the lobby."},
+{b:"The Q3 offsite will be held onsite.",p:"The onsite is optional. Attendance is mandatory. Both are true."},
+{b:"Approved acronyms are listed in the AAL.",p:"See also: the AAL FAQ, the AAL AMA, and AAL-ALL (deprecated)."},
+{b:"Someone has been taking the good chair.",p:"We know who. We are giving you the chance to do the right thing."},
+{b:"The all-hands is now a town hall. Nothing else has changed.",p:"There is no town. There is no hall."},
+{b:"Please welcome our new Chief People Officer.",p:"She is the fourth this year. Her name is on the badge. Learn it fast."}
+];
+const TICKER=[
+"Q3 OUTLOOK REVISED TO 'VIBES'",
+"BREAK ROOM MICROWAVE ACHIEVES SENTIENCE, IMMEDIATELY UNIONIZES",
+"PRINTER ON FLOOR 3 STILL AT LARGE",
+"MANDATORY FUN MOVED TO SATURDAY 7PM 'FOR ATTENDANCE'",
+"CEO 'DEEPLY HUMBLED' BY OWN POST ABOUT HUMILITY",
+"NEW COMPANY VALUE ADDED: 'CANDOR.' STAFF ADVISED NOT TO USE IT",
+"THERMOSTAT SET TO 68F AND 74F SIMULTANEOUSLY VIA COMPROMISE",
+"OFFICE PLANT OUTPERFORMS Q2 TARGETS, PROMOTED TO DIRECTOR",
+"ALL-HANDS EXTENDED TO DISCUSS LENGTH OF ALL-HANDS",
+"OPTIONS VEST IN 2049, FULLY UNDERWATER, 'STILL A GREAT STORY'",
+"IT ASKS THAT YOU STOP CALLING. IT IS AWARE. IT IS ALWAYS AWARE",
+"SNACK BUDGET REALLOCATED TO SNACK BUDGET CONSULTANT",
+"EMPLOYEE ASKS 'WHY' -- INCIDENT UNDER REVIEW",
+"RTO MANDATE CITES 'COLLABORATION,' ALSO 'THE LEASE'",
+"HR ANNOUNCES OPEN DOOR POLICY; DOOR CLOSED, LOCKED, GONE",
+"MORALE SURVEY RESULTS 'TOO STATISTICALLY SAD TO PUBLISH'",
+"BOOKSHELF ZOOM BACKGROUND FOOLS NOBODY, PROMOTED ANYWAY",
+"PARKING VALIDATED. YOU ARE NOT",
+"Q9 COMPENSATION REVIEW MOVED TO Q11 FOR CONSISTENCY",
+"NEW COFFEE MACHINE REQUIRES LOGIN, 2FA, AND A REASON",
+"LEGAL REVIEWING THE WORD 'WIN.' USE 'OUTCOME' UNTIL FURTHER NOTICE",
+"SOMEONE REPLIED-ALL. 4,000 PEOPLE. IT'S HAPPENING AGAIN",
+"STANDUP NOW SEATED. NOBODY KNOWS WHY. NOBODY ASKS"
+];
+const FAILS=["LET'S CIRCLE BACK.","WE'RE CHOOSING TO SEE THIS AS A GROWTH AREA.",
+"EFFORT RATING: PRESENT.","THIS IS NOW IN YOUR PERMANENT FILE, WHICH IS A SPREADSHEET.",
+"LEADERSHIP IS DISAPPOINTED BUT NOT SURPRISED. LEADERSHIP IS NEVER SURPRISED.",
+"PLEASE SELF-SCHEDULE A 1:1 WITH YOURSELF.",
+"A LEARNING OPPORTUNITY HAS BEEN IDENTIFIED. IT IS YOU.",
+"PER POLICY, FAILURE IS SIMPLY PRE-SUCCESS.",
+"WE'RE NOT MAD. WE'RE JUST GOING TO TALK ABOUT IT A LOT.",
+"YOUR MANAGER WAS NOTIFIED. YOUR MANAGER NOTIFIED THEIR MANAGER."];
+const WINLINES=["NOTED IN YOUR PERMANENT FILE.","LEADERSHIP HAS BEEN MADE AWARE. CAUTIOUSLY.",
+"A CERTIFICATE IS PRINTING. THE PRINTER DISAGREES.",
+"EXPECTATIONS EXCEEDED, AND THEREFORE RAISED.","THIS RESULT IS NOW THE BASELINE.",
+"BONUS ELIGIBILITY: SEE THE Q9 MEMO.",
+"HR CALLS THIS A WIN. LEGAL IS REVIEWING THE WORD 'WIN'.",
+"EXCELLENT WORK. IT WILL NEVER BE MENTIONED AGAIN."];
+const TOASTS=["VALUE ADDED.","ACTIONED.","ALIGNED.","GREAT OPTICS.","NEEDLE: MOVED.",
+"LOW-HANGING FRUIT: TAKEN.","PER MY LAST EMAIL.","TAKING THIS OFFLINE.","DOUBLE-CLICKING.",
+"BOILING THE OCEAN.","CIRCLING BACK.","NOTED. EXTENSIVELY.","SOCIALIZED.","OPERATIONALIZED.",
+"LEANED IN.","UNBLOCKED.","DE-RISKED.","SUNSET.","IDEATED.","PINGED.","LOOPED IN.",
+"BUBBLED UP.","TRUE NORTH: FOUND.","SHIPPED IT.","PARKED.","TABLED. FOREVER."];
+const CASCADE=["SYNERGY.","LEVERAGE!","PARADIGM SHIFT.","DISRUPTION!!","FULL PIVOT!!","BLUE-SKY EVENT!!"];
+const IDLE=["ACTIVITY DETECTED: NONE.","STILL THERE? YOUR STATUS DOT WENT YELLOW.",
+"YOUR MOUSE IS IDLE. SO IS THE COMPANY.","THIS PAUSE IS BEING NOTED."];
+const TITLES=["UNPAID INTERN","INTERN (PAID IN EXPOSURE)","JUNIOR COORDINATOR",
+"COORDINATOR OF ALIGNMENT","SR. COORDINATOR, ALIGNMENT & VIBES","MANAGER OF MANAGING",
+"SR. MANAGER, SPECIAL PROJECTS (UNSPECIFIED)","DIRECTOR OF CIRCLING BACK",
+"SR. DIRECTOR OF SYNERGY","VP OF LEVERAGING","SVP, OFFICE OF THE OFFICE",
+"EVP OF VERTICAL PARADIGMS","CHIEF ALIGNMENT OFFICER","CHIEF VIBES COMPLIANCE OFFICER",
+"PRESIDENT, SUBCOMMITTEE OF THE WHOLE","CO-CEO (NON-VOTING)"];
+const TPRE=["GLOBAL ","INTERIM ","EXECUTIVE ","ACTING ","SUPREME ","REGIONAL "];
+const TROLE=["HEAD","CZAR","STEWARD","CUSTODIAN","ARCHITECT","OWNER"];
+const TDOM=["SYNERGY","BANDWIDTH","DELIVERABLES","PARADIGMS","ALIGNMENT","STAKEHOLDERS",
+"OPTICS","CADENCE","VIBES"];
+const ADJ=["MANDATORY","STRATEGIC","CROSS-FUNCTIONAL","AGILE","HOLISTIC","PROACTIVE",
+"SYNERGISTIC","HYBRID","SCALABLE","QUARTERLY","URGENT","CASCADING"];
+const NOUN=["SYNERGY","BANDWIDTH","ALIGNMENT","COMPLIANCE","ONBOARDING","ENGAGEMENT",
+"DELIVERABLES","STAKEHOLDER","ROADMAP","CADENCE","PIPELINE","HEADCOUNT","MORALE",
+"PARADIGM","TOUCHPOINT","OPTICS","BUDGET"];
+const EVT=["DEEP-DIVE","OFFSITE","AUDIT","ROLLOUT","FREEZE","PIVOT","RETRO","ALL-HANDS",
+"SYNC","SPRINT","SUMMIT","REVIEW","WORKSHOP","TOWN HALL","FIRE DRILL","REALIGNMENT"];
+const RANKS=[[0,"COMPLIANT"],[5,"OCCASIONALLY HONEST"],[15,"QUIETLY FEARED"],
+[30,"A KNOWN QUANTITY"],[50,"LEGALLY INTERESTING"],[80,"FOLK HERO (UNEMPLOYABLE)"]];
+
+/* ---------------- coworkers ----------------------------------------------- */
+const NAMES=["BRAD","DEREK","JANICE","TERRY","LINDA","GREG","MARCUS","SANDRA","KEITH","DONNA","RANDY","PAULA","NEIL","CHERYL","DOUG","YVONNE","TREVOR","BEV","KIRK","RHONDA","CLINT","MARGE","DUSTIN","LORRAINE","BARRY","JOELLE","WENDELL","TAMMY","ROSS","GAYLE","CHIP","DENISE","LARRY","BRENDA","SCOTT","MAUREEN","VANCE","PHYLLIS","DALE","CONNIE"];
+const OPENERS=[
+{l:"Hey! Do you have a sec? It's a quick one.",a:"It is not a quick one. It has never been a quick one."},
+{l:"Just circling back on this. And this. And this.",a:"Three separate threads. One chair."},
+{l:"Sorry to hop on your calendar, I know you're slammed!",a:"He booked 90 minutes. He booked it during lunch."},
+{l:"Not to be that guy, but per my last email...",a:"He is that guy. He has always been that guy."},
+{l:"Quick gut-check: are we aligned? Are we, though?",a:"You were aligned. You are now less aligned than when he started."},
+{l:"I'm going to push back on that. Respectfully.",a:"There is no respect in the room. There is only the push."},
+{l:"Can you take this one? I'm at capacity.",a:"His screen is a video of a man restoring a chair."},
+{l:"Love this! Just a few thoughts.",a:"There are forty-one thoughts. One is about the font."},
+{l:"Let's take this offline.",a:"There is no offline. There has never been an offline."},
+{l:"I did want to flag one small thing.",a:"He did want to. He wanted to so badly. He's been holding it since Tuesday."},
+{l:"I've gone ahead and added a few people to this thread.",a:"Eleven. He added eleven people. One of them is legal."},
+{l:"So I went ahead and volunteered you!",a:"For a committee. About committees."},
+{l:"Do we need a working session on this?",a:"We do not. We never did. We never will."},
+{l:"I'm just playing devil's advocate here.",a:"The devil has counsel. The devil is fine. The devil is covered."},
+{l:"Real quick, and don't take this the wrong way -- what do you actually do here?",a:"There is no right way to take it. That's the design."},
+{l:"I noticed you left at 5 yesterday.",a:"He noticed. He wrote it down. He has a document."},
+{l:"Just bumping this to the top of your inbox!",a:"Fourth bump. Same thread. He is bumping a bump."},
+{l:"Hey, no rush on this at all!",a:"It is due at 3. It is 2:51. He knows. He knows exactly."},
+{l:"I'd love to pick your brain sometime.",a:"He means now. 'Sometime' means now. It always means now."},
+{l:"Just making sure this doesn't fall through the cracks!",a:"There are no cracks. There is only the thread. The thread is eternal."},
+{l:"Quick question -- did you get my ping about my email about my other ping?",a:"You did. All three. Within four minutes of each other."},
+{l:"I'm not saying it's a problem. I'm saying it's a learning.",a:"It is a problem. He is saying it's a problem. This is how he says it."},
+{l:"Can we timebox this to fifteen?",a:"It is 4:55 PM. It will run seventy-five minutes. It always does."},
+{l:"I ran it up the flagpole, and the flagpole has questions.",a:"The flagpole is a man named Doug. Doug has one question. Doug asks it every time."},
+{l:"Just want to socialize this before we socialize it.",a:"He will socialize the socialization. There will be a pre-read for the pre-read."},
+{l:"Sorry -- were you saying something? Go ahead.",a:"You had been saying something for eleven seconds."},
+{l:"Hey, sorry, do you have literally two seconds?",a:"He has a deck. The deck has an appendix. The appendix has an owner."},
+{l:"I don't want to make this a whole thing.",a:"He has already made it a whole thing. There are calendar holds."},
+{l:"Just a heads up, I looped in your manager.",a:"About a typo. In a Slack message. From March."},
+{l:"Are you heads-down right now?",a:"You are. That was the point of the headphones. He knows what headphones are."},
+{l:"Sorry! Just one more thing.",a:"It is never one more thing. It is a family of things."},
+{l:"I'm going to be honest with you.",a:"He is not. He is going to be honest AT you."},
+{l:"So this is probably a dumb question --",a:"It is not a dumb question. It is a trap with a dumb question on top."},
+{l:"Hey, I don't want to step on toes here.",a:"He is standing on your toes. He has been for nine minutes."},
+{l:"Can I get your temperature on something?",a:"Your temperature is rising. He will not measure that one."},
+{l:"Quick one -- who owns this?",a:"You do. You have owned it since 2021. He is asking so it's on record that he asked."},
+{l:"I think there's a disconnect here.",a:"There is no disconnect. There is you, being correct, and him, being louder."},
+{l:"Let's parking-lot that.",a:"The parking lot is full. It has been full since a previous administration."},
+{l:"I just want to make sure we're all rowing in the same direction.",a:"There is no boat. There has never been a boat."},
+{l:"Sorry, I'm going to have to jump in here.",a:"You were on word four."},
+{l:"Help me understand.",a:"He does not want to understand. He wants you to explain until you are tired."},
+{l:"I'm hearing a lot of 'no' and not a lot of 'how'.",a:"You said 'no' once. It was the correct answer."},
+{l:"Is now a good time?",a:"It is 4:58 on a Friday. He knows it is 4:58 on a Friday."},
+{l:"I put 30 minutes on your calendar for tomorrow.",a:"There is no agenda. There is only the hold. The hold is the message."},
+{l:"We should really document this.",a:"You documented it. Twice. He wants you to document the documentation."},
+{l:"I'm not going to lie, I was surprised.",a:"He was not surprised. He was delighted, and this is what that looks like."},
+{l:"Do you have capacity to take a swing at this?",a:"'Swing' is doing a great deal of work. So will you."},
+{l:"So, funny story --",a:"It is not funny. It is a story about something that is now your problem."},
+{l:"I wanted to give you a heads up before the meeting.",a:"The heads up is that he already said it. To everyone. Without you."},
+{l:"Not urgent!",a:"He has said 'not urgent' four times. Also in the subject line. In caps."},
+{l:"Can we double-click on that?",a:"There is nothing under it. It is a word he found."},
+{l:"I'm a big believer in over-communicating.",a:"He is. That is the problem. That has always been the problem."},
+{l:"Between you and me --",a:"It is not between you and him. It has never been between you and him."},
+{l:"Can you just sanity-check this real quick?",a:"It is forty pages. It is due at 9. It is 8:52."},
+{l:"How are you doing? No, really.",a:"He does not want the answer. He wants the credit for asking."},
+{l:"I'm going to say something and I want you to really hear it.",a:"It is the same thing. It is the thing he says. He wants applause for the thing."},
+{l:"I have a hard stop in five.",a:"He does not. He has never had a hard stop. He simply stops."},
+{l:"This will only take a minute.",a:"Minutes here are like dog years. Nobody has explained the math."},
+{l:"Can I be super candid with you?",a:"He cannot. He has tried. There is a support group."},
+{l:"I feel like we got off on the wrong foot.",a:"There was no right foot. There were never feet. It has been like this since orientation."},
+{l:"What's our appetite for risk here?",a:"He means: will you take the blame. That is the appetite. You are the meal."},
+{l:"I want to pressure-test this with you.",a:"The pressure is real. The test is not. You are the gauge."},
+{l:"Can you make the font bigger?",a:"It is a 60-inch screen. He is nine feet away. He is squinting on principle."},
+{l:"Great energy in that meeting!",a:"You said four words. One of them was 'pass.'"},
+{l:"Where are we on the thing?",a:"There are nine things. He will not say which. This is a test you cannot pass."},
+{l:"Let's align on next steps.",a:"Step one: this conversation. There is no step two. There has never been a step two."},
+{l:"I'm sensing some resistance.",a:"He is sensing a boundary. He has never met one before. He thinks it is resistance."},
+{l:"We're all wearing a lot of hats right now.",a:"He wears one hat. It says MANAGER. He points at it during disagreements."},
+{l:"Can you own this?",a:"'Own' means do. 'This' means everything. 'Can you' means you will."},
+{l:"Just wanted to close the loop on this.",a:"The loop was closed. He is opening it to check. He is a loop surgeon."},
+{l:"Do you have five for a quick brainstorm?",a:"He has the ideas already. You are there to gasp."},
+{l:"I'll let you get back to it!",a:"He will not. He is still standing there. He has been there nine minutes."},
+{l:"So what's the ETA on this?",a:"He asked at 9. And 9:40. And 10:15. The ETA moves each time he asks. He is the reason."},
+{l:"I know it's EOD Friday, but --",a:"Nothing good has ever followed those words. Nothing good will follow these."},
+{l:"We missed you at the offsite!",a:"You were there. You did the trust fall. You caught HIM."},
+{l:"Any blockers?",a:"He asks daily. He is the blocker. The standup exists to contain him."}
+];
+/* t = CANDOR tier required. The politer you are, the less you may say. */
+const REPLIES=[
+{s:"No.",r:"...I'm sorry, what?",h:"Employee used a complete sentence. Escalating.",c:2,t:1},
+{s:"It's never a quick one, {N}. It has never once been quick.",r:"It's like a two-minute thing, tops.",h:"It was not a two-minute thing. It was Thursday.",c:2,t:1},
+{s:"Per MY last email. Which you did not read. Which you will not read.",r:"I skim. Skimming is reading.",h:"Skimming is not reading. HR has confirmed this internally.",c:2,t:1},
+{s:"I'm at capacity too. I've been at capacity since 2019.",r:"Have you tried, like, a system?",h:"Employee directed to the Wellness Portal. The Wellness Portal is down.",c:2,t:1},
+{s:"I don't want you picking my brain. I want it left alone.",r:"Fifteen minutes! Coffee's on me.",h:"The coffee was not on him. The coffee has never been on him.",c:2,t:1},
+{s:"You added eleven people to a thread about a chair.",r:"It's a big chair decision.",h:"The chair went to committee. The committee needs a chair.",c:2,t:1},
+{s:"That was an email. That was always an email.",r:"Some things need a human touch.",h:"Nothing needs a human touch. That is the entire point of email.",c:2,t:1},
+{s:"I left at 5 because it was 5.",r:"Wow. Boundaries. Love that for you.",h:"'Love that for you' is the most violent sentence in the language.",c:3,t:1},
+{s:"Fifteen means fifteen. Fifteen has always meant fifteen.",r:"Ha! You know me.",h:"It ran seventy-five minutes. Everyone knew. Everyone always knows.",c:1,t:1},
+{s:"You scheduled a meeting to prepare for a meeting.",r:"Pre-reads are a courtesy.",h:"There was no pre-read. There has never been a pre-read.",c:2,t:1},
+{s:"No, and I'd rather not build to a yes.",r:"...We can circle back.",h:"Employee declined without a reason. Reason requested. Reason denied.",c:1,t:1},
+{s:"That's a no. Thanks for asking, though.",r:"Love the directness!",h:"He does not love the directness. He wrote it down.",c:1,t:1},
+{s:"I'll need that in writing.",r:"Ha! It's not that serious.",h:"It became that serious. It always becomes that serious.",c:2,t:1},
+{s:"What should I stop doing to make room for this?",r:"...I mean, nothing?",h:"Employee asked a question with math in it. Math is discouraged.",c:2,t:1},
+{s:"Send the agenda and I'll consider the meeting.",r:"It's more of a working session.",h:"There was no agenda. There was a man, a room, and a clock.",c:2,t:1},
+{s:"You've asked me this three times. The answer hasn't moved.",r:"Just making sure!",h:"He was not making sure. He was hoping you'd get tired.",c:2,t:1},
+{s:"Is this a question, or are you thinking at me?",r:"...Bit of both?",h:"It was the second one. It is always the second one.",c:2,t:1},
+{s:"I need you to say what you actually want.",r:"I want us to be aligned!",h:"He wants you to do it. He cannot say it. He has never been able to say it.",c:2,t:1},
+{s:"I have read your email. I have chosen violence.",r:"That's -- that's not one of the options.",h:"'Chosen violence' has been logged as a scheduling conflict.",c:3,t:2},
+{s:"Say 'circle back' one more time. I dare you, {N}.",r:"...revisit?",h:"A workplace was rendered. Briefly. Beautifully.",c:3,t:2},
+{s:"We are not a family. We are strangers with a shared dental plan.",r:"I feel like that's a you thing.",h:"The dental plan has been reviewed. It's fine. It's the same one.",c:3,t:2},
+{s:"You've been talking nine minutes. You've said 'synergy' four times.",r:"Five, actually. But who's counting.",h:"You were. You were counting. That's the tragedy here.",c:3,t:2},
+{s:"That's not a learning. That's a mistake. Say the word.",r:"I'd call it a growth-adjacent outcome.",h:"'Growth-adjacent outcome' added to the Approved Acronym List as GAO.",c:3,t:2},
+{s:"Devil's advocate? The devil has counsel. He's covered. He's fine.",r:"I'm just stress-testing the thinking.",h:"The thinking did not survive. The thinking is gone.",c:3,t:2},
+{s:"You've never known what I do here. You've never once asked.",r:"I'm asking now!",h:"He is not asking now. He is looking at his phone.",c:3,t:2},
+{s:"Flag it. Flag the thing. Say the thing out loud, {N}.",r:"...it's just -- the font's a little casual?",h:"The font was Arial. The font was fine. The font did nothing.",c:3,t:2},
+{s:"I ran YOU up a flagpole. Nobody saluted.",r:"That's -- that's not how flagpoles work.",h:"Facilities removed the flagpole. Facilities was tired.",c:3,t:2},
+{s:"I'm going to say 'let's align' and then walk directly into the sea.",r:"Love the energy!",h:"The sea is not an approved vendor. Please use Procurement.",c:3,t:2},
+{s:"My bandwidth is a lie. Everyone's bandwidth is a lie.",r:"Whoa. Let's put a pin in that.",h:"Pin logged. Pin will not be retrieved. There are 4,000 pins.",c:2,t:2},
+{s:"I've been in back-to-backs since 8. I saw a bird earlier and I cried.",r:"...Do you want to grab lunch?",h:"He meant it. That's the worst part. He meant it sincerely.",c:2,t:2},
+{s:"You are describing your job. To me. I know what it is.",r:"We all wear a lot of hats!",h:"You are wearing his hat. You have worn it since April.",c:2,t:2},
+{s:"Four years, {N}. You have never learned my last name.",r:"Of course I have! It starts with a letter.",h:"It does start with a letter. Points for that.",c:3,t:2},
+{s:"Every idea you've had this year was mine in March.",r:"That's a strong claim.",h:"It is a true claim. Those are the strongest kind.",c:3,t:2},
+{s:"'We' means me. Every time you say 'we', you mean me.",r:"That's what teamwork looks like!",h:"That is not teamwork. That is a saddle.",c:3,t:2},
+{s:"I've watched you fail upward for six years. Honestly? Kind of beautiful.",r:"...Thank you?",h:"He took it as a compliment. He takes everything as a compliment.",c:3,t:2},
+{s:"Your calendar is a cry for help and I am not a first responder.",r:"I like to stay busy!",h:"He is not busy. He is scheduled. Those are different things.",c:3,t:2},
+{s:"That's not feedback. That's just you, out loud.",r:"I'm trying to help.",h:"He is not trying to help. He has never once tried to help.",c:3,t:2},
+{s:"Help you understand? I drew it. Twice. There was a diagram, {N}.",r:"I'm a verbal processor.",h:"He is not a verbal processor. He is a verbal emitter.",c:2,t:2},
+{s:"You over-communicate the way a car alarm over-communicates.",r:"I'd rather over than under!",h:"Nobody has ever wanted a car alarm. Not once. Not in all of history.",c:3,t:2},
+{s:"Your invite had no agenda. Neither does your life.",r:"I have an agenda. It's called EXCELLENCE.",h:"Both parties encouraged to bring their whole selves. Regrettably.",c:3,t:3},
+{s:"I need you to physically leave. Physically. With your legs.",r:"...Leave leave?",h:"He left. He returned in four minutes. He always returns.",c:3,t:3},
+{s:"I want you to know that I know. And now you know that I know.",r:"Know what? What do you know?",h:"He does not know. He will think about this for eleven years.",c:3,t:3},
+{s:"Deleted. Whole thread. Gone. It's a nice day outside, {N}.",r:"You can't just delete a thread--",h:"You can. You did. Nobody noticed. Nobody ever notices.",c:3,t:3},
+{s:"Nobody has finished a sentence near you. Nobody. Not once. Not ever.",r:"That's not -- I let people --",h:"He did not let you finish that sentence. He physically could not.",c:3,t:3},
+{s:"When you leave a room, the room gets smarter. It's measurable.",r:"Whoa.",h:"'Whoa' is the sound of a man learning something at forty-eight.",c:3,t:3},
+{s:"I have imagined your resignation so often I could cater it.",r:"...Cater it?",h:"Small plates. A modest bar. Nothing showy. You've thought about this a lot.",c:3,t:3},
+{s:"You don't have opinions. You have opinions you overheard.",r:"I synthesize.",h:"He does not synthesize. He repeats. Louder. Later. To someone taller.",c:3,t:3},
+{s:"Your entire career is a rounding error that learned to speak.",r:"I'm choosing not to take that personally.",h:"He should take it personally. It was aggressively personal.",c:3,t:3},
+{s:"There's a version of this company where you don't work here. I visit it.",r:"Ha! What's it like?",h:"It's Tuesday there. Always Tuesday. Nobody pings.",c:3,t:3},
+{s:"If you say 'circle back' I will lie down on this floor and stay there.",r:"...Revisit? Touch base?",h:"You lay down. Facilities was called. Facilities understood completely.",c:3,t:3},
+{s:"I've never thought about you outside this building. Not once. Not for a second.",r:"...Same!",h:"He is lying. He thinks about you constantly. That's the tragedy.",c:3,t:3},
+{s:"You are the reason the good chair has a sign on it.",r:"That sign is aggressive.",h:"The sign is polite. You wrote four drafts. That was draft four.",c:2,t:3},
+{s:"I'd take a pay cut. To not be here. Right now. In this specific conversation.",r:"...How much of a cut?",h:"You named a number. It was a serious number. He wrote it down.",c:3,t:3},
+{s:"{N}, with total professional respect: get the hell away from my desk.",r:"...Is this a bit?",h:"It was not a bit. It has never been less of a bit.",c:3,t:4},
+{s:"Every part of this is bullshit and you know it's bullshit.",r:"Let's take the heat out of this.",h:"There was no heat. There was clarity. He can't tell them apart.",c:3,t:4},
+{s:"I would rather be actively on fire than in another one of your working sessions.",r:"They're collaborative!",h:"They are not collaborative. They are hostage situations with a whiteboard.",c:3,t:4},
+{s:"I have run out of professional ways to say this, so: no. Get bent.",r:"'Get bent'?",h:"HR had to look it up. HR looked it up. HR laughed out loud.",c:3,t:4},
+{s:"Do you know what the worst part is, {N}? You'll be fine. You'll be completely fine.",r:"I mean... yeah?",h:"That is the horror. He retires comfortably. The universe has no notes.",c:3,t:4},
+{s:"Get out. Get out of my square of carpet. Go.",r:"...It's a shared space.",h:"It was never a shared space. Not once. Not for a second.",c:3,t:4},
+{s:"You have never had a thought. Not one. Not a single goddamn thought.",r:"That's a little harsh--",h:"It was not harsh. It was a measurement.",c:3,t:4},
+{s:"I'm going to say one word and then walk away. The word is no.",r:"...That's fine, actually.",h:"It was always going to be fine. Six years. You never knew.",c:3,t:4},
+{s:"Screw the roadmap, {N}. Screw the cadence, the pod, and the offsite.",r:"Whoa. Okay. Wow.",h:"He wrote 'wow' in a doc. The doc is called Notes. It is 300 pages.",c:3,t:4},
+{s:"You are a meeting that learned to walk.",r:"...",h:"He has no reply. There has never been a reply to this.",c:3,t:4},
+{s:"I'm not angry. I want to be clear about that. This is my normal voice now.",r:"It's a little loud--",h:"It was not loud. That's what made it land.",c:3,t:4},
+{s:"Hell no. Not today, not Thursday, not in the fourth quarter of any year.",r:"You're on fire today!",h:"You were. Quietly. For six years.",c:3,t:4},
+{s:"I have a hard stop at now.",r:"That's not a real time.",h:"It is now somewhere. HR checked. It is always now somewhere.",c:1,t:1},
+{s:"Put it in the ticket and I'll see it when I see it.",r:"Tickets feel so impersonal.",h:"That is the entire point of tickets. That has always been the point.",c:1,t:1},
+{s:"I'm going to let that question answer itself.",r:"...It's not saying anything.",h:"It said plenty. He wasn't listening. He never is.",c:1,t:1},
+{s:"Which of your nine things? Use nouns.",r:"You know. THE thing.",h:"Nouns were requested. Vibes were provided. The thing remains at large.",c:1,t:1},
+{s:"If it's not urgent, why are you standing here?",r:"I was in the area!",h:"His desk is forty feet away. He brought a notebook. The notebook was open.",c:1,t:1},
+{s:"You can be candid. I can also leave. Let's see which happens first.",r:"Okay, honesty hour--",h:"You left. HR considers this a tie.",c:2,t:1},
+{s:"I'll take it as a ticket, an email, or never. Dealer's choice.",r:"What about a quick call?",h:"'Never' was chosen. It is somehow still on your plate.",c:1,t:1},
+{s:"My ETA moves every time you ask. You're the variable, {N}.",r:"I'm just tracking progress!",h:"The tracking IS the delay. Science was consulted. Science sighed.",c:2,t:1},
+{s:"Define 'quick,' define 'sync,' and then let's revisit 'no.'",r:"It's literally two things.",h:"It was eleven things. Two were about him. Nine were also about him.",c:1,t:1},
+{s:"I answered this in the doc. Page one. It's the title.",r:"I skimmed it!",h:"The title was four words. He skimmed four words. HR is impressed, honestly.",c:2,t:1},
+{s:"You're not sensing resistance, {N}. You're meeting a boundary. First contact.",r:"See, THAT'S the energy I mean.",h:"The boundary held. Historians will want to know how.",c:2,t:2},
+{s:"Every time you say 'we', a project manager loses their wings.",r:"We're a team!",h:"The team was polled. The team says 'we' means you.",c:2,t:2},
+{s:"You've asked for the ETA four times. The ETA now includes those conversations.",r:"So... end of day?",h:"End of A day. No one will say which. This is policy now.",c:2,t:2},
+{s:"A brainstorm with you is a hostage reading of your one idea.",r:"Collaboration takes many forms!",h:"It takes one form. His. There are slides about it.",c:2,t:2},
+{s:"I've seen your screen, {N}. One tab. It's the org chart.",r:"I like to stay oriented.",h:"He has been orienting for six years. Toward what remains unclear.",c:2,t:2},
+{s:"'Wrong foot'? You scheduled my lunch, {N}. You put an agenda on it.",r:"Working lunches build culture!",h:"The lunch had action items. The sandwich did not survive review.",c:2,t:2},
+{s:"Great energy? I said four words and you expensed a whiteboard.",r:"Momentum needs a surface!",h:"The whiteboard says SYNERGY in the middle. It has been there for a year.",c:2,t:2},
+{s:"I'd close this loop but you'd just open it to check if it's closed.",r:"Verification is love.",h:"It is not. Verification was asked. Verification wants space.",c:2,t:2},
+{s:"You want my temperature? Room. It's room temperature, {N}. Like this idea.",r:"So, lukewarm-positive?",h:"The idea was placed in the fridge with the others. The fridge is full.",c:2,t:2},
+{s:"I hope your next sync is with a mirror, and I hope it declines.",r:"...A mirror can't decline.",h:"It can. It did. There were witnesses.",c:2,t:3},
+{s:"You're not a stakeholder, {N}. You're a guy who found the meeting link.",r:"I was FORWARDED that link.",h:"By himself. From his other email. HR has both.",c:3,t:3},
+{s:"When I picture peace, {N}, it's this hallway. Empty. Just the vending machine and me.",r:"...I can come back?",h:"The vending machine has never asked him for anything. That is the whole dream.",c:2,t:3},
+{s:"You are the reason we have icebreakers. You broke the people.",r:"Icebreakers build culture!",h:"Culture was reached for comment. Culture declined.",c:3,t:3},
+{s:"Somewhere there's a version of you that listens. I write to him. He doesn't answer either.",r:"I'm a GREAT listener.",h:"The letters return unopened. Even fiction has limits.",c:3,t:3},
+{s:"I've muted this thread, this channel, and emotionally, you.",r:"You can't mute a person.",h:"You can. There's a setting. It's called acceptance.",c:3,t:3},
+{s:"Your five minutes cost me a childhood, {N}.",r:"It was seven minutes, tops.",h:"It was fifty. Everyone counted. Everyone always counts.",c:2,t:3},
+{s:"The wrong foot was you existing near me before coffee. We never recovered.",r:"So it's a timing thing!",h:"It is not a timing thing. All times were tried. Science gave up.",c:3,t:3},
+{s:"You have the confidence of a man with three monitors and zero goddamn deliverables.",r:"The monitors are for THROUGHPUT.",h:"One displays a clock. It is wrong. He has never noticed.",c:3,t:4},
+{s:"This isn't a blocker, {N}. It's a personality. Yours. It's yours.",r:"That feels personal.",h:"It was. HR confirms feelings can be facts. Just this once.",c:3,t:4},
+{s:"'Any blockers?' You. Daily. At 9:15. You are the blocker, you magnificent bottleneck.",r:"The standup takes five minutes!",h:"The standup is why nothing stands up. Facilities has a theory. It is him.",c:3,t:4},
+{s:"I would rather reply-all my own resignation than own your action item.",r:"So that's a maybe?",h:"The draft exists. It is beautiful. It has a font.",c:3,t:4},
+{s:"EOD Friday? I'd rather eat the damn deck, {N}. Slide by slide. Appendix first.",r:"The appendix is optional!",h:"Nothing about the appendix has ever been optional. Ask the interns.",c:3,t:4},
+{s:"Screw the loop. The loop is closed. I welded it. Bring a hacksaw next time.",r:"...Should I loop in Facilities?",h:"Facilities respects the weld. Facilities has been waiting for someone to do it.",c:3,t:4},
+{s:"Own it? Hell, I'll own it. I'll own it the way you own mistakes: publicly, never.",r:"I own my growth areas!",h:"The growth areas have never been named. They are legion. They attend meetings.",c:3,t:4}
+];
+/* Tier 5 -- REDACTED. Served only with FORM PW-1 (profanity waiver) on file. */
+const REPLIES_X=[
+{s:"I've read your email, {N}, and I want my fucking eyes back.",r:"It had bullet points!",h:"The bullets were used. On morale. Morale is survived by a plant.",c:3,t:5},
+{s:"This meeting is a hostage situation with worse coffee.",r:"The coffee is complimentary!",h:"The coffee has never complimented anyone. The coffee knows what it is.",c:3,t:5},
+{s:"You absolute Reply-All of a human being.",r:"...Is that an insult?",h:"Linguistics was consulted. It is the worst thing one person has ever called another.",c:3,t:5},
+{s:"My bandwidth died so you could ask me that shit in person.",r:"So... is that a no?",h:"A moment of silence was held. He talked through it.",c:3,t:5},
+{s:"Take your synergy and shove it somewhere cross-functional.",r:"That's not the spirit of the value!",h:"The value was updated. It is just the word CANDOR now. HR blames you.",c:3,t:5},
+{s:"You couldn't lead a fucking conga line, {N}, and you're driving strategy?",r:"I set VISION.",h:"The vision is a stock photo of a lighthouse. He did not license it.",c:3,t:5},
+{s:"I've seen better alignment in a bar fight.",r:"Have you TRIED radical candor?",h:"He read half the book. The wrong half. There is no wrong half. He found one.",c:3,t:5},
+{s:"You're slammed? Your last deliverable was a birthday card, you magnificent fraud.",r:"Culture IS output.",h:"The card was late. It was for his own birthday. He signed it 'The Team.'",c:3,t:5},
+{s:"Your quick sync is forty-five minutes of you flirting with your own voice.",r:"I'm an auditory processor!",h:"The audit found nothing. There was nothing to process. There never is.",c:3,t:5},
+{s:"I would rather be CC'd on a divorce than take this meeting.",r:"Wow. Noted.",h:"It was noted. In the wrong doc. Which was shared company-wide. Standard.",c:3,t:5},
+{s:"Six pivots, {N}. That's not a strategy, it's a fucking pirouette.",r:"Iteration is strength!",h:"The deck was submitted to a dance competition. It placed.",c:3,t:5},
+{s:"Your camera's been broken for two years. Blink twice if you're actually a lava lamp.",r:"Bandwidth issues!",h:"IT checked. His bandwidth is pristine. The lava lamp had no comment.",c:3,t:5},
+{s:"Sorry, I don't speak 'thoughts and prayers to the roadmap.'",r:"The roadmap is DIRECTIONAL.",h:"The direction is down. The map is a napkin. The napkin has ranch on it.",c:3,t:5},
+{s:"Congratulations on doing fuck-all with tremendous energy.",r:"Momentum matters!",h:"The energy was audited. It powers a small sign that says HUSTLE.",c:3,t:5},
+{s:"If passive-aggression burned calories you'd be a shredded god, {N}.",r:"I'm just being thorough!",h:"The gym downstairs asked him to stop supervising.",c:3,t:5},
+{s:"Every word of that sentence was a war crime against meaning.",r:"It tested well with leadership.",h:"Leadership is three guys named Doug and a raccoon with a badge. It did test well.",c:3,t:5},
+{s:"You've got the emotional range of an out-of-office reply.",r:"I set boundaries!",h:"His boundary is other people's time. He guards it like it is his.",c:3,t:5},
+{s:"Put a pin in it. Pin the whole shitshow. Pin yourself, {N}.",r:"...So, parking lot?",h:"The lot is full. The pins are load-bearing. Nothing may be unpinned now.",c:3,t:5},
+{s:"The devil settled, {N}. The devil took a package. Let it go.",r:"SOMEONE has to stress-test--",h:"The devil's exit interview was brief: 'It was the culture.'",c:3,t:5},
+{s:"You gorgeous single point of failure.",r:"...Thank you?",h:"It was not a compliment. It was a diagnosis. He framed it anyway.",c:3,t:5},
+{s:"Ask if I 'have a sec' one more time and I'll show you what a fucking sec does to a man.",r:"...I'll ping you instead.",h:"He pinged. Eleven times. The pings have their own thread now. It is thriving.",c:3,t:5},
+{s:"I've had root canals with better agendas, and the drill listened more.",r:"I hear you. I HEAR you.",h:"He heard nothing. The drill sent a card. The drill stays in touch.",c:3,t:5},
+{s:"Your 'quick question' just fucked my entire afternoon, {N}. It's dead. You killed it.",r:"It was ONE question!",h:"The afternoon is survived by an evening. The evening is nervous.",c:3,t:5},
+{s:"You're not over-communicating, you're littering, and my inbox is the goddamn ocean.",r:"I like a paper trail!",h:"The trail is plastic. It will outlive us all. Turtles were shown photos.",c:3,t:5}
+];
+const COWARD=[
+{s:"Sure! Happy to help :)",r:"Amazing. You're a rockstar.",h:"You died a little. It didn't show. That's the skill."},
+{s:"Absolutely! Let me just move some things around.",r:"You're a lifesaver!",h:"The things you moved were your evening. And your Saturday."},
+{s:"Great point! Let's take it offline.",r:"Perfect. I'll set something up.",h:"He will. It will be recurring. It will have no end date."},
+{s:"Of course! No problem at all.",r:"Legend.",h:"It was a problem. It was several. You made them yours."},
+{s:"Ha, totally. Good catch!",r:"That's why they pay me the medium bucks.",h:"It was not a good catch. You caught it in March."},
+{s:"Yep! Already on my list.",r:"You're so on it.",h:"It was not on your list. It is now. It is item forty."},
+{s:"No worries at all! Whenever you get a chance.",r:"You're the best.",h:"There were worries. There were so many worries. You just filed them."},
+{s:"Happy to be a resource here!",r:"Appreciate you.",h:"'Resource' is what they call the thing that gets used up."},
+{s:"Totally fair, I'll take another pass.",r:"Amazing.",h:"It was not fair. It was the fourth pass. The first one was right."},
+{s:"Good flag! I'll own that.",r:"Legend.",h:"You owned it. It was not yours. It is now. Forever."},
+{s:"Let me circle back with you on that.",r:"Perfect.",h:"You said it. You said the words out loud. You've become the thing."},
+{s:"Makes sense! Thanks for the context.",r:"Anytime.",h:"It did not make sense. There was no context. You thanked him for a fog."},
+{s:"Oh totally, that's on me!",r:"All good! Just flagging.",h:"It was not on you. You know whose it was. You will think about it at 2 AM."},
+{s:"Great callout! Adding it to the doc.",r:"Love the collaboration!",h:"The doc is 60 pages of callouts. It has never been read. It never will be."},
+{s:"You're right, you're right. Ignore what I sent.",r:"Team player!",h:"You were right the first time. The rework will make it worse. You both know."},
+{s:"Sounds good, I'll make it work!",r:"Knew I could count on you.",h:"'Making it work' is now your job title. It does not come with a raise."},
+{s:"Honestly? Great point.",r:"I do my homework!",h:"It was not a great point. Honesty was reached for comment and declined."},
+{s:"Say less! On it.",r:"THIS is why you're my go-to.",h:"Being the go-to is not a promotion. It is a location. People go to it."}
+];
+
+/* ---------------- utils / state ------------------------------------------- */
+const N=8;
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+const wait=ms=>sleep(S.fast?Math.max(24,ms*.5):ms);
+const pick=a=>a[(Math.random()*a.length)|0];
+const pickR=(r,a)=>a[(r()*a.length)|0];
+const fmt=n=>n.toLocaleString('en-US');
+function mulberry32(a){return function(){a|=0;a=(a+0x6D2B79F5)|0;
+  let t=Math.imul(a^(a>>>15),1|a);t=(t+Math.imul(t^(t>>>7),61|t))^t;
+  return((t^(t>>>14))>>>0)/4294967296}}
+function shuf(a){for(let i=a.length-1;i>0;i--){const j=(Math.random()*(i+1))|0;
+  const t=a[i];a[i]=a[j];a[j]=t}return a}
+const key=(r,c)=>r*N+c,kr=k=>(k/N)|0,kc=k=>k%N;
+const S={level:1,cfg:null,grid:null,tape:null,tapeEls:{},score:0,moves:0,collected:{},
+  tapeCutTotal:0,maxCascade:0,bonus:0,busy:true,modal:false,sel:null,sound:true,fast:false,
+  failStreak:0,saveLevel:1,candor:0,incidents:0,tier:1,waiver:false};
+let CELL=48,GAP=4,PS=4;
+const $=id=>document.getElementById(id);
+const tileLayer=$('tileLayer'),tapeLayer=$('tapeLayer'),fxLayer=$('fxLayer'),
+  boardWrap=$('boardWrap'),boardHost=$('boardHost'),banner=$('banner'),bannerT=$('bannerT'),
+  bannerS=$('bannerS'),overlayEl=$('overlay'),modalEl=$('modal'),movesEl=$('moves'),
+  scoreEl=$('score'),objsEl=$('objs'),asgnum=$('asgnum'),asname=$('asname'),
+  titleChip=$('titleChip'),soundBtn=$('soundBtn'),helpBtn=$('helpBtn'),bootEl=$('boot');
+const at=k=>S.grid[kr(k)][kc(k)];
+
+/* ---------------- chiptune audio (pulse + noise, no samples) --------------- */
+let AC=null,NOISE=null;
+function initAudio(){
+  try{
+    if(!AC){
+      AC=new(window.AudioContext||window.webkitAudioContext)();
+      const len=AC.sampleRate*.5;
+      NOISE=AC.createBuffer(1,len,AC.sampleRate);
+      const d=NOISE.getChannelData(0);
+      for(let i=0;i<len;i++)d[i]=Math.random()*2-1;
+    }
+    if(AC.state==='suspended')AC.resume();
+  }catch(e){}
+}
+/* duty-cycle pulse wave, the actual sound of 1991 */
+const _pw={};
+function pulse(duty){
+  if(!AC)return null;
+  const k='d'+duty;
+  if(_pw[k])return _pw[k];
+  const n=32,real=new Float32Array(n),imag=new Float32Array(n);
+  for(let i=1;i<n;i++)imag[i]=(2/(i*Math.PI))*Math.sin(Math.PI*i*duty);
+  return _pw[k]=AC.createPeriodicWave(real,imag);
+}
+function blip(f,d,o){
+  if(!AC||!S.sound)return;
+  o=o||{};
+  try{
+    const osc=AC.createOscillator(),g=AC.createGain(),t=AC.currentTime+(o.at||0);
+    if(o.type)osc.type=o.type;else osc.setPeriodicWave(pulse(o.duty||.5));
+    osc.frequency.setValueAtTime(f,t);
+    if(o.slide)osc.frequency.exponentialRampToValueAtTime(Math.max(20,o.slide),t+d);
+    g.gain.setValueAtTime(0,t);
+    g.gain.linearRampToValueAtTime(o.g||.07,t+.008);
+    g.gain.exponentialRampToValueAtTime(.0001,t+d);
+    osc.connect(g);g.connect(AC.destination);osc.start(t);osc.stop(t+d+.02);
+  }catch(e){}
+}
+function noise(d,o){
+  if(!AC||!S.sound||!NOISE)return;
+  o=o||{};
+  try{
+    const src=AC.createBufferSource(),g=AC.createGain(),f=AC.createBiquadFilter(),
+      t=AC.currentTime+(o.at||0);
+    src.buffer=NOISE;f.type=o.hp?'highpass':'lowpass';f.frequency.value=o.freq||2200;
+    g.gain.setValueAtTime(o.g||.05,t);
+    g.gain.exponentialRampToValueAtTime(.0001,t+d);
+    src.connect(f);f.connect(g);g.connect(AC.destination);src.start(t);src.stop(t+d+.02);
+  }catch(e){}
+}
+const sfxTick=()=>blip(880,.04,{duty:.25,g:.035});
+const sfxDeny=()=>{blip(180,.11,{duty:.5,g:.06,slide:90});noise(.06,{freq:900,g:.03})};
+const sfxPop=c=>{blip(392*Math.pow(1.1225,Math.min(c*3,14)),.09,{duty:.25,g:.06});
+  noise(.05,{freq:5000,hp:true,g:.025})};
+const sfxSwap=()=>blip(520,.07,{duty:.125,g:.045,slide:760});
+const sfxBoom=()=>{noise(.32,{freq:1400,g:.09});blip(140,.3,{type:'triangle',g:.07,slide:48})};
+const sfxWin=()=>[[523,0],[659,.08],[784,.16],[1046,.24],[784,.34],[1046,.4]]
+  .forEach(n=>blip(n[0],.16,{duty:.5,g:.07,at:n[1]}));
+const sfxLose=()=>[[392,0],[349,.13],[311,.26],[233,.4]]
+  .forEach(n=>blip(n[0],.24,{duty:.5,g:.07,at:n[1]}));
+const sfxPromo=()=>[[392,0],[523,.07],[659,.14],[784,.21],[1046,.28],[1318,.35]]
+  .forEach(n=>blip(n[0],.14,{duty:.25,g:.06,at:n[1]}));
+const sfxTalk=()=>blip(660+Math.random()*120,.02,{duty:.125,g:.02});
+const sfxSting=()=>{blip(220,.5,{duty:.5,g:.05});blip(233,.5,{duty:.5,g:.05,at:.01})};
+const sfxCandor=()=>[[659,0],[880,.07],[1318,.15]].forEach(n=>
+  blip(n[0],.2,{duty:.5,g:.075,at:n[1]}));
+
+/* ---------------- persistence --------------------------------------------- */
+/* Uses the artifact storage API. Swap these three for your own store if you
+   self-host this file. */
+/* Persistence backend, picked once: the artifact storage API when running
+   inside Claude; localStorage when self-hosted (dunl.app etc); memory as the
+   floor. One file works everywhere. */
+const SAVEK='synergy_save_v2';
+let _mem=null,_backend=null;
+function backend(){
+  if(_backend)return _backend;
+  try{if(window.storage&&window.storage.get&&window.storage.set)return _backend='cloud'}catch(e){}
+  try{if(typeof localStorage!=='undefined'){
+    localStorage.setItem(SAVEK+'_t','1');localStorage.removeItem(SAVEK+'_t');
+    return _backend='local';
+  }}catch(e){}
+  return _backend='mem';
+}
+async function loadSave(){
+  const bk=backend();
+  try{
+    if(bk==='cloud'){
+      const r=await window.storage.get(SAVEK);
+      if(r&&r.value)return JSON.parse(r.value);
+    }else if(bk==='local'){
+      const r=localStorage.getItem(SAVEK);
+      if(r)return JSON.parse(r);
+    }
+  }catch(e){}
+  return _mem;
+}
+async function persist(){
+  const v={level:S.saveLevel,sound:S.sound,candor:S.candor,incidents:S.incidents,waiver:S.waiver};
+  _mem=v;
+  const bk=backend();
+  try{
+    if(bk==='cloud')await window.storage.set(SAVEK,JSON.stringify(v));
+    else if(bk==='local')localStorage.setItem(SAVEK,JSON.stringify(v));
+  }catch(e){}
+}
+async function wipeSave(){
+  _mem=null;
+  const bk=backend();
+  try{
+    if(bk==='cloud')await window.storage.delete(SAVEK);
+    else if(bk==='local')localStorage.removeItem(SAVEK);
+  }catch(e){}
+}
+
+/* ---------------- layout / tiles ------------------------------------------ */
+const pxPos=i=>i*(CELL+GAP);
+function layout(){
+  const avail=Math.min((boardHost.clientWidth||420)-18,540);
+  /* Sprites are 16px source drawn at an INTEGER scale so pixels stay crisp.
+     Pick the largest scale that fits, then let the cell hug the sprite. */
+  let ps=4;
+  while(ps>2&&(16*ps)*N+GAP*(N-1)>avail)ps--;
+  const maxCell=Math.floor((avail-GAP*(N-1))/N);
+  CELL=Math.min(16*ps+4,Math.max(16*ps,maxCell));
+  PS=ps;
+  const size=CELL*N+GAP*(N-1);
+  boardWrap.style.width=size+'px';boardWrap.style.height=size+'px';
+  const ds=document.documentElement.style;
+  if(ds.setProperty){
+    ds.setProperty('--cell',CELL+'px');
+    ds.setProperty('--sprw',(16*PS)+'px');
+    ds.setProperty('--sprx',((CELL-16*PS)/2)+'px');
+  }
+  if(S.grid){
+    for(let r=0;r<N;r++)for(let c=0;c<N;c++){
+      const t=S.grid[r][c];
+      if(t){t.el.style.width=CELL+'px';t.el.style.height=CELL+'px';
+        updateTileVisual(t);positionTile(t)}
+    }
+    renderTape();
+  }
+}
+function updateTileVisual(t){
+  t.el.className='tile'+(t.t!=null?' t'+t.t:'')+(t.s?' s-'+t.s:'');
+  const f=t.face;
+  if(t.s==='color'){
+    f.style.backgroundImage='url('+spriteURL('REORG',PS)+')';
+    f.style.backgroundSize=(16*PS*6)+'px '+(16*PS)+'px';
+  }else{
+    f.style.backgroundImage='url('+spriteURL(TILES[t.t].s,PS)+')';
+    f.style.backgroundSize=(16*PS)+'px '+(16*PS)+'px';
+  }
+}
+function newTile(r,c,t,s){
+  const el=document.createElement('div'),face=document.createElement('div');
+  face.className='face';el.appendChild(face);
+  el.style.width=CELL+'px';el.style.height=CELL+'px';
+  const o={t:t,s:s||null,r:r,c:c,el:el,face:face};
+  updateTileVisual(o);
+  tileLayer.appendChild(el);
+  return o;
+}
+function positionTile(t,anim){
+  if(!anim)t.el.style.transitionDuration='0ms';
+  t.el.style.transform='translate('+pxPos(t.c)+'px,'+pxPos(t.r)+'px)';
+  if(!anim){void t.el.offsetWidth;t.el.style.transitionDuration=''}
+}
+/* ---------------- red tape ------------------------------------------------ */
+function renderTape(){
+  tapeLayer.innerHTML='';S.tapeEls={};
+  if(!S.tape)return;
+  for(let r=0;r<N;r++)for(let c=0;c<N;c++){
+    if(S.tape[r][c]>0){
+      const d=document.createElement('div');
+      d.className='tape'+(S.tape[r][c]>1?' lv2':'');
+      d.style.width=CELL+'px';d.style.height=CELL+'px';
+      d.style.transform='translate('+pxPos(c)+'px,'+pxPos(r)+'px)';
+      tapeLayer.appendChild(d);
+      S.tapeEls[key(r,c)]=d;
+    }
+  }
+}
+function ripTape(r,c){
+  const k=key(r,c),el=S.tapeEls[k];
+  if(!el)return;
+  if(S.tape[r][c]>0){
+    el.className='tape'+(S.tape[r][c]>1?' lv2':'');
+    return;
+  }
+  el.classList.add('rip');
+  delete S.tapeEls[k];
+  setTimeout(()=>el.remove(),300);
+}
+/* ---------------- HUD / fx ------------------------------------------------ */
+function rankFor(c){let n=RANKS[0][1];for(const r of RANKS)if(c>=r[0])n=r[1];return n}
+function updateChrome(){
+  setPx($('logoTxt'),'SYNERGY',3,'#3DF06A','#0E3A1C');
+  setPx($('logoSub'),'EMPLOYEE ENGAGEMENT SUITE 4.0.2',1,'#5E7292');
+  setPx($('logoS'),'S',3,'#3DF06A');
+  setPx($('kBand'),'BANDWIDTH',1,'#7F91AC');
+  setPx($('kEng'),'ENGAGEMENT',1,'#7F91AC');
+  const cc=$('candorChip');cc.innerHTML='';
+  const a=document.createElement('div'),b=document.createElement('div');
+  a.appendChild(pxCanvas('CANDOR',1,'#7F91AC'));
+  b.appendChild(pxCanvas(String(S.candor),2,'#3DF06A'));
+  const wrap=document.createElement('div');wrap.appendChild(a);wrap.appendChild(b);
+  cc.appendChild(wrap);
+  cc.appendChild(pxCanvas(rankFor(S.candor),1,'#3DF06A'));
+  const hc=$('hrChip');hc.innerHTML='';
+  const h1=document.createElement('div'),h2=document.createElement('div');
+  h1.appendChild(pxCanvas('HR FILE',1,'#7F91AC'));
+  h2.appendChild(pxCanvas(S.incidents+' INCIDENTS',2,S.incidents?'#FF4D3D':'#7F91AC'));
+  const w2=document.createElement('div');w2.appendChild(h1);w2.appendChild(h2);
+  hc.appendChild(w2);
+}
+function objProgress(o){
+  if(o.kind==='collect')return S.collected[o.t]||0;
+  if(o.kind==='tape')return S.tapeCut;
+  return S.score;
+}
+function buildObjChips(){
+  objsEl.innerHTML='';
+  S.cfg.objectives.forEach((o,i)=>{
+    const d=document.createElement('div');
+    d.className='obj';d.dataset.i=String(i);
+    const ic=document.createElement('div');
+    ic.className='oi'+(o.kind==='tape'?' tapeI':o.kind==='score'?' scoreI':'');
+    if(o.kind==='collect'){
+      ic.style.backgroundImage='url('+spriteURL(TILES[o.t].s,2)+')';
+      ic.style.backgroundSize='32px 32px';
+      ic.style.backgroundColor=TILES[o.t].bg;
+    }
+    const v=document.createElement('div');v.className='ov';
+    d.appendChild(ic);d.appendChild(v);
+    objsEl.appendChild(d);
+  });
+  updateHUD();
+}
+function updateHUD(){
+  setPx(movesEl,String(Math.max(0,S.moves)),3,S.moves<=3?'#FF4D3D':'#DCE6F5');
+  setPx(scoreEl,fmt(S.score),3,'#FFB627');
+  setPx(asgnum,'ASSIGNMENT '+S.level,1,'#7F91AC');
+  setPx(asname,S.cfg.name,2,'#DCE6F5');
+  setPx(titleChip,titleFor(S.level),1,'#4D8DF0');
+  const kids=objsEl.children;
+  S.cfg.objectives.forEach((o,i)=>{
+    const d=kids[i];if(!d)return;
+    const p=Math.min(objProgress(o),o.need),done=p>=o.need;
+    const label=o.kind==='score'?fmt(p)+'/'+fmt(o.need):p+'/'+o.need;
+    const v=d.children[1];
+    if(v&&v._last!==label){v._last=label;setPx(v,label,2,done?'#3DF06A':'#DCE6F5')}
+    if(done&&!d.classList.contains('done')){d.classList.add('done');
+      d.classList.add('bump');setTimeout(()=>d.classList.remove('bump'),260)}
+    else if(!done)d.classList.remove('done');
+  });
+}
+function toast(text,color){
+  const d=document.createElement('div');
+  d.className='toast';
+  if(color)d.style.borderColor=color;
+  d.appendChild(pxCanvas(text,2,color||'#3DF06A'));
+  fxLayer.appendChild(d);
+  setTimeout(()=>d.remove(),1500);
+}
+function floatText(r,c,text,color){
+  const d=document.createElement('div');
+  d.className='float';
+  d.style.transform='translate('+pxPos(c)+'px,'+pxPos(r)+'px)';
+  d.appendChild(pxCanvas(text,2,color||'#FFB627'));
+  fxLayer.appendChild(d);
+  setTimeout(()=>d.remove(),900);
+}
+function confetti(){
+  const cols=['#3DF06A','#FFB627','#4D8DF0','#FF5FD2','#FF4D3D'];
+  for(let i=0;i<44;i++){
+    const d=document.createElement('div');
+    d.className='cf';
+    d.style.left=(Math.random()*100)+'vw';
+    d.style.background=cols[(Math.random()*cols.length)|0];
+    d.style.animationDuration=(1.1+Math.random()*1.4)+'s';
+    d.style.animationDelay=(Math.random()*.4)+'s';
+    document.body.appendChild(d);
+    setTimeout(()=>d.remove(),3000);
+  }
+}
+function fillTicker(){
+  const el=$('tickerIn');el.innerHTML='';
+  const mk=()=>{
+    TICKER.forEach(t=>{
+      const s=document.createElement('span');
+      s.textContent='\u25A0 SYNERGY NEWS: '+t;
+      el.appendChild(s);
+    });
+  };
+  mk();mk();
+}
+
+/* ---------------- match engine -------------------------------------------- */
+function findRuns(){
+  const runs=[];
+  for(let r=0;r<N;r++){
+    let c=0;
+    while(c<N){
+      const t=S.grid[r][c]?S.grid[r][c].t:null;
+      if(t==null){c++;continue}
+      let e=c;
+      while(e+1<N&&S.grid[r][e+1]&&S.grid[r][e+1].t===t)e++;
+      if(e-c+1>=3){const cells=[];for(let i=c;i<=e;i++)cells.push(key(r,i));
+        runs.push({cells:cells,dir:'h',t:t})}
+      c=e+1;
+    }
+  }
+  for(let c=0;c<N;c++){
+    let r=0;
+    while(r<N){
+      const t=S.grid[r][c]?S.grid[r][c].t:null;
+      if(t==null){r++;continue}
+      let e=r;
+      while(e+1<N&&S.grid[e+1][c]&&S.grid[e+1][c].t===t)e++;
+      if(e-r+1>=3){const cells=[];for(let i=r;i<=e;i++)cells.push(key(i,c));
+        runs.push({cells:cells,dir:'v',t:t})}
+      r=e+1;
+    }
+  }
+  return runs;
+}
+function findGroups(runs){
+  const parent=runs.map((_,i)=>i);
+  const find=x=>{while(parent[x]!==x){parent[x]=parent[parent[x]];x=parent[x]}return x};
+  const cellMap={};
+  runs.forEach((run,i)=>{
+    run.cells.forEach(k=>{
+      if(cellMap[k]!==undefined){
+        const a=find(cellMap[k]),b=find(i);
+        if(a!==b)parent[a]=b;
+      }else cellMap[k]=i;
+    });
+  });
+  const groups={};
+  runs.forEach((run,i)=>{
+    const root=find(i);
+    if(!groups[root])groups[root]={cells:new Set(),runs:[],t:run.t};
+    run.cells.forEach(k=>groups[root].cells.add(k));
+    groups[root].runs.push(run);
+  });
+  return Object.keys(groups).map(k=>groups[k]);
+}
+function planSpawn(g,swapKeys){
+  const runs=g.runs;
+  const five=runs.filter(r=>r.cells.length>=5)[0];
+  const hasH=runs.some(r=>r.dir==='h'),hasV=runs.some(r=>r.dir==='v');
+  const four=runs.filter(r=>r.cells.length===4)[0];
+  let s=null;
+  if(five)s='color';
+  else if(hasH&&hasV)s='bomb';
+  else if(four)s=(four.dir==='h'?'row':'col');
+  if(!s)return null;
+  let cell=null;
+  if(swapKeys)for(let i=0;i<swapKeys.length;i++){
+    if(g.cells.has(swapKeys[i])){cell=swapKeys[i];break}
+  }
+  if(cell==null){
+    const src=five||four||runs[0];
+    cell=src.cells[(src.cells.length/2)|0];
+  }
+  return {cell:cell,s:s,t:g.t};
+}
+function mostCommonType(){
+  const cnt={};
+  for(let r=0;r<N;r++)for(let c=0;c<N;c++){
+    const t=S.grid[r][c];
+    if(t&&t.t!=null)cnt[t.t]=(cnt[t.t]||0)+1;
+  }
+  let best=0,bv=-1;
+  for(const k in cnt)if(cnt[k]>bv){bv=cnt[k];best=+k}
+  return best;
+}
+function expandClears(seed){
+  const out=new Set(),q=[];
+  seed.forEach(k=>q.push(k));
+  while(q.length){
+    const k=q.pop();
+    if(out.has(k))continue;
+    out.add(k);
+    const t=at(k);
+    if(!t||!t.s)continue;
+    const add=[],r=kr(k),c=kc(k);
+    if(t.s==='row')for(let i=0;i<N;i++)add.push(key(r,i));
+    else if(t.s==='col')for(let i=0;i<N;i++)add.push(key(i,c));
+    else if(t.s==='bomb'){
+      for(let dr=-1;dr<=1;dr++)for(let dc=-1;dc<=1;dc++){
+        const rr=r+dr,cc=c+dc;
+        if(rr>=0&&rr<N&&cc>=0&&cc<N)add.push(key(rr,cc));
+      }
+    }else if(t.s==='color'){
+      const tt=mostCommonType();
+      for(let rr=0;rr<N;rr++)for(let cc=0;cc<N;cc++){
+        const o=S.grid[rr][cc];
+        if(o&&o.t===tt)add.push(key(rr,cc));
+      }
+    }
+    for(let i=0;i<add.length;i++)if(!out.has(add[i]))q.push(add[i]);
+  }
+  return out;
+}
+async function popTiles(clear,cascade){
+  const mult=Math.min(cascade||1,6);
+  let pts=0,n=0,boom=false;
+  clear.forEach(k=>{
+    const t=at(k);
+    if(!t)return;
+    if(t.s)boom=true;
+    if(t.t!=null)S.collected[t.t]=(S.collected[t.t]||0)+1;
+    t.el.classList.add('pop');
+    pts+=10*mult;n++;
+    const r=kr(k),c=kc(k);
+    if(S.tape&&S.tape[r][c]>0){S.tape[r][c]--;S.tapeCut++;ripTape(r,c)}
+  });
+  if(!n)return;
+  S.score+=pts;
+  sfxPop(n);
+  if(boom)sfxBoom();
+  updateHUD();
+  await wait(190);
+}
+function clearAndRemove(clear){
+  clear.forEach(k=>{
+    const t=at(k);
+    if(t){t.el.remove();S.grid[kr(k)][kc(k)]=null}
+  });
+}
+async function settleBoard(){
+  const moved=[];
+  for(let c=0;c<N;c++){
+    let write=N-1;
+    for(let r=N-1;r>=0;r--){
+      const t=S.grid[r][c];
+      if(t){
+        if(write!==r){S.grid[write][c]=t;S.grid[r][c]=null;t.r=write;moved.push(t)}
+        write--;
+      }
+    }
+    let above=1;
+    for(let r=write;r>=0;r--){
+      const t=newTile(r,c,(Math.random()*S.cfg.types)|0);
+      t.el.style.transitionDuration='0ms';
+      t.el.style.transform='translate('+pxPos(c)+'px,'+pxPos(-above)+'px)';
+      void t.el.offsetWidth;
+      t.el.style.transitionDuration='';
+      S.grid[r][c]=t;moved.push(t);above++;
+    }
+  }
+  for(let i=0;i<moved.length;i++)positionTile(moved[i],true);
+  if(moved.length)await wait(175);
+}
+async function resolve(swapKeys){
+  let cascade=0;
+  for(let guard=0;guard<40;guard++){
+    const runs=findRuns();
+    if(!runs.length)break;
+    cascade++;
+    S.maxCascade=Math.max(S.maxCascade,cascade);
+    const groups=findGroups(runs);
+    const spawns=[];
+    groups.forEach(g=>{const sp=planSpawn(g,swapKeys);if(sp)spawns.push(sp)});
+    const seed=new Set();
+    groups.forEach(g=>g.cells.forEach(k=>seed.add(k)));
+    spawns.forEach(sp=>seed.delete(sp.cell));
+    const clear=expandClears(seed);
+    spawns.forEach(sp=>clear.delete(sp.cell));
+    await popTiles(clear,cascade);
+    clearAndRemove(clear);
+    spawns.forEach(sp=>{
+      const t=at(sp.cell);
+      if(!t)return;
+      t.s=sp.s;
+      if(sp.s==='color')t.t=null;
+      updateTileVisual(t);
+      const nm=sp.s==='color'?'THE RE-ORG':sp.s==='bomb'?'REPLY ALL':'THE SHREDDER';
+      floatText(t.r,t.c,nm,'#3DF06A');
+    });
+    if(cascade>=2)toast(CASCADE[Math.min(cascade-1,CASCADE.length-1)],'#FFB627');
+    else if(Math.random()<.42)toast(pick(TOASTS));
+    await settleBoard();
+    swapKeys=null;
+  }
+  return cascade;
+}
+function comboType(a,b){
+  if(!a.s&&!b.s)return null;
+  if(a.s==='color'&&b.s==='color')return 'CC';
+  if(a.s==='color'||b.s==='color'){
+    const other=(a.s==='color')?b:a;
+    return other.s?'CS':'C';
+  }
+  if(a.s&&b.s){
+    const line=x=>(x==='row'||x==='col');
+    if(line(a.s)&&line(b.s))return 'SS';
+    if(a.s==='bomb'&&b.s==='bomb')return 'BB';
+    return 'SB';
+  }
+  return null;
+}
+const COMBO_NAME={CC:'THE GREAT RESET',C:'COMPANY-WIDE RE-ORG',CS:'TOTAL RESTRUCTURE',
+  SS:'CROSS-FUNCTIONAL',BB:'REPLY-ALL STORM',SB:'ESCALATED'};
+async function executeCombo(type,A,B){
+  const seed=new Set();
+  const inb=(r,c)=>r>=0&&r<N&&c>=0&&c<N;
+  if(type==='CC'){
+    for(let r=0;r<N;r++)for(let c=0;c<N;c++)seed.add(key(r,c));
+  }else if(type==='C'||type==='CS'){
+    const other=(A.s==='color')?B:A,colorT=(A.s==='color')?A:B;
+    let tt=other.t;
+    if(tt==null)tt=mostCommonType();
+    const conv=[];
+    for(let r=0;r<N;r++)for(let c=0;c<N;c++){
+      const t=S.grid[r][c];
+      if(t&&t.t===tt&&t!==colorT)conv.push(t);
+    }
+    const sp=(type==='CS')?other.s:null;
+    conv.forEach((t,i)=>{
+      t.s=(sp==='bomb')?'bomb':(sp?(i%2?'col':'row'):(i%2?'col':'row'));
+      updateTileVisual(t);
+    });
+    await wait(280);
+    conv.forEach(t=>seed.add(key(t.r,t.c)));
+    seed.add(key(colorT.r,colorT.c));
+  }else if(type==='SS'){
+    for(let i=0;i<N;i++){seed.add(key(B.r,i));seed.add(key(i,B.c))}
+  }else if(type==='BB'){
+    for(let dr=-2;dr<=2;dr++)for(let dc=-2;dc<=2;dc++)
+      if(inb(B.r+dr,B.c+dc))seed.add(key(B.r+dr,B.c+dc));
+  }else if(type==='SB'){
+    for(let d=-1;d<=1;d++){
+      if(B.r+d>=0&&B.r+d<N)for(let i=0;i<N;i++)seed.add(key(B.r+d,i));
+      if(B.c+d>=0&&B.c+d<N)for(let i=0;i<N;i++)seed.add(key(i,B.c+d));
+    }
+  }
+  A.s=null;B.s=null;
+  if(A.t==null)A.t=(Math.random()*S.cfg.types)|0;
+  if(B.t==null)B.t=(Math.random()*S.cfg.types)|0;
+  seed.add(key(A.r,A.c));seed.add(key(B.r,B.c));
+  return expandClears(seed);
+}
+
+/* ---------------- swap / input / hints ------------------------------------ */
+async function animateSwap(A,B){
+  const ar=A.r,ac=A.c,br=B.r,bc=B.c;
+  S.grid[ar][ac]=B;S.grid[br][bc]=A;
+  A.r=br;A.c=bc;B.r=ar;B.c=ac;
+  positionTile(A,true);positionTile(B,true);
+  sfxSwap();
+  await wait(140);
+}
+async function trySwap(a,b){
+  if(S.busy||S.modal)return;
+  const A=S.grid[a.r][a.c],B=S.grid[b.r][b.c];
+  if(!A||!B)return;
+  S.busy=true;stopHint();clearSel();
+  await animateSwap(A,B);
+  const ct=comboType(A,B);
+  if(ct){
+    S.moves--;
+    const clear=await executeCombo(ct,A,B);
+    toast(COMBO_NAME[ct],'#FF5FD2');
+    sfxSting();
+    await popTiles(clear,2);
+    clearAndRemove(clear);
+    await settleBoard();
+    await resolve(null);
+    await endTurn();
+    return;
+  }
+  if(!findRuns().length){
+    sfxDeny();
+    await animateSwap(A,B);
+    S.busy=false;startHint();
+    return;
+  }
+  S.moves--;
+  await resolve([key(A.r,A.c),key(B.r,B.c)]);
+  await endTurn();
+}
+function findHint(){
+  const dirs=[[0,1],[1,0]];
+  for(let r=0;r<N;r++)for(let c=0;c<N;c++){
+    for(let d=0;d<2;d++){
+      const r2=r+dirs[d][0],c2=c+dirs[d][1];
+      if(r2>=N||c2>=N)continue;
+      const A=S.grid[r][c],B=S.grid[r2][c2];
+      if(!A||!B)continue;
+      if(comboType(A,B))return [A,B];
+      S.grid[r][c]=B;S.grid[r2][c2]=A;
+      const ok=findRuns().length>0;
+      S.grid[r][c]=A;S.grid[r2][c2]=B;
+      if(ok)return [A,B];
+    }
+  }
+  return null;
+}
+let hintT=null,hintEls=[];
+function startHint(){
+  stopHint();
+  hintT=setTimeout(()=>{
+    const h=findHint();
+    if(h){h.forEach(t=>{t.el.classList.add('hint');hintEls.push(t)})}
+    if(Math.random()<.5)toast(pick(IDLE),'#FFB627');
+  },7000);
+}
+function stopHint(){
+  if(hintT)clearTimeout(hintT);
+  hintT=null;
+  hintEls.forEach(t=>t.el.classList.remove('hint'));
+  hintEls=[];
+}
+async function ensureMoves(){
+  let guard=0;
+  while(!findHint()&&guard++<12){
+    toast('RESTRUCTURING IN PROGRESS','#FF4D3D');
+    const tiles=[];
+    for(let r=0;r<N;r++)for(let c=0;c<N;c++)if(S.grid[r][c])tiles.push(S.grid[r][c]);
+    const types=tiles.filter(t=>t.t!=null).map(t=>t.t);
+    shuf(types);
+    let i=0;
+    tiles.forEach(t=>{if(t.t!=null){t.t=types[i++];updateTileVisual(t)}});
+    await wait(220);
+    await resolve(null);
+  }
+}
+function clearSel(){
+  if(S.sel&&S.grid){
+    const t=S.grid[S.sel.r][S.sel.c];
+    if(t)t.el.classList.remove('sel');
+  }
+  S.sel=null;
+}
+function tapCell(r,c){
+  const t=S.grid[r][c];
+  if(!t)return;
+  if(!S.sel){S.sel={r:r,c:c};t.el.classList.add('sel');sfxTick();return}
+  if(S.sel.r===r&&S.sel.c===c){clearSel();return}
+  const d=Math.abs(S.sel.r-r)+Math.abs(S.sel.c-c);
+  if(d===1){const a=S.sel;clearSel();trySwap(a,{r:r,c:c})}
+  else{clearSel();S.sel={r:r,c:c};t.el.classList.add('sel');sfxTick()}
+}
+function cellFrom(e){
+  const b=boardWrap.getBoundingClientRect();
+  const c=Math.floor((e.clientX-b.left)/(CELL+GAP)),
+        r=Math.floor((e.clientY-b.top)/(CELL+GAP));
+  if(r<0||r>=N||c<0||c>=N)return null;
+  return {r:r,c:c};
+}
+let ptr=null;
+boardWrap.addEventListener('pointerdown',e=>{
+  initAudio();
+  if(S.busy||S.modal)return;
+  const cell=cellFrom(e);
+  if(!cell)return;
+  ptr={r:cell.r,c:cell.c,x:e.clientX,y:e.clientY,moved:false};
+});
+window.addEventListener('pointermove',e=>{
+  if(!ptr||ptr.moved||S.busy)return;
+  const dx=e.clientX-ptr.x,dy=e.clientY-ptr.y;
+  if(Math.abs(dx)<16&&Math.abs(dy)<16)return;
+  ptr.moved=true;
+  const dir=Math.abs(dx)>Math.abs(dy)?(dx>0?[0,1]:[0,-1]):(dy>0?[1,0]:[-1,0]);
+  const r2=ptr.r+dir[0],c2=ptr.c+dir[1];
+  const p=ptr;ptr=null;
+  if(r2<0||r2>=N||c2<0||c2>=N)return;
+  clearSel();
+  trySwap({r:p.r,c:p.c},{r:r2,c:c2});
+});
+window.addEventListener('pointerup',()=>{
+  if(!ptr){return}
+  const p=ptr;ptr=null;
+  if(!p.moved&&!S.busy&&!S.modal)tapCell(p.r,p.c);
+});
+
+/* ---------------- level generation ---------------------------------------- */
+function shufR(r,a){
+  for(let i=a.length-1;i>0;i--){const j=(r()*(i+1))|0;const t=a[i];a[i]=a[j];a[j]=t}
+  return a;
+}
+const genName=rng=>pickR(rng,ADJ)+' '+pickR(rng,NOUN)+' '+pickR(rng,EVT);
+/* Red tape is the only positionally-constrained objective -- you must match ON
+   a taped square -- so its size is the real difficulty dial. Pick an exact
+   layer target from the level, paint a pattern, then trim/pad to hit it. */
+function genTape(rng,level){
+  const g=[];
+  for(let r=0;r<N;r++)g.push(new Array(N).fill(0));
+  if(level<4)return {g:g,total:0};
+  const target=Math.max(6,Math.min(18,4+level));
+  const pat=(rng()*4)|0;
+  const put=(r,c)=>{if(r>=0&&r<N&&c>=0&&c<N)g[r][c]=1};
+  if(pat===0){const r0=2+((rng()*4)|0);for(let c=0;c<N;c++){put(r0,c);put(r0+1,c)}}
+  else if(pat===1){for(let i=2;i<N-2;i++){put(2,i);put(N-3,i);put(i,2);put(i,N-3)}}
+  else if(pat===2){const r0=(rng()*(N-4))|0,c0=(rng()*(N-4))|0;
+    for(let r=0;r<4;r++)for(let c=0;c<4;c++)put(r0+r,c0+c)}
+  else{[[1,1],[1,N-3],[N-3,1],[N-3,N-3]].forEach(o=>{
+    for(let r=0;r<2;r++)for(let c=0;c<2;c++)put(o[0]+r,o[1]+c)})}
+  let cells=[];
+  for(let r=0;r<N;r++)for(let c=0;c<N;c++)if(g[r][c])cells.push([r,c]);
+  shufR(rng,cells);
+  while(cells.length>target){const x=cells.pop();g[x[0]][x[1]]=0}
+  while(cells.length<target){
+    const r=(rng()*N)|0,c=(rng()*N)|0;
+    if(!g[r][c]){g[r][c]=1;cells.push([r,c])}
+  }
+  if(level>=13)for(const x of cells)if(rng()<0.3)g[x[0]][x[1]]=2;
+  let total=0;
+  for(let r=0;r<N;r++)for(let c=0;c<N;c++)total+=g[r][c];
+  return {g:g,total:total};
+}
+/* Objectives are derived FROM the move budget, not the raw level number.
+   E = tiles the level is expected to clear (measured: ~5.6/move with cascades);
+   a given type is ~E/types of that. Needs are a fraction of that share, so a
+   level can never ask for more than it hands you. Difficulty ramps by stacking
+   objective KINDS, not by inflating a single number into the impossible. */
+function levelConfig(level){
+  const rng=mulberry32((level*2654435761)>>>0);
+  const types=level>=7?6:5;
+  let moves=Math.round(28+Math.min(level,12)*0.9)+((rng()*7)|0);
+  moves=Math.max(24,Math.min(44,moves));
+  const tape=genTape(rng,level);
+  const nC=level<3?1:(level<9?2:(rng()<.35?3:2));
+  const wantScore=(level>=6&&rng()<.4);
+  const E=moves*5.6, perType=E/types;
+  let f=0.56+0.19*Math.min(1,level/16);
+  if(nC>=3)f*=0.84;
+  if(tape.total>0)f*=0.92;
+  if(wantScore)f*=0.95;
+  const objectives=[],pool=shufR(rng,[0,1,2,3,4,5].slice(0,types));
+  for(let i=0;i<nC;i++){
+    let need=Math.round(perType*f)+(((rng()*5)|0)-2);
+    objectives.push({kind:'collect',t:pool[i],need:Math.max(8,Math.min(34,need))});
+  }
+  if(tape.total>0)objectives.push({kind:'tape',need:tape.total});
+  if(wantScore)objectives.push({kind:'score',need:Math.min(3600,900+level*110)});
+  return {types:types,objectives:objectives,tape:tape,moves:moves,name:genName(rng)};
+}
+function titleFor(level){
+  const i=Math.floor((level-1)/5);
+  if(i<TITLES.length)return TITLES[i];
+  const rng=mulberry32((i*97+7)>>>0);
+  return pickR(rng,TPRE)+pickR(rng,TROLE)+' OF '+pickR(rng,TDOM);
+}
+function causesRun(r,c,t){
+  if(c>=2&&S.grid[r][c-1]&&S.grid[r][c-1].t===t&&S.grid[r][c-2]&&S.grid[r][c-2].t===t)return true;
+  if(r>=2&&S.grid[r-1][c]&&S.grid[r-1][c].t===t&&S.grid[r-2][c]&&S.grid[r-2][c].t===t)return true;
+  return false;
+}
+function buildLevel(level){
+  S.level=level;
+  S.cfg=levelConfig(level);
+  S.score=0;S.collected={};S.tapeCut=0;S.maxCascade=0;S.bonus=0;
+  S.moves=S.cfg.moves;S.sel=null;
+  tileLayer.innerHTML='';tapeLayer.innerHTML='';S.tapeEls={};
+  S.grid=[];
+  for(let r=0;r<N;r++)S.grid.push(new Array(N).fill(null));
+  for(let r=0;r<N;r++)for(let c=0;c<N;c++){
+    let t=0,g=0;
+    do{t=(Math.random()*S.cfg.types)|0;g++}while(g<40&&causesRun(r,c,t));
+    S.grid[r][c]=newTile(r,c,t);
+  }
+  S.tape=S.cfg.tape.g.map(row=>row.slice());
+  layout();
+  renderTape();
+  buildObjChips();
+}
+
+/* ---------------- modals -------------------------------------------------- */
+const esc=s=>String(s).replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));
+function showModal(html){
+  modalEl.innerHTML=html;
+  overlayEl.classList.remove('hidden');
+  S.modal=true;
+  hydrate(modalEl);
+}
+function hideModal(){overlayEl.classList.add('hidden');S.modal=false}
+function typeText(el,text){
+  return new Promise(res=>{
+    let i=0,done=false;
+    el.textContent='';
+    const finish=()=>{if(done)return;done=true;el.textContent=text;res()};
+    el._skip=finish;
+    const step=()=>{
+      if(done)return;
+      i++;
+      el.textContent=text.slice(0,i);
+      if(i%2===0)sfxTalk();
+      if(i>=text.length){finish();return}
+      setTimeout(step,18);
+    };
+    step();
+  });
+}
+const waitClick=el=>new Promise(res=>{el.onclick=()=>{el.onclick=null;res()}});
+
+/* ---------------- THE FEEDBACK WINDOW ------------------------------------- */
+/* Draw without replacement so a session never repeats itself until the bag
+   is empty. The old code seeded off the level number, which meant assignment 3
+   handed you the same person saying the same thing every single playthrough. */
+const _bags={};
+function drawFrom(name,len){
+  let b=_bags[name];
+  if(!b||!b.length){b=_bags[name]=shuf(Array.from({length:len},(_,i)=>i))}
+  return b.pop();
+}
+/* What you're allowed to say is a function of what you've already said.
+   Politeness keeps the sharp stuff locked. */
+const TIERS=[0,0,5,15,30];
+const TIERNOTE=['','','THE POLITENESS IS WEARING OFF.','YOU CAN SAY WORSE THINGS NOW.',
+  'ALL FILTERS OFFLINE.'];
+function candorTier(){
+  let t=1;
+  for(let i=2;i<TIERS.length;i++)if(S.candor>=TIERS[i])t=i;
+  return t;
+}
+function coworkerFor(){
+  const ni=drawFrom('name',NAMES.length),oi=drawFrom('open',OPENERS.length);
+  const rng=mulberry32((Math.random()*1e9)>>>0);
+  return {name:NAMES[ni],op:OPENERS[oi],seed:(Math.random()*1e6)|0,
+    title:pickR(rng,TPRE)+pickR(rng,TROLE)+' OF '+pickR(rng,TDOM)};
+}
+let _seenR=new Set();
+function buildOptions(){
+  const tier=candorTier();
+  const base=S.waiver?REPLIES.concat(REPLIES_X):REPLIES;
+  const avail=base.filter(r=>r.t<=tier||r.t===5);
+  let fresh=avail.filter(r=>!_seenR.has(r));
+  if(fresh.length<3){_seenR.clear();fresh=avail.slice()}
+  const isTop=r=>r.t===tier||r.t===5;
+  const top=shuf(fresh.filter(isTop));
+  const low=shuf(fresh.filter(r=>!isTop(r)));
+  const opts=[];
+  while(opts.length<2&&top.length)opts.push(top.pop());
+  const mix=shuf(top.concat(low));
+  while(opts.length<3&&mix.length)opts.push(mix.pop());
+  opts.forEach(r=>_seenR.add(r));
+  opts.push(COWARD[drawFrom('coward',COWARD.length)]);
+  return shuf(opts);
+}
+/* FORM PW-1 -- the profanity waiver. Rendered inline inside the Feedback
+   Window so signing mid-encounter refreshes the reply options in place. */
+function renderWaiverForm(host,red,back){
+  red.classList.add('hidden');
+  host.innerHTML='';
+  const memo=document.createElement('div');
+  memo.className='memo';
+  memo.innerHTML='<div class="mrow">FORM PW-1 &middot; PROFANITY WAIVER &middot; ONE (1) SIGNATURE REQUIRED</div><hr>'+
+    '<div class="mbod">I, the undersigned, acknowledge that my unfiltered thoughts may '+
+    'contain language. I release SYNERGY&trade; from responsibility for what I meant. '+
+    'I understand HR will hear about it, write it down, and underline parts of it twice.</div>'+
+    '<div class="ps">P.S. This form cannot be unsigned emotionally. Mechanically, see Onboarding.</div>';
+  host.appendChild(memo);
+  const row=document.createElement('div');
+  row.className='btnrow';
+  const no=document.createElement('button');
+  no.className='btn';no.textContent='DECLINE (SAFE)';
+  no.onclick=()=>{sfxTick();back()};
+  const yes=document.createElement('button');
+  yes.className='btn bad';yes.textContent='SIGN (UNWISE)';
+  yes.onclick=()=>{S.waiver=true;persist();sfxCandor();back()};
+  row.appendChild(no);row.appendChild(yes);
+  host.appendChild(row);
+}
+async function confrontation(){
+  const cw=coworkerFor();
+  showModal('<div class="mhead">'+
+    '<span data-px="FEEDBACK WINDOW" data-s="2" data-c="#0B0E14"></span>'+
+    '<span data-px="1 UNFILTERED THOUGHT REMAINING" data-s="1" data-c="#0B0E14"></span></div>'+
+    '<div class="dlgtop"><div class="portrait" id="port"></div>'+
+    '<div class="nameplate"><div id="cwName" style="margin-bottom:5px"></div>'+
+    '<div id="cwTitle"></div>'+
+    '<div style="margin-top:8px" data-px="IS AT YOUR DESK" data-s="1" data-c="#FF4D3D"></div>'+
+    '</div></div>'+
+    '<div class="dlgbox" id="dlgb"><span id="dlgT"></span>'+
+    '<span class="arrow hidden" id="arw">&#9660;</span></div>'+
+    '<div id="aside" style="color:#5E7292;font-size:10.5px;line-height:1.6;padding:7px 12px 0"></div>'+
+    '<div class="opts hidden" id="opts"></div><div class="opts hidden" id="redact"></div><div class="btnrow" id="brow"></div>');
+  const port=$('port');
+  port.style.backgroundImage='url('+portraitURL(cw.seed,3)+')';
+  port.style.backgroundSize='cover';
+  setPx($('cwName'),cw.name,3,'#FFB627');
+  setPx($('cwTitle'),cw.title,1,'#7F91AC');
+  const box=$('dlgb'),txt=$('dlgT'),arw=$('arw');
+  box.onclick=()=>{if(txt._skip)txt._skip()};
+  await typeText(txt,cw.op.l);
+  $('aside').textContent=cw.op.a;
+  arw.classList.remove('hidden');
+  await waitClick(box);
+  arw.classList.add('hidden');
+  const host=$('opts'),red=$('redact');
+  host.classList.remove('hidden');
+  const choice=await new Promise(res=>{
+    const render=()=>{
+      host.classList.remove('hidden');
+      host.innerHTML='';
+      buildOptions().forEach(o=>{
+        const b=document.createElement('button');
+        b.className='opt'+((o.c||0)===0?' coward':'');
+        const cur=document.createElement('span');cur.className='cur';cur.textContent='>';
+        const sp=document.createElement('span');
+        sp.textContent=o.s.replace(/\{N\}/g,cw.name);
+        b.appendChild(cur);b.appendChild(sp);
+        b.onclick=()=>{sfxTick();res(o)};
+        host.appendChild(b);
+      });
+      red.innerHTML='';
+      if(!S.waiver){
+        red.classList.remove('hidden');
+        const b=document.createElement('button');
+        b.className='opt coward';
+        b.style.opacity='.55';
+        const cur=document.createElement('span');cur.className='cur';cur.textContent='#';
+        const sp=document.createElement('span');
+        sp.textContent='[ '+REPLIES_X.length+' REPLIES REDACTED -- FORM PW-1 NOT ON FILE -- REVIEW WAIVER ]';
+        b.appendChild(cur);b.appendChild(sp);
+        b.onclick=()=>{sfxTick();renderWaiverForm(host,red,render)};
+        red.appendChild(b);
+      }else red.classList.add('hidden');
+    };
+    render();
+  });
+  host.classList.add('hidden');
+  red.classList.add('hidden');
+  $('aside').textContent='';
+  box.classList.add('you');
+  await typeText(txt,'YOU: '+choice.s.replace(/\{N\}/g,cw.name));
+  await wait(420);
+  box.classList.remove('you');
+  await typeText(txt,cw.name+': '+choice.r);
+  await wait(240);
+  const gain=choice.c||0;
+  const hr=document.createElement('div');
+  hr.className='hrline';
+  hr.textContent=(gain?'HR NOTE: ':'')+choice.h;
+  modalEl.insertBefore(hr,host);
+  if(gain){
+    S.candor+=gain;S.incidents++;
+    sfxCandor();
+    const cp=document.createElement('div');
+    cp.className='candorpop';
+    cp.appendChild(pxCanvas('+'+gain+' CANDOR - '+rankFor(S.candor),2,'#3DF06A'));
+    modalEl.insertBefore(cp,host);
+    const nt=candorTier();
+    if(nt>S.tier){
+      S.tier=nt;
+      const tn=document.createElement('div');
+      tn.className='candorpop';
+      tn.appendChild(pxCanvas(TIERNOTE[nt],2,'#FF5FD2'));
+      modalEl.insertBefore(tn,host);
+      setTimeout(sfxPromo,220);
+    }
+  }else sfxSting();
+  updateChrome();
+  await persist();
+  const b=document.createElement('button');
+  b.className='btn go';b.textContent='BACK TO WORK';
+  b.onclick=()=>{hideModal();afterConfrontation()};
+  $('brow').appendChild(b);
+}
+function afterConfrontation(){
+  const next=S.level+1;
+  if(Math.floor((next-1)/5)>Math.floor((S.level-1)/5))showPromo(next);
+  else startLevel(next);
+}
+function showPromo(next){
+  sfxPromo();confetti();
+  showModal('<div class="stampwrap"><div class="stamp blu">'+
+    '<span data-px="PROMOTION" data-s="4" data-c="#4D8DF0"></span></div></div>'+
+    '<div class="sub">EFFECTIVE IMMEDIATELY, YOU ARE NOW</div>'+
+    '<div style="text-align:center;padding:9px 12px 0" data-px="'+esc(titleFor(next))+
+    '" data-s="2" data-c="#FFB627"></div>'+
+    '<div class="sub">COMPENSATION: UNCHANGED.<br>EXPECTATIONS: DOUBLED.<br>'+
+    'PARKING: STILL LEVEL 6.</div>'+
+    '<div class="btnrow"><button class="btn go" id="promoBtn">ACCEPT (MANDATORY)</button></div>');
+  $('promoBtn').onclick=()=>{hideModal();startLevel(next)};
+}
+
+/* ---------------- level flow ---------------------------------------------- */
+const objectivesMet=()=>S.cfg.objectives.every(o=>objProgress(o)>=o.need);
+async function bandwidthBonus(){
+  if(S.moves<=0)return;
+  toast('REALLOCATING UNUSED BANDWIDTH','#FFB627');
+  await wait(420);
+  let n=Math.min(S.moves,6);
+  while(n-->0&&S.moves>0){
+    S.moves--;S.score+=150;
+    const cand=[];
+    for(let r=0;r<N;r++)for(let c=0;c<N;c++)if(S.grid[r][c])cand.push(S.grid[r][c]);
+    if(!cand.length)break;
+    const t=pick(cand);
+    if(t.t==null)t.t=(Math.random()*S.cfg.types)|0;
+    t.s=Math.random()<.5?'row':'col';
+    updateTileVisual(t);
+    await wait(90);
+    const clear=expandClears(new Set([key(t.r,t.c)]));
+    await popTiles(clear,2);
+    clearAndRemove(clear);
+    await settleBoard();
+    await resolve(null);
+  }
+  if(S.moves>0){S.score+=S.moves*150;S.moves=0}
+  updateHUD();
+  await wait(220);
+}
+async function endTurn(){
+  updateHUD();
+  await ensureMoves();
+  if(objectivesMet()){await doWin();return}
+  if(S.moves<=0){await doFail();return}
+  S.busy=false;
+  startHint();
+}
+async function doWin(){
+  S.busy=true;stopHint();
+  await bandwidthBonus();
+  sfxWin();confetti();
+  S.failStreak=0;S.saveLevel=S.level+1;
+  await persist();
+  showModal('<div class="stampwrap"><div class="stamp">'+
+    '<span data-px="EXCEEDS EXPECTATIONS" data-s="3" data-c="#3DF06A"></span></div></div>'+
+    '<div class="sub">'+esc(pick(WINLINES))+'</div>'+
+    '<div class="statsrow">'+
+    '<div class="stat"><div data-px="ENGAGEMENT" data-s="1" data-c="#7F91AC"></div>'+
+    '<div data-px="'+fmt(S.score)+'" data-s="3" data-c="#FFB627"></div></div>'+
+    '<div class="stat"><div data-px="BEST CASCADE" data-s="1" data-c="#7F91AC"></div>'+
+    '<div data-px="'+S.maxCascade+'X" data-s="3" data-c="#3DF06A"></div></div></div>'+
+    '<div class="btnrow"><button class="btn go" id="nextBtn">CONTINUE</button></div>');
+  $('nextBtn').onclick=()=>{hideModal();confrontation()};
+}
+async function doFail(){
+  S.busy=true;stopHint();sfxLose();
+  S.failStreak++;
+  const skip=S.failStreak>=2;
+  showModal('<div class="stampwrap"><div class="stamp red">'+
+    '<span data-px="NEEDS IMPROVEMENT" data-s="3" data-c="#FF4D3D"></span></div></div>'+
+    '<div class="sub">'+esc(pick(FAILS))+'</div>'+
+    '<div class="btnrow">'+
+    (skip?'<button class="btn" id="skipBtn">ESCALATE TO MANAGER</button>':'')+
+    '<button class="btn go" id="retryBtn">TRY AGAIN</button></div>');
+  $('retryBtn').onclick=()=>{hideModal();startLevel(S.level)};
+  if(skip)$('skipBtn').onclick=()=>{hideModal();S.failStreak=0;
+    S.saveLevel=S.level+1;persist();startLevel(S.level+1)};
+}
+function startLevel(level){
+  S.busy=true;stopHint();
+  buildLevel(level);
+  const m=MEMOS[(level-1)%MEMOS.length];
+  const objTxt=S.cfg.objectives.map(o=>
+    o.kind==='collect'?TILES[o.t].verb+' '+o.need+' '+TILES[o.t].plural:
+    o.kind==='tape'?'CUT '+o.need+' LAYERS OF RED TAPE':
+    'REACH '+fmt(o.need)+' ENGAGEMENT');
+  showModal('<div class="mhead">'+
+    '<span data-px="INTEROFFICE MEMO" data-s="2" data-c="#0B0E14"></span>'+
+    '<span data-px="ASSIGNMENT '+level+'" data-s="1" data-c="#0B0E14"></span></div>'+
+    '<div class="mbody"><div class="memo">'+
+    '<div class="mrow">TO: ALL STAFF<br>FROM: THE OFFICE OF THE OFFICE<br>RE: '+
+    esc(S.cfg.name)+'</div><hr>'+
+    '<div class="mbod">'+esc(m.b)+'</div>'+
+    '<ul>'+objTxt.map(o=>'<li>'+esc(o)+'</li>').join('')+'</ul>'+
+    '<div class="ps">P.S. '+esc(m.p)+'</div></div></div>'+
+    '<div class="btnrow"><button class="btn go" id="ackBtn">ACKNOWLEDGE</button></div>');
+  $('ackBtn').onclick=()=>{initAudio();sfxTick();hideModal();S.busy=false;startHint()};
+}
+function openHelp(){
+  showModal('<div class="mhead">'+
+    '<span data-px="ONBOARDING" data-s="2" data-c="#0B0E14"></span>'+
+    '<span data-px="MANDATORY" data-s="1" data-c="#0B0E14"></span></div>'+
+    '<div class="mbody"><ul class="rules">'+
+    '<li>Swap adjacent assets to line up 3 or more. This is your job now.</li>'+
+    '<li>4 in a row makes THE SHREDDER. It clears a whole line. Nobody asks where it went.</li>'+
+    '<li>An L or T makes REPLY ALL. It takes out everything nearby. As intended.</li>'+
+    '<li>5 in a row makes THE RE-ORG. Swap it onto any asset to remove that entire category.</li>'+
+    '<li>Swap two specials together for something worse.</li>'+
+    '<li>RED TAPE takes 1-2 matches on that square to cut. It is load-bearing.</li>'+
+    '<li>BANDWIDTH is moves. Unused bandwidth is reallocated, loudly.</li>'+
+    '<li>After each assignment you get one (1) unfiltered thought. Spend it.</li>'+
+    '<li>CANDOR is permanent. So is your HR file. Both go up together.</li>'+
+    '<li>The more CANDOR you have, the worse the things you are allowed to say. '+
+    'Politeness keeps the good ones locked.</li>'+
+    '<li>FORM PW-1 (the profanity waiver) unlocks the REDACTED tier immediately, '+
+    'rank be damned. Sign it below or in any Feedback Window. HR keeps the original.</li>'+
+    '</ul></div><div class="btnrow"><button class="btn bad" id="pwBtn"></button>'+
+    '<button class="btn go" id="helpClose">GET BACK TO WORK</button></div>');
+  const pw=$('pwBtn');
+  const pwLbl=()=>{pw.textContent=S.waiver?'REVOKE FORM PW-1':'SIGN FORM PW-1'};
+  pwLbl();
+  pw.onclick=()=>{
+    S.waiver=!S.waiver;
+    persist();
+    if(S.waiver)sfxCandor();else sfxTick();
+    pwLbl();
+  };
+  $('helpClose').onclick=()=>{hideModal()};
+}
+
+/* ---------------- boot ---------------------------------------------------- */
+const BOOT=[['SYNERGY BIOS v4.0.2','a'],
+['(C) 1994-INFINITY  SYNERGY HOLDINGS (A SYNERGY COMPANY)','d'],['',''],
+['MEMORY TEST.............. 640K OK',''],
+['CHECKING MORALE.......... NOT FOUND','r'],
+['CHECKING MORALE.......... NOT FOUND','r'],
+['CHECKING MORALE.......... SKIPPED','a'],
+['LOADING VALUES........... INTEGRITY, EXCELLENCE, OTHER',''],
+['MOUNTING /dev/hope....... READ-ONLY','a'],
+['SCANNING FOR UNION....... NONE DETECTED',''],
+['SCANNING FOR UNION....... SCANNING AGAIN','a'],
+['CALIBRATING OPTICS....... OK',''],
+['SYNCHRONIZING CADENCE.... OK',''],
+['ENGAGEMENT ENGINE........ ONLINE',''],['',''],
+['WELCOME BACK.',''],
+['YOU WERE NOT MISSED. YOU WERE NOTICED.','d'],['',''],
+['PRESS ANY KEY TO BEGIN YOUR JOURNEY','a']];
+async function runBoot(){
+  const el=$('bootTxt');
+  el.innerHTML='';
+  for(let i=0;i<BOOT.length;i++){
+    const line=BOOT[i][0],cls=BOOT[i][1];
+    const d=document.createElement('div');
+    if(cls)d.className=cls;
+    el.appendChild(d);
+    if(!line)continue;
+    for(let j=0;j<=line.length;j++){
+      if(S.bootSkip)break;
+      d.textContent=line.slice(0,j);
+      if(j%3===0)blip(1400,.008,{duty:.125,g:.01});
+      await sleep(8);
+    }
+    d.textContent=line;
+    if(!S.bootSkip)await sleep(60);
+  }
+  const cur=document.createElement('span');
+  cur.className='cursorblk';
+  el.appendChild(cur);
+  S.bootReady=true;
+}
+async function boot(){
+  updateChrome();
+  fillTicker();
+  layout();
+  const sv=await loadSave();
+  if(sv){
+    S.saveLevel=sv.level||1;
+    S.sound=sv.sound!==false;
+    S.candor=sv.candor||0;
+    S.incidents=sv.incidents||0;
+    S.waiver=!!sv.waiver;
+  }
+  S.tier=candorTier();
+  updateChrome();
+  soundBtn.textContent=S.sound?'\u266A':'\u2715';
+  soundBtn.onclick=()=>{
+    S.sound=!S.sound;
+    soundBtn.textContent=S.sound?'\u266A':'\u2715';
+    if(S.sound){initAudio();sfxTick()}
+    persist();
+  };
+  helpBtn.onclick=()=>{initAudio();openHelp()};
+  let dismissed=false;
+  const dismiss=()=>{
+    if(!S.bootReady){S.bootSkip=true;return}
+    if(dismissed)return;
+    dismissed=true;
+    bootEl.classList.add('hidden');
+    initAudio();
+    startLevel(S.saveLevel);
+  };
+  bootEl.addEventListener('click',dismiss);
+  document.addEventListener('keydown',dismiss);
+  window.addEventListener('resize',()=>{layout()});
+  runBoot();
+}
+boot();
+</script>
+</body>
+</html>
