@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'none'; object-src 'none'; base-uri 'self'; form-action 'none'; upgrade-insecure-requests">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<title>Systems – Josh Dunlap</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #08080c; --fg: #dcdce0; --muted: #6b6b76; --dim: #3e3e4a;
+    --accent: #2dd4bf; --card: rgba(255,255,255,0.03); --border: rgba(255,255,255,0.08);
+    --mono: 'JetBrains Mono', monospace; --sans: 'DM Sans', sans-serif; --display: 'Syne', sans-serif;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--bg); color: var(--fg); font-family: var(--sans); min-height: 100vh;
+         display: flex; align-items: center; justify-content: center; -webkit-font-smoothing: antialiased; }
+  .gate-box { width: min(380px, calc(100vw - 48px)); }
+  .gate-label { font-family: var(--mono); font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
+                color: var(--accent); margin-bottom: 14px; display: flex; align-items: center; gap: 10px; }
+  .gate-label::after { content: ''; height: 1px; flex: 1; background: linear-gradient(90deg, var(--accent), transparent); opacity: 0.4; }
+  .gate-title { font-family: var(--display); font-weight: 700; font-size: 26px; letter-spacing: -0.02em; margin-bottom: 8px; }
+  .gate-sub { font-size: 14px; color: var(--muted); line-height: 1.6; margin-bottom: 24px; }
+  .gate-row { display: flex; gap: 10px; }
+  #gate-input { flex: 1; background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+                padding: 12px 16px; color: var(--fg); font-family: var(--mono); font-size: 14px; outline: none;
+                transition: border-color 0.18s ease-out; }
+  #gate-input:focus { border-color: color-mix(in srgb, var(--accent) 60%, transparent); }
+  #gate-btn { background: color-mix(in srgb, var(--accent) 14%, transparent);
+              border: 1px solid color-mix(in srgb, var(--accent) 50%, transparent);
+              color: var(--accent); border-radius: 12px; padding: 12px 20px;
+              font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase;
+              cursor: pointer; transition: background 0.18s ease-out; }
+  #gate-btn:hover { background: color-mix(in srgb, var(--accent) 22%, transparent); }
+  #gate-err { font-family: var(--mono); font-size: 11px; color: #d6336c; margin-top: 12px; min-height: 16px;
+              opacity: 0; transition: opacity 0.18s ease-out; }
+  body.err .gate-box { animation: shake 0.3s; }
+  body.err #gate-err { opacity: 1; }
+  @keyframes shake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
+  .gate-back { display: inline-block; margin-top: 28px; font-family: var(--mono); font-size: 11px;
+               color: var(--dim); text-decoration: none; }
+  .gate-back:hover { color: var(--muted); }
+  @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+</style>
+</head>
+<body>
+  <div class="gate-box">
+    <div class="gate-label">dunl.app / systems</div>
+    <div class="gate-title">Design Language Kit</div>
+    <p class="gate-sub">Thirteen design languages, motion dialects, and component systems. Enter the passphrase to continue.</p>
+    <div class="gate-row">
+      <input id="gate-input" type="password" placeholder="passphrase" autocomplete="off" spellcheck="false">
+      <button id="gate-btn">Enter</button>
+    </div>
+    <div id="gate-err">incorrect passphrase</div>
+    <a class="gate-back" href="/">&larr; back to dunl.app</a>
+  </div>
+
+<script>
+(function () {
+  // SHA-256 of the passphrase (unchanged from your existing gate).
+  // To change it, run in any browser console:
+  //   crypto.subtle.digest('SHA-256', new TextEncoder().encode('your-new-passphrase'))
+  //     .then(b => console.log([...new Uint8Array(b)].map(x => x.toString(16).padStart(2,'0')).join('')))
+  // then paste the result here.
+  var HASH = 'fec17e14422ea36fc870dcc9be63632ff140020524fb82a2565c4693edda9139';
+  var KEY = 'dunl_systems_unlocked';
+  var DEST = '/design-language-kit/';
+
+  // Already unlocked this session? Straight through.
+  if (sessionStorage.getItem(KEY) === '1') { location.replace(DEST); return; }
+
+  var input = document.getElementById('gate-input');
+  var btn = document.getElementById('gate-btn');
+
+  async function tryUnlock() {
+    var pw = input.value.trim();
+    if (!pw) return;
+    var buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(pw));
+    var hex = Array.prototype.map.call(new Uint8Array(buf), function (b) { return b.toString(16).padStart(2, '0'); }).join('');
+    if (hex === HASH) {
+      sessionStorage.setItem(KEY, '1');
+      location.replace(DEST);
+    } else {
+      document.body.classList.remove('err');
+      void document.body.offsetWidth;
+      document.body.classList.add('err');
+      input.select();
+    }
+  }
+
+  btn.addEventListener('click', tryUnlock);
+  input.addEventListener('keydown', function (e) { if (e.key === 'Enter') tryUnlock(); });
+  input.focus();
+})();
+</script>
+</body>
+</html>
