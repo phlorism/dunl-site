@@ -54,6 +54,7 @@ body{
   -webkit-user-select:none;user-select:none;
   -webkit-tap-highlight-color:transparent;
   overscroll-behavior:none;
+  -webkit-touch-callout:none;
   transition:--h .5s linear;
 }
 canvas#gl{position:fixed;inset:0;width:100%;height:100%;display:block;cursor:crosshair}
@@ -221,6 +222,23 @@ body.hidden-ui .hud, body.hidden-ui #strip{opacity:0}
   #btns{right:14px}
   #hint{font-size:8px;letter-spacing:.1em;max-width:94vw;overflow:hidden;text-overflow:ellipsis}
 }
+/* ---------- mweb pass ---------- */
+#info{max-height:min(78dvh,640px)}
+body.touch #info .kb{display:none}
+@media (pointer:coarse){
+  .pbtn{font-size:10px;letter-spacing:.12em;padding:12px 13px;min-height:42px;border-radius:11px}
+  #btns{right:auto;left:50%;transform:translateX(-50%);bottom:calc(14px + env(safe-area-inset-bottom,0px));gap:9px;flex-wrap:wrap;justify-content:center;max-width:calc(100vw - 20px)}
+  #hint{bottom:calc(70px + env(safe-area-inset-bottom,0px))}
+  #log{bottom:calc(94px + env(safe-area-inset-bottom,0px));max-width:92vw;font-size:8.5px}
+  #hudTL{top:calc(14px + env(safe-area-inset-top,0px));left:calc(14px + env(safe-area-inset-left,0px))}
+  #hudTR{top:calc(14px + env(safe-area-inset-top,0px));right:calc(14px + env(safe-area-inset-right,0px))}
+  #info{padding:26px 22px 24px}
+  #info .close{padding:12px;margin:-8px -8px 0 0}
+}
+@media (max-width:480px){
+  #start h1{font-size:clamp(34px,10.5vw,104px)}
+  #start .card{padding:0 16px}
+}
 @media (prefers-reduced-motion: reduce){
   #start h1{animation:none}
   #start .go{animation:none}
@@ -252,6 +270,8 @@ body.hidden-ui .hud, body.hidden-ui #strip{opacity:0}
 
 <div class="hud" id="btns">
   <button class="pbtn" id="bMute">MUTE</button>
+  <button class="pbtn" id="bEvolve">EVOLVE</button>
+  <button class="pbtn" id="bNew">NEW</button>
   <button class="pbtn" id="bInfo">INFO</button>
   <button class="pbtn" id="bHide">HIDE</button>
 </div>
@@ -271,12 +291,12 @@ body.hidden-ui .hud, body.hidden-ui #strip{opacity:0}
       <span class="k">MOVE</span><span class="d">stir the field · open the filter</span>
       <span class="k">CLICK / TAP</span><span class="d">bloom — bell chord + reward the network</span>
       <span class="k">HOLD</span><span class="d">riser — tension swells until you let go</span>
-      <span class="k">A – L</span><span class="d">play the current scale yourself</span>
-      <span class="k">1 – 5</span><span class="d">force a scene · <b style="color:var(--ink-hi)">0</b> returns to auto</span>
-      <span class="k">SPACE</span><span class="d">evolve now — mutate the network</span>
-      <span class="k">↑ ↓</span><span class="d">bias the energy of the piece</span>
-      <span class="k">R</span><span class="d">rebirth — new seed, new universe</span>
-      <span class="k">M · H · I</span><span class="d">mute · hide interface · this panel</span>
+      <span class="k kb">A – L</span><span class="d kb">play the current scale yourself</span>
+      <span class="k kb">1 – 5</span><span class="d kb">force a scene · <b style="color:var(--ink-hi)">0</b> returns to auto</span>
+      <span class="k kb">SPACE</span><span class="d kb">evolve now — mutate the network</span>
+      <span class="k kb">↑ ↓</span><span class="d kb">bias the energy of the piece</span>
+      <span class="k kb">R</span><span class="d kb">rebirth — new seed, new universe</span>
+      <span class="k kb">M · H · I</span><span class="d kb">mute · hide interface · this panel</span>
     </div></div>
   <div class="sect" style="margin-top:22px"><p style="color:var(--ink-ghost);font-size:9.5px;letter-spacing:.16em;text-transform:uppercase">dunl.app · instrument 01 · seed in URL — share it, same universe, different life</p></div>
 </div>
@@ -301,6 +321,8 @@ body.hidden-ui .hud, body.hidden-ui #strip{opacity:0}
 <script>
 /*__JS_START__*/
 'use strict';
+const IS_TOUCH=matchMedia('(pointer:coarse)').matches;
+const MB=IS_TOUCH&&Math.min(screen.width,screen.height)<=820;
 /* ================================================================
    PILOT WAVE · a self-composing audio-visual organism
    dunl.app · instrument 01
@@ -1488,7 +1510,7 @@ const GLR = {
   gl:null, ok:false, fallback:false, c2d:null,
   pScene:null, pPost:null, uS:{}, uP:{},
   texA:null, texB:null, fbA:null, fbB:null, readIsA:true,
-  W:0,H:0, scale:1, dprCap:1.75, floatOk:false,
+  W:0,H:0, scale:MB?0.8:1, dprCap:MB?1.3:1.75, floatOk:false,
   evtA:new Float32Array(64), evtT:new Float32Array(16), evtHead:0,
   rip:new Float32Array(32),
   glitchAmt:0, fbAmt:0.35, fbZoom:0.002, fbRot:0.0006, rotSign:1,
@@ -1826,6 +1848,8 @@ function toggleHide(){
 }
 $('bMute').addEventListener('click',toggleMute);
 $('bHide').addEventListener('click',toggleHide);
+$('bEvolve').addEventListener('click',()=>{if(State.running)Composer.evolve(true)});
+$('bNew').addEventListener('click',()=>{if(State.running)rebirth()});
 $('bInfo').addEventListener('click',()=>$('info').classList.toggle('open'));
 $('infoClose').addEventListener('click',()=>$('info').classList.remove('open'));
 $('info').addEventListener('pointerdown',e=>e.stopPropagation());
@@ -1931,6 +1955,8 @@ function frame(){
    BOOT
    ================================================================ */
 function fatal(msg){ $('fatalMsg').innerHTML=msg; $('fatal').classList.add('show'); }
+let wakeLock=null;
+async function reqWake(){try{if('wakeLock' in navigator&&document.visibilityState==='visible'){wakeLock=await navigator.wakeLock.request('screen')}}catch(e){}}
 function start(){
   if(State.running) return;
   try{
@@ -1939,6 +1965,7 @@ function start(){
     Composer.begin();
     Sched.start();
     State.running=true;
+    reqWake();
     $('start').classList.add('gone');
     setTimeout(()=>{ const s=$('start'); if(s) s.remove(); },1700);
     log('AWAKE','seed '+hex8(SEED));
@@ -1958,11 +1985,12 @@ try{
   $('sSeed').textContent=hex8(SEED);
   HUD.update();
   Hint.init();
+  if(IS_TOUCH)document.body.classList.add('touch');
   addEventListener('resize',()=>GLR.resize());
   document.addEventListener('visibilitychange',()=>{
     if(!actx) return;
     if(document.hidden){ actx.suspend(); }
-    else { actx.resume(); }
+    else { actx.resume(); if(State.running)reqWake(); }
   });
   $('start').addEventListener('pointerup',start);
   $('goBtn').addEventListener('pointerup',e=>{e.stopPropagation();start();});

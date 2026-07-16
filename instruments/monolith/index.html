@@ -37,8 +37,8 @@
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{height:100%;overflow:hidden;background:var(--bg)}
-body{font-family:var(--mono);color:var(--ink);-webkit-font-smoothing:antialiased;touch-action:none;overscroll-behavior:none;user-select:none;-webkit-user-select:none}
-canvas#gl{position:fixed;inset:0;width:100vw;height:100vh;display:block}
+body{font-family:var(--mono);color:var(--ink);-webkit-font-smoothing:antialiased;touch-action:none;overscroll-behavior:none;user-select:none;-webkit-user-select:none;-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none}
+canvas#gl{position:fixed;inset:0;width:100vw;height:100vh;height:100dvh;display:block}
 body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:40;
   background:repeating-linear-gradient(0deg,transparent 0 2px,rgba(0,0,0,.055) 2px 4px);
   mix-blend-mode:multiply}
@@ -96,7 +96,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:40;
 .pbtn.on{color:var(--acc);border-color:var(--acc)}
 .pbtn:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
 
-body.hidden-ui .hud,body.hidden-ui #btns,body.hidden-ui #strip,body.hidden-ui #chordBox{opacity:0;pointer-events:none}
+body.hidden-ui .hud,body.hidden-ui #btns,body.hidden-ui #strip,body.hidden-ui #chordBox,body.hidden-ui #pads{opacity:0;pointer-events:none}
 
 /* ---------- info panel ---------- */
 #info{position:fixed;z-index:50;top:50%;left:50%;transform:translate(-50%,-50%) scale(.97);
@@ -162,6 +162,35 @@ body.hidden-ui .hud,body.hidden-ui #btns,body.hidden-ui #strip,body.hidden-ui #c
   #btns{right:50%;transform:translateX(50%);bottom:16px}
   #gaviz{width:140px}#roll{width:140px}
 }
+/* ---------- mweb pass ---------- */
+#info{max-height:84dvh}
+body.touch #info .kb{display:none}
+#pads{display:none;position:fixed;left:50%;transform:translateX(-50%);z-index:34;gap:6px}
+.pad{pointer-events:auto;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.04em;
+  color:var(--ink-lo);background:var(--panel);border:1px solid hsl(222 14% 30% / .5);
+  min-width:34px;min-height:40px;padding:0 6px;cursor:pointer;transition:all .15s ease}
+.pad.on,.pad:active{color:var(--acc);border-color:var(--acc);box-shadow:0 0 12px hsl(var(--h) 80% 60% / .3)}
+@media (pointer:coarse){
+  .pbtn{font-size:10px;letter-spacing:.14em;padding:12px 12px;min-height:42px}
+  #btns{gap:8px;flex-wrap:wrap;justify-content:center;max-width:calc(100vw - 20px);bottom:calc(14px + env(safe-area-inset-bottom,0px))}
+  #hudTL{top:calc(12px + env(safe-area-inset-top,0px));left:calc(12px + env(safe-area-inset-left,0px))}
+  #hudTR{top:calc(12px + env(safe-area-inset-top,0px));right:calc(12px + env(safe-area-inset-right,0px))}
+  #hint{bottom:calc(118px + env(safe-area-inset-bottom,0px))}
+  #chordBox{bottom:calc(146px + env(safe-area-inset-bottom,0px))}
+  #info{padding:26px 20px 24px}
+  #info .close{padding:12px;margin:-8px -8px 0 0}
+}
+@media (pointer:coarse) and (min-height:500px){
+  #pads{display:flex;bottom:calc(66px + env(safe-area-inset-bottom,0px))}
+}
+@media (pointer:coarse) and (max-height:499px){
+  #hint{bottom:calc(70px + env(safe-area-inset-bottom,0px))}
+  #chordBox{bottom:calc(96px + env(safe-area-inset-bottom,0px))}
+}
+@media (max-width:480px){
+  #start h1{font-size:clamp(28px,9vw,68px);letter-spacing:.18em;text-indent:.18em}
+  #start .card{padding:32px 16px}
+}
 @media (prefers-reduced-motion: reduce){
   #start::before,#start::after,#start .stone{animation:none}
   *{transition-duration:.01ms !important}
@@ -206,8 +235,13 @@ body.hidden-ui .hud,body.hidden-ui #btns,body.hidden-ui #strip,body.hidden-ui #c
   <button class="pbtn" id="bMute">MUTE</button>
   <button class="pbtn" id="bXpose">KEY±</button>
   <button class="pbtn" id="bEvolve">EVOLVE</button>
+  <button class="pbtn" id="bNew">NEW</button>
   <button class="pbtn" id="bInfo">INFO</button>
   <button class="pbtn" id="bHide">HIDE</button>
+</div>
+
+<div class="hud" id="pads">
+  <button class="pad" data-i="0">I</button><button class="pad" data-i="1">ii</button><button class="pad" data-i="2">iii</button><button class="pad" data-i="3">IV</button><button class="pad" data-i="4">V</button><button class="pad" data-i="5">vi</button><button class="pad" data-i="6">vii</button><button class="pad" data-i="7">♭VII</button><button class="pad" data-i="8">♭VI</button>
 </div>
 
 <div id="info">
@@ -225,14 +259,14 @@ body.hidden-ui .hud,body.hidden-ui #btns,body.hidden-ui #strip,body.hidden-ui #c
       <span class="k">MOVE</span><span class="d">wind — slants the rain · tilts the filter</span>
       <span class="k">CLICK / TAP</span><span class="d">strike — chord stab · votes for this bassline</span>
       <span class="k">HOLD</span><span class="d">charge — the storm swells · release for thunder</span>
-      <span class="k">A – L</span><span class="d">play chords · I–vii plus two borrowed · rewrites that bar of the loop</span>
-      <span class="k">SHIFT + A – L</span><span class="d">extend — same chord, ninth voicing</span>
-      <span class="k">X</span><span class="d">transpose — force a key change now</span>
-      <span class="k">1 – 5</span><span class="d">force a scene · <b style="color:var(--ink-hi)">0</b> returns to auto</span>
-      <span class="k">SPACE</span><span class="d">evolve — breed the bassline population now</span>
-      <span class="k">↑ ↓</span><span class="d">bias the energy of the piece</span>
-      <span class="k">R</span><span class="d">rebirth — new seed, new storm</span>
-      <span class="k">M · V · I</span><span class="d">mute · hide interface · this panel</span>
+      <span class="k kb">A – L</span><span class="d kb">play chords · I–vii plus two borrowed · rewrites that bar of the loop</span>
+      <span class="k kb">SHIFT + A – L</span><span class="d kb">extend — same chord, ninth voicing</span>
+      <span class="k kb">X</span><span class="d kb">transpose — force a key change now</span>
+      <span class="k kb">1 – 5</span><span class="d kb">force a scene · <b style="color:var(--ink-hi)">0</b> returns to auto</span>
+      <span class="k kb">SPACE</span><span class="d kb">evolve — breed the bassline population now</span>
+      <span class="k kb">↑ ↓</span><span class="d kb">bias the energy of the piece</span>
+      <span class="k kb">R</span><span class="d kb">rebirth — new seed, new storm</span>
+      <span class="k kb">M · V · I</span><span class="d kb">mute · hide interface · this panel</span>
     </div></div>
   <div class="sect" style="margin-top:22px"><p style="color:var(--ink-ghost);font-size:9.5px;letter-spacing:.16em;text-transform:uppercase">dunl.app · instrument 02 · seed in URL — share it, same stone, different storm</p></div>
 </div>
@@ -258,6 +292,8 @@ body.hidden-ui .hud,body.hidden-ui #btns,body.hidden-ui #strip,body.hidden-ui #c
 <script>
 /*__JS_START__*/
 'use strict';
+const IS_TOUCH=matchMedia('(pointer:coarse)').matches;
+const MB=IS_TOUCH&&Math.min(screen.width,screen.height)<=820;
 /* ================================================================
    MONOLITH · a ladder-filtered stone in the rain
    dunl.app · instrument 02
@@ -1574,7 +1610,7 @@ void main(){
 const GLR={
   gl:null,ok:false,fallback:false,c2d:null,
   pScene:null,pPost:null,uS:{},uP:{},
-  texA:null,texB:null,readIsA:true,W:0,H:0,scale:0.85,dprCap:1.5,floatOk:false,
+  texA:null,texB:null,readIsA:true,W:0,H:0,scale:MB?0.68:0.85,dprCap:MB?1.25:1.5,floatOk:false,
   evtA:new Float32Array(48),evtT:new Float32Array(12),evtHead:0,
   pulseQ:[],P:{kick:0,flash:0,acc:0,snap:0},
   spin:0,twist:0,formW:new Float32Array([0,1,0,0]),formTgt:1,
@@ -1823,7 +1859,7 @@ function chargeRelease(){
 }
 function ptrPos(e){Ptr.x=clamp(e.clientX/innerWidth,0,1);Ptr.y=clamp(e.clientY/innerHeight,0,1);
   if(Audio.ready)Audio.color(Ptr.y)}
-function uiTarget(e){return e.target.closest&&e.target.closest('.pbtn,#info,#start')}
+function uiTarget(e){return e.target.closest&&e.target.closest('.pbtn,.pad,#info,#start')}
 
 addEventListener('pointerdown',e=>{
   if(uiTarget(e))return;
@@ -1977,6 +2013,13 @@ $('bMute').addEventListener('click',toggleMute);
 $('bHide').addEventListener('click',toggleHide);
 $('bXpose').addEventListener('click',()=>{if(State.running)queueTranspose()});
 $('bEvolve').addEventListener('click',()=>{if(State.running)GA.generation(true)});
+$('bNew').addEventListener('click',()=>{if(State.running)rebirth()});
+document.querySelectorAll('#pads .pad').forEach(p=>p.addEventListener('pointerdown',e=>{
+  e.preventDefault();e.stopPropagation();
+  if(!State.running)return;
+  playChord(+p.dataset.i,false);
+  p.classList.add('on');setTimeout(()=>p.classList.remove('on'),150);
+}));
 $('bInfo').addEventListener('click',()=>$('info').classList.toggle('open'));
 $('infoClose').addEventListener('click',()=>$('info').classList.remove('open'));
 $('info').addEventListener('pointerdown',e=>e.stopPropagation());
@@ -2079,6 +2122,9 @@ function frame(){
    BOOT
    ================================================================ */
 function fatal(msg){$('fatalMsg').innerHTML=msg;$('fatal').classList.add('show')}
+
+let wakeLock=null;
+async function reqWake(){try{if('wakeLock' in navigator&&document.visibilityState==='visible'){wakeLock=await navigator.wakeLock.request('screen')}}catch(e){}}
 function start(){
   if(State.running)return;
   try{
@@ -2087,6 +2133,7 @@ function start(){
     Composer.begin();
     Sched.start();
     State.running=true;
+    reqWake();
     $('start').classList.add('gone');
     setTimeout(()=>{const s=$('start');if(s)s.remove()},1700);
     log('AWAKE','seed '+hex8(SEED));
@@ -2107,11 +2154,12 @@ try{
   $('sSeed').textContent=hex8(SEED);
   HUD.update();
   Hint.init();
+  if(IS_TOUCH)document.body.classList.add('touch');
   addEventListener('resize',()=>GLR.resize());
   document.addEventListener('visibilitychange',()=>{
     if(!actx)return;
     if(document.hidden)actx.suspend();
-    else actx.resume();
+    else {actx.resume();if(State.running)reqWake()}
   });
   $('start').addEventListener('pointerup',start);
   $('goBtn').addEventListener('pointerup',e=>{e.stopPropagation();start()});

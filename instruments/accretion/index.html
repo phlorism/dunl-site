@@ -35,8 +35,8 @@
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{height:100%;overflow:hidden;background:var(--bg)}
-body{font-family:var(--mono);color:var(--ink);-webkit-font-smoothing:antialiased;touch-action:none;overscroll-behavior:none;user-select:none;-webkit-user-select:none;cursor:crosshair}
-canvas#gl{position:fixed;inset:0;width:100vw;height:100vh;display:block}
+body{font-family:var(--mono);color:var(--ink);-webkit-font-smoothing:antialiased;touch-action:none;overscroll-behavior:none;user-select:none;-webkit-user-select:none;-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none;cursor:crosshair}
+canvas#gl{position:fixed;inset:0;width:100vw;height:100vh;height:100dvh;display:block}
 #strip{position:fixed;left:0;right:0;bottom:0;width:100vw;height:3px;z-index:32;opacity:.95}
 
 /* ---------- HUD: observatory annotations, no boxes ---------- */
@@ -154,6 +154,23 @@ body.hidden-ui .hud,body.hidden-ui #btns,body.hidden-ui #strip,body.hidden-ui #s
   #btns{right:50%;transform:translateX(50%);bottom:16px}
   #app{width:140px}
 }
+/* ---------- mweb pass ---------- */
+#info{max-height:84dvh}
+body.touch #info .kb{display:none}
+@media (pointer:coarse){
+  .pbtn{font-size:10px;letter-spacing:.14em;padding:12px 13px;min-height:42px}
+  #btns{gap:8px;flex-wrap:wrap;justify-content:center;max-width:calc(100vw - 20px);bottom:calc(14px + env(safe-area-inset-bottom,0px))}
+  #hudTL{top:calc(12px + env(safe-area-inset-top,0px));left:calc(12px + env(safe-area-inset-left,0px))}
+  #hudTR{top:calc(12px + env(safe-area-inset-top,0px));right:calc(12px + env(safe-area-inset-right,0px))}
+  #hint{bottom:calc(70px + env(safe-area-inset-bottom,0px))}
+  #sysChord{bottom:calc(92px + env(safe-area-inset-bottom,0px))}
+  #info{padding:26px 20px 24px}
+  #info .close{padding:12px;margin:-8px -8px 0 0}
+}
+@media (max-width:480px){
+  #start h1{font-size:clamp(26px,8.5vw,64px);letter-spacing:.18em;text-indent:.18em}
+  #start .card{padding:32px 16px}
+}
 @media (prefers-reduced-motion: reduce){
   #start .orb,#start .sun{animation:none}
   *{transition-duration:.01ms !important}
@@ -196,6 +213,7 @@ body.hidden-ui .hud,body.hidden-ui #btns,body.hidden-ui #strip,body.hidden-ui #s
   <button class="pbtn" id="bMute">MUTE</button>
   <button class="pbtn" id="bWarp">WARP</button>
   <button class="pbtn" id="bStyle">LENS</button>
+  <button class="pbtn" id="bNew">NEW</button>
   <button class="pbtn" id="bInfo">INFO</button>
   <button class="pbtn" id="bHide">HIDE</button>
 </div>
@@ -221,8 +239,8 @@ body.hidden-ui .hud,body.hidden-ui #btns,body.hidden-ui #strip,body.hidden-ui #s
       <span class="k">INTO THE STAR</span><span class="d">sacrifice a body · heat rises · flares answer</span>
       <span class="k">HOLD SPACE-BAR / WARP</span><span class="d">slow time — physics, beam, and tape</span>
       <span class="k">C / LENS</span><span class="d">cycle the four render lenses</span>
-      <span class="k">R</span><span class="d">rebirth — new seed, new system</span>
-      <span class="k">M · V · I</span><span class="d">mute · hide interface · this panel</span>
+      <span class="k kb">R</span><span class="d kb">rebirth — new seed, new system</span>
+      <span class="k kb">M · V · I</span><span class="d kb">mute · hide interface · this panel</span>
     </div></div>
   <div class="sect" style="margin-top:22px"><p style="color:var(--ink-ghost);font-size:9.5px;letter-spacing:.16em;text-transform:uppercase">dunl.app · instrument 03 · seed in URL — share it, same star, different sky</p></div>
 </div>
@@ -252,6 +270,8 @@ body.hidden-ui .hud,body.hidden-ui #btns,body.hidden-ui #strip,body.hidden-ui #s
 <script>
 /*__JS_START__*/
 'use strict';
+const IS_TOUCH=matchMedia('(pointer:coarse)').matches;
+const MB=IS_TOUCH&&Math.min(screen.width,screen.height)<=820;
 /* ================================================================
    ACCRETION · matter in, music out
    dunl.app · instrument 03
@@ -1344,7 +1364,7 @@ void main(){
 const GLR={
   gl:null,ok:false,fallback:false,c2d:null,
   pScene:null,pPost:null,uS:{},uP:{},
-  texA:null,texB:null,readIsA:true,W:0,H:0,scale:1,dprCap:1.6,floatOk:false,
+  texA:null,texB:null,readIsA:true,W:0,H:0,scale:MB?0.8:1,dprCap:MB?1.3:1.6,floatOk:false,
   bodyA:new Float32Array(46*4),bodyV:new Float32Array(46*4),
   laneHue:new Float32Array(LANES),appU:new Float32Array(LANES),
   evtA:new Float32Array(48),evtT:new Float32Array(12),evtHead:0,
@@ -1801,6 +1821,7 @@ function toggleHide(){
 $('bMute').addEventListener('click',toggleMute);
 $('bHide').addEventListener('click',toggleHide);
 $('bStyle').addEventListener('click',()=>{if(State.running)GLR.cycleStyle()});
+$('bNew').addEventListener('click',()=>{if(State.running)rebirth()});
 $('bInfo').addEventListener('click',()=>$('info').classList.toggle('open'));
 $('infoClose').addEventListener('click',()=>$('info').classList.remove('open'));
 $('info').addEventListener('pointerdown',e=>e.stopPropagation());
@@ -1924,6 +1945,9 @@ function frame(){
    BOOT
    ================================================================ */
 function fatal(msg){$('fatalMsg').innerHTML=msg;$('fatal').classList.add('show')}
+
+let wakeLock=null;
+async function reqWake(){try{if('wakeLock' in navigator&&document.visibilityState==='visible'){wakeLock=await navigator.wakeLock.request('screen')}}catch(e){}}
 function start(){
   if(State.running)return;
   try{
@@ -1932,6 +1956,7 @@ function start(){
     Star.begin();
     Sched.start();
     State.running=true;
+    reqWake();
     $('start').classList.add('gone');
     setTimeout(()=>{const s=$('start');if(s)s.remove()},1600);
     log('AWAKE','seed '+hex8(SEED));
@@ -1951,11 +1976,12 @@ try{
   $('sSeed').textContent=hex8(SEED);
   HUD.update();
   Hint.init();
+  if(IS_TOUCH)document.body.classList.add('touch');
   addEventListener('resize',()=>GLR.resize());
   document.addEventListener('visibilitychange',()=>{
     if(!actx)return;
     if(document.hidden)actx.suspend();
-    else actx.resume();
+    else {actx.resume();if(State.running)reqWake()}
   });
   $('start').addEventListener('pointerup',start);
   $('goBtn').addEventListener('pointerup',e=>{e.stopPropagation();start()});

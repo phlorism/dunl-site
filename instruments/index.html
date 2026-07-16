@@ -84,7 +84,8 @@ body.err #gate-err{opacity:1}
 .gate-back:hover{color:var(--muted)}
 
 /* ---------- library ---------- */
-#library{position:relative; z-index:1; max-width:1060px; margin:0 auto; padding:64px 28px 56px}
+#library{position:relative; z-index:1; max-width:1060px; margin:0 auto;
+  padding:calc(64px + env(safe-area-inset-top,0px)) calc(28px + env(safe-area-inset-right,0px)) calc(56px + env(safe-area-inset-bottom,0px)) calc(28px + env(safe-area-inset-left,0px))}
 #library[hidden]{display:none}
 .lib-head{display:flex; align-items:baseline; justify-content:space-between; gap:16px; flex-wrap:wrap}
 .lib-eyebrow{font-family:var(--mono); font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--dim); margin-bottom:14px}
