@@ -26,6 +26,7 @@
   --border: rgba(255,255,255,0.08);
   --serif: 'DM Serif Display', Georgia, serif;
   --sans: 'DM Sans', sans-serif;
+  --mono: 'JetBrains Mono', monospace;
 }
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 html { scroll-behavior: smooth; }
@@ -155,7 +156,7 @@ nav .container {
   margin-bottom: 16px;
   font-weight: 500;
   opacity: 0;
-  animation: fadeUp 0.8s ease forwards 0.2s;
+  animation: fadeUp var(--m-hero, 0.8s) var(--m-ease, ease) forwards 0.2s;
 }
 .hero h1 {
   font-family: var(--serif);
@@ -164,7 +165,7 @@ nav .container {
   line-height: 1.1;
   margin-bottom: 20px;
   opacity: 0;
-  animation: fadeUp 0.8s ease forwards 0.4s;
+  animation: fadeUp var(--m-hero, 0.8s) var(--m-ease, ease) forwards 0.4s;
   overflow: visible;
 }
 .hero h1 em {
@@ -177,14 +178,14 @@ nav .container {
   max-width: 680px;
   line-height: 1.7;
   opacity: 0;
-  animation: fadeUp 0.8s ease forwards 0.6s;
+  animation: fadeUp var(--m-hero, 0.8s) var(--m-ease, ease) forwards 0.6s;
 }
 .hero-rule {
   width: 100%;
   height: 1px;
   margin-top: 24px;
   opacity: 0;
-  animation: fadeUp 0.8s ease forwards 0.8s;
+  animation: fadeUp var(--m-hero, 0.8s) var(--m-ease, ease) forwards 0.8s;
   position: relative;
   background: var(--border);
   overflow: hidden;
@@ -204,6 +205,74 @@ nav .container {
   0%, 100% { left: -110px; }
   50% { left: calc(100% - 110px); }
 }
+.scope-strip {
+  margin-top: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  opacity: 0;
+  animation: fadeUp var(--m-hero, 0.8s) var(--m-ease, ease) forwards 1s;
+}
+.scope-group {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 16px;
+  align-items: start;
+}
+.scope-group-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent);
+  padding-top: 7px;
+  white-space: nowrap;
+}
+.scope-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.scope-tags span {
+  font-size: 12.5px;
+  color: var(--fg);
+  cursor: pointer;
+  padding: 5px 12px;
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  background: color-mix(in srgb, var(--accent) 4%, transparent);
+  white-space: nowrap;
+  transition: border-color 0.25s, background 0.25s;
+}
+.scope-tags span:hover {
+  border-color: color-mix(in srgb, var(--accent) 50%, transparent);
+  background: color-mix(in srgb, var(--accent) 9%, transparent);
+}
+@media (max-width: 600px) {
+  .scope-group { grid-template-columns: 1fr; gap: 8px; }
+  .scope-group-label { padding-top: 0; }
+}
+/* --- Scope bottom sheet --- */
+.scope-sheet-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.45); opacity: 0; pointer-events: none; transition: opacity 0.3s ease; z-index: 300; }
+.scope-sheet-backdrop.open { opacity: 1; pointer-events: auto; }
+.scope-sheet {
+  position: fixed; left: 50%; bottom: 0; z-index: 301;
+  width: min(560px, calc(100% - 24px));
+  background: var(--bg);
+  border: 1px solid var(--border); border-bottom: none;
+  border-radius: 18px 18px 0 0;
+  padding: 14px 28px 34px;
+  box-shadow: 0 -18px 60px rgba(0,0,0,0.35);
+  transform: translate(-50%, 105%);
+  transition: transform var(--m-enter, 0.45s) var(--m-ease, ease);
+}
+.scope-sheet.open { transform: translate(-50%, 0); }
+.scope-sheet-handle { width: 36px; height: 4px; border-radius: 2px; background: var(--border); margin: 0 auto 18px; }
+.scope-sheet-label { font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); margin-bottom: 6px; }
+.scope-sheet h3 { font-family: var(--serif); font-size: 22px; font-weight: 400; margin-bottom: 10px; color: var(--fg); }
+.scope-sheet p { font-size: 14px; color: var(--muted); line-height: 1.65; }
+.scope-sheet-close { position: absolute; top: 14px; right: 16px; background: none; border: none; color: var(--muted); font-size: 20px; cursor: pointer; line-height: 1; padding: 6px; }
+.scope-sheet-close:hover { color: var(--fg); }
 .inline-link {
   color: var(--accent);
   text-decoration: none;
@@ -561,6 +630,20 @@ footer {
   to { opacity: 1; transform: translateY(0); }
 }
 
+/* --- Motion tokens (dunl.app/systems motion languages) --- */
+:root { --m-enter: 0.6s; --m-ease: ease; --m-stagger: 0.08s; --m-hero: 0.8s; }
+/* Concentric: enter 400ms decelerating, 45ms stagger (cap 8), micro 180ms */
+body.theme-void { --m-enter: 0.4s; --m-ease: cubic-bezier(0.16, 1, 0.3, 1); --m-stagger: 0.045s; --m-hero: 0.6s; }
+body.theme-void .stat-card, body.theme-void .dl-card, body.theme-void .theme-option { transition-duration: 180ms; }
+/* Atelier: 350ms is the floor — drift in at 700ms, nothing snaps */
+body.theme-atelier { --m-enter: 0.7s; --m-ease: ease-out; --m-stagger: 0.09s; --m-hero: 0.9s; }
+body.theme-atelier .stat-card, body.theme-atelier .article-card, body.theme-atelier .dl-card, body.theme-atelier .theme-option { transition-duration: 350ms; }
+/* Chaos: slam — 240ms overshoot, once per element */
+body.theme-chaos { --m-enter: 0.24s; --m-ease: cubic-bezier(0.22, 1.6, 0.36, 1); --m-stagger: 0.05s; --m-hero: 0.24s; }
+body.theme-chaos .reveal { transform: translateY(10px) scale(1.06); }
+/* Commerce: reveal 500ms · 60ms stagger; press 120ms scale(0.98) */
+body.theme-commerce { --m-enter: 0.5s; --m-ease: ease; --m-stagger: 0.06s; --m-hero: 0.7s; }
+
 /* --- Stats / KPI --- */
 .stats-grid {
   display: grid;
@@ -793,6 +876,13 @@ footer {
   gap: 16px;
 }
 @media (max-width: 600px) { .dl-grid { grid-template-columns: 1fr; } }
+/* Re-entrance when switching design languages — each language replays in its own motion dialect */
+.dl-grid.dl-switch .dl-card { animation: fadeUp var(--m-enter, 0.5s) var(--m-ease, ease) backwards; }
+.dl-grid.dl-switch .dl-card:nth-child(2) { animation-delay: calc(var(--m-stagger, 0.08s) * 1); }
+.dl-grid.dl-switch .dl-card:nth-child(3) { animation-delay: calc(var(--m-stagger, 0.08s) * 2); }
+.dl-grid.dl-switch .dl-card:nth-child(4) { animation-delay: calc(var(--m-stagger, 0.08s) * 3); }
+.dl-grid.dl-switch .dl-card:nth-child(5) { animation-delay: calc(var(--m-stagger, 0.08s) * 4); }
+.dl-grid.dl-switch .dl-card:nth-child(6) { animation-delay: calc(var(--m-stagger, 0.08s) * 5); }
 .dl-card {
   background: var(--card);
   border: 1px solid var(--border);
@@ -1288,6 +1378,153 @@ body.theme-void .impact-scale > div:nth-child(2) .shipped-item:hover { border-le
 body.theme-void .impact-scale > div:nth-child(3) .shipped-item:hover { border-left-color: rgba(45,212,191,0.5); }
 body.theme-void .impact-scale > div:nth-child(4) .shipped-item:hover { border-left-color: #2dd4bf; background: rgba(45,212,191,0.06); }
 
+/* --- Atelier --- */
+body.theme-atelier { background: #F1EDE7; color: #282828; }
+body.theme-atelier::after { display: none; }
+body.theme-atelier .void-bg { display: none; }
+
+/* Typography – warm serif display, clean sans body */
+body.theme-atelier h1 { font-family: 'Instrument Serif', serif !important; font-weight: 400; font-style: italic; color: #282828; letter-spacing: -0.02em; }
+body.theme-atelier h1 em { color: #8B7355; font-style: normal; }
+body.theme-atelier .nav-logo { font-family: 'Instrument Serif', serif !important; font-weight: 400; letter-spacing: 0.02em; color: #282828; }
+body.theme-atelier .t-company { font-family: 'Instrument Serif', serif !important; font-weight: 400; color: #282828; font-size: 110%; }
+body.theme-atelier .article-card h3 { font-family: 'Instrument Serif', serif !important; font-weight: 400; color: #282828; font-size: 110%; }
+body.theme-atelier .dl-card h4 { font-family: 'Instrument Serif', serif !important; font-weight: 400; color: #282828; }
+body.theme-atelier .stat-number { font-family: 'Instrument Serif', serif !important; font-weight: 400; color: #8B7355; font-style: italic; }
+body.theme-atelier .stat-label { font-family: 'Plus Jakarta Sans', sans-serif !important; color: #7A7168; font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; }
+body.theme-atelier .feature-card h3 { font-family: 'Instrument Serif', serif !important; font-weight: 400; color: #282828; }
+body.theme-atelier .contact-section h2 { font-family: 'Instrument Serif', serif !important; font-weight: 400; font-style: italic; color: #282828; }
+body.theme-atelier .approach-text { font-family: 'Instrument Serif', serif !important; font-weight: 400; color: #282828; }
+body.theme-atelier .approach-text em { color: #8B7355; font-style: italic; }
+body.theme-atelier .philosophy-text { font-family: 'Plus Jakarta Sans', sans-serif !important; color: #282828; }
+body.theme-atelier .philosophy-text em { color: #8B7355; font-style: italic; }
+body.theme-atelier .hero-label { font-family: 'JetBrains Mono', monospace !important; font-size: 10px !important; color: #6F5B3E; letter-spacing: 0.12em; }
+body.theme-atelier .hero-bio { color: #7A7168; font-family: 'Plus Jakarta Sans', sans-serif !important; }
+body.theme-atelier .section-label { font-family: 'JetBrains Mono', monospace !important; font-size: 10px !important; color: #6F5B3E; letter-spacing: 0.12em; }
+body.theme-atelier .article-tag { font-family: 'JetBrains Mono', monospace !important; color: #6F5B3E; font-size: 10px !important; }
+body.theme-atelier .impact-tier-label { font-family: 'JetBrains Mono', monospace !important; color: #7A7168; }
+body.theme-atelier .shipped-category { font-family: 'JetBrains Mono', monospace !important; color: #6F5B3E; }
+body.theme-atelier .t-role-date, body.theme-atelier .t-date { font-family: 'JetBrains Mono', monospace !important; color: #9A948C; }
+body.theme-atelier .t-desc { color: #7A7168; }
+body.theme-atelier .t-role-title { color: #8B7355; }
+body.theme-atelier .shipped-item { font-family: 'Plus Jakarta Sans', sans-serif !important; color: #282828; }
+body.theme-atelier .scope-group-label { color: #6F5B3E; }
+body.theme-atelier footer { color: #9A948C; }
+body.theme-atelier .article-card p { color: #7A7168; }
+body.theme-atelier .article-expand-hint { color: #9A948C; }
+
+/* Nav – frosted glass */
+body.theme-atelier nav { background: rgba(241,237,231,0.85); backdrop-filter: blur(24px); border-bottom: 1px solid rgba(0,0,0,0.06); }
+body.theme-atelier .nav-links a { color: #7A7168; }
+body.theme-atelier .nav-links a:hover { color: #8B7355; }
+body.theme-atelier .nav-links a::after { background: #8B7355; }
+body.theme-atelier .nav-headshot { border-color: rgba(0,0,0,0.08); }
+
+/* Section dividers – warm, subtle */
+body.theme-atelier .section-label::after { background: linear-gradient(90deg, rgba(139,115,85,0.25), transparent) !important; flex: 1 !important; width: auto !important; }
+body.theme-atelier .hero-rule { background: linear-gradient(90deg, rgba(139,115,85,0.3), rgba(139,115,85,0.05) 60%, transparent); height: 1px; }
+body.theme-atelier .hero-rule::after { display: none; }
+
+/* Frosted glass cards – soft shadows, no hard borders */
+body.theme-atelier .stat-card {
+  background: rgba(255,255,255,0.5);
+  border: 1px solid rgba(255,255,255,0.7);
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.04), 0 1px 3px rgba(0,0,0,0.03);
+  backdrop-filter: blur(16px);
+}
+body.theme-atelier .stat-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.07); background: rgba(255,255,255,0.65); }
+body.theme-atelier .article-card {
+  background: rgba(255,255,255,0.5);
+  border: 1px solid rgba(255,255,255,0.7);
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.04), 0 1px 3px rgba(0,0,0,0.03);
+  backdrop-filter: blur(16px);
+  border-left-color: rgba(255,255,255,0.7);
+}
+body.theme-atelier .article-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.07); background: rgba(255,255,255,0.65); border-left-color: #8B7355; }
+body.theme-atelier .dl-card {
+  background: rgba(255,255,255,0.5);
+  border: 1px solid rgba(255,255,255,0.7);
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+  backdrop-filter: blur(16px);
+}
+body.theme-atelier .dl-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.07); }
+body.theme-atelier .shipped-item {
+  background: rgba(255,255,255,0.4);
+  border: 1px solid rgba(255,255,255,0.6);
+  border-radius: 12px;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.03);
+  backdrop-filter: blur(12px);
+}
+body.theme-atelier .shipped-item:hover { background: rgba(255,255,255,0.6); box-shadow: 0 3px 12px rgba(0,0,0,0.06); }
+body.theme-atelier .exp-card {
+  background: rgba(255,255,255,0.5);
+  border: 1px solid rgba(255,255,255,0.7);
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+  backdrop-filter: blur(16px);
+}
+body.theme-atelier .feature-card {
+  background: #FDFCFA;
+  border: 1px solid rgba(0,0,0,0.06);
+  border-radius: 16px;
+  color: #282828;
+}
+body.theme-atelier .feature-card p { color: #7A7168; }
+body.theme-atelier .feature-card-bar { background: #EBE7E1; }
+body.theme-atelier .feature-card-bar-fill { background: linear-gradient(90deg, #8B7355, #A89070); border-radius: 4px; }
+body.theme-atelier .feature-card-tag { color: #6F5B3E; }
+
+/* Results and accents */
+body.theme-atelier .article-result { color: #8B7355; }
+body.theme-atelier .article-kpi { color: #8B7355; }
+body.theme-atelier .article-detail-inner { border-top-color: rgba(0,0,0,0.06); }
+
+/* Timeline */
+body.theme-atelier .timeline::before { background: rgba(0,0,0,0.06); }
+body.theme-atelier .timeline::after { background: #8B7355; }
+body.theme-atelier .t-item::before { background: #8B7355; }
+body.theme-atelier .t-item.current::before { box-shadow: 0 0 0 4px rgba(139,115,85,0.15); }
+
+/* Impact scale */
+body.theme-atelier .impact-scale-header { color: #9A948C; }
+
+/* Contact */
+body.theme-atelier .contact-link { color: #8B7355; border-color: #8B7355; border-radius: 12px; }
+body.theme-atelier .contact-link:hover { background: #8B7355; color: #F1EDE7; }
+body.theme-atelier .inline-link { color: #8B7355; border-bottom-color: rgba(139,115,85,0.3); }
+body.theme-atelier .inline-link:hover { border-bottom-color: #8B7355; }
+body.theme-atelier .see-more-toggle { color: #8B7355; }
+
+/* Swatches */
+body.theme-atelier .dl-swatch { border-color: rgba(0,0,0,0.06); border-radius: 12px; }
+body.theme-atelier .dl-swatch-label { color: #9A948C; }
+body.theme-atelier .dl-card p { color: #7A7168; }
+
+/* Theme picker */
+body.theme-atelier .theme-picker .theme-option { border-color: rgba(0,0,0,0.08); color: #282828; border-radius: 12px; }
+body.theme-atelier .theme-picker .theme-option.active { border-color: #8B7355; }
+
+/* Easter egg */
+body.theme-atelier .easter-egg { border-color: rgba(139,115,85,0.2); background: rgba(139,115,85,0.04); color: #8B7355; border-radius: 12px; }
+
+/* Achievements */
+body.theme-atelier .ach-overlay { background: rgba(0,0,0,0.3); }
+body.theme-atelier .ach-panel { background: #FDFCFA; color: #282828; border-radius: 20px; box-shadow: 0 8px 40px rgba(0,0,0,0.12); }
+body.theme-atelier .ach-title { color: #282828; }
+body.theme-atelier .ach-item { border-color: rgba(0,0,0,0.06); }
+body.theme-atelier .ach-icon { background: #EBE7E1; color: #9A948C; border-radius: 8px; }
+body.theme-atelier .ach-item.unlocked .ach-icon { background: rgba(139,115,85,0.12); color: #8B7355; }
+
+/* Lightbox */
+body.theme-atelier .lightbox { background: rgba(0,0,0,0.4); }
+body.theme-atelier .feature-modal { background: rgba(0,0,0,0.3); }
+
+/* Modals */
+body.theme-atelier .lightbox img { border-radius: 16px; }
+
 /* --- Commerce --- */
 body.theme-commerce { background: #F8FAFB; color: #141B21; }
 body.theme-commerce::after { display: none; }
@@ -1332,7 +1569,7 @@ body.theme-commerce .section-label::after { background: linear-gradient(90deg, r
 body.theme-commerce .hero-rule { background: #DDE3E8; }
 body.theme-commerce .hero-rule::after { display: none; }
 
-/* Cards — whitespace carries structure, no visible cards */
+/* Cards – whitespace carries structure, no visible cards */
 body.theme-commerce .stat-card { background: transparent; border: 1px solid #EBF0F3; border-radius: 12px; }
 body.theme-commerce .stat-card:hover { border-color: #00CCBB; background: rgba(0,204,187,0.04); }
 body.theme-commerce .article-card { background: #FFFFFF; border: 1px solid #EBF0F3; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
@@ -1399,10 +1636,10 @@ body.theme-commerce .ach-item { border-color: #EBF0F3; }
 body.theme-commerce .ach-icon { background: #EBF0F3; color: #8C949C; }
 body.theme-commerce .ach-item.unlocked .ach-icon { background: #E0FAF7; color: #00CCBB; }
 
-/* No animations — content just appears */
-body.theme-commerce .reveal { opacity: 1 !important; transform: none !important; transition: none !important; }
-body.theme-commerce .hero-label, body.theme-commerce .hero h1,
-body.theme-commerce .hero-bio, body.theme-commerce .hero-rule { opacity: 1 !important; animation: none !important; }
+/* Motion — one hero moment, then everything answers the shopper: reveal 500ms + 60ms stagger, press 120ms */
+body.theme-commerce .stat-card:active, body.theme-commerce .article-card:active,
+body.theme-commerce .dl-card:active, body.theme-commerce .theme-option:active,
+body.theme-commerce .contact-btn:active { transform: scale(0.98); transition-duration: 120ms; }
 
 /* --- Chaos --- */
 body.theme-chaos { background: #0a0a0a; }
@@ -1442,7 +1679,7 @@ body.theme-chaos h1 em { color: #FFE600 !important; font-style: normal !importan
   97% { text-shadow: -1px 1px 0 #FF003C, 2px -2px 0 #00D4FF; }
 }
 
-/* Cards: bordered not filled — JS handles rotation, color, radius */
+/* Cards: bordered not filled – JS handles rotation, color, radius */
 body.theme-chaos .stat-card, body.theme-chaos .article-card,
 body.theme-chaos .dl-card, body.theme-chaos .shipped-item,
 body.theme-chaos .exp-card {
@@ -1453,7 +1690,7 @@ body.theme-chaos .exp-card {
   transition: transform 0.15s linear !important;
 }
 
-/* Neon accent colors — JS re-rolls stat-number, article-tag, article-result, section-label, t-role-title every 5s */
+/* Neon accent colors – JS re-rolls stat-number, article-tag, article-result, section-label, t-role-title every 5s */
 /* Pseudo-elements and nav stay in CSS since JS can't reach them */
 body.theme-chaos .section-label::after { width: 48px !important; flex: none !important; background: currentColor !important; }
 body.theme-chaos .t-item::before { background: var(--chaos-dot, #FF00C8) !important; }
@@ -1489,6 +1726,238 @@ body.theme-chaos .philosophy-text em { color: #FFE600 !important; }
 
 /* Swatch border */
 body.theme-chaos .dl-swatch { border-color: #333 !important; border-radius: 0 !important; }
+
+/* --- Industry Pulse --- */
+.pulse-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+.pulse-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  user-select: none;
+}
+.pulse-toggle-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  transition: color 0.25s;
+}
+.pulse-switch {
+  position: relative;
+  width: 44px;
+  height: 24px;
+  display: inline-block;
+  flex-shrink: 0;
+}
+.pulse-switch input {
+  position: absolute;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  cursor: pointer;
+  z-index: 2;
+}
+.pulse-slider {
+  position: absolute;
+  inset: 0;
+  border-radius: 100px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  transition: background 0.25s, border-color 0.25s;
+}
+.pulse-slider::before {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--muted);
+  transition: transform 0.25s, background 0.25s;
+}
+.pulse-switch input:checked + .pulse-slider {
+  background: color-mix(in srgb, var(--accent) 22%, transparent);
+  border-color: color-mix(in srgb, var(--accent) 60%, transparent);
+}
+.pulse-switch input:checked + .pulse-slider::before {
+  transform: translateX(20px);
+  background: var(--accent);
+}
+.pulse-off-note {
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.7;
+  max-width: 760px;
+}
+.pulse-dim { color: var(--text-dim, #555); }
+.pulse-body[hidden] { display: none; }
+.pulse-meta {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+.pulse-live {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.pulse-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 70%, transparent);
+  animation: pulseDot 2.4s ease-out infinite;
+}
+@keyframes pulseDot {
+  0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 55%, transparent); }
+  70% { box-shadow: 0 0 0 7px transparent; }
+  100% { box-shadow: 0 0 0 0 transparent; }
+}
+.pulse-sample {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  color: var(--text-dim, #555);
+}
+.pulse-ticker {
+  position: relative;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent);
+}
+.pulse-track {
+  display: flex;
+  gap: 14px;
+  width: max-content;
+  animation: pulseScroll 60s linear infinite;
+}
+.pulse-ticker:hover .pulse-track { animation-play-state: paused; }
+@keyframes pulseScroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.pulse-card {
+  width: 300px;
+  flex-shrink: 0;
+  padding: 16px 18px;
+  border-radius: 14px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  backdrop-filter: blur(4px);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.pulse-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.pulse-card-tag {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 100px;
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+  color: var(--accent);
+  white-space: nowrap;
+}
+.pulse-card-tag.rev { background: color-mix(in srgb, #e8a317 14%, transparent); color: #e8a317; }
+.pulse-card-tag.ma { background: color-mix(in srgb, #d6336c 14%, transparent); color: #d6336c; }
+.pulse-card-time {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.04em;
+  color: var(--text-dim, #555);
+  white-space: nowrap;
+}
+.pulse-card-co {
+  font-family: var(--serif);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--fg);
+  line-height: 1.25;
+}
+.pulse-card-head {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+.pulse-card-amt {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--accent);
+  letter-spacing: 0.02em;
+}
+.pulse-footnote {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.7;
+  max-width: 720px;
+  margin-top: 18px;
+  font-style: italic;
+}
+@media (max-width: 768px) {
+  .pulse-card { width: 240px; }
+}
+
+
+.systems-link {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-top: 28px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+  text-decoration: none;
+  padding: 10px 16px;
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  transition: border-color 0.25s, background 0.25s;
+}
+.systems-link:hover {
+  border-color: color-mix(in srgb, var(--accent) 50%, transparent);
+  background: color-mix(in srgb, var(--accent) 7%, transparent);
+}
+.systems-link-lock { color: var(--muted); letter-spacing: 0.08em; text-transform: none; }
+.systems-link-arrow { transition: transform 0.25s; display: inline-block; }
+.systems-link:hover .systems-link-arrow { transform: translateX(3px); }
+
+/* --- Reduced motion --- */
+@media (prefers-reduced-motion: reduce) {
+  .void-tracer { display: none; }
+  .hero-label, .hero h1, .hero-bio, .hero-rule, .scope-strip, .reveal {
+    opacity: 1 !important; transform: none !important; animation: none !important; transition: none !important;
+  }
+  .hero-rule::after, .pulse-dot { animation: none !important; }
+  .pulse-track { animation: none !important; }
+  .grain, #effectsCanvas { display: none !important; }
+  * { scroll-behavior: auto !important; }
+}
 
 /* --- Achievements --- */
 .ach-overlay {
@@ -1656,7 +2125,7 @@ body.theme-chaos .dl-swatch { border-color: #333 !important; border-radius: 0 !i
 .reveal {
   opacity: 0;
   transform: translateY(16px);
-  transition: opacity 0.6s ease, transform 0.6s ease;
+  transition: opacity var(--m-enter) var(--m-ease), transform var(--m-enter) var(--m-ease);
 }
 .reveal.visible {
   opacity: 1;
@@ -1776,11 +2245,39 @@ body.theme-chaos .dl-swatch { border-color: #333 !important; border-radius: 0 !i
       <div class="hero-label">Executive Director of Digital Products & UX Design</div>
       <h1>Building digital<br>experiences at <em>scale</em></h1>
       <div class="easter-egg-wrap"><span class="easter-egg" id="easterEgg" onclick="document.getElementById('gameOverlay').classList.add('active'); unlockAch('game'); initGame();">psst... what's this?</span></div>
-      <p class="hero-bio">End-to-end product, design, and engineering leadership – from building the org to shipping the product.</p>
+      <p class="hero-bio">End-to-end product, design, and engineering leadership across the digital guest journey – from building the org to shipping the experience.</p>
       <div class="hero-rule"></div>
+      <div class="scope-strip reveal">
+        <div class="scope-group">
+          <span class="scope-group-label">Platforms</span>
+          <div class="scope-tags">
+            <span data-scope="web">Web</span>
+            <span data-scope="app">Mobile App</span>
+            <span data-scope="kiosk">Kiosk</span>
+          </div>
+        </div>
+        <div class="scope-group">
+          <span class="scope-group-label">Teams</span>
+          <div class="scope-tags">
+            <span data-scope="loyalty">Loyalty</span>
+            <span data-scope="arrivals">Arrivals</span>
+            <span data-scope="discovery">Discovery &amp; Digital Experience</span>
+            <span data-scope="ux">UX Design</span>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </section>
+
+<div class="scope-sheet-backdrop" id="scopeBackdrop" onclick="closeScopeSheet()"></div>
+<div class="scope-sheet" id="scopeSheet" role="dialog" aria-modal="true" aria-labelledby="scopeSheetTitle">
+  <button class="scope-sheet-close" onclick="closeScopeSheet()" aria-label="Close">×</button>
+  <div class="scope-sheet-handle"></div>
+  <div class="scope-sheet-label" id="scopeSheetLabel">Platform</div>
+  <h3 id="scopeSheetTitle"></h3>
+  <p id="scopeSheetDesc"></p>
+</div>
 
 <section id="stats">
   <div class="container">
@@ -1811,7 +2308,7 @@ body.theme-chaos .dl-swatch { border-color: #333 !important; border-radius: 0 !i
         <div class="stat-detail">Global launches including GDPR compliance</div>
       </div>
       <div class="stat-card" onclick="this.classList.toggle('expanded')">
-        <div class="stat-number" data-target="28">0</div>
+        <div class="stat-number" data-target="35">0</div>
         <div class="stat-label">Current Team</div>
         <div class="stat-detail">6 Product · 22 UX Design</div>
       </div>
@@ -1847,7 +2344,7 @@ body.theme-chaos .dl-swatch { border-color: #333 !important; border-radius: 0 !i
           <div class="t-role"><span class="t-role-title">Director of Product Management</span> <span class="t-role-date">2022–2024</span></div>
           <div class="t-role"><span class="t-role-title">Senior Product Manager</span> <span class="t-role-date">2020–2022</span></div>
         </div>
-        <div class="t-desc">Four promotions in four years. Currently leading a 28-person product and UX design organization across web, app, and kiosk – spanning discovery, personalization, and the full digital guest experience.</div>
+        <div class="t-desc">Four promotions in four years. Currently leading a 35-person product and UX design organization across web, app, and kiosk – spanning discovery, personalization, and the full digital guest experience.</div>
       </div>
 
       <div class="t-item reveal">
@@ -1977,7 +2474,7 @@ body.theme-chaos .dl-swatch { border-color: #333 !important; border-radius: 0 !i
         <div class="article-tag">AI & Operations</div>
         <h3>AI-Native Team Transition & Operating Model</h3>
         <div class="article-result">→ Targeting 30–50% effort reduction in Year 1</div>
-        <p>Framework for transitioning a 28-person org to AI-augmented workflows – hybrid team structures, compressed cycles.</p>
+        <p>Framework for transitioning a 35-person org to AI-augmented workflows – hybrid team structures, compressed cycles.</p>
         <div class="article-expand-hint">Tap to expand ↓</div>
         <div class="article-detail"><div class="article-detail-inner">
           <p>AI-DLC operating model with Centaur Pod team structures. 30+ initiative competitive roadmap benchmarked across industries.</p>
@@ -2003,6 +2500,7 @@ body.theme-chaos .dl-swatch { border-color: #333 !important; border-radius: 0 !i
           <div class="shipped-item">CA Fee Transparency Pricing</div>
           <div class="shipped-item">Embedded Schema for SEO</div>
           <div class="shipped-item">Global Footer Redesign</div>
+          <div class="shipped-item">Key Encoding Service</div>
           <div class="shipped-item">Web Check-in on Homepage</div>
           <div class="shipped-item">Wi-Fi Connection-to-Discovery</div>
         </div>
@@ -2011,7 +2509,10 @@ body.theme-chaos .dl-swatch { border-color: #333 !important; border-radius: 0 !i
       <div>
         <div class="impact-tier-label">Supporting</div>
         <div class="impact-tier-items">
+          <div class="shipped-item">Cross-sell on Product Detail Pages</div>
           <div class="shipped-item">Digital Account Unlock</div>
+          <div class="shipped-item">Digital Parking Access</div>
+          <div class="shipped-item">Discover Tab Gallery View</div>
           <div class="shipped-item">Guided Sign-in / Sign-up</div>
           <div class="shipped-item">Packages – Dynamic Pricing</div>
           <div class="shipped-item">Pools & Spas Product Detail Pages</div>
@@ -2024,14 +2525,17 @@ body.theme-chaos .dl-swatch { border-color: #333 !important; border-radius: 0 !i
       <div>
         <div class="impact-tier-label">High Visibility</div>
         <div class="impact-tier-items">
-          <div class="shipped-item">Cross-sell on Product Detail Pages</div>
+          <div class="shipped-item">Cosmopolitan Premium Homepage</div>
           <div class="shipped-item">Digital Concierge Chat</div>
           <div class="shipped-item">Dining & Entertainment Product Detail Pages</div>
-          <div class="shipped-item">Discover Tab Gallery View</div>
           <div class="shipped-item">Employee Tools Platform</div>
           <div class="shipped-item">Global Search</div>
+          <div class="shipped-item">Itinerary & Trip Planner</div>
+          <div class="shipped-item">Mobile Checkout</div>
           <div class="shipped-item">Multi-Factor Authentication</div>
           <div class="shipped-item">Offline-First App Architecture</div>
+          <div class="shipped-item">Passkey Authentication</div>
+          <div class="shipped-item">Personalized Offers Platform</div>
         </div>
       </div>
 
@@ -2040,8 +2544,10 @@ body.theme-chaos .dl-swatch { border-color: #333 !important; border-radius: 0 !i
         <div class="impact-tier-items">
           <div class="shipped-item">AI Agent Escalation Framework</div>
           <div class="shipped-item">Bellagio Premium Homepage</div>
-          <div class="shipped-item">Cosmopolitan Premium Homepage</div>
           <div class="shipped-item">Digital Key</div>
+          <div class="shipped-item">Gamification System</div>
+          <div class="shipped-item">Kiosk Check-in & Checkout</div>
+          <div class="shipped-item">MGM Rewards Loyalty Experience</div>
           <div class="shipped-item">Mobile Check-in</div>
           <div class="shipped-item">Personalized Home Screen</div>
           <div class="shipped-item">Room Booking Funnel Redesign</div>
@@ -2050,6 +2556,37 @@ body.theme-chaos .dl-swatch { border-color: #333 !important; border-radius: 0 !i
         </div>
       </div>
 
+    </div>
+  </div>
+</section>
+
+
+<section id="pulse">
+  <div class="container">
+    <div class="pulse-head reveal">
+      <div class="section-label" style="cursor:default;">Industry Pulse</div>
+      <label class="pulse-toggle" for="pulseToggle">
+        <span class="pulse-toggle-label" id="pulseStateLabel">Off</span>
+        <span class="pulse-switch">
+          <input type="checkbox" id="pulseToggle" onchange="togglePulse(this.checked)">
+          <span class="pulse-slider"></span>
+        </span>
+      </label>
+    </div>
+
+    <p class="pulse-off-note reveal" id="pulseOffNote">
+      An optional, AI-curated feed of travel, hospitality, and product-tech signals – funding rounds, launches, and market moves, filtered to my domain. Toggle on to preview. <span class="pulse-dim">The live version is built from public data (SEC EDGAR Form D + industry RSS), then summarized and ranked by a small model running in a daily GitHub Action – the site stays fully static.</span>
+    </p>
+
+    <div class="pulse-body" id="pulseBody" hidden>
+      <div class="pulse-meta reveal">
+        <span class="pulse-live"><span class="pulse-dot"></span>Auto-curated daily</span>
+        <span class="pulse-sample">Sample feed – the live build pulls real items from SEC EDGAR + RSS</span>
+      </div>
+      <div class="pulse-ticker" id="pulseTicker">
+        <div class="pulse-track" id="pulseTrack"></div>
+      </div>
+      <p class="pulse-footnote reveal">A small model reads the firehose and keeps only what's adjacent to what I do – the same centaur pattern I build into products, running as a live demo of itself.</p>
     </div>
   </div>
 </section>
@@ -2064,10 +2601,11 @@ body.theme-chaos .dl-swatch { border-color: #333 !important; border-radius: 0 !i
       <div class="theme-option active" data-theme="void"><div class="theme-option-dot" style="background:#2dd4bf;"></div>Concentric</div>
       <div class="theme-option" data-theme="cta"><div class="theme-option-dot" style="background:#ff385c;"></div>CTA Driver</div>
       <div class="theme-option" data-theme="chaos"><div class="theme-option-dot" style="background:#FF003C;"></div>Chaos</div>
-      <div class="theme-option" data-theme="synth84"><div class="theme-option-dot" style="background:#ff1744;"></div>Synth '84</div>
+      <div class="theme-option" data-theme="atelier"><div class="theme-option-dot" style="background:#8B7355;"></div>Atelier</div>
     </div>
     <div class="theme-picker reveal" id="hiddenThemes" style="display:none;">
       <div class="theme-option" data-theme="classic"><div class="theme-option-dot" style="background:#c9a96e;"></div>Classic</div>
+      <div class="theme-option" data-theme="synth84"><div class="theme-option-dot" style="background:#ff1744;"></div>Synth '84</div>
       <div class="theme-option" data-theme="aol"><div class="theme-option-dot" style="background:#ffcc00;"></div>Instant Messenger</div>
       <div class="theme-option" data-theme="cosmic"><div class="theme-option-dot" style="background:#ffff00;"></div>Cosmic Secrets</div>
       <div class="theme-option" data-theme="cyberpunk"><div class="theme-option-dot" style="background:#ff2d6b;"></div>Cyberpunk</div>
@@ -2111,6 +2649,8 @@ body.theme-chaos .dl-swatch { border-color: #333 !important; border-radius: 0 !i
         <p id="dlTextureDesc">Subtle SVG noise overlay at 4% opacity gives the dark background a tactile quality without being visible at a glance. Grain prevents the flat-black-screen feeling common to dark themes. Card surfaces sit one step lighter (#161614) to create depth without shadows.</p>
       </div>
     </div>
+
+    <a href="/systems/" class="systems-link reveal">Component libraries <span class="systems-link-lock">· gated</span> <span class="systems-link-arrow">&rarr;</span></a>
   </div>
 </section>
 
@@ -2119,7 +2659,8 @@ body.theme-chaos .dl-swatch { border-color: #333 !important; border-radius: 0 !i
     <h2 class="reveal">Say hi</h2>
     <p class="reveal">Just keeping this up to date. Feel free to reach out anytime.</p>
     <a href="https://linkedin.com/in/joshdunlap" class="contact-link reveal" target="_blank" rel="noopener noreferrer">LinkedIn</a>
-    <a href="mailto:josh@dunl.app" class="contact-link reveal">Email</a>
+    <a href="/cdn-cgi/l/email-protection#95fffae6fdd5f1e0fbf9bbf4e5e5" class="contact-link reveal">Email</a>
+    <a href="/Josh-Dunlap-Resume.pdf" class="contact-link reveal" target="_blank" rel="noopener noreferrer">Résumé</a>
   </div>
 </section>
 
@@ -2137,86 +2678,29 @@ body.theme-chaos .dl-swatch { border-color: #333 !important; border-radius: 0 !i
 <footer>
   <div class="container">
     <div>&copy; <span id="copyrightYear" style="cursor:default;">2026</span> Josh Dunlap</div>
-    <div style="margin-top:6px; font-size:11px; color:var(--muted);">Published April 10, 2026 · Last updated April 13, 2026</div>
+    <div style="margin-top:6px; font-size:11px; color:var(--muted);">Published April 10, 2026 · Last updated June 18, 2026 · <a href="/Josh-Dunlap-Resume.pdf" target="_blank" rel="noopener noreferrer" style="color:var(--accent); text-decoration:none;">Résumé (PDF)</a></div>
   </div>
 </footer>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 const featureData = {
-  // --- MOBILE APP ---
-  "Mobile Check-in": { tag: "Guest Experience", desc: "End-to-end mobile check-in flow enabling guests to bypass the front desk entirely – from ID verification to room assignment to digital key delivery.", impact: 95 },
-  "Digital Key & Redesign": { tag: "Guest Experience", desc: "Full-screen digital key with redesigned UX, animated unlock experience, error handling, and support for convention-sponsored branding overlays.", impact: 90 },
-  "Sponsored Digital Key": { tag: "Revenue", desc: "Monetized digital key screen real estate by enabling convention and event sponsors to display branded overlays to guests during their stay.", impact: 70 },
+  "Mobile Check-in": { tag: "Guest Experience", desc: "End-to-end mobile check-in flow – from ID verification to room assignment. Multi-room check-in enables guests with multiple reservations to check in to all rooms in a single flow.", impact: 100 },
   "Personalized Home Screen": { tag: "Personalization", desc: "Dynamically assembled app home screen that adapts content, carousels, and modules based on the guest's trip state, loyalty tier, and behavioral signals.", impact: 96 },
-  "Personalized App Architecture by Trip State": { tag: "Platform", desc: "Rebuilt the app's information architecture to surface different content and navigation based on whether a guest is pre-trip, in-trip, or post-trip.", impact: 88 },
-  "Experiences You'll Love Carousel": { tag: "Personalization", desc: "Image-forward personalized carousel powered by recommendation models, surfacing dining and entertainment tailored to each guest's preferences.", impact: 80 },
-  "Personalized Dining Recommendations": { tag: "Personalization", desc: "Data science-powered dining recommendations populating the home screen carousel based on guest preference signals and property context.", impact: 82 },
-  "Upcoming Trip Recommendations": { tag: "Revenue", desc: "Pre-trip recommendation engine surfacing relevant dining, entertainment, and spa experiences for upcoming reservations – driving significant conversion and AOV lift.", impact: 85 },
-  "Cross-sell Entertainment × Dining": { tag: "Revenue", desc: "Contextual cross-sell system recommending dining options on entertainment PDPs and vice versa, powered by the Rules Service.", impact: 78 },
   "Global Search": { tag: "Discovery", desc: "Unified search experience across the mobile app, enabling guests to find rooms, dining, entertainment, and property information from a single entry point.", impact: 88 },
-  "Search History": { tag: "Discovery", desc: "Persistent search history allowing guests to quickly return to previous queries without retyping, reducing friction in the discovery flow.", impact: 65 },
-  "Room Booking Flow Optimization": { tag: "Revenue", desc: "Iterative optimization of the room booking funnel – improving CTR and conversion through UX refinements, carousel logic, and pricing display.", impact: 93 },
-  "Native Room PDP": { tag: "Guest Experience", desc: "Redesigned room product detail page with improved information hierarchy, aligned to the Vega design system, with booking-state-aware positioning.", impact: 80 },
-  "Native Pools & Spas PDPs": { tag: "Guest Experience", desc: "Native product detail pages for pools and spas, replacing webview experiences with performant native screens and improved conversion.", impact: 72 },
-  "Native Resort PDPs": { tag: "Revenue", desc: "Fully native resort-level product detail pages driving significant incremental revenue through improved browsing and booking conversion.", impact: 85 },
-  "Resort Tab App Hero": { tag: "Revenue", desc: "Redesigned hero component on the Resort tab driving measurable CTR and incremental revenue improvements.", impact: 78 },
-  "Dining & Entertainment PDPs": { tag: "Guest Experience", desc: "Native product detail pages for dining and entertainment venues, replacing webviews with faster, richer native experiences.", impact: 82 },
-  "Dining Category Pages": { tag: "Discovery", desc: "Category-level browsing pages for dining with filtering, sorting, and property-scoped results – driving traffic to booking.", impact: 80 },
-  "Entertainment Calendar / Showtimes": { tag: "Discovery", desc: "Calendar view for entertainment and concert showtimes, giving guests a time-based way to browse and book upcoming performances.", impact: 75 },
-  "Venue Calendar": { tag: "Discovery", desc: "Property-level venue calendar enabling guests to see all upcoming events and shows at a specific venue.", impact: 72 },
-  "Purchasable Room Upgrades": { tag: "Revenue", desc: "In-app room upgrade purchasing flow allowing guests to upgrade their room type after initial booking, creating incremental upsell revenue.", impact: 88 },
-  "Early Check-in & Late Checkout": { tag: "Revenue", desc: "Purchasable stay enhancement options enabling guests to extend their stay window – generating ancillary revenue with zero inventory cost.", impact: 82 },
-  "Event Packages (F1)": { tag: "Revenue", desc: "Bundled event package experience for Formula 1 and other tentpole events – combining room, tickets, and dining into purchasable packages.", impact: 76 },
-  "Discover Tab Full-screen Gallery": { tag: "Revenue", desc: "Immersive full-screen gallery tiles on the Discover tab, projected to drive significant annualized incremental revenue through improved visual merchandising.", impact: 84 },
-  "Mobile Ordering Module": { tag: "Guest Experience", desc: "Home screen module promoting mobile dining ordering for in-trip guests, with pre-filtered restaurant results based on property location.", impact: 74 },
   "Digital Concierge Chat": { tag: "Guest Experience", desc: "AI-powered chat experience for housekeeping requests, trip planning, booking activities, and answering guest questions – deployed across app and web.", impact: 90 },
-  "Folio & Stay Summary": { tag: "Guest Experience", desc: "Digital folio and stay summary giving guests a clear view of charges, activity, and trip details throughout and after their stay.", impact: 70 },
-  "Checkout Experiences": { tag: "Guest Experience", desc: "Streamlined digital checkout flow reducing front desk congestion and giving guests control over their departure experience.", impact: 78 },
-  "Carbon Offsetting Offers": { tag: "Guest Experience", desc: "Optional carbon offset purchasing integrated into the booking and stay flow, supporting MGM's sustainability positioning.", impact: 55 },
-  "Transactional Push Notifications & Emails": { tag: "Engagement", desc: "Automated transactional messaging across the guest journey – booking confirmations, check-in reminders, folio updates, and post-stay communications.", impact: 82 },
-  "First Time User Experience Redesign": { tag: "Engagement", desc: "Redesigned onboarding flow explaining app capabilities, permission requests, and capturing user intent – with cohort testing for optimization.", impact: 80 },
   "Guided Sign-in / Sign-up": { tag: "Engagement", desc: "Streamlined authentication flow with clearer instructions, password manager support, real-time validation, and MGM Rewards value proposition.", impact: 76 },
   "Multi-Factor Authentication": { tag: "Security", desc: "SMS, email, and passkey-based MFA rolled out across app and web as an optional security layer for MGM Rewards accounts.", impact: 85 },
   "Digital Account Unlock": { tag: "Operations", desc: "Self-service account unlock flow reducing call center volume by eliminating a high-frequency support request – significant annual labor savings.", impact: 82 },
   "Preferences Center": { tag: "Personalization", desc: "Guest preference management hub enabling users to set dining, entertainment, and stay preferences – powering downstream personalization across all surfaces.", impact: 86 },
-  "Rewards Stay Preferences": { tag: "Personalization", desc: "Preferences allowing guests to manage and apply rewards points for automatic redemption at checkout.", impact: 72 },
-  "Profile Navigation Redesign": { tag: "Guest Experience", desc: "Relocated profile access from a dedicated tab to a persistent header element, freeing bottom navigation space for higher-value destinations.", impact: 68 },
 
-  // --- WEB ---
   "Bellagio Premium Homepage": { tag: "Brand", desc: "Premium homepage redesign for Bellagio featuring immersive video, distinctive brand identity, and curated content hierarchy – the template for luxury property web experiences.", impact: 96 },
-  "The Cosmopolitan Premium Homepage": { tag: "Brand", desc: "Bespoke premium homepage for The Cosmopolitan of Las Vegas with unique brand expression, video content, and differentiated product merchandising.", impact: 90 },
-  "TCOLV Discovery Navigation": { tag: "Discovery", desc: "Custom discovery-optimized navigation for The Cosmopolitan, redesigning how guests browse dining, entertainment, and nightlife.", impact: 78 },
-  "Enterprise Homepage Redesign (Vega)": { tag: "Revenue", desc: "Enterprise-wide homepage redesign rolled out across all properties – driving significant lifts in traffic-to-booking, conversion, and average order value.", impact: 95 },
-  "Top Navigation Optimization": { tag: "Revenue", desc: "Redesigned top navigation rolled out enterprise-wide with measurable improvements in click-through rate and conversion across all properties.", impact: 93 },
-  "Global Footer Redesign": { tag: "Brand", desc: "Consistent global footer deployed across MGMRI and property sites – unifying branding, app download CTAs, and navigational structure.", impact: 62 },
-  "Sizzle Shorts Video Reels": { tag: "Engagement", desc: "Short-form vertical video content integrated into property pages, bringing social-style immersive content to the web experience.", impact: 75 },
-  "Video in Mobile Web Hero": { tag: "Revenue", desc: "Video hero treatment on mobile web driving significant improvements in CTR and conversion over static imagery.", impact: 82 },
-  "Dining Product Detail Pages": { tag: "Revenue", desc: "Redesigned dining PDPs driving substantial traffic-to-booking and conversion improvements across the portfolio.", impact: 88 },
-  "Entertainment & Attractions PDPs": { tag: "Revenue", desc: "Product detail page redesign for entertainment and attractions, significantly increasing traffic-to-booking and conversion.", impact: 88 },
-  "Pools PDPs": { tag: "Guest Experience", desc: "Dedicated product detail pages for pool experiences, driving increased traffic to booking across resort pool venues.", impact: 72 },
-  "Spas & Salons PDPs": { tag: "Revenue", desc: "Redesigned spa and salon product detail pages with improved CTR and measurable annualized revenue lift.", impact: 76 },
-  "Private & Group Dining Pages": { tag: "Revenue", desc: "Dedicated pages for private and group dining experiences, driving higher email CTR and incremental revenue.", impact: 74 },
-  "Premium Package PDPs": { tag: "Revenue", desc: "Enhanced product detail pages for premium packages with improved CTR, reduced bounce rate, and measurable revenue lift.", impact: 78 },
+  "Global Footer Redesign": { tag: "Platform", desc: "Redesigned global footer deployed across all properties – improving navigation consistency and SEO internal linking.", impact: 62 },
   "Packages – Dynamic Pricing": { tag: "Revenue", desc: "Dynamic pricing display on package category and detail pages, pulling real-time rates including sold-out states and error handling.", impact: 80 },
-  "Wi-Fi Connection-to-Discovery Flow": { tag: "Engagement", desc: "Post-Wi-Fi-connection flow directing guests to app discovery content – driving significant CTR and app install improvements.", impact: 76 },
-  "Web Chat (Digital Concierge)": { tag: "Guest Experience", desc: "Web-based digital concierge chat rolled out across property homepages, with NPS feedback collection and notification badges.", impact: 80 },
   "Web Check-in on Homepage": { tag: "Guest Experience", desc: "Prominent check-in entry point on property homepages, making it easier for guests to start the check-in process from web.", impact: 70 },
-  "Meetings & Events Navigation": { tag: "Discovery", desc: "Added Meetings & Events to top navigation, driving significantly increased clicks to group and event booking content.", impact: 68 },
   "Embedded Schema for SEO": { tag: "Discovery", desc: "Structured data markup (schema.org) added to entertainment and restaurant PDPs, improving search engine visibility and rich result eligibility.", impact: 75 },
   "CA Fee Transparency Pricing": { tag: "Compliance", desc: "Updated price displays across entertainment to comply with California fee transparency law – showing total price inclusive of fees.", impact: 60 },
-  "MFA on Web via Okta": { tag: "Security", desc: "Multi-factor authentication deployed on web via Okta – supporting SMS, email, and passkey methods for MGM Rewards account security.", impact: 82 },
-  "Blog Platform": { tag: "Discovery", desc: "Content marketing platform enabling editorial content to drive organic traffic and support SEO strategy across the portfolio.", impact: 70 },
-  "Miscellaneous Page Redesigns & A/B Tests": { tag: "Revenue", desc: "Ongoing cycle of page-level redesigns and A/B tests across the portfolio – each measured against traffic-to-booking, conversion, and revenue KPIs.", impact: 85 },
 
-  // --- PLATFORM & EMPLOYEE TOOLS ---
-  "Employee Tools Platform (Backstage)": { tag: "Operations", desc: "Internal platform consolidating employee-facing tools – homescreen builder, digital key manager, guest services, and content management – into a unified application.", impact: 88 },
-  "In-Lobby Hosted Digital Check-in App": { tag: "Operations", desc: "Employee-facing tablet application enabling lobby ambassadors to facilitate guest check-in, reducing front desk queues and improving the arrival experience.", impact: 82 },
-  "Homescreen Experience Builder": { tag: "Operations", desc: "Internal tool enabling non-technical operators to configure and reorder mobile app home screen modules based on trip state, network, and login status.", impact: 78 },
-  "Digital Key Manager": { tag: "Operations", desc: "Back-office tool for managing digital key backgrounds for standard and VIP guests, including sponsored convention overlays.", impact: 68 },
-  "Backend for Frontend (BFF) Architecture": { tag: "Platform", desc: "API orchestration layer decoupling the mobile app from backend services – enabling faster feature development, better performance, and independent deployability.", impact: 90 },
-  "Rules Service / Personalization Engine": { tag: "Platform", desc: "Centralized rules engine powering content personalization, cross-sell logic, and dynamic module assembly across app and web surfaces.", impact: 92 },
 
-  // --- Renamed/combined entries for impact scale ---
   "Wi-Fi Connection-to-Discovery": { tag: "Engagement", desc: "Post-Wi-Fi-connection flow directing guests to app discovery content – driving significant CTR and app install improvements.", impact: 76 },
   "Backend for Frontend (BFF)": { tag: "Platform", desc: "API orchestration layer decoupling the mobile app from backend services – enabling faster feature development and independent deployability.", impact: 90 },
   "Push Notifications & Emails": { tag: "Engagement", desc: "Automated transactional messaging across the guest journey – booking confirmations, check-in reminders, folio updates, and post-stay communications.", impact: 82 },
@@ -2224,19 +2708,24 @@ const featureData = {
   "Discover Tab Gallery View": { tag: "Revenue", desc: "Immersive full-screen gallery view on the Discover tab, driving significant incremental revenue through improved visual merchandising.", impact: 84 },
   "Cosmopolitan Premium Homepage": { tag: "Brand", desc: "Bespoke premium homepage for The Cosmopolitan of Las Vegas with unique brand expression, video content, and differentiated merchandising.", impact: 90 },
   "Trip-State App Architecture": { tag: "Platform", desc: "Rebuilt the app's information architecture to surface different content and navigation based on pre-trip, in-trip, or post-trip state.", impact: 88 },
-  "Mobile Check-in": { tag: "Guest Experience", desc: "End-to-end mobile check-in flow – from ID verification to room assignment. Multi-room check-in enables guests with multiple reservations to check in to all rooms in a single flow.", impact: 100 },
   "Digital Key": { tag: "Guest Experience", desc: "Full-screen animated digital key enabling guests to unlock their room via mobile – with redesigned UX, error handling, and support for convention-sponsored branding overlays.", impact: 100 },
   "Room Booking Funnel Redesign": { tag: "Revenue", desc: "Iterative redesign of the room booking funnel – improving CTR and conversion through UX refinements, carousel logic, and pricing display.", impact: 98 },
   "Rules & Personalization API": { tag: "Platform", desc: "Centralized rules engine and API powering content personalization, cross-sell logic, and dynamic module assembly across app and web.", impact: 96 },
   "Employee Tools Platform": { tag: "Operations", desc: "Internal platform consolidating employee-facing tools – homescreen builder, digital key manager, guest services – into a unified application.", impact: 88 },
-  "Entertainment & Attractions Product Detail Pages": { tag: "Revenue", desc: "Product detail page redesign for entertainment and attractions, significantly increasing traffic-to-booking and conversion.", impact: 88 },
   "Cross-sell on Product Detail Pages": { tag: "Revenue", desc: "Contextual cross-sell system recommending related experiences on product detail pages – dining on entertainment pages and vice versa.", impact: 78 },
   "Short Video Reels": { tag: "Engagement", desc: "Short-form vertical video content integrated into property and venue pages, bringing immersive social-style content to the web experience.", impact: 75 },
-  "Global Footer Redesign": { tag: "Platform", desc: "Redesigned global footer deployed across all properties – improving navigation consistency and SEO internal linking.", impact: 62 },
-  "Multi-Factor Authentication (App & Web)": { tag: "Security", desc: "SMS, email, and passkey-based MFA rolled out across both mobile app and web via Okta as an optional security layer for MGM Rewards accounts.", impact: 85 },
   "Dining & Entertainment Product Detail Pages": { tag: "Revenue", desc: "Product detail page system across dining, entertainment, and attractions – each A/B tested and measured, driving significant traffic-to-booking and conversion improvements.", impact: 90 },
   "Offline-First App Architecture": { tag: "Platform", desc: "Rebuilt core app data layer for offline-first operation – caching reservations, digital keys, and trip details locally so guests retain full functionality during connectivity gaps on property.", impact: 85 },
   "AI Agent Escalation Framework": { tag: "AI & Operations", desc: "Tiered AI agent architecture for guest interactions. Automated responses handle routine requests, AI agents resolve complex queries with context-aware reasoning, and human agents receive warm handoffs with full conversation history for edge cases. Reduces human agent volume while improving resolution quality at every tier.", impact: 96 },
+  "MGM Rewards Loyalty Experience": { tag: "Loyalty", desc: "All digital experiences of the MGM Rewards program – tier status, benefits, points, and member home across app and web. The connective layer that ties identity, offers, and personalization together.", impact: 100 },
+  "Gamification System": { tag: "Loyalty & Engagement", desc: "Gamified mechanics layered across the loyalty experience – challenges, streaks, progress, and rewards designed to drive repeat engagement and deepen member relationships.", impact: 94 },
+  "Kiosk Check-in & Checkout": { tag: "Guest Experience", desc: "Self-service kiosk flows for arrival and departure – check-in, room assignment, key encoding, and checkout – extending the digital guest journey into the physical lobby.", impact: 96 },
+  "Personalized Offers Platform": { tag: "Revenue & Loyalty", desc: "Targeted offers surfaced across app and web, driven by member profile, tier, and trip state. Connects the marketing offer engine to the personalization layer.", impact: 88 },
+  "Mobile Checkout": { tag: "Guest Experience", desc: "Streamlined mobile checkout process – review folio, settle, and depart from the phone without a front-desk stop. The departure bookend to mobile check-in.", impact: 86 },
+  "Itinerary & Trip Planner": { tag: "Guest Experience", desc: "Unified itinerary surfacing reservations, dining, shows, and activities in one trip view – the in-trip backbone that connects bookings into a coherent guest agenda.", impact: 84 },
+  "Digital Parking Access": { tag: "Access", desc: "Mobile-enabled parking access tied to the guest account – part of the broader access portfolio alongside digital key, enabling frictionless on-property entry.", impact: 72 },
+  "Key Encoding Service": { tag: "Platform", desc: "Backend service powering room key encoding across mobile, kiosk, and front desk – the shared infrastructure behind digital key and physical key issuance.", impact: 68 },
+  "Passkey Authentication": { tag: "Security", desc: "Passwordless passkey sign-in launched across the guest experience – biometric, phishing-resistant authentication that saw high opt-in once offered, cutting password resets and account-recovery support volume.", impact: 88 },
 };
 
 // Scroll reveal
@@ -2246,7 +2735,8 @@ const observer = new IntersectionObserver((entries) => {
       const parent = e.target.parentElement;
       const siblings = Array.from(parent.querySelectorAll(':scope > .reveal'));
       const idx = siblings.indexOf(e.target);
-      e.target.style.transitionDelay = (idx * 0.08) + 's';
+      const stagger = parseFloat(getComputedStyle(document.body).getPropertyValue('--m-stagger')) || 0.08;
+      e.target.style.transitionDelay = (Math.min(idx, 7) * stagger) + 's'; // cap at 8 — past that a stagger reads as lag
       e.target.classList.add('visible');
     }
   });
@@ -2336,6 +2826,7 @@ const themes = {
   cosmic: { bg:'#000000', fg:'#00ffff', muted:'#ffff00', accent:'#00ff00', card:'#000033', border:'#333399', effect: 'stars' },
   chaos: { bg:'#0a0a0a', fg:'#ffffff', muted:'#888888', accent:'#FF003C', card:'transparent', border:'#FF003C', effect: null },
   commerce: { bg:'#F8FAFB', fg:'#141B21', muted:'#5A6670', accent:'#00CCBB', card:'#FFFFFF', border:'#DDE3E8', effect: null },
+  atelier: { bg:'#F1EDE7', fg:'#282828', muted:'#7A7168', accent:'#8B7355', card:'rgba(255,255,255,0.6)', border:'rgba(0,0,0,0.06)', effect: null },
 };
 
 let currentEffect = null;
@@ -2594,7 +3085,7 @@ const dlContent = {
   void: {
     color: 'Near-black (#08080c) void. Teal (#2dd4bf) as the sole interactive accent. Amber (#e8a317) for categorical labels only. No competing colors – the void is the canvas.',
     type: 'Syne for display headings – geometric, modern, confident. DM Sans for body. JetBrains Mono for labels and metadata – giving structural text a code-like precision.',
-    motion: 'Entrances decelerate. Exits accelerate. Staggered reveals cascade with delay. Hover shifts depth via translateY. Glass cards float above the void atmosphere.',
+    motion: 'Reactive only — nothing loops at rest. Enter 400ms decelerating (cubic-bezier 0.16, 1, 0.3, 1), exit 220ms accelerating, micro-feedback at 180ms, 45ms stagger capped at eight. One 900ms signal pulse for confirmations.',
     texture: 'Concentric ripple rings from offset origins. Dot grid at 32px intervals. Neutral white light pools. Background is always monochrome – color lives in the content layer only.',
   },
   cosmic: {
@@ -2606,14 +3097,20 @@ const dlContent = {
   chaos: {
     color: 'Ten neon colors. No roles. No system. Any color, any time, any element. Red (#FF003C), green (#00FF87), blue (#3D00FF), yellow (#FFE600), orange, cyan, magenta, lime, white, black. If it screams, let it scream.',
     type: 'Six fonts, all in play at once. Rubik Glitch for glitch headings. Impact for LOUD. Silkscreen for pixel labels. Space Mono for structure. Instrument Serif for ironic elegance. Plus Jakarta Sans exists to be disrupted.',
-    motion: 'Chromatic aberration glitch on the hero – red and cyan split layers with random jitter. Cards snap-rotate on hover, no easing. Everything re-randomizes every 5 seconds. Nothing is ease-in-out. Motion should startle, not soothe.',
+    motion: 'Three registers: the interval (everything re-randomizes every 5 seconds), the slam (entrances hit in 240ms with overshoot, once, then hold still), and the jitter (RGB-split on hover — steps(2), never smooth). The chrome never joins in.',
     texture: 'No texture. No grain. No glass. Cards are bordered, not filled – 2px neon strokes on black void. Every card picks a different rotation, border color, and radius. No two look alike. Stickers are scattered across the page.',
   },
   commerce: {
     color: 'Cool blue-white (#F8FAFB) canvas. Neon teal (#00CCBB) as the primary CTA color. Rose (#D94878) as a secondary accent for tags and categories. Cool neutrals only – no warm greys anywhere.',
     type: 'Plus Jakarta Sans carries everything – headlines, body, UI, prices. Instrument Serif italic for display headlines, creating editorial tension against the geometric sans. JetBrains Mono for labels – shared DNA with Concentric.',
-    motion: 'None. Content appears. No scroll animations, no parallax, no staggered reveals. Only hover transitions at 0.2s ease. The anti-pattern is decorative motion.',
+    motion: 'One orchestrated hero moment; after that, motion only answers the shopper. Reveals ride the scroll at 500ms with a 60ms stagger, presses compress to 0.98 in 120ms, hovers lift in 240ms. The cart spring (600ms overshoot) is the one allowed spring — and prices never animate.',
     texture: 'Whitespace is the texture. No grain, no glass, no background patterns. Cards exist only when content demands enclosure. Subtle box-shadows provide depth. Cool neutral borders at low contrast.',
+  },
+  atelier: {
+    color: 'Warm cream canvas (#F1EDE7) – never cool grey. Bronze (#8B7355) as the sole accent – understated, warm, editorial. Text is warm charcoal (#282828). Muted tones pull brown, not blue.',
+    type: 'Instrument Serif italic for all display text – headings, stat numbers, company names. The warmth of a hand-lettered sign. Plus Jakarta Sans for body. JetBrains Mono for labels at wide letter-spacing.',
+    motion: 'Nothing here is urgent — 350ms is the floor, not the ceiling. Pages turn at 350ms ease-in-out, panels drift in over 700ms, and the light pools breathe on a nine-second cycle. No bounce, no spring; momentum is for machines.',
+    texture: 'Frosted glass everywhere. Cards are translucent white (50% opacity) with backdrop-blur and soft multi-layered box-shadows. No hard borders – depth comes from light and blur alone. Warm, handcrafted, boutique.',
   },
 };
 
@@ -2628,11 +3125,13 @@ function updateDesignLanguage(name) {
     void: { card: '#0d0d12', border: '#1a1a22' },
     chaos: { bg: '#FF003C', fg: '#00FF87', accent: '#FFE600', muted: '#3D00FF', card: '#FF00C8', border: '#00D4FF' },
     commerce: { bg: '#F8FAFB', fg: '#141B21', accent: '#00CCBB', muted: '#5A6670', card: '#D94878', border: '#DDE3E8' },
+    atelier: { bg: '#F1EDE7', fg: '#282828', accent: '#8B7355', muted: '#7A7168', card: '#FDFCFA', border: '#EBE7E1' },
   };
   const dc = displayColors[name] || {};
   const swatchLabels = {
     chaos: ['Red', 'Green', 'Yellow', 'Blue', 'Magenta', 'Cyan'],
     commerce: ['Canvas', 'Text', 'Teal', 'Secondary', 'Rose', 'Border'],
+    atelier: ['Cream', 'Charcoal', 'Bronze', 'Warm Grey', 'Surface', 'Linen'],
   };
   const labels = swatchLabels[name] || ['Background', 'Foreground', 'Accent', 'Muted', 'Card', 'Border'];
   swatchEl.innerHTML = [
@@ -2648,7 +3147,45 @@ function updateDesignLanguage(name) {
   document.getElementById('dlTypeDesc').textContent = dl.type;
   document.getElementById('dlMotionDesc').textContent = dl.motion;
   document.getElementById('dlTextureDesc').textContent = dl.texture;
+  // Replay the section in the incoming language's motion dialect — only once cards are on screen
+  const grid = document.getElementById('dlGrid');
+  if (grid && grid.querySelector('.reveal.visible')) {
+    grid.classList.remove('dl-switch');
+    void grid.offsetWidth;
+    grid.classList.add('dl-switch');
+  }
 }
+
+// Scope chip bottom sheet
+const scopeInfo = {
+  web:      { group: 'Platform', title: 'Web', desc: 'The consumer web experience across every property — the room booking funnel, dining and entertainment product detail pages, global search, and web check-in. Where most guests touch the brand first.' },
+  app:      { group: 'Platform', title: 'Mobile App', desc: 'The iOS and Android guest app: digital key, mobile check-in and checkout, itinerary and trip planner, offline-first architecture. The in-trip companion for the entire stay.' },
+  kiosk:    { group: 'Platform', title: 'Kiosk', desc: 'Self-service arrival and departure in the lobby — check-in, room assignment, key encoding, and checkout. Extends the digital journey into physical space and takes pressure off the front desk.' },
+  loyalty:  { group: 'Team', title: 'Loyalty', desc: 'MGM Rewards end to end — tier status, benefits, points, and member home across app and web, plus the gamification system and personalized offers platform layered on top.' },
+  arrivals: { group: 'Team', title: 'Arrivals', desc: 'The journey from booking to room: web, kiosk, and mobile check-in, digital key, digital parking access — and mobile checkout on the way back out. The bookends of every stay.' },
+  discovery:{ group: 'Team', title: 'Discovery & Digital Experience', desc: 'How guests find and book what\u2019s on property — global search, product detail pages, short video reels, cross-sell, and the rules and personalization engine behind them.' },
+  ux:       { group: 'Team', title: 'UX Design', desc: 'The 22-person design practice — product design, research, and design systems — working as one discipline with product across every platform above.' },
+};
+function openScopeSheet(k) {
+  const s = scopeInfo[k];
+  if (!s) return;
+  document.getElementById('scopeSheetLabel').textContent = s.group;
+  document.getElementById('scopeSheetTitle').textContent = s.title;
+  document.getElementById('scopeSheetDesc').textContent = s.desc;
+  document.getElementById('scopeBackdrop').classList.add('open');
+  document.getElementById('scopeSheet').classList.add('open');
+}
+function closeScopeSheet() {
+  document.getElementById('scopeBackdrop').classList.remove('open');
+  document.getElementById('scopeSheet').classList.remove('open');
+}
+document.querySelectorAll('.scope-tags span[data-scope]').forEach(el => {
+  el.setAttribute('role', 'button');
+  el.setAttribute('tabindex', '0');
+  el.addEventListener('click', () => openScopeSheet(el.dataset.scope));
+  el.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openScopeSheet(el.dataset.scope); } });
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeScopeSheet(); });
 
 // Initialize swatches on load
 updateDesignLanguage('void');
@@ -3282,6 +3819,48 @@ document.querySelectorAll('.shipped-item').forEach(item => {
     }
   });
 });
+// === INDUSTRY PULSE ===
+// Sample feed. The live build replaces this array with items written daily by a
+// GitHub Action that fetches SEC EDGAR Form D + industry RSS, then has a small
+// model classify for relevance, summarize, and rank. Shape stays identical.
+const PULSE_ITEMS = [
+  { tag: "Hospitality Tech", cls: "", co: "Mews", head: "Hospitality cloud PMS raises growth capital to expand AI operations suite.", amt: "Series · $100M+ range", time: "2d ago", src: "RSS" },
+  { tag: "Revenue / AI", cls: "rev", co: "Duetto", head: "Revenue-management platform ships new AI-driven dynamic pricing engine.", amt: "Product launch", time: "3d ago", src: "RSS" },
+  { tag: "Travel", cls: "", co: "Hopper", head: "Travel fintech expands B2B distribution of its price-prediction products.", amt: "Partnership", time: "4d ago", src: "RSS" },
+  { tag: "Funding", cls: "", co: "Cloudbeds", head: "Hotel management platform closes new round to grow mid-market footprint.", amt: "Form D · private placement", time: "5d ago", src: "EDGAR" },
+  { tag: "M&A", cls: "ma", co: "Life House", head: "Hotel operations-tech provider acquired; team folds into larger platform.", amt: "Acquisition", time: "6d ago", src: "RSS" },
+  { tag: "Access / AI", cls: "", co: "OpenAI", head: "Enterprise agent tooling adds long-running task support relevant to guest ops.", amt: "Platform update", time: "1w ago", src: "RSS" },
+  { tag: "Commerce", cls: "rev", co: "Stripe", head: "New checkout primitives target embedded, multi-step purchase flows.", amt: "Product launch", time: "1w ago", src: "RSS" },
+  { tag: "Travel / Access", cls: "", co: "Wheel the World", head: "Accessible-travel platform raises to expand inventory and booking coverage.", amt: "Form D · private placement", time: "1w ago", src: "EDGAR" },
+];
+
+function renderPulse() {
+  const track = document.getElementById('pulseTrack');
+  if (!track) return;
+  const card = (it) => `
+    <div class="pulse-card">
+      <div class="pulse-card-top">
+        <span class="pulse-card-tag ${it.cls}">${it.tag}</span>
+        <span class="pulse-card-time">${it.time} · ${it.src}</span>
+      </div>
+      <div class="pulse-card-co">${it.co}</div>
+      <div class="pulse-card-head">${it.head}</div>
+      <div class="pulse-card-amt">${it.amt}</div>
+    </div>`;
+  // Duplicate the set so the -50% translate loops seamlessly
+  track.innerHTML = (PULSE_ITEMS.map(card).join('')) + (PULSE_ITEMS.map(card).join(''));
+}
+
+function togglePulse(on) {
+  const body = document.getElementById('pulseBody');
+  const note = document.getElementById('pulseOffNote');
+  const label = document.getElementById('pulseStateLabel');
+  if (on && !body.dataset.rendered) { renderPulse(); body.dataset.rendered = '1'; }
+  body.hidden = !on;
+  note.style.display = on ? 'none' : '';
+  label.textContent = on ? 'On' : 'Off';
+}
+
 // === CHAOS SYSTEM ===
 const CHAOS_COLORS = ['#FF003C','#00FF87','#3D00FF','#FFE600','#FF6B00','#00D4FF','#FF00C8','#8AFF00'];
 const CHAOS_FONTS = ["'Rubik Glitch',system-ui","'Space Mono',monospace","'Instrument Serif',serif","Impact,sans-serif","'Silkscreen',monospace","'Plus Jakarta Sans',sans-serif"];
@@ -3400,8 +3979,10 @@ function chaosInit() {
   // Initial roll
   chaosRoll();
 
-  // Re-chaos every 5 seconds
-  chaosInterval = setInterval(chaosRoll, 5000);
+  // Re-chaos every 5 seconds (respect reduced motion: style once, no interval)
+  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    chaosInterval = setInterval(chaosRoll, 5000);
+  }
 }
 
 function chaosDestroy() {
