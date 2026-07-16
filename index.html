@@ -3,6 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- --- Security --- -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'none'; object-src 'none'; base-uri 'self'; form-action 'none'; upgrade-insecure-requests">
+<meta name="referrer" content="strict-origin-when-cross-origin">
 <link rel="icon" type="image/x-icon" href="/favicon.ico?v=2">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=2">
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=2">
@@ -2715,7 +2718,6 @@ body.theme-chaos .dl-swatch { border-color: #333 !important; border-radius: 0 !i
     <h2 class="reveal">Say hi</h2>
     <p class="reveal">Just keeping this up to date. Feel free to reach out anytime.</p>
     <a href="https://linkedin.com/in/joshdunlap" class="contact-link reveal" target="_blank" rel="noopener noreferrer">LinkedIn</a>
-    <a href="/resume.html" class="contact-link reveal">Résumé</a>
   </div>
 </section>
 
@@ -2733,7 +2735,7 @@ body.theme-chaos .dl-swatch { border-color: #333 !important; border-radius: 0 !i
 <footer>
   <div class="container">
     <div>&copy; <span id="copyrightYear" style="cursor:default;">2026</span> Josh Dunlap</div>
-    <div style="margin-top:6px; font-size:11px; color:var(--muted);">Published April 10, 2026 · Last updated July 15, 2026 · <a href="/resume.html" style="color:var(--accent); text-decoration:none;">Résumé</a> · <a href="/Josh-Dunlap-Resume.pdf" target="_blank" rel="noopener noreferrer" style="color:var(--accent); text-decoration:none;">PDF</a></div>
+    <div style="margin-top:6px; font-size:11px; color:var(--muted);">Published April 10, 2026 · Last updated July 15, 2026</div>
   </div>
 </footer>
 
@@ -3946,10 +3948,17 @@ const PULSE_ITEMS = [
   { tag: "Travel / Access", cls: "", co: "Wheel the World", head: "Accessible-travel platform raises to expand inventory and booking coverage.", amt: "Form D · private placement", time: "1w ago", src: "EDGAR" },
 ];
 
+// Escapes item fields before HTML templating. PULSE_ITEMS is hardcoded today,
+// but when the GitHub Action starts writing pulse.json from external feeds
+// (EDGAR/RSS), every field becomes untrusted input - this keeps that path safe.
+function escHTML(s) {
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
 function renderPulse() {
   const track = document.getElementById('pulseTrack');
   if (!track) return;
-  const card = (it) => `
+  const card = (raw) => { const it = Object.fromEntries(Object.entries(raw).map(([k,v]) => [k, k === 'cls' ? (v === 'rev' || v === 'ma' ? v : '') : escHTML(v)])); return `
     <div class="pulse-card">
       <div class="pulse-card-top">
         <span class="pulse-card-tag ${it.cls}">${it.tag}</span>
@@ -3958,7 +3967,7 @@ function renderPulse() {
       <div class="pulse-card-co">${it.co}</div>
       <div class="pulse-card-head">${it.head}</div>
       <div class="pulse-card-amt">${it.amt}</div>
-    </div>`;
+    </div>`; };
   // Duplicate the set so the -50% translate loops seamlessly
   track.innerHTML = (PULSE_ITEMS.map(card).join('')) + (PULSE_ITEMS.map(card).join(''));
 }
