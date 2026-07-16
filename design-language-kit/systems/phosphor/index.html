@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Phosphor – Design Language</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  /* ============ PHOSPHOR TOKENS ============ */
+  :root {
+    --bg: #05060a;
+    --p100: #5cff9a;                      /* phosphor, full emission */
+    --p62: rgba(92,255,154,0.62);         /* phosphor, decayed */
+    --p38: rgba(92,255,154,0.38);         /* phosphor, faint */
+    --p16: rgba(92,255,154,0.16);         /* phosphor, residual */
+    --p08: rgba(92,255,154,0.08);         /* surface tint */
+    --line: rgba(92,255,154,0.22);
+    --line-dim: rgba(92,255,154,0.10);
+    --control-border: rgba(92,255,154,0.40); /* component floor - 3.1:1 */
+    --split-a: #ff2e63;                   /* aberration red   – states only */
+    --split-b: #2ee6ff;                   /* aberration cyan  – states only */
+    --amber: #ffc24b;                     /* warning */
+    --red: #ff5c5c;                       /* fault */
+    --mono: 'JetBrains Mono', ui-monospace, Menlo, monospace;
+    --u: 8px;                             /* baseline unit */
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--p62);
+    font-family: var(--mono);
+    font-size: 13px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    font-variant-numeric: tabular-nums;
+  }
+  ::selection { background: var(--p100); color: var(--bg); }
+
+  /* permanent scanline texture, near-subliminal */
+  body::after {
+    content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 90;
+    background: repeating-linear-gradient(rgba(0,0,0,0) 0 2px, rgba(0,0,0,0.16) 2px 3px);
+    opacity: 0.5;
+  }
+
+  .wrap { max-width: 980px; margin: 0 auto; padding: 56px 28px 96px; }
+
+  /* ---------- corner-tick frame (the Phosphor surface) ---------- */
+  .frame {
+    --tick: var(--p100);
+    position: relative;
+    padding: calc(var(--u) * 3);
+    background:
+      linear-gradient(var(--tick), var(--tick)) top left / 14px 1px,
+      linear-gradient(var(--tick), var(--tick)) top left / 1px 14px,
+      linear-gradient(var(--tick), var(--tick)) top right / 14px 1px,
+      linear-gradient(var(--tick), var(--tick)) top right / 1px 14px,
+      linear-gradient(var(--tick), var(--tick)) bottom left / 14px 1px,
+      linear-gradient(var(--tick), var(--tick)) bottom left / 1px 14px,
+      linear-gradient(var(--tick), var(--tick)) bottom right / 14px 1px,
+      linear-gradient(var(--tick), var(--tick)) bottom right / 1px 14px;
+    background-repeat: no-repeat;
+    background-color: var(--p08);
+  }
+  .frame.dim { background-color: transparent; }
+  .frame.dim { --tick: rgba(92,255,154,0.45); } /* dims the ticks only - was re-dimming every word inside to 3.7:1 */
+
+  /* ---------- type ---------- */
+  h1, h2, h3 { color: var(--p100); font-weight: 700; line-height: 1.2; }
+  .display { font-size: clamp(40px, 8vw, 64px); letter-spacing: 0.01em; }
+  h2 { font-size: 20px; margin-bottom: calc(var(--u) * 2); }
+  .label { font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--p62); }
+  .sec-label { display: flex; align-items: center; gap: 12px; margin: calc(var(--u) * 8) 0 calc(var(--u) * 2); }
+  .sec-label .label { color: var(--p100); }
+  .sec-label::after { content: ''; height: 1px; flex: 1; background: var(--line-dim); }
+  .sec-num { color: var(--p62); font-size: 10px; letter-spacing: 0.1em; }
+  p.body { max-width: 68ch; margin-bottom: calc(var(--u) * 2); }
+  .faint { color: var(--p62); }
+  code, .code { background: var(--p08); border: 1px solid var(--line-dim); padding: 1px 6px; font-size: 12px; }
+  pre.code { padding: 16px 18px; overflow-x: auto; line-height: 1.6; white-space: pre; }
+
+  /* ---------- header ---------- */
+  header { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; flex-wrap: wrap; margin-bottom: calc(var(--u) * 3); }
+  .wordmark { position: relative; display: inline-block; cursor: default; }
+  .wordmark::before, .wordmark::after {
+    content: attr(data-text); position: absolute; inset: 0; overflow: hidden; opacity: 0; pointer-events: none;
+  }
+  .wordmark::before { color: var(--split-a); clip-path: inset(0 0 55% 0); }
+  .wordmark::after  { color: var(--split-b); clip-path: inset(55% 0 0 0); }
+  .wordmark:hover::before { opacity: 1; animation: wa 0.5s steps(2) infinite; }
+  .wordmark:hover::after  { opacity: 1; animation: wb 0.42s steps(2) infinite; }
+  @keyframes wa { 0% { transform: translate(-2px,0); } 50% { transform: translate(2px,0); } 100% { transform: translate(-1px,0); } }
+  @keyframes wb { 0% { transform: translate(2px,0); } 50% { transform: translate(-2px,0); } 100% { transform: translate(1px,0); } }
+  nav a { color: var(--p62); text-decoration: none; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; }
+  nav a:hover { color: var(--p100); }
+  .statusline { display: flex; gap: 20px; flex-wrap: wrap; margin-top: 4px; font-size: 11px; color: var(--p62); }
+
+  /* ---------- principles ---------- */
+  .principles { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 14px; }
+  .principle { padding: 18px; border: 1px solid var(--line-dim); }
+  .principle b { display: block; color: var(--p100); font-weight: 500; margin-bottom: 6px; font-size: 13px; }
+  .principle span { font-size: 12px; color: var(--p62); line-height: 1.6; }
+
+  /* ---------- swatches ---------- */
+  .swatches { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+  .swatch { border: 1px solid var(--line-dim); }
+  .swatch-chip { height: 56px; }
+  .swatch-meta { padding: 10px 12px; font-size: 10px; line-height: 1.7; }
+  .swatch-meta b { color: var(--p100); display: block; font-weight: 500; font-size: 11px; }
+
+  /* ---------- type specimen ---------- */
+  .spec-row { display: grid; grid-template-columns: 160px 1fr; gap: 16px; align-items: baseline; padding: 14px 0; border-bottom: 1px solid var(--line-dim); }
+  .spec-row:last-child { border-bottom: 0; }
+  @media (max-width: 640px) { .spec-row { grid-template-columns: 1fr; gap: 4px; } }
+
+  /* ---------- buttons ---------- */
+  .btn {
+    display: inline-flex; align-items: center;
+    font-family: var(--mono); font-size: 12px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--p100); background: none; border: none; cursor: pointer;
+    padding: 10px 6px;
+  }
+  .btn::before { content: '['; color: var(--control-border); margin-right: 1ch; transition: none; }
+  .btn::after  { content: ']'; color: var(--control-border); margin-left: 1ch; }
+  .btn:hover::before { margin-right: 2ch; color: var(--p100); }
+  .btn:hover::after  { margin-left: 2ch; color: var(--p100); }
+  .btn:active { color: var(--bg); background: var(--p100); }
+  .btn:focus-visible { outline: 1px solid var(--split-b); outline-offset: 2px; }
+  .btn.warn { color: var(--amber); } .btn.warn:active { background: var(--amber); color: var(--bg); }
+  .btn.fault { color: var(--red); } .btn.fault:active { background: var(--red); color: var(--bg); }
+  .btn.dim { color: var(--p62); } .btn.dim:hover { color: var(--p100); }
+  .btn[disabled] { color: var(--p16); cursor: not-allowed; }
+  .btn[disabled]::before, .btn[disabled]::after { color: var(--p16); margin: 0 1ch; }
+
+  /* ---------- inputs ---------- */
+  .field { display: flex; flex-direction: column; gap: 6px; max-width: 340px; }
+  .field label { font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--p62); }
+  .field input, .field select {
+    background: transparent; border: none; border-bottom: 1px solid var(--control-border);
+    color: var(--p100); font-family: var(--mono); font-size: 14px; padding: 8px 2px;
+    outline: none; caret-color: var(--p100); border-radius: 0;
+  }
+  .field input:focus, .field select:focus { border-bottom-color: var(--p100); }
+  .field input::placeholder { color: var(--p38); }
+  .field .hint { font-size: 10px; color: var(--p62); }
+  .field.err input { border-bottom-color: var(--red); color: var(--red); }
+  .field.err .hint { color: var(--red); }
+
+  /* ---------- toggle ---------- */
+  .toggle { display: inline-flex; border: 1px solid var(--control-border); cursor: pointer; user-select: none; font-size: 11px; letter-spacing: 0.1em; }
+  .toggle span { padding: 8px 16px; color: var(--p62); }
+  .toggle span.on { background: var(--p100); color: var(--bg); font-weight: 700; }
+
+  /* ---------- status ---------- */
+  .chips { display: flex; gap: 12px; flex-wrap: wrap; }
+  .chip { display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--line-dim); padding: 7px 14px; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; }
+  .chip .g { color: var(--p100); animation: blink 1.2s steps(2) infinite; }
+  .chip.warn { color: var(--amber); border-color: color-mix(in srgb, var(--amber) 30%, transparent); }
+  .chip.fault { color: var(--red); border-color: color-mix(in srgb, var(--red) 30%, transparent); }
+  @keyframes blink { 50% { opacity: 0.25; } }
+
+  /* ---------- table ---------- */
+  table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  th { text-align: left; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--p62); font-weight: 500; padding: 10px 12px; border-bottom: 1px solid var(--line); }
+  td { padding: 10px 12px; border-bottom: 1px solid var(--line-dim); color: var(--p62); }
+  tr:hover td { background: var(--p08); }
+  td.num { text-align: right; color: var(--p100); }
+
+  /* ---------- progress / loader ---------- */
+  .bar { height: 10px; border: 1px solid var(--line); position: relative; max-width: 340px; }
+  .bar i { position: absolute; inset: 1px auto 1px 1px; width: 62%; background: var(--p100); animation: fill 4s steps(12) infinite; }
+  @keyframes fill { 0% { width: 4%; } 100% { width: 96%; } }
+  .loader::after { content: '▖'; color: var(--p100); animation: spin 0.6s steps(4) infinite; display: inline-block; }
+  @keyframes spin { 0% { content: '▖'; } 25% { content: '▘'; } 50% { content: '▝'; } 75% { content: '▗'; } }
+
+  /* ---------- alerts ---------- */
+  .alert { border: 1px solid var(--line); border-left: 3px solid var(--p100); padding: 12px 16px; font-size: 12px; max-width: 560px; }
+  .alert.warn { border-left-color: var(--amber); }
+  .alert.warn b { color: var(--amber); }
+  .alert.fault { border-left-color: var(--red); }
+  .alert.fault b { color: var(--red); }
+  .alert b { color: var(--p100); font-weight: 500; }
+
+  /* ---------- do / don't ---------- */
+  .dd { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px; }
+  .dd .col { border: 1px solid var(--line-dim); padding: 18px; }
+  .dd h3 { font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 12px; }
+  .dd .no h3 { color: var(--red); }
+  .dd li { list-style: none; padding-left: 18px; position: relative; margin-bottom: 8px; font-size: 12px; color: var(--p62); }
+  .dd .yes li::before { content: '▸'; position: absolute; left: 0; color: var(--p100); }
+  .dd .no li::before { content: '✕'; position: absolute; left: 0; color: var(--red); }
+
+  .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; align-items: start; }
+  .stack { display: flex; flex-direction: column; gap: 16px; }
+  .row { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+
+  footer { margin-top: calc(var(--u) * 10); padding-top: 16px; border-top: 1px solid var(--line-dim); display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; font-size: 10px; color: var(--p62); }
+
+  /* ---------- motion demos ---------- */
+  .m-demo .m-stage { min-height: 110px; display: flex; flex-direction: column; gap: 14px; justify-content: center; margin-bottom: 14px; }
+  .m-track { height: 10px; border: 1px solid var(--line); position: relative; }
+  .m-track i { position: absolute; inset: 1px auto 1px 1px; width: 4%; background: var(--p100); }
+  .m-stage.play .m-track.step i { animation: m-fillk 1200ms steps(8) forwards; }
+  .m-stage.play .m-track.ease i { animation: m-fillk 1200ms cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+  @keyframes m-fillk { to { width: 96%; } }
+  .m-type { font-size: 13px; color: var(--p100); white-space: nowrap; overflow: hidden; width: 0; }
+  .m-stage.play .m-type { animation: m-typek 1400ms steps(26) forwards; }
+  @keyframes m-typek { to { width: 26ch; } }
+  @media (prefers-reduced-motion: reduce) { .m-track i { width: 96%; } .m-type { width: auto; } }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { animation: none !important; transition: none !important; }
+    .wordmark::before, .wordmark::after { display: none; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div>
+      <div class="label" style="margin-bottom:10px;">dunl.app / systems / phosphor · v1.1</div>
+      <h1 class="display wordmark" data-text="PHOSPHOR">PHOSPHOR</h1>
+      <div class="statusline">
+        <span>● signal locked</span>
+        <span>type: mono-only</span>
+        <span>elevation: none</span>
+        <span>motion: steps() only</span>
+      </div>
+    </div>
+    <nav><a href="../">&larr; systems</a></nav>
+  </header>
+
+  <p class="body">A design language built on CRT physics. The screen is an emitter, not a surface: hierarchy comes from phosphor intensity, depth comes from brightness, and motion means the system is doing something. Named for P1 phosphor – the green coating that made terminals glow.</p>
+  <p class="body faint">Use it for: developer tools, dashboards, status pages, takeover states, and anything that should feel like machinery rather than furniture.</p>
+
+  <!-- ================= 00 PRINCIPLES ================= -->
+  <div class="sec-label"><span class="sec-num">00</span><span class="label">Principles</span></div>
+  <div class="principles">
+    <div class="principle"><b>Light is emission, not reflection.</b><span>A CRT emits; it doesn't catch light. There are no drop shadows, no glass, no elevation. Depth is brightness. Layering is intensity.</span></div>
+    <div class="principle"><b>Aberration is a state, not a decoration.</b><span>RGB split appears only when something is happening: loading, erroring, taking over. At rest the interface is perfectly calm. If everything glitches, nothing does.</span></div>
+    <div class="principle"><b>Brightness is hierarchy.</b><span>One hue, four intensities. 100% for what matters now, 62% for reading, 38% for structure, 16% for residue. No grays. Ever.</span></div>
+    <div class="principle"><b>Motion is signal, easing is a lie.</b><span>CRTs don't ease. Every animation uses steps() – state changes snap between frames like a refresh. If it needs a curve, it doesn't belong here.</span></div>
+    <div class="principle"><b>The mono set is the icon set.</b><span>● ▲ ✕ ▮ ▸ ▖ do the work of an icon library. If a glyph doesn't exist in the type family, the interface doesn't need it.</span></div>
+  </div>
+
+  <!-- ================= 01 COLOR ================= -->
+  <div class="sec-label"><span class="sec-num">01</span><span class="label">Color</span></div>
+  <p class="body">One emissive hue at four intensities, two aberration channels reserved for state, two signal colors for warning and fault. That's the whole palette – nine values, no neutrals. Words never dip below phosphor/62 – the 4.5:1 emission floor; 38 and under is structure.</p>
+  <div class="swatches">
+    <div class="swatch"><div class="swatch-chip" style="background:#05060a;"></div><div class="swatch-meta"><b>void</b>#05060A · canvas, always</div></div>
+    <div class="swatch"><div class="swatch-chip" style="background:#5cff9a;"></div><div class="swatch-meta"><b>phosphor / 100</b>#5CFF9A · headlines, data, actions</div></div>
+    <div class="swatch"><div class="swatch-chip" style="background:rgba(92,255,154,0.62);"></div><div class="swatch-meta"><b>phosphor / 62</b>text floor: body, labels, hints</div></div>
+    <div class="swatch"><div class="swatch-chip" style="background:rgba(92,255,154,0.38);"></div><div class="swatch-meta"><b>phosphor / 38</b>structure only · never words</div></div>
+    <div class="swatch"><div class="swatch-chip" style="background:rgba(92,255,154,0.16);"></div><div class="swatch-meta"><b>phosphor / 16</b>residual: disabled, hover fills</div></div>
+    <div class="swatch"><div class="swatch-chip" style="background:#ff2e63;"></div><div class="swatch-meta"><b>split / a</b>#FF2E63 · aberration only</div></div>
+    <div class="swatch"><div class="swatch-chip" style="background:#2ee6ff;"></div><div class="swatch-meta"><b>split / b</b>#2EE6FF · aberration + focus</div></div>
+    <div class="swatch"><div class="swatch-chip" style="background:#ffc24b;"></div><div class="swatch-meta"><b>amber</b>#FFC24B · warning states</div></div>
+    <div class="swatch"><div class="swatch-chip" style="background:#ff5c5c;"></div><div class="swatch-meta"><b>fault</b>#FF5C5C · errors, destructive</div></div>
+  </div>
+
+  <!-- ================= 02 TYPOGRAPHY ================= -->
+  <div class="sec-label"><span class="sec-num">02</span><span class="label">Typography</span></div>
+  <p class="body">One family: JetBrains Mono. Restraint is the maturity – hierarchy comes from size, weight, and intensity, never from a second voice. Tabular numerals everywhere; data must align.</p>
+  <div class="frame dim">
+    <div class="spec-row"><span class="label">display · 700 · 44–64</span><span style="font-size:38px; font-weight:700; color:var(--p100);">SIGNAL LOCKED</span></div>
+    <div class="spec-row"><span class="label">heading · 700 · 20</span><span style="font-size:20px; font-weight:700; color:var(--p100);">Subsystem report</span></div>
+    <div class="spec-row"><span class="label">body · 400 · 13</span><span>Phosphor persistence is the afterglow of an excited screen – the past frame still faintly visible under the present one.</span></div>
+    <div class="spec-row"><span class="label">label · 500 · 10 · +16%</span><span class="label" style="color:var(--p100);">Uplink established</span></div>
+    <div class="spec-row"><span class="label">data · 400 · 13 · tabular</span><span style="color:var(--p100);">00:14:52.108&nbsp;&nbsp;&nbsp;99.987%&nbsp;&nbsp;&nbsp;1,024.00</span></div>
+  </div>
+
+  <!-- ================= 03 SURFACE ================= -->
+  <div class="sec-label"><span class="sec-num">03</span><span class="label">Surface &amp; frame</span></div>
+  <p class="body">Containers don't use full borders – they use corner ticks, like an oscilloscope reticle. A frame marks where attention goes without boxing content in. Fills stay under 8% intensity.</p>
+  <div class="grid-2">
+    <div class="frame">
+      <div class="label" style="margin-bottom:8px;">frame / standard</div>
+      <p style="font-size:12px;">Corner ticks at phosphor/100, fill at phosphor/8. The primary container for grouped content and live modules.</p>
+    </div>
+    <div class="frame dim">
+      <div class="label" style="margin-bottom:8px;">frame / dim</div>
+      <p style="font-size:12px;">Ticks at 45%, no fill. For reference material, specimens, and anything at rest.</p>
+    </div>
+  </div>
+
+  <!-- ================= 04 COMPONENTS ================= -->
+  <div class="sec-label"><span class="sec-num">04</span><span class="label">Components</span></div>
+
+  <div class="stack">
+
+    <div class="frame dim">
+      <div class="label" style="margin-bottom:12px;">buttons – brackets are the affordance</div>
+      <div class="row">
+        <button class="btn">Execute</button>
+        <button class="btn dim">Secondary</button>
+        <button class="btn warn">Hold</button>
+        <button class="btn fault">Purge</button>
+        <button class="btn" disabled>Offline</button>
+      </div>
+      <p class="faint" style="font-size:11px; margin-top:10px;">Hover widens the brackets by 1ch. Active inverts. Focus rings use split/b – the only place cyan appears outside a glitch.</p>
+    </div>
+
+    <div class="frame dim">
+      <div class="label" style="margin-bottom:12px;">inputs</div>
+      <div class="grid-2">
+        <div class="field">
+          <label>Callsign</label>
+          <input type="text" placeholder="enter callsign" value="">
+          <span class="hint">underline only – fields are lines on a terminal, not boxes</span>
+        </div>
+        <div class="field err">
+          <label>Frequency</label>
+          <input type="text" value="884.??">
+          <span class="hint">✕ out of band – 88.0 to 108.0 only</span>
+        </div>
+      </div>
+      <div class="row" style="margin-top:18px;">
+        <span class="label" style="margin-right:4px;">uplink</span>
+        <span class="toggle" onclick="this.querySelectorAll('span').forEach(s=>s.classList.toggle('on'))"><span class="on">ON</span><span>OFF</span></span>
+      </div>
+    </div>
+
+    <div class="frame dim">
+      <div class="label" style="margin-bottom:12px;">status</div>
+      <div class="chips">
+        <span class="chip"><span class="g">●</span> live</span>
+        <span class="chip warn">▲ degraded</span>
+        <span class="chip fault">✕ fault</span>
+        <span class="chip"><span class="loader"></span>&nbsp;syncing</span>
+      </div>
+      <div style="margin-top:18px; max-width:340px;">
+        <div class="label" style="margin-bottom:6px;">buffer</div>
+        <div class="bar"><i></i></div>
+      </div>
+    </div>
+
+    <div class="frame dim">
+      <div class="label" style="margin-bottom:12px;">data table</div>
+      <table>
+        <thead><tr><th>node</th><th>region</th><th>status</th><th style="text-align:right;">uptime</th></tr></thead>
+        <tbody>
+          <tr><td>lv-app-01</td><td>us-west</td><td style="color:var(--p100);">● live</td><td class="num">99.987%</td></tr>
+          <tr><td>lv-web-02</td><td>us-west</td><td style="color:var(--p100);">● live</td><td class="num">99.942%</td></tr>
+          <tr><td>lv-kiosk-04</td><td>us-east</td><td style="color:var(--amber);">▲ degraded</td><td class="num">97.210%</td></tr>
+          <tr><td>lv-key-09</td><td>us-west</td><td style="color:var(--red);">✕ fault</td><td class="num">61.006%</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="frame dim">
+      <div class="label" style="margin-bottom:12px;">alerts</div>
+      <div class="stack" style="gap:10px;">
+        <div class="alert"><b>sync complete.</b> 1,204 records reconciled in 00:00:14.</div>
+        <div class="alert warn"><b>▲ latency rising.</b> p95 at 840ms on lv-kiosk-04. watching.</div>
+        <div class="alert fault"><b>✕ uplink lost.</b> retrying in 8s. keys served from local cache.</div>
+      </div>
+    </div>
+
+    <div class="frame">
+      <div class="label" style="margin-bottom:12px;">takeover – the glitch overlay</div>
+      <p style="font-size:12px; margin-bottom:14px;">Full-screen interruptions – errors, lockouts, dramatic reveals – use the Glitch overlay. This is the one moment aberration runs free: static, scanlines, RGB split. Dependency-free, themeable, respects reduced motion.</p>
+      <div class="row">
+        <button class="btn" onclick="Glitch.show('signal acquired')">Takeover</button>
+        <button class="btn fault" onclick="Glitch.error('503','uplink lost – retrying')">Error screen</button>
+        <button class="btn warn" onclick="Glitch.show({ big:'HOLD', lines:['awaiting authorization'], theme:'amber' })">Amber hold</button>
+        <button class="btn dim" onclick="Glitch.show({ lines:['DECRYPTING…'], theme:'cyan', duration:0 })">Persistent</button>
+      </div>
+      <p class="faint" style="font-size:11px; margin-top:10px;">api: Glitch.show(text | options) · Glitch.error(code, message) · Glitch.hide() · esc or click dismisses</p>
+    </div>
+
+  </div>
+
+  <!-- ================= 05 MOTION ================= -->
+  <div class="sec-label"><span class="sec-num">05</span><span class="label">Motion</span></div>
+  <p class="body">CRTs don't ease. Every animation runs on steps() — state changes snap between frames like a refresh, and the step count is the fidelity dial: 2 for a blink, 3 for a state, 12 for a sweep. If something moves smoothly here, it's lying about what it is.</p>
+  <div class="frame dim">
+    <table>
+      <thead><tr><th>token</th><th>value</th><th>use</th></tr></thead>
+      <tbody>
+        <tr><td>step-fast</td><td class="num">120ms · steps(2)</td><td>hover, focus, toggles</td></tr>
+        <tr><td>step-base</td><td class="num">240ms · steps(3)</td><td>state changes, chips, reveals</td></tr>
+        <tr><td>step-slow</td><td class="num">480ms · steps(4)</td><td>loaders, progress, transitions</td></tr>
+        <tr><td>sweep</td><td class="num">900ms · steps(12)</td><td>scan pass across a frame — refresh, recalibrate</td></tr>
+        <tr><td>type-on</td><td class="num">steps(1 per char)</td><td>log lines type in — text never fades</td></tr>
+        <tr><td>blink</td><td class="num">1200ms · steps(2) · loop</td><td>live indicators only</td></tr>
+        <tr><td>takeover</td><td class="num">1800ms default</td><td>glitch overlay auto-dismiss</td></tr>
+      </tbody>
+    </table>
+    <p class="faint" style="font-size:11px; margin-top:12px;">No cubic-bezier. No spring. No opacity fades on text — words are output, and output arrives whole. prefers-reduced-motion collapses everything to instant state changes and hides the static layer entirely.</p>
+  </div>
+  <div class="grid-2" style="margin-top:14px;">
+    <div class="frame m-demo">
+      <div class="label" style="margin-bottom:14px;">the lie detector — same fill, two clocks</div>
+      <div class="m-stage play">
+        <div>
+          <div class="label" style="font-size:9px; margin-bottom:6px;">steps(8) · phosphor</div>
+          <div class="m-track step"><i></i></div>
+        </div>
+        <div>
+          <div class="label" style="font-size:9px; margin-bottom:6px;">cubic-bezier · forbidden</div>
+          <div class="m-track ease"><i></i></div>
+        </div>
+      </div>
+      <button class="btn" onclick="var s=this.closest('.m-demo').querySelector('.m-stage');s.classList.remove('play');void s.offsetWidth;s.classList.add('play');">replay</button>
+    </div>
+    <div class="frame m-demo">
+      <div class="label" style="margin-bottom:14px;">type-on — text arrives like output</div>
+      <div class="m-stage play">
+        <div class="m-type">signal acquired. 26 chars.</div>
+      </div>
+      <button class="btn" onclick="var s=this.closest('.m-demo').querySelector('.m-stage');s.classList.remove('play');void s.offsetWidth;s.classList.add('play');">replay</button>
+    </div>
+  </div>
+  <pre class="code" style="margin-top:14px;">--motion-step-fast: 120ms steps(2);
+--motion-step-base: 240ms steps(3);
+--motion-step-slow: 480ms steps(4);
+--motion-sweep:     900ms steps(12);
+--motion-blink:     1200ms steps(2) infinite;   /* live only */</pre>
+
+  <!-- ================= 06 VOICE ================= -->
+  <div class="sec-label"><span class="sec-num">06</span><span class="label">Voice</span></div>
+  <p class="body">The system speaks in log lines: lowercase, present tense, timestamped when it matters. It states, it doesn't apologize. <span class="faint">"uplink lost. retrying in 8s."</span> – never "Oops! Something went wrong."</p>
+
+  <!-- ================= 07 DO / DON'T ================= -->
+  <div class="sec-label"><span class="sec-num">07</span><span class="label">Do / Don't</span></div>
+  <div class="dd">
+    <div class="col yes">
+      <h3>Do</h3>
+      <li>Use brightness for hierarchy – four intensities of one hue</li>
+      <li>Reserve aberration for loading, error, and takeover states</li>
+      <li>Use corner ticks instead of full borders</li>
+      <li>Set all numerals tabular; align data right</li>
+      <li>Write system messages as log lines</li>
+      <li>Collapse all motion under reduced-motion</li>
+    </div>
+    <div class="col no">
+      <h3>Don't</h3>
+      <li>No drop shadows, glass, or gradients – light is emission</li>
+      <li>No border-radius above 2px</li>
+      <li>No easing curves – steps() or nothing</li>
+      <li>No second typeface, no grays, no emoji</li>
+      <li>No aberration at rest – calm until the system acts</li>
+      <li>No more than one signal color per view</li>
+      <li>No words below phosphor/62 – dimmer is structure, not signal</li>
+    </div>
+  </div>
+
+  <!-- ================= 08 TOKENS ================= -->
+  <div class="sec-label"><span class="sec-num">08</span><span class="label">Tokens · Tokens Studio</span></div>
+  <p class="body">Drop the <code>phosphor</code> set below into design-tokens.json and sync via Tokens Studio to get Figma variables for color, radius, and type styles.</p>
+  <pre class="code">"phosphor": {
+  "color": {
+    "void":      { "value": "#05060A", "type": "color" },
+    "p-100":     { "value": "#5CFF9A", "type": "color", "description": "Full emission - headlines, data, actions" },
+    "p-62":      { "value": "rgba(92,255,154,0.62)", "type": "color", "description": "Text floor - body, labels, hints" },
+    "p-38":      { "value": "rgba(92,255,154,0.38)", "type": "color", "description": "Structure only - never words" },
+    "p-16":      { "value": "rgba(92,255,154,0.16)", "type": "color", "description": "Residual - disabled, fills" },
+    "p-08":      { "value": "rgba(92,255,154,0.08)", "type": "color", "description": "Surface tint" },
+    "split-a":   { "value": "#FF2E63", "type": "color", "description": "Aberration red - states only" },
+    "split-b":   { "value": "#2EE6FF", "type": "color", "description": "Aberration cyan - states + focus" },
+    "amber":     { "value": "#FFC24B", "type": "color" },
+    "fault":     { "value": "#FF5C5C", "type": "color" }
+  },
+  "control": {
+    "tint":    { "value": "#5CFF9A", "type": "color", "description": "System controls - full emission" },
+    "on-tint": { "value": "#05060A", "type": "color" },
+    "track":   { "value": "rgba(92,255,154,0.16)", "type": "color" },
+    "border":  { "value": "rgba(92,255,154,0.40)", "type": "color", "description": "Inputs, toggles, brackets - 3.1:1 floor" },
+    "focus":   { "value": "#2EE6FF", "type": "color", "description": "Focus ring - split/b on duty" }
+  },
+  "borderRadius": {
+    "none": { "value": "0", "type": "borderRadius" },
+    "max":  { "value": "2", "type": "borderRadius" }
+  },
+  "typography": {
+    "display": { "value": { "fontFamily": "{fontFamilies.jetbrains-mono}", "fontWeight": "700", "fontSize": "56", "lineHeight": "110%" }, "type": "typography" },
+    "heading": { "value": { "fontFamily": "{fontFamilies.jetbrains-mono}", "fontWeight": "700", "fontSize": "20", "lineHeight": "120%" }, "type": "typography" },
+    "body":    { "value": { "fontFamily": "{fontFamilies.jetbrains-mono}", "fontWeight": "400", "fontSize": "13", "lineHeight": "165%" }, "type": "typography" },
+    "label":   { "value": { "fontFamily": "{fontFamilies.jetbrains-mono}", "fontWeight": "500", "fontSize": "10", "letterSpacing": "16%", "lineHeight": "130%", "textCase": "uppercase" }, "type": "typography" },
+    "data":    { "value": { "fontFamily": "{fontFamilies.jetbrains-mono}", "fontWeight": "400", "fontSize": "13", "lineHeight": "150%" }, "type": "typography" }
+  }
+}</pre>
+
+  <footer>
+    <span>phosphor v1.1 · part of dunl.app/systems</span>
+    <span>motion: steps() only · elevation: none · one hue, four intensities</span>
+  </footer>
+
+</div>
+
+<!-- ====================  GLITCH OVERLAY COMPONENT  ==================== -->
+<style id="glitch-overlay-styles">
+  #glitch-overlay {
+    --g-color: #5cff9a; --g-a: #ff2e63; --g-b: #2ee6ff; --g-bg: #05060a;
+    --g-mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, monospace;
+    position: fixed; inset: 0; z-index: 2147483600; display: none;
+    align-items: center; justify-content: center; flex-direction: column;
+    background: var(--g-bg); overflow: hidden;
+    box-shadow: inset 0 0 140px rgba(0,0,0,.85);
+  }
+  #glitch-overlay.on { display: flex; animation: g-flicker .11s steps(2) infinite; }
+  #glitch-overlay .g-noise { position: absolute; inset: 0; width: 100%; height: 100%; opacity: .32; mix-blend-mode: screen; pointer-events: none; }
+  #glitch-overlay .g-scan {
+    position: absolute; inset: 0; z-index: 1; pointer-events: none;
+    background: repeating-linear-gradient(rgba(0,0,0,0) 0 2px, rgba(0,0,0,.5) 2px 3px);
+    animation: g-scan .25s steps(3) infinite;
+  }
+  #glitch-overlay .g-stack { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 0 20px; text-align: center; }
+  #glitch-overlay .g-hint {
+    position: absolute; bottom: 30px; left: 0; right: 0; z-index: 2; pointer-events: none;
+    text-align: center; font-family: var(--g-mono); font-size: 11px; letter-spacing: .2em; text-transform: uppercase;
+    color: color-mix(in srgb, var(--g-color) 45%, transparent);
+    opacity: 0; transition: opacity .2s;
+  }
+  #glitch-overlay.g-show-hint .g-hint { opacity: .7; }
+  #glitch-overlay .g-line {
+    position: relative; font-family: var(--g-mono); white-space: nowrap;
+    color: var(--g-color);
+    text-shadow: 0 0 5px color-mix(in srgb, var(--g-color) 55%, transparent), 0 0 14px color-mix(in srgb, var(--g-color) 22%, transparent);
+    animation: g-jit .18s steps(2) infinite;
+  }
+  #glitch-overlay .g-line:not(.g-big) { font-size: 15px; letter-spacing: .06em; }
+  #glitch-overlay .g-line.g-big { font-size: clamp(40px, 12vw, 74px); font-weight: 700; letter-spacing: .02em; }
+  #glitch-overlay .g-line::before, #glitch-overlay .g-line::after {
+    content: attr(data-text); position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden;
+  }
+  #glitch-overlay .g-line::before { color: var(--g-a); clip-path: inset(0 0 55% 0); animation: g-a .5s steps(2) infinite; }
+  #glitch-overlay .g-line::after  { color: var(--g-b); clip-path: inset(55% 0 0 0); animation: g-b .42s steps(2) infinite; }
+  @keyframes g-flicker { 0% { opacity: 1; } 50% { opacity: .9; } 100% { opacity: 1; } }
+  @keyframes g-scan { to { transform: translateY(3px); } }
+  @keyframes g-jit { 0% { transform: translate(0,0); } 25% { transform: translate(-1px,0); } 50% { transform: translate(1px,0); } 75% { transform: translate(0,1px); } 100% { transform: translate(0,0); } }
+  @keyframes g-a { 0% { clip-path: inset(0 0 62% 0); transform: translate(-2px,0); } 50% { clip-path: inset(38% 0 22% 0); transform: translate(2px,0); } 100% { clip-path: inset(8% 0 70% 0); transform: translate(-1px,0); } }
+  @keyframes g-b { 0% { clip-path: inset(62% 0 0 0); transform: translate(2px,0); } 50% { clip-path: inset(22% 0 40% 0); transform: translate(-2px,0); } 100% { clip-path: inset(70% 0 8% 0); transform: translate(1px,0); } }
+  @media (prefers-reduced-motion: reduce) {
+    #glitch-overlay.on, #glitch-overlay .g-line, #glitch-overlay .g-line::before, #glitch-overlay .g-line::after, #glitch-overlay .g-scan { animation: none !important; }
+    #glitch-overlay .g-noise { display: none; }
+    #glitch-overlay .g-line::before, #glitch-overlay .g-line::after { opacity: 0; }
+  }
+</style>
+<script>
+(function () {
+  if (window.Glitch) return;
+
+  var THEMES = {
+    green: { color: '#5cff9a', a: '#ff2e63', b: '#2ee6ff' },
+    red:   { color: '#ff5c5c', a: '#ffd23b', b: '#2ee6ff' },
+    amber: { color: '#ffc24b', a: '#ff2e63', b: '#2ee6ff' },
+    cyan:  { color: '#5cd9ff', a: '#ff2e63', b: '#a05cff' }
+  };
+
+  var el = document.createElement('div');
+  el.id = 'glitch-overlay';
+  el.setAttribute('aria-hidden', 'true');
+  el.innerHTML =
+    '<svg class="g-noise" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">' +
+      '<filter id="g-static" x="0%" y="0%" width="100%" height="100%">' +
+        '<feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" seed="3" stitchTiles="stitch" result="n">' +
+          '<animate attributeName="seed" values="1;7;3;9;2;8;4;6;1" dur="0.5s" repeatCount="indefinite"/>' +
+        '</feTurbulence>' +
+        '<feColorMatrix in="n" type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  4 0 0 0 -1.6"/>' +
+      '</filter>' +
+      '<rect width="100%" height="100%" filter="url(#g-static)"/>' +
+    '</svg>' +
+    '<div class="g-scan"></div>' +
+    '<div class="g-stack"></div>' +
+    '<div class="g-hint">esc or click to dismiss</div>';
+
+  function mount() { if (!el.isConnected && document.body) document.body.appendChild(el); }
+  if (document.body) mount(); else document.addEventListener('DOMContentLoaded', mount);
+
+  var stack = el.querySelector('.g-stack');
+  var timer = null;
+
+  function makeLine(text, big) {
+    var d = document.createElement('div');
+    d.className = 'g-line' + (big ? ' g-big' : '');
+    d.textContent = text;
+    d.setAttribute('data-text', text);
+    return d;
+  }
+
+  function show(opts) {
+    mount();
+    if (typeof opts === 'string') opts = { lines: [opts] };
+    opts = opts || {};
+    var theme = THEMES[opts.theme] || THEMES.green;
+    el.style.setProperty('--g-color', opts.color || theme.color);
+    el.style.setProperty('--g-a', opts.splitA || theme.a);
+    el.style.setProperty('--g-b', opts.splitB || theme.b);
+    if (opts.background) el.style.setProperty('--g-bg', opts.background);
+
+    stack.innerHTML = '';
+    if (opts.big) stack.appendChild(makeLine(String(opts.big), true));
+    var lines = opts.lines || (opts.text ? [opts.text] : []);
+    lines.forEach(function (t) { stack.appendChild(makeLine(String(t), false)); });
+
+    var dur = (opts.duration === undefined) ? 1800 : opts.duration;
+    var dismissible = (opts.dismissible !== false);
+    el.__dismissible = dismissible;
+    el.style.cursor = dismissible ? 'pointer' : 'default';
+    el.classList.toggle('g-show-hint', dismissible && dur === 0);
+
+    el.classList.add('on');
+    clearTimeout(timer);
+    if (dur > 0) timer = setTimeout(hide, dur);
+  }
+
+  function hide() {
+    el.classList.remove('on');
+    el.classList.remove('g-show-hint');
+    clearTimeout(timer);
+  }
+
+  el.addEventListener('click', function () { if (el.__dismissible) hide(); });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && el.__dismissible && el.classList.contains('on')) hide();
+  });
+
+  function error(code, message, opts) {
+    opts = opts || {};
+    show({
+      big: String(code),
+      lines: message ? [String(message)] : [],
+      theme: opts.theme || 'red',
+      color: opts.color, splitA: opts.splitA, splitB: opts.splitB, background: opts.background,
+      duration: (opts.duration === undefined) ? 0 : opts.duration
+    });
+  }
+
+  window.Glitch = { show: show, hide: hide, error: error, themes: THEMES, el: el };
+})();
+</script>
+<!-- ==================  END GLITCH OVERLAY COMPONENT  ================== -->
+
+<!-- gate removed for offline kit -->
+</body>
+</html>

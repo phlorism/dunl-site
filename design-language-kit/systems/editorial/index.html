@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Editorial – Design Language</title>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  /* ============ EDITORIAL TOKENS ============ */
+  :root {
+    --bg: #F0F1F3; --bg-alt: #E8E9EC; --surface: #FFFFFF;
+    --text: #18191B; --text-2: #52555C; --text-3: #696C74;      /* tertiary a11y-passed 4.6:1 */
+    --border: #D4D6DB; --border-light: #E2E4E8;
+    --accent: #2B5C8A; --accent-light: #EDF3F8; --accent-dark: #1E4468;
+    --ctl-border: #8A8D95; --ctl-track: #D4D6DB;
+    --serif: 'Newsreader', serif;
+    --mono: 'JetBrains Mono', monospace;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--text); font-family: var(--serif); font-size: 17px; line-height: 1.75; -webkit-font-smoothing: antialiased; }
+  ::selection { background: var(--accent); color: #FFFFFF; }
+  .wrap { max-width: 760px; margin: 0 auto; padding: 52px 26px 96px; }
+
+  /* ---------- the dual mode: serif reads, mono annotates ---------- */
+  .folio { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-3); }
+  .folio a { color: inherit; text-decoration: none; }
+  .folio a:hover { color: var(--accent); }
+
+  header { border-top: 3px solid var(--text); border-bottom: 1px solid var(--border); padding: 14px 0 16px; margin-bottom: 44px;
+    display: flex; justify-content: space-between; align-items: baseline; gap: 14px; flex-wrap: wrap; }
+  nav { display: flex; gap: 18px; }
+
+  h1.display { font-weight: 400; font-size: clamp(42px, 8vw, 66px); line-height: 1.08; letter-spacing: -0.015em; font-optical-sizing: auto; }
+  h1.display em { font-style: italic; }
+  .dek { font-size: 21px; line-height: 1.55; color: var(--text-2); margin: 18px 0 10px; font-weight: 300; }
+  .byline { display: flex; gap: 16px; flex-wrap: wrap; margin: 22px 0 0; padding-top: 14px; border-top: 1px solid var(--border); }
+
+  h2 { font-weight: 500; font-size: 27px; line-height: 1.25; margin-bottom: 12px; letter-spacing: -0.01em; }
+  p.body { margin-bottom: 18px; color: var(--text); max-width: 66ch; }
+  p.body.first::first-letter { font-size: 3.4em; float: left; line-height: 0.82; padding: 6px 10px 0 0; color: var(--accent); font-weight: 400; }
+  a.inline { color: var(--accent); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+  a.inline:hover { color: var(--accent-dark); }
+  .fine { font-size: 14px; color: var(--text-3); }
+  code { font-family: var(--mono); font-size: 13px; background: var(--bg-alt); border: 1px solid var(--border-light); padding: 1px 6px; }
+  pre.code { font-family: var(--mono); font-size: 12.5px; background: var(--surface); border: 1px solid var(--border); padding: 20px 22px; overflow-x: auto; line-height: 1.65; }
+
+  .sec-label { display: flex; align-items: baseline; gap: 12px; margin: 72px 0 18px; }
+  .sec-label::after { content: ''; height: 1px; flex: 1; background: var(--border); align-self: center; }
+
+  .rule { height: 1px; background: var(--border); margin: 32px 0; }
+  .rule.heavy { height: 3px; background: var(--text); }
+
+  blockquote { border-left: 3px solid var(--accent); padding: 4px 0 4px 22px; margin: 26px 0; font-size: 22px; line-height: 1.5; font-style: italic; color: var(--text-2); }
+  blockquote .folio { display: block; font-style: normal; margin-top: 10px; }
+
+  /* ---------- swatches ---------- */
+  .swatches { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+  .swatch { border: 1px solid var(--border); background: var(--surface); }
+  .swatch-chip { height: 54px; }
+  .swatch-meta { padding: 10px 12px; font-size: 11px; line-height: 1.65; color: var(--text-3); font-family: var(--mono); }
+  .swatch-meta b { color: var(--text); display: block; font-weight: 500; font-size: 11px; }
+
+  /* ---------- spec rows ---------- */
+  .panel { background: var(--surface); border: 1px solid var(--border-light); padding: 26px; }
+  .spec-row { display: grid; grid-template-columns: 175px 1fr; gap: 16px; align-items: baseline; padding: 15px 0; border-bottom: 1px solid var(--border-light); }
+  .spec-row:last-child { border-bottom: 0; }
+  @media (max-width: 620px) { .spec-row { grid-template-columns: 1fr; gap: 4px; } }
+
+  /* ---------- components ---------- */
+  .btn { display: inline-flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase;
+    padding: 11px 20px; cursor: pointer; border: 1px solid var(--text); background: transparent; color: var(--text); transition: background 0.2s, color 0.2s; }
+  .btn:hover { background: var(--text); color: var(--bg); }
+  .btn.accent { border-color: var(--accent); background: var(--accent); color: #FFFFFF; }
+  .btn.accent:hover { background: var(--accent-dark); border-color: var(--accent-dark); }
+  .btn.quiet { border-color: var(--ctl-border); color: var(--text-2); }
+  .btn.quiet:hover { background: var(--bg-alt); color: var(--text); }
+  .btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  .field { display: flex; flex-direction: column; gap: 7px; max-width: 360px; }
+  .field label { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-2); }
+  .field input { background: var(--surface); border: 1px solid var(--ctl-border); color: var(--text);
+    font-family: var(--serif); font-size: 16px; padding: 11px 14px; outline: none; transition: border-color 0.2s; }
+  .field input:focus { border-color: var(--accent); }
+  .field input::placeholder { color: var(--text-3); font-style: italic; }
+  .field .hint { font-size: 13px; color: var(--text-3); }
+
+  .switch { width: 44px; height: 25px; border-radius: 100px; background: var(--ctl-track); border: 1px solid var(--ctl-border); position: relative; cursor: pointer; flex: none; }
+  .switch::after { content: ''; position: absolute; top: 3px; left: 3px; width: 17px; height: 17px; border-radius: 50%; background: var(--surface); border: 1px solid var(--ctl-border); transition: left 0.2s; box-sizing: border-box; }
+  .switch.on { background: var(--accent); border-color: var(--accent); }
+  .switch.on::after { left: 21px; border-color: var(--accent); }
+
+  .demo-row { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 15px; }
+  th { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-3); text-align: left; font-weight: 500; padding: 10px 12px; border-bottom: 2px solid var(--text); }
+  td { padding: 10px 12px; border-bottom: 1px solid var(--border-light); }
+  td.num { font-family: var(--mono); font-size: 13px; text-align: right; font-variant-numeric: tabular-nums; }
+
+  /* ---------- do / don't ---------- */
+  .dd { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
+  .dd h3 { font-size: 18px; font-weight: 500; margin-bottom: 8px; }
+  .dd .yes h3 { color: var(--accent); }
+  .dd .no h3 { color: var(--text); }
+  .dd li { list-style: none; padding: 8px 0 8px 22px; position: relative; font-size: 15px; color: var(--text-2); border-bottom: 1px solid var(--border-light); }
+  .dd li::before { position: absolute; left: 0; font-family: var(--mono); }
+  .dd .yes li::before { content: '+'; color: var(--accent); }
+  .dd .no li::before { content: '×'; color: var(--text); }
+
+  footer { margin-top: 84px; padding-top: 16px; border-top: 3px solid var(--text); display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+  /* ---------- motion demos ---------- */
+  .m-demo .m-stage { min-height: 140px; display: flex; flex-direction: column; justify-content: center; margin-bottom: 14px; }
+  .m-rule { height: 3px; background: var(--text); transform: scaleX(0); transform-origin: left; }
+  .m-stage.play .m-rule { animation: m-draw 500ms ease-in-out forwards; }
+  @keyframes m-draw { to { transform: scaleX(1); } }
+  .m-head { font-size: 25px; line-height: 1.25; margin-top: 12px; opacity: 0; }
+  .m-stage.play .m-head { animation: m-rise 300ms ease-out 350ms forwards; }
+  .m-folio-in { margin-top: 10px; opacity: 0; }
+  .m-stage.play .m-folio-in { animation: m-rise 300ms ease-out 500ms forwards; }
+  @keyframes m-rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+  .m-pages { position: relative; min-height: 120px; width: 100%; }
+  .m-page { position: absolute; inset: 0; background: var(--surface); border: 1px solid var(--border); padding: 14px 18px; }
+  .m-page.b { opacity: 0; }
+  .m-stage.play .m-page.a { animation: m-out 240ms ease forwards; }
+  .m-stage.play .m-page.b { animation: m-in 300ms ease-out 220ms forwards; }
+  @keyframes m-out { to { opacity: 0; } }
+  @keyframes m-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+  .m-replay { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase; background: none; border: 1px solid var(--ctl-border); padding: 8px 14px; cursor: pointer; color: var(--text); transition: color 180ms ease, border-color 180ms ease; }
+  .m-replay:hover { color: var(--accent); border-color: var(--accent); }
+  @media (prefers-reduced-motion: reduce) { .m-rule { transform: none; } .m-head, .m-folio-in { opacity: 1; } }
+
+  @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <span class="folio">dunl.app / systems / editorial</span>
+    <nav class="folio">
+      <a href="../">Systems</a><a href="#color">Color</a><a href="#type">Type</a><a href="#components">Components</a><a href="#tokens">Tokens</a>
+    </nav>
+  </header>
+
+  <h1 class="display">Long-form first, <em>everything else after.</em></h1>
+  <p class="dek">Newsreader set against a working monospace. One restrained ink blue. Structure carried by typography — rules, weights, and optical sizes doing what boxes and shadows usually fake.</p>
+  <div class="byline">
+    <span class="folio">Design language · No. 03</span>
+    <span class="folio">Reading measure 66ch</span>
+    <span class="folio">v1.0</span>
+  </div>
+
+  <!-- ================= 01 PRINCIPLES ================= -->
+  <div class="sec-label"><span class="folio">01 · Principles</span></div>
+  <p class="body first">Two typefaces in permanent conversation: the serif reads, the mono annotates. Every folio line, caption, byline, and datum is JetBrains Mono in small caps tracking — the machinery of the page kept visibly separate from its prose. The page is a column, not a grid; the measure holds at 66 characters and everything else negotiates around it.</p>
+  <p class="body">The blue is spent like a byline budget. It appears on links, one pull-quote rule, the drop cap, and the primary action — <a class="inline" href="#components">and nowhere else</a>. When everything is neutral, one color is a headline.</p>
+
+  <!-- ================= 02 COLOR ================= -->
+  <div class="sec-label" id="color"><span class="folio">02 · Color</span></div>
+  <div class="swatches">
+    <div class="swatch"><div class="swatch-chip" style="background:#F0F1F3;"></div><div class="swatch-meta"><b>bg</b>#F0F1F3 · cool paper</div></div>
+    <div class="swatch"><div class="swatch-chip" style="background:#FFFFFF;"></div><div class="swatch-meta"><b>surface</b>#FFFFFF · panels, tables</div></div>
+    <div class="swatch"><div class="swatch-chip" style="background:#18191B;"></div><div class="swatch-meta"><b>text</b>#18191B · 15.6:1</div></div>
+    <div class="swatch"><div class="swatch-chip" style="background:#52555C;"></div><div class="swatch-meta"><b>text / 2</b>#52555C · deks, quotes</div></div>
+    <div class="swatch"><div class="swatch-chip" style="background:#696C74;"></div><div class="swatch-meta"><b>text / 3</b>#696C74 · folios · 4.6:1 min</div></div>
+    <div class="swatch"><div class="swatch-chip" style="background:#2B5C8A;"></div><div class="swatch-meta"><b>ink blue</b>#2B5C8A · 6.2:1 · spent sparingly</div></div>
+    <div class="swatch"><div class="swatch-chip" style="background:#1E4468;"></div><div class="swatch-meta"><b>ink / dark</b>#1E4468 · hover, pressed</div></div>
+    <div class="swatch"><div class="swatch-chip" style="background:#D4D6DB;"></div><div class="swatch-meta"><b>rule</b>#D4D6DB · hairlines · #8A8D95 on controls</div></div>
+  </div>
+
+  <!-- ================= 03 TYPE ================= -->
+  <div class="sec-label" id="type"><span class="folio">03 · Type</span></div>
+  <div class="panel">
+    <div class="spec-row"><span class="folio">Display · 400 · opsz 72</span><span style="font-size:36px; line-height:1.1; letter-spacing:-0.015em;">Optical size is the luxury</span></div>
+    <div class="spec-row"><span class="folio">Ital · the aside</span><span style="font-size:26px; font-style:italic;">emphasis, titles of works, the wry beat</span></div>
+    <div class="spec-row"><span class="folio">Dek · 300</span><span style="font-size:20px; font-weight:300; color:var(--text-2);">Light weight earns the second read</span></div>
+    <div class="spec-row"><span class="folio">Body · 400 · 17/1.75</span><span>The paragraph is the unit of design. Everything serves the reading.</span></div>
+    <div class="spec-row"><span class="folio">Folio · Mono 10.5</span><span class="folio" style="color:var(--text-2);">CAPTIONS · BYLINES · DATA · TRACKED 0.14EM</span></div>
+  </div>
+  <blockquote>
+    Structure is typography. If the hierarchy needs a box to be legible, the hierarchy is wrong.
+    <span class="folio">— The one pull-quote per page</span>
+  </blockquote>
+
+  <!-- ================= 04 COMPONENTS ================= -->
+  <div class="sec-label" id="components"><span class="folio">04 · Components</span></div>
+  <div class="panel">
+    <div class="folio" style="margin-bottom:14px;">Buttons — mono voice, editorial restraint</div>
+    <div class="demo-row">
+      <button class="btn accent">Subscribe</button>
+      <button class="btn">Read the archive</button>
+      <button class="btn quiet">Share</button>
+    </div>
+    <p class="fine" style="margin-top:14px;">One filled action per page — ink blue with white at 7.0:1. Everything else is an outline in the mono voice.</p>
+  </div>
+  <div class="panel" style="margin-top:14px;">
+    <div class="folio" style="margin-bottom:14px;">Field + controls</div>
+    <div class="field">
+      <label>Your address</label>
+      <input type="email" placeholder="for the weekly letter" spellcheck="false">
+      <span class="hint">Sent Sundays. Unsubscribe is one click and holds no grudge.</span>
+    </div>
+    <div class="demo-row" style="margin-top:18px; gap:16px;">
+      <span class="switch on" role="switch" aria-checked="true" tabindex="0" onclick="this.classList.toggle('on'); this.setAttribute('aria-checked', this.classList.contains('on'))"></span>
+      <span class="switch" role="switch" aria-checked="false" tabindex="0" onclick="this.classList.toggle('on'); this.setAttribute('aria-checked', this.classList.contains('on'))"></span>
+      <span class="fine">ink blue on duty · border #8A8D95 · 3.3:1</span>
+    </div>
+  </div>
+  <div class="panel" style="margin-top:14px;">
+    <div class="folio" style="margin-bottom:10px;">Table — the ledger register</div>
+    <table>
+      <thead><tr><th>Piece</th><th>Section</th><th style="text-align:right;">Words</th></tr></thead>
+      <tbody>
+        <tr><td>The unhurried interface</td><td>Essays</td><td class="num">2,840</td></tr>
+        <tr><td>Notes on optical sizing</td><td>Craft</td><td class="num">1,120</td></tr>
+        <tr><td>Quarterly reading list</td><td>Lists</td><td class="num">640</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ================= 05 MOTION ================= -->
+  <div class="sec-label"><span class="folio">05 · Motion</span></div>
+  <p class="body">A page of prose earns stillness. Motion lives at the edges — the arrival of a page, the turn to the next, the quiet color change of a link. Mid-column, while the reader is reading, nothing moves. Ever.</p>
+  <div class="panel">
+    <table>
+      <thead><tr><th>token</th><th>value</th><th>use</th></tr></thead>
+      <tbody>
+        <tr><td>settle</td><td class="num">300ms · ease-out</td><td>page and section entrances — opacity + 8px rise</td></tr>
+        <tr><td>ink</td><td class="num">180ms · ease</td><td>link + button color turns — color only, nothing else</td></tr>
+        <tr><td>rule-draw</td><td class="num">500ms · ease-in-out · once</td><td>the heavy rule draws left to right on arrival</td></tr>
+        <tr><td>turn</td><td class="num">240ms out · 300ms in</td><td>page-to-page crossfade — old ink dries before new ink lands</td></tr>
+        <tr><td>none</td><td class="num">0ms</td><td>while reading — the column never moves</td></tr>
+      </tbody>
+    </table>
+    <p class="fine" style="margin-top:12px;">Everything is opacity and a few pixels of rise. No parallax, no scroll-jacking, nothing follows the cursor. Reduced-motion prints the page instantly.</p>
+  </div>
+  <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:14px; margin-top:14px;">
+    <div class="panel m-demo">
+      <div class="folio" style="margin-bottom:12px;">Arrival · rule, then words</div>
+      <div class="m-stage play">
+        <div class="m-rule"></div>
+        <div class="m-head">The rule draws first,<br><em>then the page speaks.</em></div>
+        <div class="folio m-folio-in">Section 05 · Motion</div>
+      </div>
+      <button class="m-replay" onclick="var s=this.closest('.m-demo').querySelector('.m-stage');s.classList.remove('play');void s.offsetWidth;s.classList.add('play');">Replay</button>
+    </div>
+    <div class="panel m-demo">
+      <div class="folio" style="margin-bottom:12px;">Page turn · crossfade</div>
+      <div class="m-stage play">
+        <div class="m-pages">
+          <div class="m-page a"><span class="folio">p. 12</span><p style="font-size:14.5px; margin-top:6px;">The old page dries…</p></div>
+          <div class="m-page b"><span class="folio">p. 13</span><p style="font-size:14.5px; margin-top:6px;">…before the new ink lands, six pixels below.</p></div>
+        </div>
+      </div>
+      <button class="m-replay" onclick="var s=this.closest('.m-demo').querySelector('.m-stage');s.classList.remove('play');void s.offsetWidth;s.classList.add('play');">Replay</button>
+    </div>
+    <div class="panel m-demo">
+      <div class="folio" style="margin-bottom:12px;">Ink · live</div>
+      <div class="m-stage">
+        <p style="font-size:15.5px;">Color is the only hover: <a class="inline" href="#">a link turns its ink</a> in 180ms, and underlines never thicken or slide.</p>
+      </div>
+      <p class="fine" style="margin:0;">If a hover changes anything but color, it is too loud for this room.</p>
+    </div>
+  </div>
+  <pre class="code" style="margin-top:14px;">--motion-ink:     180ms ease;         /* color only */
+--motion-settle:  300ms ease-out;     /* opacity + 8px rise */
+--motion-rule:    500ms ease-in-out;  /* scaleX, origin left, once */
+--motion-turn:    240ms out · 300ms in;
+--motion-reading: 0ms;                /* the column never moves */</pre>
+
+  <!-- ================= 06 VOICE ================= -->
+  <div class="sec-label"><span class="folio">06 · Voice</span></div>
+  <p class="body">Complete sentences, unhurried, precise. Interface copy reads like a well-edited caption: <span class="fine">"Saved to your library. Filed under Craft."</span> The mono register handles facts; the serif handles meaning. Neither exclaims.</p>
+
+  <!-- ================= 07 DO / DON'T ================= -->
+  <div class="sec-label"><span class="folio">07 · Do / Don't</span></div>
+  <div class="dd">
+    <div class="panel yes">
+      <h3>Do</h3>
+      <li>Hold the measure at 60–70ch, whatever the viewport</li>
+      <li>Let optical sizing carry the display weight</li>
+      <li>Keep every folio, caption, and datum in mono</li>
+      <li>Spend the blue like a budget — links + one action</li>
+      <li>Separate with rules; a 3px rule is a headline</li>
+      <li>Use white panels only where data needs a desk</li>
+    </div>
+    <div class="panel no">
+      <h3>Don't</h3>
+      <li>No boxes around prose — typography is the structure</li>
+      <li>No second accent, ever</li>
+      <li>No serif below 14px — that's the mono's floor</li>
+      <li>No justified text; ragged right reads honest</li>
+      <li>No border-radius above 0 — corners are square</li>
+      <li>No motion while the reader is mid-column</li>
+    </div>
+  </div>
+
+  <!-- ================= 08 TOKENS ================= -->
+  <div class="sec-label" id="tokens"><span class="folio">08 · Tokens · Tokens Studio</span></div>
+  <p class="body">The <code>editorial</code> set from design-tokens.json — sync via Tokens Studio for Figma variables.</p>
+  <pre class="code">{
+  "editorial": {
+    "color": {
+      "bg": {
+        "value": "#F0F1F3",
+        "type": "color",
+        "description": "Light grey canvas"
+      },
+      "bg-alt": {
+        "value": "#E8E9EC",
+        "type": "color"
+      },
+      "surface": {
+        "value": "#FFFFFF",
+        "type": "color"
+      },
+      "text": {
+        "value": "#18191B",
+        "type": "color"
+      },
+      "text-secondary": {
+        "value": "#52555C",
+        "type": "color"
+      },
+      "text-tertiary": {
+        "value": "#696C74",
+        "type": "color",
+        "description": "4.6:1 min (was #8A8D95 / 2.9:1 - that value now lives at control.border)"
+      },
+      "border": {
+        "value": "#D4D6DB",
+        "type": "color"
+      },
+      "border-light": {
+        "value": "#E2E4E8",
+        "type": "color"
+      },
+      "accent": {
+        "value": "#2B5C8A",
+        "type": "color",
+        "description": "Ink blue - used sparingly"
+      },
+      "accent-light": {
+        "value": "#EDF3F8",
+        "type": "color"
+      },
+      "accent-dark": {
+        "value": "#1E4468",
+        "type": "color"
+      }
+    },
+    "control": {
+      "tint": {
+        "value": "#2B5C8A",
+        "type": "color",
+        "description": "System controls - ink blue on duty (7.0:1 on surface)"
+      },
+      "on-tint": {
+        "value": "#FFFFFF",
+        "type": "color",
+        "description": "Glyphs on tint - 7.0:1"
+      },
+      "track": {
+        "value": "#D4D6DB",
+        "type": "color"
+      },
+      "border": {
+        "value": "#8A8D95",
+        "type": "color",
+        "description": "Field &amp; control boundaries - 3.3:1 vs surface"
+      },
+      "focus": {
+        "value": "#2B5C8A",
+        "type": "color"
+      }
+    }
+  }
+}</pre>
+
+  <footer>
+    <span class="folio">editorial v1.0 · part of dunl.app/systems</span>
+    <span class="folio">serif reads · mono annotates · blue is a budget</span>
+  </footer>
+</div>
+
+<!-- gate removed for offline kit -->
+</body>
+</html>

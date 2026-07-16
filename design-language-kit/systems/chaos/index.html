@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>CHAOS – Design Language</title>
+<link href="https://fonts.googleapis.com/css2?family=Rubik+Glitch&family=Syne:wght@800&family=JetBrains+Mono:wght@400;700&family=Instrument+Serif:ital@1&family=Plus+Jakarta+Sans:wght@800&family=Newsreader:ital,opsz,wght@1,6..72,400&display=swap" rel="stylesheet">
+<style>
+  /* ============ CHAOS TOKENS ============ */
+  :root {
+    --bg: #0A0A0A; --text: #FFFFFF; --muted: #888888;
+    --red: #FF003C; --green: #00FF87; --blue: #3D00FF; --blue-ink: #825BFF;
+    --yellow: #FFE600; --orange: #FF6B00; --cyan: #00D4FF; --magenta: #FF00C8; --lime: #8AFF00;
+    --ctl-track: #262626; --ctl-border: rgba(255,255,255,0.45);
+    --glitch: 'Rubik Glitch', system-ui;
+    --mono: 'JetBrains Mono', monospace;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--text); font-family: var(--mono); font-size: 14px; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+  ::selection { background: var(--yellow); color: #000; }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 48px 26px 96px; overflow-x: hidden; }
+
+  /* marquee hairline – one moving line, always */
+  .marquee { position: fixed; top: 0; left: 0; right: 0; height: 26px; border-bottom: 1px solid var(--muted);
+    overflow: hidden; background: var(--bg); z-index: 50; display: flex; align-items: center; }
+  .marquee span { white-space: nowrap; font-size: 10px; letter-spacing: 0.3em; text-transform: uppercase; color: var(--muted);
+    animation: mq 22s linear infinite; padding-left: 100%; }
+  @keyframes mq { to { transform: translateX(-100%); } }
+  body { padding-top: 26px; }
+
+  /* ---------- the CHAOS surface: every card draws a seeded lot ---------- */
+  .card { border: 2px solid var(--c, var(--green)); background: transparent; padding: 22px;
+    transform: rotate(var(--tilt, 0deg)); border-radius: var(--r, 0px); transition: transform 600ms, border-radius 600ms, border-color 600ms; }
+  .card .cardhead { font-family: var(--hf, var(--glitch)); font-size: 19px; color: var(--c, var(--green)); margin-bottom: 10px; }
+  .card p, .card li { color: var(--muted); font-size: 13px; }
+
+  /* ---------- RGB-split display ---------- */
+  h1.display { font-family: var(--glitch); font-weight: 400; font-size: clamp(46px, 10vw, 92px); line-height: 1; position: relative; display: inline-block; }
+  h1.display::before, h1.display::after { content: attr(data-text); position: absolute; inset: 0; overflow: hidden; }
+  h1.display::before { color: var(--red); clip-path: inset(0 0 55% 0); transform: translate(-3px, 0); }
+  h1.display::after  { color: var(--cyan); clip-path: inset(55% 0 0 0); transform: translate(3px, 0); }
+  h1.display:hover::before { animation: ja 0.4s steps(2) infinite; }
+  h1.display:hover::after  { animation: jb 0.34s steps(2) infinite; }
+  @keyframes ja { 50% { transform: translate(3px, 1px); } }
+  @keyframes jb { 50% { transform: translate(-3px, -1px); } }
+
+  .label { font-size: 10px; letter-spacing: 0.28em; text-transform: uppercase; color: var(--muted); }
+  .sec-label { display: flex; align-items: center; gap: 12px; margin: 64px 0 18px; }
+  .sec-label b { font-family: var(--glitch); font-size: 15px; letter-spacing: 0.06em; }
+  .sec-label::after { content: ''; height: 2px; flex: 1; background: repeating-linear-gradient(90deg, var(--muted) 0 8px, transparent 8px 16px); }
+  p.body { max-width: 64ch; margin-bottom: 16px; color: var(--text); }
+  .faint { color: var(--muted); }
+  code { font-size: 12px; border: 1px dashed var(--muted); padding: 1px 6px; }
+  pre.code { font-size: 12px; border: 2px solid var(--green); padding: 18px 20px; overflow-x: auto; line-height: 1.6; border-radius: 14px; transform: rotate(-0.4deg); }
+
+  header { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; flex-wrap: wrap; margin-bottom: 8px; }
+  nav { display: flex; gap: 16px; flex-wrap: wrap; }
+  nav a { color: var(--muted); text-decoration: none; font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; }
+  nav a:hover { color: var(--yellow); }
+  .statusline { display: flex; gap: 18px; flex-wrap: wrap; margin: 14px 0 34px; font-size: 11px; color: var(--muted); }
+
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 18px; }
+
+  /* ---------- swatches ---------- */
+  .swatches { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 12px; }
+  .swatch { border: 1px solid var(--muted); }
+  .swatch-chip { height: 52px; }
+  .swatch-meta { padding: 9px 11px; font-size: 10px; line-height: 1.65; color: var(--muted); }
+  .swatch-meta b { color: var(--text); display: block; font-weight: 700; font-size: 11px; }
+
+  /* ---------- the six fonts ---------- */
+  .font-row { display: grid; grid-template-columns: 150px 1fr; gap: 14px; align-items: baseline; padding: 12px 0; border-bottom: 1px dashed var(--muted); }
+  .font-row:last-child { border-bottom: 0; }
+  @media (max-width: 620px) { .font-row { grid-template-columns: 1fr; gap: 2px; } }
+
+  /* ---------- components ---------- */
+  .btn { display: inline-flex; align-items: center; font-family: var(--mono); font-weight: 700; font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase;
+    padding: 12px 20px; cursor: pointer; background: transparent; border: 2px solid var(--c, var(--green)); color: var(--c, var(--green));
+    border-radius: var(--r, 0px); transform: rotate(var(--tilt, 0deg)); transition: transform 600ms, border-radius 600ms, border-color 600ms, color 600ms; }
+  .btn:hover { background: var(--c, var(--green)); color: #000; }
+  .btn:focus-visible { outline: 3px solid var(--yellow); outline-offset: 3px; }
+  .btn.solid { background: var(--c, var(--green)); color: #000; }
+  .btn.solid:hover { filter: brightness(1.15); }
+
+  .field { display: flex; flex-direction: column; gap: 6px; max-width: 340px; }
+  .field label { font-size: 10px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--muted); }
+  .field input { background: transparent; border: 2px solid var(--ctl-border); color: var(--text);
+    font-family: var(--mono); font-size: 14px; padding: 11px 13px; outline: none; border-radius: var(--r, 0px); }
+  .field input:focus { border-color: var(--yellow); }
+  .field input::placeholder { color: var(--muted); }
+
+  .switch { width: 46px; height: 26px; background: var(--ctl-track); border: 2px solid var(--ctl-border); position: relative; cursor: pointer; flex: none; border-radius: var(--r, 0px); }
+  .switch::after { content: ''; position: absolute; top: 2px; left: 2px; width: 18px; height: 18px; background: var(--muted); transition: left 0.15s steps(2); border-radius: inherit; }
+  .switch.on { background: var(--green); border-color: var(--green); }
+  .switch.on::after { left: 22px; background: #000; }
+
+  .sticker { display: inline-flex; padding: 5px 13px; font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+    background: var(--c, var(--yellow)); color: #000; transform: rotate(var(--tilt, -1deg)); border-radius: var(--r, 0px); }
+
+  .demo-row { display: flex; gap: 14px; flex-wrap: wrap; align-items: center; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th { font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); text-align: left; font-weight: 700; padding: 9px 11px; border-bottom: 2px solid var(--ctl-border); }
+  td { padding: 9px 11px; border-bottom: 1px dashed var(--muted); }
+  td.num { text-align: right; font-variant-numeric: tabular-nums; }
+
+  /* ---------- do / don't ---------- */
+  .dd { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 18px; }
+  .dd h3 { font-family: var(--glitch); font-size: 18px; margin-bottom: 10px; }
+  .dd .yes h3 { color: var(--green); }
+  .dd .no h3 { color: var(--red); }
+  .dd li { list-style: none; padding: 7px 0 7px 20px; position: relative; border-bottom: 1px dashed var(--muted); }
+  .dd .yes li::before { content: '+'; position: absolute; left: 0; color: var(--green); font-weight: 700; }
+  .dd .no li::before { content: '×'; position: absolute; left: 0; color: var(--red); font-weight: 700; }
+
+  footer { margin-top: 76px; padding-top: 16px; border-top: 2px solid var(--ctl-border); display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; font-size: 10px; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; }
+
+  /* ---------- motion demos ---------- */
+  .m-demo .m-stage { min-height: 110px; display: flex; align-items: center; justify-content: center; margin-bottom: 14px; }
+  .m-slam { font-family: var(--glitch); font-size: 40px; color: var(--yellow); opacity: 0; }
+  .m-stage.play .m-slam { animation: m-slamk 240ms cubic-bezier(0.22, 1.6, 0.36, 1) forwards; }
+  @keyframes m-slamk { 0% { opacity: 0; transform: scale(2.6) rotate(-4deg); } 100% { opacity: 1; transform: scale(1) rotate(-1deg); } }
+  .m-jit { position: relative; display: inline-block; font-family: var(--glitch); font-size: 32px; }
+  .m-jit::before, .m-jit::after { content: attr(data-text); position: absolute; inset: 0; overflow: hidden; }
+  .m-jit::before { color: var(--red); clip-path: inset(0 0 55% 0); transform: translate(-2px, 0); }
+  .m-jit::after { color: var(--cyan); clip-path: inset(55% 0 0 0); transform: translate(2px, 0); }
+  .m-jit:hover::before { animation: ja 0.4s steps(2) infinite; }
+  .m-jit:hover::after { animation: jb 0.34s steps(2) infinite; }
+  .m-replay { font-family: var(--mono); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; background: var(--green); color: #000; border: none; padding: 10px 16px; cursor: pointer; }
+  .m-replay:hover { background: var(--yellow); }
+  @media (prefers-reduced-motion: reduce) { .m-slam { opacity: 1; } }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { animation: none !important; transition: none !important; }
+    .marquee span { animation: none !important; padding-left: 0; }
+  }
+</style>
+</head>
+<body>
+<div class="marquee" aria-hidden="true"><span>TENDENCIES NOT RULES · RE-RANDOMIZED EVERY FIVE SECONDS · ALIVE NOT UGLY · TENDENCIES NOT RULES · RE-RANDOMIZED EVERY FIVE SECONDS · ALIVE NOT UGLY ·</span></div>
+<div class="wrap">
+
+  <header>
+    <div>
+      <span class="label">dunl.app / systems / chaos</span>
+      <h1 class="display" data-text="CHAOS" style="margin-top:10px;">CHAOS</h1>
+    </div>
+    <nav>
+      <a href="../">Systems</a><a href="#color">Color</a><a href="#fonts">Fonts</a><a href="#components">Components</a><a href="#tokens">Tokens</a>
+    </nav>
+  </header>
+  <div class="statusline"><span>anti-design, designed</span><span>seeded lots</span><span id="reroll-count">roll 001</span><span>v1.0</span></div>
+
+  <p class="body">Every card on this page just drew a lot: a neon from the pool, a tilt between one and three degrees, a radius from {0, 6, 14, 24}. In five seconds it draws again. That's the whole system — <span class="faint">tendencies, not rules, and exactly one rule anyway.</span></p>
+
+  <!-- ================= 01 PRINCIPLES ================= -->
+  <div class="sec-label"><span class="label">01</span><b>Principles</b></div>
+  <div class="grid">
+    <div class="card lot"><div class="cardhead">Seeded, not sloppy</div><p>Randomness is drawn from pools someone curated. Wrong-on-purpose still has to compose — alive, not ugly.</p></div>
+    <div class="card lot"><div class="cardhead">Clash the type</div><p>Six fonts, zero harmony, one page. Hierarchy survives on size and color because family loyalty is dead.</p></div>
+    <div class="card lot"><div class="cardhead">Everything tilts</div><p>Nothing sits square. One to three degrees is enough to feel hand-placed; more is a mess, and mess is banned.</p></div>
+    <div class="card lot"><div class="cardhead">One rule keeps</div><p>Blue #3D00FF can't spell — 2.5:1 on black. It stays a fill; words in blue use blue-ink #825BFF. Chaos, but legible chaos.</p></div>
+  </div>
+
+  <!-- ================= 02 COLOR ================= -->
+  <div class="sec-label" id="color"><span class="label">02</span><b>Color · the pool</b></div>
+  <div class="swatches">
+    <div class="swatch"><div class="swatch-chip" style="background:#FF003C;"></div><div class="swatch-meta"><b>red</b>#FF003C · 5.0:1</div></div>
+    <div class="swatch"><div class="swatch-chip" style="background:#00FF87;"></div><div class="swatch-meta"><b>green</b>#00FF87 · control accent</div></div>
+    <div class="swatch"><div class="swatch-chip" style="background:#FFE600;"></div><div class="swatch-meta"><b>yellow</b>#FFE600 · focus ring</div></div>
+    <div class="swatch"><div class="swatch-chip" style="background:#FF6B00;"></div><div class="swatch-meta"><b>orange</b>#FF6B00</div></div>
+    <div class="swatch"><div class="swatch-chip" style="background:#00D4FF;"></div><div class="swatch-meta"><b>cyan</b>#00D4FF</div></div>
+    <div class="swatch"><div class="swatch-chip" style="background:#FF00C8;"></div><div class="swatch-meta"><b>magenta</b>#FF00C8 · 5.7:1</div></div>
+    <div class="swatch"><div class="swatch-chip" style="background:#8AFF00;"></div><div class="swatch-meta"><b>lime</b>#8AFF00</div></div>
+    <div class="swatch"><div class="swatch-chip" style="background:#3D00FF;"></div><div class="swatch-meta"><b>blue</b>#3D00FF · fills only · never words</div></div>
+    <div class="swatch"><div class="swatch-chip" style="background:#825BFF;"></div><div class="swatch-meta"><b>blue / ink</b>#825BFF · the one rule chaos keeps</div></div>
+  </div>
+  <p class="faint" style="font-size:12px; margin-top:14px;">Border lots draw from the seven that clear the 3:1 shape bar. Blue never enters the border pool — it can barely hold a shape, let alone a sentence.</p>
+
+  <!-- ================= 03 FONTS ================= -->
+  <div class="sec-label" id="fonts"><span class="label">03</span><b>The six fonts</b></div>
+  <div class="card lot">
+    <div class="font-row"><span class="label">Rubik Glitch</span><span style="font-family:'Rubik Glitch'; font-size:24px;">THE HEADLINER BREAKS UP</span></div>
+    <div class="font-row"><span class="label">Syne 800</span><span style="font-family:'Syne'; font-weight:800; font-size:22px; letter-spacing:-0.02em;">Borrowed muscle from the house</span></div>
+    <div class="font-row"><span class="label">Jakarta 800</span><span style="font-family:'Plus Jakarta Sans'; font-weight:800; font-size:22px;">Retail confidence, wrong party</span></div>
+    <div class="font-row"><span class="label">Instrument it.</span><span style="font-family:'Instrument Serif'; font-style:italic; font-size:24px;">elegance, misfiled</span></div>
+    <div class="font-row"><span class="label">Newsreader it.</span><span style="font-family:'Newsreader'; font-style:italic; font-size:22px;">the broadsheet, defaced</span></div>
+    <div class="font-row"><span class="label">JetBrains Mono</span><span style="font-family:var(--mono); font-weight:700; font-size:18px;">the machine keeps the receipts</span></div>
+  </div>
+  <p class="faint" style="font-size:12px; margin-top:12px;">Card headings draw a font lot along with their color. Body copy stays mono — someone has to be the adult.</p>
+
+  <!-- ================= 04 COMPONENTS ================= -->
+  <div class="sec-label" id="components"><span class="label">04</span><b>Components</b></div>
+  <div class="grid">
+    <div class="card lot">
+      <div class="cardhead">Buttons</div>
+      <div class="demo-row">
+        <button class="btn lot">Do it</button>
+        <button class="btn lot solid">DO IT LOUDER</button>
+      </div>
+      <p style="margin-top:14px;">Each button draws its own lot. Hover inverts — text goes black because black on any pool color always passes.</p>
+    </div>
+    <div class="card lot">
+      <div class="cardhead">Stickers</div>
+      <div class="demo-row">
+        <span class="sticker lot">New</span>
+        <span class="sticker lot">Broken on purpose</span>
+        <span class="sticker lot">B-side</span>
+      </div>
+      <p style="margin-top:14px;">Slapped-on labels — black text, pool fill, own tilt. The tab bar wears these.</p>
+    </div>
+    <div class="card lot">
+      <div class="cardhead">Field + control</div>
+      <div class="field">
+        <label>Shout something</label>
+        <input type="text" placeholder="lowercase is fine, coward" spellcheck="false">
+      </div>
+      <div class="demo-row" style="margin-top:16px; gap:16px;">
+        <span class="switch on" role="switch" aria-checked="true" tabindex="0" onclick="this.classList.toggle('on'); this.setAttribute('aria-checked', this.classList.contains('on'))"></span>
+        <span class="switch" role="switch" aria-checked="false" tabindex="0" onclick="this.classList.toggle('on'); this.setAttribute('aria-checked', this.classList.contains('on'))"></span>
+        <span class="faint" style="font-size:12px;">chrome doesn't re-randomize · green stays green</span>
+      </div>
+    </div>
+    <div class="card lot">
+      <div class="cardhead">Ledger of damage</div>
+      <table>
+        <thead><tr><th>Element</th><th style="text-align:right;">Tilt</th></tr></thead>
+        <tbody>
+          <tr><td>Hero</td><td class="num">-1.2°</td></tr>
+          <tr><td>This table</td><td class="num">inherits</td></tr>
+          <tr><td style="color:var(--blue-ink);">Blue words</td><td class="num">4.6:1</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ================= 05 MOTION ================= -->
+  <div class="sec-label"><span class="label">05</span><b>Motion</b></div>
+  <p class="body">Three registers: the <b>interval</b> (the whole page redraws itself every five seconds), the <b>slam</b> (entrances hit hard, once, then hold still), and the <b>jitter</b> (RGB split on hover — steps(2), never smooth). Easing between lots would imply the lots were related.</p>
+  <div class="card lot">
+    <table>
+      <thead><tr><th>token</th><th>value</th><th>use</th></tr></thead>
+      <tbody>
+        <tr><td>reroll</td><td class="num">every 5000ms · 600ms ease</td><td>all lots redraw — border, tilt, radius, heading font</td></tr>
+        <tr><td>slam</td><td class="num">240ms · cubic-bezier(0.22, 1.6, 0.36, 1)</td><td>entrances — oversized, overshooting, once per element</td></tr>
+        <tr><td>jitter</td><td class="num">steps(2) · hover only</td><td>RGB-split on the display face</td></tr>
+        <tr><td>marquee</td><td class="num">22s · linear · loop</td><td>the one hairline that never stops</td></tr>
+      </tbody>
+    </table>
+    <p class="faint" style="font-size:11px; margin-top:12px;">The chrome never joins in — controls hold stable green while the content rolls. Reduced-motion kills the interval, the marquee, and the jitter — the page freezes on its first roll and stays honest.</p>
+  </div>
+  <div class="grid" style="margin-top:18px;">
+    <div class="card lot m-demo">
+      <div class="label" style="margin-bottom:12px;">slam · 240ms overshoot</div>
+      <div class="m-stage play"><span class="m-slam">BAM.</span></div>
+      <button class="m-replay" onclick="var s=this.closest('.m-demo').querySelector('.m-stage');s.classList.remove('play');void s.offsetWidth;s.classList.add('play');">again</button>
+    </div>
+    <div class="card lot m-demo">
+      <div class="label" style="margin-bottom:12px;">jitter · hover it</div>
+      <div class="m-stage"><span class="m-jit" data-text="unstable">unstable</span></div>
+      <p class="faint" style="font-size:11px; margin:0;">steps(2). a tween would ruin it.</p>
+    </div>
+    <div class="card lot m-demo">
+      <div class="label" style="margin-bottom:12px;">reroll · don't wait for the interval</div>
+      <div class="m-stage" style="flex-direction:column; gap:12px;">
+        <button class="m-replay" onclick="reroll()">reroll everything</button>
+        <span class="faint" style="font-size:11px; text-align:center;">every lot on this page redraws — 600ms ease, chrome stays green</span>
+      </div>
+    </div>
+  </div>
+  <pre class="code" style="margin-top:18px;">--motion-reroll:  600ms ease;      /* interval: 5000ms */
+--motion-slam:    240ms cubic-bezier(0.22, 1.6, 0.36, 1);
+--motion-jitter:  steps(2);        /* hover only, never smooth */
+--motion-marquee: 22s linear infinite;</pre>
+
+  <!-- ================= 06 VOICE ================= -->
+  <div class="sec-label"><span class="label">06</span><b>Voice</b></div>
+  <p class="body">Loud, lowercase-or-ALLCAPS, self-aware. <span class="faint">"saved. probably."</span> — the interface mocks polish but never the person. Errors are blunt and useful: <span class="faint">"that broke. here's the undo."</span></p>
+
+  <!-- ================= 07 DO / DON'T ================= -->
+  <div class="sec-label"><span class="label">07</span><b>Do / Don't</b></div>
+  <div class="dd">
+    <div class="card lot yes">
+      <h3>Do</h3>
+      <li>Draw every lot from a curated pool</li>
+      <li>Cap tilt at 3° — hand-placed, not dropped</li>
+      <li>Keep body copy in mono at full white</li>
+      <li>Freeze everything under reduced-motion</li>
+      <li>Keep system chrome on stable green</li>
+      <li>Step blue to blue-ink the instant it spells</li>
+    </div>
+    <div class="card lot no">
+      <h3>Don't</h3>
+      <li>No blue words, no blue borders — fills only</li>
+      <li>No re-rolling mid-read on inputs or chrome</li>
+      <li>No random type sizes — clash faces, not scales</li>
+      <li>No muted below #888888 — 5:1 is the floor</li>
+      <li>No two solid neons touching</li>
+      <li>No ugly. Alive is the brief; ugly is a miss</li>
+    </div>
+  </div>
+
+  <!-- ================= 08 TOKENS ================= -->
+  <div class="sec-label" id="tokens"><span class="label">08</span><b>Tokens · Tokens Studio</b></div>
+  <p class="body">The <code>chaos</code> set from design-tokens.json. The pool is the palette; the lots are runtime.</p>
+  <pre class="code">{
+  "chaos": {
+    "color": {
+      "bg": {
+        "value": "#0A0A0A",
+        "type": "color",
+        "description": "Near-black canvas - always"
+      },
+      "text": {
+        "value": "#FFFFFF",
+        "type": "color"
+      },
+      "red": {
+        "value": "#FF003C",
+        "type": "color"
+      },
+      "green": {
+        "value": "#00FF87",
+        "type": "color"
+      },
+      "blue": {
+        "value": "#3D00FF",
+        "type": "color",
+        "description": "Fills &amp; shapes only - 2.5:1 on black, never words; pair with blue-ink"
+      },
+      "blue-ink": {
+        "value": "#825BFF",
+        "type": "color",
+        "description": "Text-grade blue - 4.6:1; the one rule chaos keeps"
+      },
+      "yellow": {
+        "value": "#FFE600",
+        "type": "color"
+      },
+      "orange": {
+        "value": "#FF6B00",
+        "type": "color"
+      },
+      "cyan": {
+        "value": "#00D4FF",
+        "type": "color"
+      },
+      "magenta": {
+        "value": "#FF00C8",
+        "type": "color"
+      },
+      "lime": {
+        "value": "#8AFF00",
+        "type": "color"
+      },
+      "black": {
+        "value": "#000000",
+        "type": "color"
+      }
+    },
+    "control": {
+      "tint": {
+        "value": "#00FF87",
+        "type": "color",
+        "description": "Chrome doesn't re-randomize - one stable control accent (14.8:1)"
+      },
+      "on-tint": {
+        "value": "#000000",
+        "type": "color"
+      },
+      "track": {
+        "value": "#262626",
+        "type": "color"
+      },
+      "border": {
+        "value": "rgba(255,255,255,0.45)",
+        "type": "color",
+        "description": "Field &amp; control boundaries - 4.5:1 composite"
+      },
+      "focus": {
+        "value": "#FFE600",
+        "type": "color"
+      }
+    }
+  }
+}</pre>
+
+  <footer>
+    <span>chaos v1.0 · part of dunl.app/systems</span>
+    <span>tendencies not rules · one rule anyway</span>
+  </footer>
+</div>
+
+<script>
+(function () {
+  var POOL = ['#FF003C','#00FF87','#FFE600','#FF6B00','#00D4FF','#FF00C8','#8AFF00']; // 3:1 shape bar — blue never enters
+  var FONTS = ["'Rubik Glitch', system-ui", "'Syne', sans-serif", "'Plus Jakarta Sans', sans-serif",
+               "'Instrument Serif', serif", "'Newsreader', serif", "'JetBrains Mono', monospace"];
+  var RADII = [0, 6, 14, 24];
+  var roll = 0;
+  var rc = document.getElementById('reroll-count');
+
+  function lot(el, isBtn) {
+    el.style.setProperty('--c', POOL[Math.floor(Math.random()*POOL.length)]);
+    el.style.setProperty('--tilt', ((Math.random()*4 - 2) < 0 ? -1 : 1) * (1 + Math.random()*2) * 0.5 + 'deg');
+    el.style.setProperty('--r', RADII[Math.floor(Math.random()*RADII.length)] + 'px');
+    if (!isBtn) {
+      var head = el.querySelector('.cardhead');
+      if (head) head.style.fontFamily = FONTS[Math.floor(Math.random()*FONTS.length)];
+    }
+  }
+  function reroll() {
+    roll++;
+    document.querySelectorAll('.card.lot').forEach(function (el) { lot(el, false); });
+    document.querySelectorAll('.btn.lot, .sticker.lot').forEach(function (el) { lot(el, true); });
+    if (rc) rc.textContent = 'roll ' + String(roll).padStart(3, '0');
+  }
+  reroll();
+  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    setInterval(reroll, 5000);
+  }
+})();
+// gate removed for offline kit
+</script>
+</body>
+</html>

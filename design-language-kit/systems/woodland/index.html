@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Woodland – Design Language</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* ============ WOODLAND (UNDERGROWTH) TOKENS · spring canon ============ */
+  :root {
+    --bg: #FDF8EE;                 /* spring morning */
+    --bg-noon: #F6F9F2;            /* spring afternoon */
+    --surface: rgba(255,255,255,0.80);
+    --text: #3D3529;               /* reader ink – 10.9:1 */
+    --text-soft: #7A6F5E;          /* 4.6:1 min */
+    --text-muted: #7B705D;         /* captions – 4.6:1 min */
+    --leaf: #7BAE6B;               /* fills + large – 2.6:1 as ink */
+    --leaf-ink: #517B44;           /* leaf when it carries words */
+    --blossom: #E8A0B4;            /* decoration only */
+    --pollen: #F2C94C;             /* celebration only */
+    --bark: #8B7355;
+    --bark-ink: #7B664B;
+    --shadow: rgba(139,115,85,0.12);
+    --ctl-tint: #679C56; --ctl-border: #998D78; --ctl-track: #E4DCCB;
+    --story: 'Fraunces', serif;
+    --reader: 'DM Sans', sans-serif;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--text); font-family: var(--reader); font-size: 15.5px; line-height: 1.75; -webkit-font-smoothing: antialiased; transition: background 900ms ease; }
+  body.noon { background: var(--bg-noon); }
+  ::selection { background: var(--leaf); color: #FFFFFF; }
+  .wrap { max-width: 920px; margin: 0 auto; padding: 48px 26px 96px; position: relative; }
+
+  /* ---------- the Woodland surface ---------- */
+  .card { background: var(--surface); border: 1.5px solid var(--ctl-track); border-radius: 22px; padding: 26px;
+    box-shadow: 0 8px 24px -14px var(--shadow); }
+
+  /* rolling hills footer of the hero – the storybook horizon */
+  .hills { display: block; width: 100%; height: 64px; margin-top: 26px; }
+
+  /* ---------- type ---------- */
+  h1.display { font-family: var(--story); font-weight: 700; font-optical-sizing: auto; font-size: clamp(42px, 8vw, 68px); line-height: 1.08; letter-spacing: -0.01em; }
+  h1.display em { font-style: italic; font-weight: 500; color: var(--leaf-ink); }
+  h2 { font-family: var(--story); font-weight: 600; font-size: 25px; line-height: 1.2; margin-bottom: 10px; }
+  .label { font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-soft); }
+  .sec-label { display: flex; align-items: center; gap: 12px; margin: 68px 0 18px; }
+  .sec-label .leafmark { width: 16px; height: 16px; flex: none; }
+  .sec-label::after { content: ''; height: 1.5px; flex: 1; background: var(--ctl-track); border-radius: 2px; }
+  p.body { max-width: 62ch; margin-bottom: 16px; }
+  .soft { color: var(--text-soft); }
+  .fine { font-size: 13px; color: var(--text-muted); }
+  code { font-family: ui-monospace, Menlo, monospace; font-size: 12.5px; background: rgba(139,115,85,0.10); border: 1px solid var(--ctl-track); padding: 1px 7px; border-radius: 8px; }
+  pre.code { font-family: ui-monospace, Menlo, monospace; font-size: 12px; background: var(--surface); border: 1.5px solid var(--ctl-track); border-radius: 18px; padding: 20px 22px; overflow-x: auto; line-height: 1.65; }
+
+  /* ---------- header ---------- */
+  header { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; margin-bottom: 36px; }
+  .wordmark { font-family: var(--story); font-weight: 700; font-size: 19px; display: flex; align-items: center; gap: 10px; }
+  nav { display: flex; gap: 18px; align-items: center; }
+  nav a { color: var(--text-soft); text-decoration: none; font-size: 12.5px; font-weight: 600; }
+  nav a:hover { color: var(--leaf-ink); }
+
+  /* time-of-day toggle – the seasonal dimension, live */
+  .daytoggle { display: inline-flex; border: 1.5px solid var(--ctl-border); border-radius: 100px; overflow: hidden; }
+  .daytoggle button { font-family: var(--reader); font-weight: 700; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase;
+    padding: 7px 14px; border: none; background: transparent; color: var(--text-soft); cursor: pointer; }
+  .daytoggle button.on { background: var(--ctl-tint); color: #FDF8EE; }
+  .daytoggle button:focus-visible { outline: 2px solid var(--ctl-tint); outline-offset: 2px; }
+
+  .statusline { display: flex; gap: 18px; flex-wrap: wrap; margin-top: 20px; }
+
+  /* ---------- floaty motion (Totoro pace) ---------- */
+  @keyframes drift { 0% { transform: translateY(0); } 50% { transform: translateY(-6px); } 100% { transform: translateY(0); } }
+  .drift { animation: drift 7s ease-in-out infinite; }
+  .drift.late { animation-delay: 2.4s; }
+
+  /* ---------- swatches ---------- */
+  .swatches { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 13px; }
+  .swatch { border: 1.5px solid var(--ctl-track); border-radius: 16px; overflow: hidden; background: var(--surface); }
+  .swatch-chip { height: 54px; }
+  .swatch-meta { padding: 10px 12px; font-size: 11px; line-height: 1.6; color: var(--text-muted); }
+  .swatch-meta b { color: var(--text); display: block; font-weight: 700; font-size: 12px; }
+
+  /* ---------- spec rows ---------- */
+  .spec-row { display: grid; grid-template-columns: 185px 1fr; gap: 16px; align-items: baseline; padding: 15px 0; border-bottom: 1.5px solid var(--ctl-track); }
+  .spec-row:last-child { border-bottom: 0; }
+  @media (max-width: 640px) { .spec-row { grid-template-columns: 1fr; gap: 4px; } }
+
+  /* ---------- components ---------- */
+  .btn { display: inline-flex; align-items: center; gap: 8px; font-family: var(--reader); font-weight: 700; font-size: 14px;
+    border-radius: 100px; padding: 12px 24px; cursor: pointer; border: 1.5px solid transparent; transition: transform 600ms cubic-bezier(0.34,1.4,0.64,1), background 300ms; }
+  .btn:hover { transform: translateY(-2px); }
+  .btn.leaf { background: var(--leaf-ink); color: #FFFFFF; }              /* standard – white on leaf-ink, 4.6:1 */
+  .btn.leaf-big { background: var(--leaf); color: #2B4423; font-size: 17px; padding: 15px 30px; }  /* large rides true leaf */
+  .btn.bark { background: transparent; border-color: var(--bark); color: var(--bark-ink); }
+  .btn.bark:hover { background: rgba(139,115,85,0.10); }
+  .btn.quiet { background: transparent; border-color: var(--ctl-border); color: var(--text-soft); }
+  .btn:focus-visible { outline: 2.5px solid var(--ctl-tint); outline-offset: 2px; }
+
+  .field { display: flex; flex-direction: column; gap: 7px; max-width: 350px; }
+  .field label { font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-soft); }
+  .field input { background: #FFFFFF; border: 1.5px solid var(--ctl-border); border-radius: 16px; color: var(--text);
+    font-family: var(--reader); font-size: 15px; padding: 12px 15px; outline: none; transition: border-color 300ms; }
+  .field input:focus { border-color: var(--ctl-tint); }
+  .field input::placeholder { color: var(--text-muted); }
+  .field .hint { font-size: 12.5px; color: var(--text-muted); }
+
+  .switch { width: 48px; height: 28px; border-radius: 100px; background: var(--ctl-track); border: 1.5px solid var(--ctl-border); position: relative; cursor: pointer; flex: none; }
+  .switch::after { content: ''; position: absolute; top: 3px; left: 3px; width: 19px; height: 19px; border-radius: 50%; background: #FFFFFF; border: 1.5px solid var(--ctl-border); transition: left 400ms cubic-bezier(0.34,1.3,0.64,1); box-sizing: border-box; }
+  .switch.on { background: var(--ctl-tint); border-color: var(--ctl-tint); }
+  .switch.on::after { left: 23px; border-color: var(--ctl-tint); }
+
+  .badge { display: inline-flex; align-items: center; gap: 7px; border-radius: 100px; padding: 6px 14px; font-size: 12px; font-weight: 700; }
+  .badge.leaf { background: rgba(123,174,107,0.18); color: var(--leaf-ink); }
+  .badge.pollen { background: rgba(242,201,76,0.28); color: #6E5716; }
+  .badge.blossom { background: rgba(232,160,180,0.24); color: #9B4460; }
+
+  .demo-row { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+  .demo-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 14.5px; }
+  th { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-soft); text-align: left; font-weight: 700; padding: 10px 12px; border-bottom: 1.5px solid var(--ctl-border); }
+  td { padding: 10px 12px; border-bottom: 1.5px solid var(--ctl-track); }
+  td.num { font-variant-numeric: tabular-nums; text-align: right; font-weight: 600; }
+
+  /* ---------- do / don't ---------- */
+  .dd { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 16px; }
+  .dd h3 { font-family: var(--story); font-weight: 600; font-size: 21px; margin-bottom: 8px; }
+  .dd .yes h3 { color: var(--leaf-ink); }
+  .dd .no h3 { color: var(--bark-ink); }
+  .dd li { list-style: none; padding: 8px 0 8px 24px; position: relative; font-size: 14px; color: var(--text-soft); border-bottom: 1.5px solid var(--ctl-track); }
+  .dd li::before { position: absolute; left: 2px; font-weight: 800; }
+  .dd .yes li::before { content: '+'; color: var(--leaf-ink); }
+  .dd .no li::before { content: '×'; color: var(--bark-ink); }
+
+  footer { margin-top: 84px; padding-top: 20px; border-top: 1.5px solid var(--ctl-track); display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; font-size: 12px; font-weight: 600; color: var(--text-muted); }
+  /* ---------- motion demos ---------- */
+  .m-demo .m-stage { min-height: 130px; display: flex; align-items: center; justify-content: center; margin-bottom: 14px; position: relative; }
+  .m-settle { background: var(--surface); border: 1.5px solid var(--ctl-track); border-radius: 18px; padding: 14px 22px; font-weight: 700; color: var(--leaf-ink); box-shadow: 0 8px 24px -14px var(--shadow); opacity: 0; }
+  .m-stage.play .m-settle { animation: m-settlek 600ms cubic-bezier(0.34, 1.4, 0.64, 1) forwards; }
+  @keyframes m-settlek { 0% { opacity: 0; transform: translateY(16px) scale(0.96); } 100% { opacity: 1; transform: none; } }
+  .m-bloom { position: relative; width: 12px; height: 12px; border-radius: 50%; background: var(--pollen); }
+  .m-petal { position: absolute; left: 2px; top: 2px; width: 8px; height: 8px; border-radius: 50%; opacity: 0; }
+  .m-stage.play .m-petal { animation: m-bloomk 900ms ease-out forwards; }
+  @keyframes m-bloomk { 0% { opacity: 1; transform: translate(0, 0) scale(1); } 100% { opacity: 0; transform: translate(var(--dx), var(--dy)) scale(0.5); } }
+  .m-leaf { width: 34px; height: 34px; }
+  .m-replay { font-family: var(--reader); font-weight: 700; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; background: var(--ctl-tint); color: #FDF8EE; border: none; border-radius: 100px; padding: 10px 18px; cursor: pointer; transition: transform 600ms cubic-bezier(0.34, 1.4, 0.64, 1); }
+  .m-replay:active { transform: scale(0.95); }
+  @media (prefers-reduced-motion: reduce) { .m-settle { opacity: 1; } }
+
+  @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } .drift { animation: none !important; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <span class="wordmark">
+      <svg width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden="true"><path d="M11 2 C15 6 18 9 18 13 a7 7 0 0 1 -14 0 C4 9 7 6 11 2 Z" fill="#7BAE6B"/><path d="M11 6 v11" stroke="#517B44" stroke-width="1.6" stroke-linecap="round"/><path d="M11 10 l3.2 -2.4 M11 13 l-3.2 -2.4" stroke="#517B44" stroke-width="1.6" stroke-linecap="round"/></svg>
+      Woodland
+    </span>
+    <nav>
+      <a href="../">Systems</a><a href="#color">Color</a><a href="#type">Type</a><a href="#components">Components</a><a href="#tokens">Tokens</a>
+      <span class="daytoggle" role="group" aria-label="Time of day">
+        <button class="on" id="btn-morning" onclick="setDay(false)">Morning</button>
+        <button id="btn-noon" onclick="setDay(true)">Noon</button>
+      </span>
+    </nav>
+  </header>
+
+  <span class="label" style="color:var(--leaf-ink);">Design language · No. 06 · The Undergrowth beneath the Woodlands</span>
+  <h1 class="display" style="margin-top:12px;">Made for small hands<br>and <em>big wonderings.</em></h1>
+  <p class="body soft" style="font-size:18px; margin-top:16px; max-width:56ch;">Storybook display over a clean reader face. Seasonal light, Totoro-pace motion, and two guides — Reed the fox and Cove the wolf pup — who never rush anyone.</p>
+  <div class="statusline"><span class="label">kids</span><span class="label">learning</span><span class="label">field guides</span><span class="label">v1.0</span></div>
+
+  <svg class="hills drift" viewBox="0 0 900 64" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M0 52 Q140 18 300 44 T620 40 T900 48 V64 H0 Z" fill="#7BAE6B" opacity="0.35"/>
+    <path d="M0 58 Q200 34 420 54 T900 56 V64 H0 Z" fill="#8B7355" opacity="0.28"/>
+  </svg>
+
+  <!-- ================= 01 PRINCIPLES ================= -->
+  <div class="sec-label"><svg class="leafmark" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1 C11 4 13 6.5 13 9.5 a5 5 0 0 1 -10 0 C3 6.5 5 4 8 1 Z" fill="#7BAE6B"/></svg><span class="label" style="color:var(--leaf-ink);">01 · Principles</span></div>
+  <div class="demo-grid">
+    <div class="card"><h2>Light tells the time</h2><p class="fine">The canvas shifts with season and hour — spring morning cream to afternoon green-white. The palette moves; the layout never does.</p></div>
+    <div class="card"><h2>Soft edges, honest depth</h2><p class="fine">Rounded everything, bark-tinted shadows at 12%, borders you could trace with a finger. Nothing sharp near small hands.</p></div>
+    <div class="card"><h2>The guide never rushes</h2><p class="fine">Motion is floaty and slow — the Totoro pace. Success celebrates gently; mistakes are just the next try.</p></div>
+    <div class="card"><h2>Montessori bones</h2><p class="fine">One task per screen, real progress over points, and an exit a grown-up can always find. The interface is furniture, not a fairground.</p></div>
+  </div>
+
+  <!-- ================= 02 COLOR ================= -->
+  <div class="sec-label" id="color"><svg class="leafmark" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1 C11 4 13 6.5 13 9.5 a5 5 0 0 1 -10 0 C3 6.5 5 4 8 1 Z" fill="#7BAE6B"/></svg><span class="label" style="color:var(--leaf-ink);">02 · Color · spring canon</span></div>
+  <div class="swatches">
+    <div class="swatch"><div class="swatch-chip" style="background:#FDF8EE;"></div><div class="swatch-meta"><b>morning</b>#FDF8EE · the canvas</div></div>
+    <div class="swatch"><div class="swatch-chip" style="background:#F6F9F2;"></div><div class="swatch-meta"><b>noon</b>#F6F9F2 · afternoon shift</div></div>
+    <div class="swatch"><div class="swatch-chip" style="background:#3D3529;"></div><div class="swatch-meta"><b>reader ink</b>#3D3529 · 10.9:1</div></div>
+    <div class="swatch"><div class="swatch-chip" style="background:#7B705D;"></div><div class="swatch-meta"><b>caption</b>#7B705D · 4.6:1 min</div></div>
+    <div class="swatch"><div class="swatch-chip" style="background:#7BAE6B;"></div><div class="swatch-meta"><b>leaf</b>#7BAE6B · fills + large · 2.6:1 as ink</div></div>
+    <div class="swatch"><div class="swatch-chip" style="background:#517B44;"></div><div class="swatch-meta"><b>leaf / ink</b>#517B44 · words + standard fills</div></div>
+    <div class="swatch"><div class="swatch-chip" style="background:#E8A0B4;"></div><div class="swatch-meta"><b>blossom</b>#E8A0B4 · decoration only</div></div>
+    <div class="swatch"><div class="swatch-chip" style="background:#F2C94C;"></div><div class="swatch-meta"><b>pollen</b>#F2C94C · celebration only</div></div>
+    <div class="swatch"><div class="swatch-chip" style="background:#8B7355;"></div><div class="swatch-meta"><b>bark</b>#8B7355 · shares atelier's bronze-ink</div></div>
+  </div>
+  <p class="fine" style="margin-top:14px;">Summer, autumn, and winter palettes live in the Undergrowth app layer — same roles, re-lit. This set is the identity anchor; the seasons are its weather.</p>
+
+  <!-- ================= 03 TYPE ================= -->
+  <div class="sec-label" id="type"><svg class="leafmark" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1 C11 4 13 6.5 13 9.5 a5 5 0 0 1 -10 0 C3 6.5 5 4 8 1 Z" fill="#7BAE6B"/></svg><span class="label" style="color:var(--leaf-ink);">03 · Type</span></div>
+  <div class="card">
+    <div class="spec-row"><span class="label">Story · Fraunces 700</span><span style="font-family:var(--story); font-weight:700; font-size:34px; line-height:1.1;">Once, at the edge of the ferns…</span></div>
+    <div class="spec-row"><span class="label">Chapter · Fraunces 600</span><span style="font-family:var(--story); font-weight:600; font-size:22px;">The storybook voice, kept for headings</span></div>
+    <div class="spec-row"><span class="label">Reader · DM Sans 400</span><span>Clean and roomy for early readers — 15.5px floor, 1.75 leading, no long lines.</span></div>
+    <div class="spec-row"><span class="label">Guide · DM Sans 600</span><span style="font-weight:600; color:var(--leaf-ink);">"Let's try the next one together."</span></div>
+  </div>
+  <p class="fine" style="margin-top:12px;">Fraunces never sets instructions — the storybook face tells; the reader face teaches.</p>
+
+  <!-- ================= 04 COMPONENTS ================= -->
+  <div class="sec-label" id="components"><svg class="leafmark" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1 C11 4 13 6.5 13 9.5 a5 5 0 0 1 -10 0 C3 6.5 5 4 8 1 Z" fill="#7BAE6B"/></svg><span class="label" style="color:var(--leaf-ink);">04 · Components</span></div>
+  <div class="demo-grid">
+    <div class="card">
+      <div class="label" style="margin-bottom:14px;">Buttons</div>
+      <div class="demo-row">
+        <button class="btn leaf-big">Play</button>
+        <button class="btn leaf">Next page</button>
+        <button class="btn bark">For grown-ups</button>
+        <button class="btn quiet">Later</button>
+      </div>
+      <p class="fine" style="margin-top:14px;">Big play buttons ride true leaf with deep-green labels; standard buttons fill with leaf-ink under white (4.6:1). Touch targets never drop below 48px.</p>
+    </div>
+    <div class="card">
+      <div class="label" style="margin-bottom:14px;">Field — for grown-ups only</div>
+      <div class="field">
+        <label>Learner's name</label>
+        <input type="text" placeholder="what should Reed call them?" spellcheck="false">
+        <span class="hint">Kids never type to progress; typing lives in the parent section.</span>
+      </div>
+    </div>
+    <div class="card">
+      <div class="label" style="margin-bottom:14px;">Controls + badges</div>
+      <div class="demo-row" style="gap:16px;">
+        <span class="switch on" role="switch" aria-checked="true" tabindex="0" onclick="this.classList.toggle('on'); this.setAttribute('aria-checked', this.classList.contains('on'))"></span>
+        <span class="switch" role="switch" aria-checked="false" tabindex="0" onclick="this.classList.toggle('on'); this.setAttribute('aria-checked', this.classList.contains('on'))"></span>
+        <span class="fine">tint #679C56 · border #998D78 · 3:1 floor</span>
+      </div>
+      <div class="demo-row" style="margin-top:16px;">
+        <span class="badge leaf">3 in a row</span>
+        <span class="badge pollen">New sound</span>
+        <span class="badge blossom">Cove says hi</span>
+      </div>
+    </div>
+    <div class="card">
+      <div class="label" style="margin-bottom:12px;">Progress — the mushroom grows</div>
+      <table>
+        <thead><tr><th>Trail</th><th style="text-align:right;">Found</th></tr></thead>
+        <tbody>
+          <tr><td>Letter sounds</td><td class="num" style="color:var(--leaf-ink);">18 / 26</td></tr>
+          <tr><td>Counting stones</td><td class="num">7 / 10</td></tr>
+          <tr><td>Pattern paths</td><td class="num">3 / 8</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ================= 05 MOTION ================= -->
+  <div class="sec-label"><svg class="leafmark" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1 C11 4 13 6.5 13 9.5 a5 5 0 0 1 -10 0 C3 6.5 5 4 8 1 Z" fill="#7BAE6B"/></svg><span class="label" style="color:var(--leaf-ink);">05 · Motion · the Totoro pace</span></div>
+  <p class="body">Motion in the Woodland is weather, not machinery. Ambient things float on a seven-second breath, arriving things settle with one soft overshoot — like landing on moss — and success blooms once, gently. Nothing near a lesson moves faster than 300ms, and nothing ever hurries a child.</p>
+  <div class="card">
+    <table>
+      <thead><tr><th>token</th><th>value</th><th>use</th></tr></thead>
+      <tbody>
+        <tr><td>float</td><td class="num">7s · ease-in-out · loop</td><td>ambient drift — hills, clouds, Cove's tail</td></tr>
+        <tr><td>settle</td><td class="num">600ms · gentle overshoot</td><td>buttons, cards, page turns</td></tr>
+        <tr><td>hop</td><td class="num">450ms · settle curve</td><td>Reed &amp; Cove reactions — one hop, never a loop</td></tr>
+        <tr><td>bloom</td><td class="num">900ms · once</td><td>success moments — pollen, never confetti storms</td></tr>
+        <tr><td>daylight</td><td class="num">900ms · ease</td><td>time-of-day canvas shifts</td></tr>
+      </tbody>
+    </table>
+    <p class="fine" style="margin-top:12px;">Slow enough to watch, soft enough to ignore. One overshoot per landing — a second bounce is a fairground. Reduced-motion stills the forest and keeps every lesson identical.</p>
+  </div>
+  <div class="demo-grid" style="margin-top:14px;">
+    <div class="card m-demo">
+      <div class="label" style="margin-bottom:12px;">Settle · 600ms</div>
+      <div class="m-stage play"><div class="m-settle">Nice try! One more?</div></div>
+      <button class="m-replay" onclick="var s=this.closest('.m-demo').querySelector('.m-stage');s.classList.remove('play');void s.offsetWidth;s.classList.add('play');">Replay</button>
+    </div>
+    <div class="card m-demo">
+      <div class="label" style="margin-bottom:12px;">Bloom · 900ms, once</div>
+      <div class="m-stage play">
+        <div class="m-bloom">
+          <span class="m-petal" style="--dx:26px; --dy:-30px; background:var(--pollen);"></span>
+          <span class="m-petal" style="--dx:-28px; --dy:-24px; background:var(--blossom);"></span>
+          <span class="m-petal" style="--dx:34px; --dy:6px; background:var(--leaf);"></span>
+          <span class="m-petal" style="--dx:-30px; --dy:12px; background:var(--pollen);"></span>
+          <span class="m-petal" style="--dx:6px; --dy:-38px; background:var(--leaf);"></span>
+          <span class="m-petal" style="--dx:-8px; --dy:30px; background:var(--blossom);"></span>
+        </div>
+      </div>
+      <button class="m-replay" onclick="var s=this.closest('.m-demo').querySelector('.m-stage');s.classList.remove('play');void s.offsetWidth;s.classList.add('play');">Replay</button>
+    </div>
+    <div class="card m-demo">
+      <div class="label" style="margin-bottom:12px;">Float · live, 7s</div>
+      <div class="m-stage">
+        <svg class="m-leaf drift" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1 C11 4 13 6.5 13 9.5 a5 5 0 0 1 -10 0 C3 6.5 5 4 8 1 Z" fill="#7BAE6B"/></svg>
+      </div>
+      <p class="fine" style="margin:0;">Six pixels up, six down. Slow enough to watch, soft enough to ignore.</p>
+    </div>
+  </div>
+  <pre class="code" style="margin-top:14px;">--motion-float:    7s ease-in-out infinite;   /* ±6px */
+--motion-settle:   600ms cubic-bezier(0.34, 1.4, 0.64, 1);
+--motion-hop:      450ms cubic-bezier(0.34, 1.4, 0.64, 1);
+--motion-bloom:    900ms ease-out;   /* once, ≤8 petals */
+--motion-daylight: 900ms ease;</pre>
+
+  <!-- ================= 06 VOICE ================= -->
+  <div class="sec-label"><svg class="leafmark" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1 C11 4 13 6.5 13 9.5 a5 5 0 0 1 -10 0 C3 6.5 5 4 8 1 Z" fill="#7BAE6B"/></svg><span class="label" style="color:var(--leaf-ink);">06 · Voice</span></div>
+  <p class="body">Short sentences, second person, always forward. <span class="soft">"Not that one — good try. Which sound starts <b>moon</b>?"</span> Reed asks; Cove wonders aloud; the interface never says <i>wrong</i>, <i>failed</i>, or <i>time's up</i>. Grown-up copy drops the characters and keeps the warmth.</p>
+
+  <!-- ================= 07 DO / DON'T ================= -->
+  <div class="sec-label"><svg class="leafmark" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1 C11 4 13 6.5 13 9.5 a5 5 0 0 1 -10 0 C3 6.5 5 4 8 1 Z" fill="#7BAE6B"/></svg><span class="label" style="color:var(--leaf-ink);">07 · Do / Don't</span></div>
+  <div class="dd">
+    <div class="card yes">
+      <h3>Do</h3>
+      <li>Re-light the palette by season; keep every role fixed</li>
+      <li>Keep touch targets 48px+ and edges soft</li>
+      <li>Step leaf to its ink whenever it spells a word</li>
+      <li>Celebrate small — one bloom, then back to the trail</li>
+      <li>Keep typing and settings behind the grown-up gate</li>
+      <li>Let Fraunces tell and DM Sans teach</li>
+    </div>
+    <div class="card no">
+      <h3>Don't</h3>
+      <li>No blossom or pollen sentences — decoration can't spell</li>
+      <li>No timers, streaks, or anything that punishes pausing</li>
+      <li>No hard shadows or pure black — bark tints only</li>
+      <li>No motion faster than 300ms near a lesson</li>
+      <li>No more than one task per screen</li>
+      <li>No character voice in parent-facing copy</li>
+    </div>
+  </div>
+
+  <!-- ================= 08 TOKENS ================= -->
+  <div class="sec-label" id="tokens"><svg class="leafmark" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1 C11 4 13 6.5 13 9.5 a5 5 0 0 1 -10 0 C3 6.5 5 4 8 1 Z" fill="#7BAE6B"/></svg><span class="label" style="color:var(--leaf-ink);">08 · Tokens · Tokens Studio</span></div>
+  <p class="body">The <code>woodland</code> set from design-tokens.json — the spring canon. The full seasonal × time-of-day matrix ships in the Undergrowth app layer.</p>
+  <pre class="code">{
+  "woodland": {
+    "color": {
+      "bg": {
+        "value": "#FDF8EE",
+        "type": "color",
+        "description": "Spring morning cream - canonical light; full seasonal x time-of-day matrix lives in the app layer (Undergrowth)"
+      },
+      "bg-noon": {
+        "value": "#F6F9F2",
+        "type": "color",
+        "description": "Spring afternoon"
+      },
+      "surface": {
+        "value": "rgba(255,255,255,0.80)",
+        "type": "color",
+        "description": "Storybook card over cream"
+      },
+      "text": {
+        "value": "#3D3529",
+        "type": "color",
+        "description": "Reader ink - 10.9:1"
+      },
+      "text-soft": {
+        "value": "#7A6F5E",
+        "type": "color",
+        "description": "Soft ink - 4.6:1 min incl. surface"
+      },
+      "text-muted": {
+        "value": "#7B705D",
+        "type": "color",
+        "description": "Caption ink - 4.6:1 min (spring canon #A89E8C was 2.5:1 - that grade now lives at control.border)"
+      },
+      "leaf": {
+        "value": "#7BAE6B",
+        "type": "color",
+        "description": "Fresh leaf - fills, large type (2.6:1 as ink); words use leaf-ink"
+      },
+      "leaf-ink": {
+        "value": "#517B44",
+        "type": "color",
+        "description": "Text-grade leaf - 4.6:1 min; also the fill for standard-size cream labels"
+      },
+      "blossom": {
+        "value": "#E8A0B4",
+        "type": "color",
+        "description": "Cherry blossom - fills &amp; decoration only (1.9:1), never words"
+      },
+      "pollen": {
+        "value": "#F2C94C",
+        "type": "color",
+        "description": "Pollen gold - fills &amp; celebration only (1.6:1), never words"
+      },
+      "bark": {
+        "value": "#8B7355",
+        "type": "color",
+        "description": "Warm wood - accents &amp; large type (3.7:1); words use bark-ink"
+      },
+      "bark-ink": {
+        "value": "#7B664B",
+        "type": "color",
+        "description": "Text-grade bark - shared value with atelier bronze-ink (4.7:1 min)"
+      },
+      "shadow": {
+        "value": "rgba(139,115,85,0.12)",
+        "type": "color",
+        "description": "Bark-tinted soft shadow"
+      }
+    },
+    "control": {
+      "tint": {
+        "value": "#679C56",
+        "type": "color",
+        "description": "System controls - leaf stepped to the 3:1 component bar vs cream"
+      },
+      "on-tint": {
+        "value": "#FDF8EE",
+        "type": "color"
+      },
+      "track": {
+        "value": "#E4DCCB",
+        "type": "color"
+      },
+      "border": {
+        "value": "#998D78",
+        "type": "color",
+        "description": "Field &amp; control boundaries - 3:1 floor"
+      },
+      "focus": {
+        "value": "#679C56",
+        "type": "color"
+      }
+    }
+  }
+}</pre>
+
+  <footer>
+    <span>woodland v1.0 · part of dunl.app/systems</span>
+    <span>storybook warmth · seasonal light · nobody rushes</span>
+  </footer>
+</div>
+
+<script>
+function setDay(noon) {
+  document.body.classList.toggle('noon', noon);
+  document.getElementById('btn-morning').classList.toggle('on', !noon);
+  document.getElementById('btn-noon').classList.toggle('on', noon);
+}
+// gate removed for offline kit
+</script>
+</body>
+</html>

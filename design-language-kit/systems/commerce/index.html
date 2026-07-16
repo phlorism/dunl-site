@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Commerce – Design Language</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  /* ============ COMMERCE TOKENS (light) ============ */
+  :root {
+    --bg: #F8FAFB; --bg-alt: #EEF2F5; --surface: #FFFFFF;
+    --text: #141B21; --text-2: #5A6670; --text-3: #6A737C;
+    --border: #DDE3E8; --border-light: #EBF0F3;
+    --pop: #00CCBB; --pop-hover: #00B3A3; --pop-light: #E0FAF7;
+    --pop-text: #141B21;            /* labels on pop fills – 8.6:1 */
+    --pop-ink: #008076;             /* pop when it carries words */
+    --rose: #D94878; --rose-hover: #C53E6B; --rose-light: #FBF0F3;
+    --rose-ink: #D32C63;            /* standard rose buttons fill with this */
+    --ctl-tint: #00A497; --ctl-border: #8C949C; --ctl-track: #DDE3E8;
+    --sans: 'Plus Jakarta Sans', sans-serif;
+    --serif: 'Instrument Serif', serif;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--text); font-family: var(--sans); font-size: 15px; line-height: 1.75; -webkit-font-smoothing: antialiased; }
+  ::selection { background: var(--pop); color: var(--pop-text); }
+  .wrap { max-width: 1020px; margin: 0 auto; padding: 40px 28px 96px; }
+
+  /* ---------- type ---------- */
+  h1, h2 { font-weight: 800; letter-spacing: -0.03em; line-height: 1.08; }
+  h2 { font-size: 24px; margin-bottom: 14px; letter-spacing: -0.02em; }
+  .display { font-size: clamp(48px, 9vw, 84px); }
+  .display em { font-family: var(--serif); font-style: italic; font-weight: 400; letter-spacing: 0; }
+  .eyebrow { font-size: 12px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--pop-ink); }
+  .sec-label { display: flex; align-items: baseline; gap: 12px; margin: 88px 0 18px; }
+  .sec-label::after { content: ''; height: 1px; flex: 1; background: var(--border); align-self: center; }
+  p.body { max-width: 62ch; color: var(--text-2); margin-bottom: 16px; }
+  .fine { font-size: 13px; color: var(--text-3); }
+  code { font-family: ui-monospace, Menlo, monospace; font-size: 12.5px; background: var(--bg-alt); border: 1px solid var(--border); padding: 1px 6px; border-radius: 6px; }
+  pre.code { font-family: ui-monospace, Menlo, monospace; font-size: 12.5px; background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 20px 22px; overflow-x: auto; line-height: 1.65; }
+
+  /* ---------- header / hero ---------- */
+  header { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; padding-bottom: 22px; }
+  .wordmark { font-weight: 800; letter-spacing: -0.02em; font-size: 17px; }
+  nav { display: flex; gap: 22px; }
+  nav a { color: var(--text-2); text-decoration: none; font-size: 13px; font-weight: 600; }
+  nav a:hover { color: var(--text); }
+  .hero { background: var(--surface); border: 1px solid var(--border-light); border-radius: 28px; padding: clamp(36px, 7vw, 84px); text-align: center;
+    box-shadow: 0 24px 60px -36px rgba(20,27,33,0.18); }
+  .hero p { max-width: 52ch; margin: 20px auto 30px; color: var(--text-2); font-size: 17px; }
+  .hero-ctas { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .statusline { display: flex; gap: 18px; flex-wrap: wrap; justify-content: center; margin-top: 26px; font-size: 12px; color: var(--text-3); font-weight: 600; }
+
+  /* ---------- components ---------- */
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-family: var(--sans); font-weight: 700; font-size: 14.5px;
+    border-radius: 100px; padding: 13px 26px; cursor: pointer; border: 1px solid transparent; transition: background 0.2s, border-color 0.2s, transform 0.2s; }
+  .btn:active { transform: scale(0.98); }
+  .btn.pop { background: var(--pop); color: var(--pop-text); }
+  .btn.pop:hover { background: var(--pop-hover); }
+  .btn.rose { background: var(--rose-ink); color: #FFFFFF; }        /* standard size fills with the ink – 4.9:1 */
+  .btn.rose:hover { background: var(--rose-hover); }
+  .btn.ghost { background: transparent; border-color: var(--border); color: var(--text); }
+  .btn.ghost:hover { border-color: var(--ctl-border); }
+  .btn.large { font-size: 17px; padding: 16px 34px; }
+  .btn.large.rose { background: var(--rose); }                      /* large labels may ride the true rose – 4.1:1 large bar */
+  .btn:focus-visible { outline: 2px solid var(--ctl-tint); outline-offset: 2px; }
+
+  .card { background: var(--surface); border: 1px solid var(--border-light); border-radius: 20px; padding: 26px; }
+  .demo-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px; }
+  .demo-row { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+
+  .field { display: flex; flex-direction: column; gap: 7px; max-width: 360px; }
+  .field label { font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-2); }
+  .field input { background: var(--surface); border: 1px solid var(--ctl-border); border-radius: 14px; color: var(--text);
+    font-family: var(--sans); font-size: 15px; padding: 13px 16px; outline: none; transition: border-color 0.2s, box-shadow 0.2s; }
+  .field input:focus { border-color: var(--ctl-tint); box-shadow: 0 0 0 3px rgba(0,164,151,0.16); }
+  .field input::placeholder { color: var(--text-3); }
+  .field .hint { font-size: 12px; color: var(--text-3); }
+
+  .switch { width: 46px; height: 27px; border-radius: 100px; background: var(--ctl-track); border: 1px solid var(--ctl-border); position: relative; cursor: pointer; flex: none; }
+  .switch::after { content: ''; position: absolute; top: 3px; left: 3px; width: 19px; height: 19px; border-radius: 50%; background: #FFFFFF; box-shadow: 0 1px 3px rgba(20,27,33,0.25); transition: left 0.2s; }
+  .switch.on { background: var(--ctl-tint); border-color: var(--ctl-tint); }
+  .switch.on::after { left: 22px; }
+
+  .tag { display: inline-flex; align-items: center; border-radius: 100px; padding: 5px 14px; font-size: 12px; font-weight: 700; }
+  .tag.pop { background: var(--pop-light); color: var(--pop-ink); }
+  .tag.rose { background: var(--rose-light); color: var(--rose-ink); }
+  .tag.plain { background: var(--bg-alt); color: var(--text-2); }
+
+  .price { display: flex; align-items: baseline; gap: 8px; }
+  .price .amount { font-size: 44px; font-weight: 800; letter-spacing: -0.03em; }
+  .price .per { color: var(--text-3); font-size: 14px; font-weight: 600; }
+
+  /* ---------- swatches ---------- */
+  .swatches { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 14px; }
+  .swatch { border: 1px solid var(--border-light); border-radius: 16px; overflow: hidden; background: var(--surface); }
+  .swatch-chip { height: 58px; }
+  .swatch-meta { padding: 11px 13px; font-size: 11px; line-height: 1.65; color: var(--text-3); }
+  .swatch-meta b { color: var(--text); display: block; font-weight: 700; font-size: 12px; }
+
+  /* ---------- spec rows ---------- */
+  .spec-row { display: grid; grid-template-columns: 190px 1fr; gap: 16px; align-items: baseline; padding: 16px 0; border-bottom: 1px solid var(--border-light); }
+  .spec-row:last-child { border-bottom: 0; }
+  .spec-label { font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-3); }
+  @media (max-width: 640px) { .spec-row { grid-template-columns: 1fr; gap: 4px; } }
+
+  /* ---------- dark mode strip ---------- */
+  .dark-strip { background: #0E1114; border-radius: 24px; padding: 30px; color: #DDE3E8; border: 1px solid #242D35; }
+  .dark-strip .fine { color: #7B8A95; }
+  .dark-strip .btn.pop { background: #2DD4BF; color: #0E1114; }
+  .dark-strip .btn.ghost { border-color: #242D35; color: #DDE3E8; }
+  .dark-strip .tag.pop { background: #122825; color: #2DD4BF; }
+  .dark-strip .tag.rose { background: #2A1720; color: #E8609A; }
+
+  /* ---------- do / don't ---------- */
+  .dd { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 16px; }
+  .dd h3 { font-size: 15px; margin-bottom: 10px; font-weight: 800; }
+  .dd .yes h3 { color: var(--pop-ink); }
+  .dd .no h3 { color: var(--rose-ink); }
+  .dd li { list-style: none; padding: 8px 0 8px 22px; position: relative; font-size: 14px; color: var(--text-2); border-bottom: 1px solid var(--border-light); }
+  .dd li::before { position: absolute; left: 0; font-weight: 800; }
+  .dd .yes li::before { content: '+'; color: var(--pop-ink); }
+  .dd .no li::before { content: '×'; color: var(--rose-ink); }
+
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-3); text-align: left; font-weight: 700; padding: 10px 12px; border-bottom: 1px solid var(--border); }
+  td { padding: 10px 12px; border-bottom: 1px solid var(--border-light); }
+  td.num { font-variant-numeric: tabular-nums; text-align: right; }
+
+  footer { margin-top: 88px; padding-top: 20px; border-top: 1px solid var(--border-light); display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; font-size: 12px; color: var(--text-3); font-weight: 600; }
+  /* ---------- motion demos ---------- */
+  .m-demo .m-stage { min-height: 148px; display: flex; flex-direction: column; gap: 10px; justify-content: center; align-items: flex-start; margin-bottom: 14px; }
+  .m-hero-line { opacity: 0; }
+  .m-stage.play .m-hero-line { animation: m-settle 700ms cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+  .m-stage.play .m-hero-line:nth-child(2) { animation-delay: 120ms; }
+  .m-stage.play .m-hero-line:nth-child(3) { animation-delay: 240ms; }
+  @keyframes m-settle { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+  .m-card { background: var(--surface); border: 1px solid var(--border-light); border-radius: 16px; padding: 14px 18px; width: 100%;
+    box-shadow: 0 10px 30px -24px rgba(20,27,33,0.25); transition: transform 240ms ease-out, box-shadow 240ms ease-out; cursor: pointer; }
+  .m-card:hover { transform: translateY(-4px); box-shadow: 0 24px 44px -22px rgba(20,27,33,0.32); }
+  .m-cart { position: relative; }
+  .m-badge { position: absolute; top: -8px; right: -8px; min-width: 20px; height: 20px; border-radius: 100px; background: var(--rose-ink); color: #fff;
+    font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; padding: 0 5px; }
+  .m-stage.play .m-badge { animation: m-bump 600ms cubic-bezier(0.34, 1.56, 0.64, 1); }
+  @keyframes m-bump { 0% { transform: scale(1); } 35% { transform: scale(1.45); } 100% { transform: scale(1); } }
+  .m-fly { position: absolute; left: 50px; top: 16px; width: 9px; height: 9px; border-radius: 50%; background: var(--pop); opacity: 0; pointer-events: none; }
+  .m-stage.play .m-fly { animation: m-flyk 550ms cubic-bezier(0.4, 0, 0.6, 1); }
+  @keyframes m-flyk { 0% { opacity: 1; transform: translate(0, 0) scale(1); } 100% { opacity: 0; transform: translate(150px, -24px) scale(0.4); } }
+  @media (prefers-reduced-motion: reduce) { .m-hero-line { opacity: 1; } }
+
+  @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <span class="wordmark">Commerce</span>
+    <nav><a href="../">Systems</a><a href="#color">Color</a><a href="#type">Type</a><a href="#components">Components</a><a href="#tokens">Tokens</a></nav>
+  </header>
+
+  <!-- The hero IS the spec: storytelling scale, whitespace as container, both CTA rules demonstrated live -->
+  <div class="hero">
+    <span class="eyebrow">The storefront voice</span>
+    <h1 class="display" style="margin-top:14px;">Sell the story,<br><em>then the thing.</em></h1>
+    <p>Hero storytelling on cool blue-white. Whitespace is the container — panels breathe at 22px+, one neon teal does the asking, rose seconds it.</p>
+    <div class="hero-ctas">
+      <button class="btn pop large">Start free trial</button>
+      <button class="btn ghost large">See pricing</button>
+    </div>
+    <div class="statusline"><span>scroll-first</span><span>one CTA per viewport</span><span>v1.0</span></div>
+  </div>
+
+  <!-- ================= 01 PRINCIPLES ================= -->
+  <div class="sec-label"><span class="eyebrow">01 · Principles</span></div>
+  <div class="demo-grid">
+    <div class="card"><h2 style="font-size:17px;">Whitespace is the container</h2><p class="fine">No boxes doing the work air can do. Sections separate by scale and space; borders are the last resort.</p></div>
+    <div class="card"><h2 style="font-size:17px;">One ask per viewport</h2><p class="fine">Every scroll position has exactly one pop CTA. If two things glow, neither is the point.</p></div>
+    <div class="card"><h2 style="font-size:17px;">Pop is a fill, not an ink</h2><p class="fine">Neon teal at 1.9:1 can't spell. Buttons fill with pop and label in ink; teal words use pop-ink.</p></div>
+    <div class="card"><h2 style="font-size:17px;">Serif is the wink</h2><p class="fine">Instrument italic appears once per story — the emphasis beat inside a Jakarta headline, never body copy.</p></div>
+  </div>
+
+  <!-- ================= 02 COLOR ================= -->
+  <div class="sec-label" id="color"><span class="eyebrow">02 · Color</span></div>
+  <div class="swatches">
+    <div class="swatch"><div class="swatch-chip" style="background:#F8FAFB;"></div><div class="swatch-meta"><b>bg</b>#F8FAFB · cool blue-white</div></div>
+    <div class="swatch"><div class="swatch-chip" style="background:#141B21;"></div><div class="swatch-meta"><b>text / ink</b>#141B21 · also the label on pop fills</div></div>
+    <div class="swatch"><div class="swatch-chip" style="background:#6A737C;"></div><div class="swatch-meta"><b>text / tertiary</b>#6A737C · 4.6:1 min on white</div></div>
+    <div class="swatch"><div class="swatch-chip" style="background:#00CCBB;"></div><div class="swatch-meta"><b>pop</b>#00CCBB · fills + large only · 1.9:1 as ink</div></div>
+    <div class="swatch"><div class="swatch-chip" style="background:#008076;"></div><div class="swatch-meta"><b>pop / ink</b>#008076 · teal words + small white-label CTAs</div></div>
+    <div class="swatch"><div class="swatch-chip" style="background:#D94878;"></div><div class="swatch-meta"><b>rose</b>#D94878 · second voice · white labels at large only</div></div>
+    <div class="swatch"><div class="swatch-chip" style="background:#D32C63;"></div><div class="swatch-meta"><b>rose / ink</b>#D32C63 · rose words + standard button fill</div></div>
+    <div class="swatch"><div class="swatch-chip" style="background:#DDE3E8;"></div><div class="swatch-meta"><b>border</b>#DDE3E8 · hairlines · #8C949C on controls</div></div>
+  </div>
+
+  <!-- ================= 03 TYPE ================= -->
+  <div class="sec-label" id="type"><span class="eyebrow">03 · Type</span></div>
+  <div class="card">
+    <div class="spec-row"><span class="spec-label">Display · Jakarta 800</span><span style="font-weight:800; font-size:38px; letter-spacing:-0.03em; line-height:1.1;">Big, tight, unafraid</span></div>
+    <div class="spec-row"><span class="spec-label">Flourish · Instrument it.</span><span class="display" style="font-size:34px;"><em>the one italic beat</em></span></div>
+    <div class="spec-row"><span class="spec-label">Heading · Jakarta 700</span><span style="font-weight:700; font-size:21px; letter-spacing:-0.02em;">Sections at conversational scale</span></div>
+    <div class="spec-row"><span class="spec-label">Body · Jakarta 400</span><span style="color:var(--text-2);">Fifteen over one-seventy-five. Copy sells by being easy, not loud.</span></div>
+    <div class="spec-row"><span class="spec-label">Price · Jakarta 800</span><span class="price"><span class="amount">$29</span><span class="per">/ month</span></span></div>
+  </div>
+
+  <!-- ================= 04 COMPONENTS ================= -->
+  <div class="sec-label" id="components"><span class="eyebrow">04 · Components</span></div>
+  <div class="demo-grid">
+    <div class="card">
+      <div class="spec-label" style="margin-bottom:14px;">Buttons — the two-rule system</div>
+      <div class="demo-row">
+        <button class="btn pop">Add to cart</button>
+        <button class="btn rose">Join waitlist</button>
+        <button class="btn ghost">Compare</button>
+      </div>
+      <p class="fine" style="margin-top:14px;">Pop fills label in ink (8.6:1). Standard rose fills use rose-ink under white (4.9:1); only large type may ride the true rose.</p>
+    </div>
+    <div class="card">
+      <div class="spec-label" style="margin-bottom:14px;">Field</div>
+      <div class="field">
+        <label>Email</label>
+        <input type="email" placeholder="you@example.com" spellcheck="false">
+        <span class="hint">We send one receipt, zero newsletters.</span>
+      </div>
+    </div>
+    <div class="card">
+      <div class="spec-label" style="margin-bottom:14px;">Controls + tags</div>
+      <div class="demo-row" style="gap:16px;">
+        <span class="switch on" role="switch" aria-checked="true" tabindex="0" onclick="this.classList.toggle('on'); this.setAttribute('aria-checked', this.classList.contains('on'))"></span>
+        <span class="switch" role="switch" aria-checked="false" tabindex="0" onclick="this.classList.toggle('on'); this.setAttribute('aria-checked', this.classList.contains('on'))"></span>
+        <span class="fine">tint #00A497 · 3.1:1 on white</span>
+      </div>
+      <div class="demo-row" style="margin-top:16px;">
+        <span class="tag pop">Best seller</span><span class="tag rose">Limited</span><span class="tag plain">Restocked</span>
+      </div>
+    </div>
+    <div class="card">
+      <div class="spec-label" style="margin-bottom:14px;">Table</div>
+      <table>
+        <thead><tr><th>Plan</th><th style="text-align:right;">Seats</th><th style="text-align:right;">Price</th></tr></thead>
+        <tbody>
+          <tr><td>Starter</td><td class="num">3</td><td class="num">$0</td></tr>
+          <tr><td style="color:var(--pop-ink); font-weight:700;">Growth</td><td class="num">25</td><td class="num">$29</td></tr>
+          <tr><td>Scale</td><td class="num">∞</td><td class="num">$119</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="dark-strip" style="margin-top:16px;">
+    <div class="spec-label" style="color:#7B8A95; margin-bottom:14px;">Dark counterpart — commerce/dark</div>
+    <div class="demo-row">
+      <button class="btn pop">Add to cart</button>
+      <button class="btn ghost">Compare</button>
+      <span class="tag pop">Best seller</span>
+      <span class="tag rose">Limited</span>
+    </div>
+    <p class="fine" style="margin-top:14px;">Same bones on #0E1114 — pop brightens to #2DD4BF and labels in near-black, rose lifts to #E8609A and passes as ink on its own. Tertiary sits at #7B8A95 (4.6:1 on surface).</p>
+  </div>
+
+  <!-- ================= 05 MOTION ================= -->
+  <div class="sec-label"><span class="eyebrow">05 · Motion</span></div>
+  <p class="body">One orchestrated moment when the page opens; after that, motion only answers the shopper's hand. Hovers lift, presses compress, reveals ride the scroll — and the cart is the one place allowed a spring, because it's the moment worth celebrating.</p>
+  <div class="card">
+    <table>
+      <thead><tr><th>token</th><th>value</th><th>use</th></tr></thead>
+      <tbody>
+        <tr><td>lift</td><td class="num">240ms · ease-out</td><td>card hover raise + shadow bloom</td></tr>
+        <tr><td>reveal</td><td class="num">500ms · ease · 60ms stagger</td><td>scroll-in sections</td></tr>
+        <tr><td>press</td><td class="num">120ms · scale(0.98)</td><td>every button, every time</td></tr>
+        <tr><td>hero</td><td class="num">700ms · once, on load</td><td>headline settles, sub-line and CTA follow at +120ms each</td></tr>
+        <tr><td>spring</td><td class="num">600ms · cubic-bezier(0.34, 1.56, 0.64, 1)</td><td>cart badge + quantity bumps — commerce moments only</td></tr>
+      </tbody>
+    </table>
+    <p class="fine" style="margin-top:12px;">Motion sells continuity, not spectacle. Never animate a price — it must read as fact, not fireworks. Nothing moves that the shopper didn't cause, except the hero, exactly once.</p>
+  </div>
+  <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(250px, 1fr)); gap:14px; margin-top:14px;">
+    <div class="card m-demo">
+      <div class="eyebrow" style="font-size:11px; margin-bottom:12px;">Hero · 700ms, once</div>
+      <div class="m-stage play">
+        <div class="m-hero-line" style="font-weight:800; font-size:24px; letter-spacing:-0.02em; line-height:1.15;">Everything <em style="font-family:var(--serif); font-style:italic; font-weight:400;">you need</em></div>
+        <div class="m-hero-line fine">The sub-line follows at +120ms.</div>
+        <div class="m-hero-line"><button class="btn pop" style="padding:10px 20px; font-size:13px;">Start free trial</button></div>
+      </div>
+      <button class="btn ghost" style="padding:9px 18px; font-size:13px;" onclick="var s=this.closest('.m-demo').querySelector('.m-stage');s.classList.remove('play');void s.offsetWidth;s.classList.add('play');">Replay</button>
+    </div>
+    <div class="card m-demo">
+      <div class="eyebrow" style="font-size:11px; margin-bottom:12px;">Lift + press · live</div>
+      <div class="m-stage">
+        <div class="m-card"><b style="font-size:14px;">Hover me</b><div class="fine">240ms raise, shadow blooms</div></div>
+        <button class="btn pop" style="padding:10px 20px; font-size:13px;">Press me</button>
+      </div>
+      <p class="fine" style="margin:0;">Every button compresses to 0.98 — the click always lands.</p>
+    </div>
+    <div class="card m-demo">
+      <div class="eyebrow" style="font-size:11px; margin-bottom:12px;">Cart spring · 600ms</div>
+      <div class="m-stage">
+        <div style="display:flex; gap:44px; align-items:center; position:relative;">
+          <span class="m-fly"></span>
+          <button class="btn pop" style="padding:10px 20px; font-size:13px;" onclick="var s=this.closest('.m-demo').querySelector('.m-stage');s.classList.remove('play');void s.offsetWidth;s.classList.add('play');var b=s.querySelector('.m-badge');b.textContent=+b.textContent+1;">Add to cart</button>
+          <span class="m-cart btn ghost" style="padding:10px 18px; font-size:13px;">Cart<span class="m-badge">1</span></span>
+        </div>
+      </div>
+      <p class="fine" style="margin:0;">A dot flies, the badge overshoots — the one spring in the system.</p>
+    </div>
+  </div>
+  <pre class="code" style="margin-top:14px;">--motion-press:  120ms ease-out;            /* scale(0.98) */
+--motion-lift:   240ms ease-out;            /* translateY(-4px) + shadow */
+--motion-reveal: 500ms ease;                /* +60ms stagger per section */
+--motion-hero:   700ms cubic-bezier(0.16, 1, 0.3, 1);     /* once */
+--motion-spring: 600ms cubic-bezier(0.34, 1.56, 0.64, 1); /* cart only */</pre>
+
+  <!-- ================= 06 VOICE ================= -->
+  <div class="sec-label"><span class="eyebrow">06 · Voice</span></div>
+  <p class="body">Benefit first, plain verbs, zero jargon. Buttons say what happens: <span style="color:var(--text); font-weight:700;">"Start free trial"</span>, and the confirmation keeps the same words — <span class="fine">"Trial started. First charge on Aug 12."</span> Prices never hide; the fine print is short enough to read.</p>
+
+  <!-- ================= 07 DO / DON'T ================= -->
+  <div class="sec-label"><span class="eyebrow">07 · Do / Don't</span></div>
+  <div class="dd">
+    <div class="card yes">
+      <h3>Do</h3>
+      <li>Lead with the story; the product close behind</li>
+      <li>Give every viewport exactly one pop CTA</li>
+      <li>Label pop fills in ink, always</li>
+      <li>Fill standard rose buttons with rose-ink</li>
+      <li>Let whitespace do the separating</li>
+      <li>Spend the italic once per story</li>
+    </div>
+    <div class="card no">
+      <h3>Don't</h3>
+      <li>No white text on pop — 2.0:1, the old bug</li>
+      <li>No teal sentences — that's pop-ink's job</li>
+      <li>No competing CTAs in one view</li>
+      <li>No borders where a margin would do</li>
+      <li>No serif body copy — the wink is not a voice</li>
+      <li>No countdown-timer urgency theater</li>
+    </div>
+  </div>
+
+  <!-- ================= 08 TOKENS ================= -->
+  <div class="sec-label" id="tokens"><span class="eyebrow">08 · Tokens · Tokens Studio</span></div>
+  <p class="body">Two sets ship: <code>commerce/light</code> below and its <code>commerce/dark</code> counterpart — both in design-tokens.json, Figma-ready via Tokens Studio.</p>
+  <pre class="code">{
+  "commerce/light": {
+    "color": {
+      "bg": {
+        "value": "#F8FAFB",
+        "type": "color"
+      },
+      "bg-alt": {
+        "value": "#EEF2F5",
+        "type": "color"
+      },
+      "surface": {
+        "value": "#FFFFFF",
+        "type": "color"
+      },
+      "text": {
+        "value": "#141B21",
+        "type": "color"
+      },
+      "text-secondary": {
+        "value": "#5A6670",
+        "type": "color"
+      },
+      "text-tertiary": {
+        "value": "#6A737C",
+        "type": "color",
+        "description": "4.6:1 min (was #8C949C / 2.9:1 - that value now lives at control.border)"
+      },
+      "border": {
+        "value": "#DDE3E8",
+        "type": "color"
+      },
+      "border-light": {
+        "value": "#EBF0F3",
+        "type": "color"
+      },
+      "pop": {
+        "value": "#00CCBB",
+        "type": "color",
+        "description": "Primary CTA - neon teal; fills + large type only (1.9:1 as ink) - words use pop-ink"
+      },
+      "pop-hover": {
+        "value": "#00B3A3",
+        "type": "color"
+      },
+      "pop-light": {
+        "value": "#E0FAF7",
+        "type": "color"
+      },
+      "pop-text": {
+        "value": "#141B21",
+        "type": "color",
+        "description": "Label on pop fills - 8.6:1 (was #FFFFFF / 2.0:1)"
+      },
+      "pop-ink": {
+        "value": "#008076",
+        "type": "color",
+        "description": "Text-grade teal - 4.6:1 as ink; also the fill for standard-size white-label CTAs (4.8:1)"
+      },
+      "secondary": {
+        "value": "#D94878",
+        "type": "color",
+        "description": "Secondary CTA - rose; white labels pass at large sizes only (4.1:1) - standard buttons fill with secondary-ink"
+      },
+      "secondary-hover": {
+        "value": "#C53E6B",
+        "type": "color"
+      },
+      "secondary-light": {
+        "value": "#FBF0F3",
+        "type": "color"
+      },
+      "secondary-text": {
+        "value": "#FFFFFF",
+        "type": "color"
+      },
+      "secondary-ink": {
+        "value": "#D32C63",
+        "type": "color",
+        "description": "Text-grade rose - 4.7:1 as ink; white labels on it hit 4.9:1"
+      }
+    },
+    "control": {
+      "tint": {
+        "value": "#00A497",
+        "type": "color",
+        "description": "System controls - 3.1:1 vs white; white glyphs on it 3.1:1"
+      },
+      "on-tint": {
+        "value": "#FFFFFF",
+        "type": "color"
+      },
+      "track": {
+        "value": "#DDE3E8",
+        "type": "color"
+      },
+      "border": {
+        "value": "#8C949C",
+        "type": "color",
+        "description": "Field &amp; control boundaries - 3.1:1 vs surface"
+      },
+      "focus": {
+        "value": "#00A497",
+        "type": "color"
+      }
+    }
+  }
+}</pre>
+
+  <footer>
+    <span>commerce v1.0 · part of dunl.app/systems</span>
+    <span>hero storytelling · whitespace container · pop asks once</span>
+  </footer>
+</div>
+
+<!-- gate removed for offline kit -->
+</body>
+</html>

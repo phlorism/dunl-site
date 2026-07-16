@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Concentric – Design Language</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  /* ============ CONCENTRIC TOKENS ============ */
+  :root {
+    --bg: #08080c;
+    --surface-0: rgba(255,255,255,0.03);
+    --surface-1: rgba(255,255,255,0.06);
+    --surface-2: rgba(255,255,255,0.10);
+    --text: #dcdce0;                       /* the ceiling – never #fff */
+    --muted: #898994;                      /* a11y pass 07.26 – 4.6:1 worst-case on glass */
+    --dim: #3e3e4a;                        /* decorative only – never words */
+    --teal: #2dd4bf;
+    --teal-muted: rgba(45,212,191,0.12);
+    --amber: #e8a317;
+    --amber-muted: rgba(232,163,23,0.12);
+    --crimson: #d6336c;                    /* categorical – never on metrics */
+    --crimson-muted: rgba(214,51,108,0.12);
+    --crimson-ink: #DF5E8B;                /* words in crimson use this */
+    --border-top: rgba(255,255,255,0.10);
+    --border-side: rgba(255,255,255,0.04);
+    --specular: rgba(255,255,255,0.22);
+    --ctl-border: #5C5C69;
+    --ctl-track: rgba(255,255,255,0.14);
+    --display: 'Syne', sans-serif;
+    --sans: 'DM Sans', sans-serif;
+    --mono: 'JetBrains Mono', monospace;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--text); font-family: var(--sans); font-size: 14px; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+  ::selection { background: var(--teal); color: var(--bg); }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 56px 28px 96px; position: relative; }
+
+  /* atmosphere: one quiet teal pool behind the hero – glass needs something to sit over */
+  .atmo { position: absolute; top: -120px; left: 50%; transform: translateX(-50%); width: 720px; height: 480px; pointer-events: none;
+    background: radial-gradient(closest-side, rgba(45,212,191,0.10), transparent 70%); }
+
+  /* ---------- the Concentric surface: directional glass ---------- */
+  .card {
+    background: linear-gradient(180deg, var(--surface-1), var(--surface-0));
+    border: 1px solid var(--border-side);
+    border-top-color: var(--border-top);
+    border-radius: 20px;
+    padding: 24px;
+    position: relative;
+  }
+  .card::before { /* specular corner */
+    content: ''; position: absolute; top: 0; left: 18px; right: 55%; height: 1px;
+    background: linear-gradient(90deg, var(--specular), transparent); border-radius: 1px;
+  }
+  .card.raise { background: linear-gradient(180deg, var(--surface-2), var(--surface-1)); }
+
+  /* ---------- type ---------- */
+  h1, h2, h3 { font-family: var(--display); font-weight: 700; letter-spacing: -0.02em; color: var(--text); line-height: 1.15; }
+  .display { font-size: clamp(42px, 8vw, 68px); font-weight: 800; }
+  h2 { font-size: 21px; margin-bottom: 16px; }
+  .label { font-family: var(--mono); font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--muted); }
+  .sec-label { display: flex; align-items: center; gap: 12px; margin: 64px 0 16px; }
+  .sec-label .label { color: var(--teal); }
+  .sec-num { font-family: var(--mono); color: var(--muted); font-size: 10px; letter-spacing: 0.1em; }
+  .sec-label::after { content: ''; height: 1px; flex: 1; background: linear-gradient(90deg, rgba(255,255,255,0.08), transparent); }
+  p.body { max-width: 66ch; margin-bottom: 16px; color: var(--text); }
+  .faint { color: var(--muted); }
+  code { font-family: var(--mono); font-size: 12px; background: var(--surface-0); border: 1px solid var(--border-side); padding: 1px 6px; border-radius: 6px; }
+  pre.code { font-family: var(--mono); font-size: 12px; background: var(--surface-0); border: 1px solid var(--border-side); border-top-color: var(--border-top); border-radius: 14px; padding: 18px 20px; overflow-x: auto; line-height: 1.65; }
+
+  /* ---------- header ---------- */
+  header { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; flex-wrap: wrap; margin-bottom: 20px; }
+  .mark { display: flex; align-items: center; gap: 14px; }
+  .rings { width: 44px; height: 44px; flex: none; }
+  nav { display: flex; gap: 18px; }
+  nav a { color: var(--muted); text-decoration: none; font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; }
+  nav a:hover { color: var(--teal); }
+  .statusline { display: flex; gap: 20px; flex-wrap: wrap; margin: 6px 0 40px; font-family: var(--mono); font-size: 11px; color: var(--muted); }
+
+  /* ---------- principles ---------- */
+  .principles { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 14px; }
+  .principle b { display: block; font-family: var(--display); font-weight: 700; font-size: 14px; margin-bottom: 6px; }
+  .principle span { font-size: 13px; color: var(--muted); line-height: 1.65; }
+
+  /* ---------- swatches ---------- */
+  .swatches { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+  .swatch { border: 1px solid var(--border-side); border-top-color: var(--border-top); border-radius: 14px; overflow: hidden; background: var(--surface-0); }
+  .swatch-chip { height: 56px; }
+  .swatch-meta { padding: 10px 12px; font-size: 10px; line-height: 1.7; color: var(--muted); }
+  .swatch-meta b { color: var(--text); display: block; font-weight: 600; font-size: 11px; font-family: var(--mono); letter-spacing: 0.02em; }
+
+  /* ---------- type specimen ---------- */
+  .spec-row { display: grid; grid-template-columns: 170px 1fr; gap: 16px; align-items: baseline; padding: 15px 0; border-bottom: 1px solid var(--border-side); }
+  .spec-row:last-child { border-bottom: 0; }
+  @media (max-width: 640px) { .spec-row { grid-template-columns: 1fr; gap: 4px; } }
+
+  /* ---------- components ---------- */
+  .btn { display: inline-flex; align-items: center; gap: 8px; font-family: var(--sans); font-weight: 600; font-size: 13px;
+    border-radius: 12px; padding: 11px 20px; cursor: pointer; border: 1px solid transparent; transition: background 0.2s, border-color 0.2s; }
+  .btn.primary { background: var(--teal); color: var(--bg); }
+  .btn.primary:hover { background: #56dfcd; }
+  .btn.secondary { background: transparent; border-color: rgba(45,212,191,0.44); color: var(--teal); }
+  .btn.secondary:hover { background: var(--teal-muted); }
+  .btn.quiet { background: var(--surface-1); border-color: var(--border-side); color: var(--text); }
+  .btn:focus-visible { outline: 2px solid var(--teal); outline-offset: 2px; }
+  .btn[disabled] { background: var(--surface-0); color: var(--dim); cursor: not-allowed; border-color: transparent; }
+
+  .field { display: flex; flex-direction: column; gap: 6px; max-width: 340px; }
+  .field label { font-family: var(--mono); font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); }
+  .field input { background: var(--surface-0); border: 1px solid var(--ctl-border); border-radius: 12px; color: var(--text);
+    font-family: var(--sans); font-size: 14px; padding: 11px 14px; outline: none; transition: border-color 0.2s; }
+  .field input:focus { border-color: var(--teal); }
+  .field input::placeholder { color: var(--dim); }
+  .field .hint { font-size: 11px; color: var(--muted); }
+
+  .switch { width: 44px; height: 26px; border-radius: 100px; background: var(--ctl-track); border: 1px solid var(--ctl-border); position: relative; cursor: pointer; flex: none; }
+  .switch::after { content: ''; position: absolute; top: 3px; left: 3px; width: 18px; height: 18px; border-radius: 50%; background: var(--muted); transition: left 0.2s, background 0.2s; }
+  .switch.on { background: var(--teal); border-color: var(--teal); }
+  .switch.on::after { left: 21px; background: var(--bg); }
+
+  .pill { display: inline-flex; align-items: center; gap: 7px; border-radius: 100px; padding: 5px 13px; font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; border: 1px solid var(--border-side); background: var(--surface-0); color: var(--muted); }
+  .pill .dot { width: 6px; height: 6px; border-radius: 50%; }
+  .pill.teal { color: var(--teal); border-color: rgba(45,212,191,0.44); background: var(--teal-muted); }
+  .pill.amber { color: var(--amber); border-color: rgba(232,163,23,0.44); background: var(--amber-muted); }
+  .pill.crimson { color: var(--crimson-ink); border-color: rgba(214,51,108,0.44); background: var(--crimson-muted); }
+
+  .stat { display: flex; flex-direction: column; gap: 4px; }
+  .stat .num { font-family: var(--sans); font-weight: 600; font-size: 30px; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+  .stat .num.up { color: var(--teal); }
+  .demo-row { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+  .demo-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th { font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); text-align: left; font-weight: 500; padding: 10px 12px; border-bottom: 1px solid var(--border-top); }
+  td { padding: 10px 12px; border-bottom: 1px solid var(--border-side); }
+  td.num { font-family: var(--mono); text-align: right; font-variant-numeric: tabular-nums; }
+
+  /* ---------- do / don't ---------- */
+  .dd { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px; }
+  .dd h3 { font-size: 14px; margin-bottom: 10px; }
+  .dd .yes h3 { color: var(--teal); }
+  .dd .no h3 { color: var(--crimson-ink); }
+  .dd li { list-style: none; padding: 7px 0 7px 20px; position: relative; font-size: 13px; color: var(--muted); border-bottom: 1px solid var(--border-side); }
+  .dd li::before { position: absolute; left: 0; font-family: var(--mono); }
+  .dd .yes li::before { content: '+'; color: var(--teal); }
+  .dd .no li::before { content: '×'; color: var(--crimson-ink); }
+
+  footer { margin-top: 72px; padding-top: 18px; border-top: 1px solid var(--border-side); display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; font-family: var(--mono); font-size: 10px; color: var(--muted); }
+  /* ---------- motion demos ---------- */
+  .m-demo .m-stage { min-height: 128px; display: flex; flex-direction: column; gap: 8px; justify-content: center; margin-bottom: 14px; }
+  .m-demo .m-stage.center { align-items: center; }
+  .m-row { height: 28px; border-radius: 10px; background: linear-gradient(180deg, var(--surface-1), var(--surface-0)); border: 1px solid var(--border-side); border-top-color: var(--border-top); opacity: 0; }
+  .m-stage.play .m-row { animation: m-enter 400ms cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+  .m-stage.play .m-row:nth-child(2) { animation-delay: 45ms; }
+  .m-stage.play .m-row:nth-child(3) { animation-delay: 90ms; }
+  @keyframes m-enter { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+  .m-pulse { position: relative; width: 10px; height: 10px; border-radius: 50%; background: var(--teal); }
+  .m-pulse::before, .m-pulse::after { content: ''; position: absolute; inset: 0; border-radius: 50%; border: 1px solid var(--teal); opacity: 0; }
+  .m-stage.play .m-pulse::before { animation: m-ring 900ms cubic-bezier(0.16, 1, 0.3, 1); }
+  .m-stage.play .m-pulse::after { animation: m-ring 900ms cubic-bezier(0.16, 1, 0.3, 1) 150ms; }
+  @keyframes m-ring { 0% { transform: scale(1); opacity: 0.9; } 100% { transform: scale(7); opacity: 0; } }
+  .m-press { transition: transform 180ms ease-out; }
+  .m-press:active { transform: scale(0.97); }
+  .m-sweep { position: relative; overflow: hidden; }
+  .m-sweep::after { content: ''; position: absolute; top: 0; left: -40%; width: 40%; height: 1px; background: linear-gradient(90deg, transparent, var(--specular), transparent); }
+  .m-sweep:hover::after { animation: m-sweepk 700ms ease-out; }
+  @keyframes m-sweepk { to { left: 100%; } }
+  @media (prefers-reduced-motion: reduce) { .m-row { opacity: 1; } }
+
+  @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="atmo"></div>
+
+  <header>
+    <div class="mark">
+      <svg class="rings" viewBox="0 0 44 44" fill="none" aria-hidden="true">
+        <circle cx="22" cy="22" r="20" stroke="#2dd4bf" stroke-opacity="0.9" stroke-width="1.5"/>
+        <circle cx="22" cy="22" r="13" stroke="#2dd4bf" stroke-opacity="0.45" stroke-width="1.5"/>
+        <circle cx="22" cy="22" r="6"  stroke="#2dd4bf" stroke-opacity="0.2" stroke-width="1.5"/>
+        <circle cx="22" cy="22" r="1.6" fill="#2dd4bf"/>
+      </svg>
+      <div>
+        <h1 class="display">Concentric</h1>
+      </div>
+    </div>
+    <nav>
+      <a href="../">Systems</a><a href="#color">Color</a><a href="#type">Type</a><a href="#components">Components</a><a href="#tokens">Tokens</a>
+    </nav>
+  </header>
+  <div class="statusline"><span>the house style</span><span>glass over void</span><span>v1.0</span></div>
+
+  <p class="body" style="font-size:16px; max-width:60ch;">Quiet confidence on a near-black field. Glass panels catch a single specular edge, teal carries the signal, and monospace runs through everything as texture. Nothing glows unless it means something.</p>
+
+  <!-- ================= 01 PRINCIPLES ================= -->
+  <div class="sec-label"><span class="sec-num">01</span><span class="label">Principles</span></div>
+  <div class="principles">
+    <div class="card principle"><b>Glass over void</b><span>Surfaces are translucent layers over #08080c — directional borders, a lit top edge, one specular corner. Depth without shadow theater.</span></div>
+    <div class="card principle"><b>Color means something</b><span>Teal is the signal. Amber and crimson are categorical labels, never decoration, and crimson never touches a metric.</span></div>
+    <div class="card principle"><b>Mono as texture</b><span>JetBrains Mono carries labels, status, and metadata at wide tracking. It is a design material, not a code affordance.</span></div>
+    <div class="card principle"><b>Motion is reactive</b><span>Things move because you touched them. Decelerate in, accelerate out, stagger reveals — nothing loops at rest.</span></div>
+  </div>
+
+  <!-- ================= 02 COLOR ================= -->
+  <div class="sec-label" id="color"><span class="sec-num">02</span><span class="label">Color</span></div>
+  <div class="swatches">
+    <div class="swatch"><div class="swatch-chip" style="background:#08080c;"></div><div class="swatch-meta"><b>void</b>#08080C · the only canvas</div></div>
+    <div class="swatch"><div class="swatch-chip" style="background:#dcdce0;"></div><div class="swatch-meta"><b>text</b>#DCDCE0 · the ceiling — never #FFF</div></div>
+    <div class="swatch"><div class="swatch-chip" style="background:#898994;"></div><div class="swatch-meta"><b>text / muted</b>#898994 · 4.6:1 worst-case on glass</div></div>
+    <div class="swatch"><div class="swatch-chip" style="background:#3e3e4a;"></div><div class="swatch-meta"><b>text / dim</b>#3E3E4A · decorative only, never words</div></div>
+    <div class="swatch"><div class="swatch-chip" style="background:#2dd4bf;"></div><div class="swatch-meta"><b>teal · signal</b>#2DD4BF · actions, live, positive</div></div>
+    <div class="swatch"><div class="swatch-chip" style="background:#e8a317;"></div><div class="swatch-meta"><b>amber · warmth</b>#E8A317 · categorical, warnings</div></div>
+    <div class="swatch"><div class="swatch-chip" style="background:#d6336c;"></div><div class="swatch-meta"><b>crimson · pulse</b>#D6336C · categorical fills + large · never on metrics</div></div>
+    <div class="swatch"><div class="swatch-chip" style="background:#DF5E8B;"></div><div class="swatch-meta"><b>crimson / ink</b>#DF5E8B · crimson when it carries words</div></div>
+  </div>
+  <p class="body faint" style="font-size:12px; margin-top:14px;">Accents get a muted 12% wash for fills. Words never sit below muted — the dim gray is for ornament, and the pulse steps to its ink the moment it becomes a sentence.</p>
+
+  <!-- ================= 03 TYPE ================= -->
+  <div class="sec-label" id="type"><span class="sec-num">03</span><span class="label">Type</span></div>
+  <div class="card">
+    <div class="spec-row"><span class="label">Display · Syne 800</span><span style="font-family:var(--display); font-weight:800; font-size:34px; letter-spacing:-0.02em;">Structure over spectacle</span></div>
+    <div class="spec-row"><span class="label">Heading · Syne 700</span><span style="font-family:var(--display); font-weight:700; font-size:21px;">Sections earn their weight</span></div>
+    <div class="spec-row"><span class="label">Body · DM Sans 400</span><span>Readable and unhurried at 14px over 1.7 — the void does the drama so the words don't have to.</span></div>
+    <div class="spec-row"><span class="label">Data · DM Sans 600</span><span style="font-weight:600; font-size:26px; font-variant-numeric:tabular-nums;">1,204.6 <span class="faint" style="font-size:13px; font-weight:400;">tabular, always</span></span></div>
+    <div class="spec-row"><span class="label">Label · Mono 500</span><span class="label" style="color:var(--text);">TRACKED WIDE · 0.22EM · UPPERCASE</span></div>
+  </div>
+  <p class="body faint" style="font-size:12px; margin-top:12px;">Syne never sets a number. Numbers belong to DM Sans, tabular and right-aligned when they live in tables.</p>
+
+  <!-- ================= 04 COMPONENTS ================= -->
+  <div class="sec-label" id="components"><span class="sec-num">04</span><span class="label">Components</span></div>
+  <div class="demo-grid">
+    <div class="card">
+      <div class="label" style="margin-bottom:14px;">Buttons</div>
+      <div class="demo-row">
+        <button class="btn primary">Save changes</button>
+        <button class="btn secondary">Preview</button>
+        <button class="btn quiet">Later</button>
+        <button class="btn" disabled>Locked</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="label" style="margin-bottom:14px;">Field</div>
+      <div class="field">
+        <label>Project name</label>
+        <input type="text" placeholder="orbital-station" spellcheck="false">
+        <span class="hint">Lowercase, hyphens allowed.</span>
+      </div>
+    </div>
+    <div class="card">
+      <div class="label" style="margin-bottom:14px;">Controls</div>
+      <div class="demo-row" style="gap:18px;">
+        <span class="switch on" role="switch" aria-checked="true" tabindex="0" onclick="this.classList.toggle('on'); this.setAttribute('aria-checked', this.classList.contains('on'))"></span>
+        <span class="switch" role="switch" aria-checked="false" tabindex="0" onclick="this.classList.toggle('on'); this.setAttribute('aria-checked', this.classList.contains('on'))"></span>
+        <span class="faint" style="font-size:12px;">track + #5C5C69 border · 3:1 floor</span>
+      </div>
+      <div class="demo-row" style="margin-top:16px;">
+        <span class="pill teal"><span class="dot" style="background:var(--teal);"></span>Live</span>
+        <span class="pill amber"><span class="dot" style="background:var(--amber);"></span>Queued</span>
+        <span class="pill crimson"><span class="dot" style="background:var(--crimson);"></span>Blocked</span>
+      </div>
+    </div>
+    <div class="card raise">
+      <div class="label" style="margin-bottom:14px;">Stat card</div>
+      <div class="demo-row" style="gap:32px;">
+        <div class="stat"><span class="label">Uptime</span><span class="num up">99.98%</span></div>
+        <div class="stat"><span class="label">P95</span><span class="num">212ms</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="card" style="margin-top:14px;">
+    <div class="label" style="margin-bottom:10px;">Table</div>
+    <table>
+      <thead><tr><th>Service</th><th>Status</th><th style="text-align:right;">Requests</th></tr></thead>
+      <tbody>
+        <tr><td>gateway</td><td style="color:var(--teal);">healthy</td><td class="num">1,204,882</td></tr>
+        <tr><td>renderer</td><td style="color:var(--amber);">degraded</td><td class="num">88,410</td></tr>
+        <tr><td>archive</td><td style="color:var(--crimson-ink);">paused</td><td class="num">0</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ================= 05 MOTION ================= -->
+  <div class="sec-label"><span class="sec-num">05</span><span class="label">Motion</span></div>
+  <p class="body">Three moves cover the whole system: things <b>enter</b> by decelerating, <b>respond</b> in under 200ms, and <b>signal</b> with one concentric pulse. Everything animates transform and opacity only — glass never changes size or blur mid-flight — and nothing loops at rest.</p>
+  <div class="card">
+    <table>
+      <thead><tr><th>token</th><th>value</th><th>use</th></tr></thead>
+      <tbody>
+        <tr><td>ease-enter</td><td class="num">400ms · cubic-bezier(0.16, 1, 0.3, 1)</td><td>reveals, sheets, cards in</td></tr>
+        <tr><td>ease-exit</td><td class="num">220ms · cubic-bezier(0.7, 0, 0.84, 0)</td><td>dismiss, collapse</td></tr>
+        <tr><td>micro</td><td class="num">180ms · ease-out</td><td>hover, focus, toggles, press</td></tr>
+        <tr><td>stagger</td><td class="num">45ms per item · cap 8</td><td>list + grid entrances</td></tr>
+        <tr><td>pulse</td><td class="num">900ms · ease-enter · once</td><td>the signal ripple — saves, syncs, go-live</td></tr>
+        <tr><td>sweep</td><td class="num">700ms · ease-out · hover</td><td>specular edge crossing a card</td></tr>
+      </tbody>
+    </table>
+    <p class="faint" style="font-size:11px; margin-top:12px;">Decelerate in, accelerate out — exits run faster than entrances, because leaving should feel lighter than arriving. Past the eighth item a stagger reads as lag: cap the cascade and land the rest together. Reduced-motion collapses everything to instant state changes.</p>
+  </div>
+  <div class="demo-grid" style="margin-top:14px;">
+    <div class="card m-demo">
+      <div class="label" style="margin-bottom:12px;">Enter · 400ms + 45ms stagger</div>
+      <div class="m-stage play"><div class="m-row"></div><div class="m-row" style="width:82%;"></div><div class="m-row" style="width:64%;"></div></div>
+      <button class="btn quiet" onclick="var s=this.closest('.m-demo').querySelector('.m-stage');s.classList.remove('play');void s.offsetWidth;s.classList.add('play');">Replay</button>
+    </div>
+    <div class="card m-demo">
+      <div class="label" style="margin-bottom:12px;">Signal pulse · 900ms, once</div>
+      <div class="m-stage center play"><span class="m-pulse"></span></div>
+      <button class="btn quiet" onclick="var s=this.closest('.m-demo').querySelector('.m-stage');s.classList.remove('play');void s.offsetWidth;s.classList.add('play');">Replay</button>
+    </div>
+    <div class="card m-demo m-sweep">
+      <div class="label" style="margin-bottom:12px;">Micro · live</div>
+      <div class="m-stage" style="align-items:flex-start;">
+        <button class="btn primary m-press">Press me</button>
+        <span class="faint" style="font-size:11px;">press · 180ms · scale 0.97 — hover this card for the specular sweep</span>
+      </div>
+    </div>
+  </div>
+  <pre class="code" style="margin-top:14px;">--motion-enter:   400ms cubic-bezier(0.16, 1, 0.3, 1);
+--motion-exit:    220ms cubic-bezier(0.7, 0, 0.84, 0);
+--motion-micro:   180ms ease-out;
+--motion-pulse:   900ms;   /* signal ripple — once */
+--motion-stagger: 45ms;    /* per item, cap 8 */</pre>
+
+  <!-- ================= 06 VOICE ================= -->
+  <div class="sec-label"><span class="sec-num">06</span><span class="label">Voice</span></div>
+  <p class="body">Plain, present tense, quietly certain. Interfaces state what happened and what to do next. <span class="faint">"Saved. Synced to two devices."</span> — never an exclamation point doing the work a checkmark already did.</p>
+
+  <!-- ================= 07 DO / DON'T ================= -->
+  <div class="sec-label"><span class="sec-num">07</span><span class="label">Do / Don't</span></div>
+  <div class="dd">
+    <div class="card yes">
+      <h3>Do</h3>
+      <li>Light the top edge — glass reads from its borders</li>
+      <li>Track mono labels wide; let them breathe</li>
+      <li>Keep density high and spacing disciplined</li>
+      <li>Use teal for the one thing that matters now</li>
+      <li>Step crimson to its ink the moment it carries words</li>
+      <li>Simulate glass when backdrop-filter isn't safe</li>
+    </div>
+    <div class="card no">
+      <h3>Don't</h3>
+      <li>No pure white — #DCDCE0 is the ceiling</li>
+      <li>No crimson on metrics — it reads as loss</li>
+      <li>No Syne for numbers — it's a display face</li>
+      <li>No accent cycling for decoration</li>
+      <li>No looping animation at rest</li>
+      <li>No light mode — the void is the canvas</li>
+    </div>
+  </div>
+
+  <!-- ================= 08 TOKENS ================= -->
+  <div class="sec-label" id="tokens"><span class="sec-num">08</span><span class="label">Tokens · Tokens Studio</span></div>
+  <p class="body">The <code>void</code> set below is the source of truth in design-tokens.json — sync via Tokens Studio for Figma variables. The theme presents as Concentric; the set key stays <code>void</code> so existing bindings survive.</p>
+  <pre class="code">{
+  "void": {
+    "color": {
+      "bg": {
+        "value": "#08080c",
+        "type": "color",
+        "description": "Primary background - near-black void"
+      },
+      "surface-0": {
+        "value": "rgba(255,255,255,0.03)",
+        "type": "color"
+      },
+      "surface-1": {
+        "value": "rgba(255,255,255,0.06)",
+        "type": "color"
+      },
+      "surface-2": {
+        "value": "rgba(255,255,255,0.10)",
+        "type": "color"
+      },
+      "text": {
+        "value": "#dcdce0",
+        "type": "color",
+        "description": "Primary text - soft white"
+      },
+      "text-muted": {
+        "value": "#898994",
+        "type": "color",
+        "description": "Secondary text - 4.6:1 worst-case incl. glass surfaces (was #6b6b76 / 3.1:1)"
+      },
+      "text-dim": {
+        "value": "#3e3e4a",
+        "type": "color",
+        "description": "Decorative &amp; disabled only - 1.9:1, never informative text"
+      },
+      "teal": {
+        "value": "#2dd4bf",
+        "type": "color",
+        "description": "Signal - primary accent"
+      },
+      "teal-muted": {
+        "value": "rgba(45,212,191,0.12)",
+        "type": "color"
+      },
+      "amber": {
+        "value": "#e8a317",
+        "type": "color",
+        "description": "Warmth - categorical accent"
+      },
+      "amber-muted": {
+        "value": "rgba(232,163,23,0.12)",
+        "type": "color"
+      },
+      "crimson": {
+        "value": "#d6336c",
+        "type": "color",
+        "description": "Pulse - categorical accent, never on metrics; component/large only (4.3:1) - words use crimson-ink"
+      },
+      "crimson-muted": {
+        "value": "rgba(214,51,108,0.12)",
+        "type": "color"
+      },
+      "crimson-ink": {
+        "value": "#DF5E8B",
+        "type": "color",
+        "description": "Text-grade crimson - 4.7:1 min; swap in wherever crimson carries small text"
+      },
+      "glass-border-top": {
+        "value": "rgba(255,255,255,0.10)",
+        "type": "color"
+      },
+      "glass-border-side": {
+        "value": "rgba(255,255,255,0.04)",
+        "type": "color"
+      },
+      "glass-specular": {
+        "value": "rgba(255,255,255,0.22)",
+        "type": "color"
+      }
+    },
+    "control": {
+      "tint": {
+        "value": "#2dd4bf",
+        "type": "color",
+        "description": "System controls - switches, sliders, checks (10.7:1)"
+      },
+      "on-tint": {
+        "value": "#08080c",
+        "type": "color"
+      },
+      "track": {
+        "value": "rgba(255,255,255,0.14)",
+        "type": "color",
+        "description": "Off/rest tracks - state carried by tint + border"
+      },
+      "border": {
+        "value": "#5C5C69",
+        "type": "color",
+        "description": "Field &amp; control boundaries - 3:1 floor"
+      },
+      "focus": {
+        "value": "#2dd4bf",
+        "type": "color",
+        "description": "Focus ring - 2px offset"
+      }
+    }
+  }
+}</pre>
+
+  <footer>
+    <span>concentric v1.0 · part of dunl.app/systems</span>
+    <span>glass over void · teal signal · mono as texture</span>
+  </footer>
+</div>
+
+<!-- gate removed for offline kit -->
+</body>
+</html>

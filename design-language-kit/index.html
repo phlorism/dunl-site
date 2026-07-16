@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>dunl.app — Design Language Reference</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500&family=Syne:wght@700;800&family=JetBrains+Mono:wght@400;700&family=Instrument+Serif:ital@0;1&family=Plus+Jakarta+Sans:wght@400;700;800&family=Space+Mono&family=Rubik+Glitch&family=Silkscreen&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #08080c; --fg: #dcdce0; --muted: #6b6b76; --accent: #2dd4bf;
+    --card: rgba(255,255,255,0.03); --border: rgba(255,255,255,0.08);
+    --hfont: 'Syne', sans-serif; --bfont: 'DM Sans', sans-serif; --mono: 'JetBrains Mono', monospace;
+    --k-enter: 0.4s; --k-ease: cubic-bezier(0.16, 1, 0.3, 1); --k-stagger: 0.045s;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg); color: var(--fg); font-family: var(--bfont); font-weight: 300;
+    line-height: 1.6; -webkit-font-smoothing: antialiased;
+    transition: background 0.5s ease, color 0.5s ease;
+  }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .topbar {
+    position: sticky; top: 0; z-index: 50;
+    background: color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 22px;
+    transition: background 0.5s ease, border-color 0.5s ease;
+  }
+  .topbar .brand { font-family: var(--mono); font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
+  .topbar .brand b { color: var(--accent); font-weight: 400; }
+  .picker { display: flex; flex-wrap: wrap; gap: 6px; }
+  .picker button {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.04em;
+    background: transparent; color: var(--muted);
+    border: 1px solid var(--border); border-radius: 100px;
+    padding: 6px 13px; cursor: pointer;
+    transition: color 0.25s, border-color 0.25s, background 0.25s;
+  }
+  .picker button:hover { color: var(--fg); border-color: color-mix(in srgb, var(--accent) 50%, transparent); }
+  .picker button.active { color: var(--bg); background: var(--accent); border-color: var(--accent); }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 52px 22px 90px; }
+  .lang-tag { font-family: var(--mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; }
+  h1.lang-name { font-family: var(--hfont); font-weight: 700; font-size: clamp(38px, 7vw, 58px); line-height: 1.05; margin-bottom: 10px; }
+  .lang-count { font-family: var(--mono); font-size: 11px; color: var(--muted); margin-bottom: 40px; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 640px) { .grid { grid-template-columns: 1fr; } }
+  .card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 14px;
+    padding: 22px 24px;
+    transition: background 0.5s ease, border-color 0.5s ease;
+  }
+  .card.wide { grid-column: 1 / -1; }
+  .card h4 { font-family: var(--hfont); font-size: 15px; font-weight: 700; margin-bottom: 12px; }
+  .card p { font-size: 13.5px; color: var(--muted); }
+  .swatches { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; margin-bottom: 14px; }
+  .swatch { aspect-ratio: 2 / 1.4; border-radius: 8px; border: 1px solid var(--border); }
+  .swatch-label { font-family: var(--mono); font-size: 8.5px; letter-spacing: 0.05em; color: var(--muted); margin-top: 5px; text-transform: uppercase; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .type-preview { font-size: 30px; line-height: 1.2; margin-bottom: 12px; }
+  table { width: 100%; border-collapse: collapse; margin-bottom: 14px; }
+  th { font-family: var(--mono); font-size: 9.5px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); text-align: left; padding: 0 10px 8px 0; border-bottom: 1px solid var(--border); font-weight: 400; }
+  td { font-size: 12.5px; padding: 8px 10px 8px 0; border-bottom: 1px solid var(--border); vertical-align: top; }
+  td:first-child { font-family: var(--mono); font-size: 11.5px; color: var(--accent); white-space: nowrap; }
+  td.val { font-family: var(--mono); font-size: 11px; color: var(--fg); }
+  td:last-child { color: var(--muted); border-bottom-color: var(--border); }
+  tr:last-child td { border-bottom: none; }
+  .k-stage { min-height: 96px; display: flex; flex-direction: column; gap: 8px; justify-content: center; margin: 6px 0 14px; }
+  .k-bar { height: 22px; border-radius: 7px; border: 1px solid var(--border); background: color-mix(in srgb, var(--accent) 12%, transparent); opacity: 0; }
+  .k-stage.play .k-bar { animation: kIn var(--k-enter) var(--k-ease) forwards; }
+  .k-stage.play .k-bar:nth-child(2) { animation-delay: calc(var(--k-stagger) * 1); }
+  .k-stage.play .k-bar:nth-child(3) { animation-delay: calc(var(--k-stagger) * 2); }
+  @keyframes kIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+  .btn-row { display: flex; flex-wrap: wrap; gap: 8px; }
+  .kbtn {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em;
+    background: transparent; color: var(--fg);
+    border: 1px solid var(--border); border-radius: 8px;
+    padding: 9px 15px; cursor: pointer;
+    transition: border-color 0.25s, background 0.25s, transform 0.15s;
+  }
+  .kbtn:hover { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 9%, transparent); }
+  .kbtn:active { transform: scale(0.97); }
+  .kbtn.solid { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+  .fine { font-size: 11.5px; color: var(--muted); font-family: var(--mono); }
+  footer { margin-top: 70px; padding-top: 18px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; font-family: var(--mono); font-size: 10.5px; color: var(--muted); }
+  /* Language-switch re-entrance — the incoming language replays in its own dialect */
+  .wrap.switching .card, .wrap.switching .lang-head { animation: kIn var(--k-enter) var(--k-ease) backwards; }
+  .wrap.switching .card:nth-of-type(2) { animation-delay: calc(var(--k-stagger) * 1); }
+  .wrap.switching .card:nth-of-type(3) { animation-delay: calc(var(--k-stagger) * 2); }
+  .wrap.switching .card:nth-of-type(4) { animation-delay: calc(var(--k-stagger) * 3); }
+  .wrap.switching .card:nth-of-type(5) { animation-delay: calc(var(--k-stagger) * 4); }
+  .wrap.switching .card:nth-of-type(6) { animation-delay: calc(var(--k-stagger) * 5); }
+  @media (prefers-reduced-motion: reduce) {
+    * { animation: none !important; transition: none !important; }
+    .k-bar { opacity: 1; }
+  }
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="brand"><b>dunl.app</b> · design language reference · 13 languages · ←/→ to browse</div>
+  <div class="picker" id="picker"></div>
+</div>
+<div class="wrap" id="wrap">
+  <div class="lang-head">
+    <div class="lang-tag" id="langTag"></div>
+    <h1 class="lang-name" id="langName"></h1>
+    <div class="lang-count" id="langCount"></div>
+  </div>
+  <div class="grid" id="grid">
+    <div class="card"><h4>Palette</h4><div class="swatches" id="swatches"></div><p id="colorDesc"></p></div>
+    <div class="card"><h4>Typography</h4><div class="type-preview" id="typePreview">Design is the product.</div><p id="typeDesc"></p></div>
+    <div class="card wide"><h4>Motion</h4>
+      <table><thead><tr><th>token</th><th>value</th><th>use</th></tr></thead><tbody id="motionRows"></tbody></table>
+      <p id="motionDesc" style="margin-bottom:14px;"></p>
+      <div class="k-stage play" id="kStage"><div class="k-bar" style="width:100%;"></div><div class="k-bar" style="width:78%;"></div><div class="k-bar" style="width:56%;"></div></div>
+      <div class="btn-row">
+        <button class="kbtn solid" onclick="replayDemo()">Replay entrance</button>
+        <button class="kbtn">Press me</button>
+        <span class="fine" style="align-self:center;" id="demoNote"></span>
+      </div>
+    </div>
+    <div class="card"><h4>Texture</h4><p id="textureDesc"></p></div>
+    <div class="card"><h4>Takeover &amp; error states</h4>
+      <p style="margin-bottom:14px;">Full-screen interruptions use the Glitch overlay — the shared error language across every system. Esc or click dismisses.</p>
+      <div class="btn-row">
+        <button class="kbtn" onclick="Glitch.show({ lines:['signal acquired'], theme: currentGlitch })">Takeover</button>
+        <button class="kbtn" onclick="Glitch.error('503','uplink lost — retrying', { theme:'red' })">Error 503</button>
+        <button class="kbtn" onclick="Glitch.show({ big:'HOLD', lines:['awaiting authorization'], theme:'amber' })">Hold</button>
+      </div>
+    </div>
+  </div>
+  <footer>
+    <span>generated from dunl.app · july 2026</span>
+    <span>tokens: design-languages.json · overlay: glitch-overlay.js</span>
+  </footer>
+</div>
+<script src="glitch-overlay.js"></script>
+<script>
+const LANGS = [
+  { id:'classic', name:'Classic', tag:'The daily driver',
+    c:{ bg:'#0c0c0c', fg:'#e8e4df', muted:'#8a8580', accent:'#c9a96e', card:'#161614', border:'#2a2825' },
+    h:"'DM Serif Display', serif", hs:'', b:"'DM Sans', sans-serif", glitch:'amber',
+    m:{ enter:'0.6s', ease:'ease-out', stagger:'0.08s' },
+    rows:[ ['reveal','600ms · ease-out · 80ms stagger','scroll-triggered entrances'], ['lift','300ms · ease-out','card hover raise'], ['tracer','5s · ease-in-out · loop','gold dot on the hero divider'], ['ceiling','600ms','nothing runs longer'] ],
+    color:'Dark foundation with warm neutrals. Gold accent (#c9a96e) for interactive elements, labels, and results — never for backgrounds.',
+    type:'Serif for headings — warmth and authority. Sans-serif at light weight for body. Hierarchy from size and color, not weight.',
+    motion:'Scroll-triggered reveals. Timeline draws on scroll. Tracer bounces on the hero divider. Cards lift on hover. All under 600ms.',
+    texture:'SVG noise at 4% opacity gives the dark background grain. Cards sit one step lighter to create depth without shadows.' },
+  { id:'cyberpunk', name:'Cyberpunk', tag:'Controlled chaos',
+    c:{ bg:'#0a0a1a', fg:'#e0e0ff', muted:'#7070a0', accent:'#ff2d6b', card:'#12122a', border:'#2a2a4a' },
+    h:"'DM Serif Display', serif", hs:'text-shadow: 2px 0 rgba(255,45,107,0.55), -2px 0 rgba(46,230,255,0.45);', b:"'DM Sans', sans-serif", glitch:'red',
+    m:{ enter:'0.6s', ease:'ease-out', stagger:'0.08s' },
+    rows:[ ['reveal','600ms · ease-out · 80ms stagger','scroll-triggered entrances'], ['split','static','dual-tone glitch shadow on headings — displaced, not animated'], ['lift','300ms · ease-out','card hover raise'] ],
+    color:'Deep indigo foundation with cool blue-grey neutrals. Hot pink accent (#ff2d6b) creates urgency and edge. Dual-tone text shadows (pink + cyan) add a glitch aesthetic.',
+    type:'Same typographic hierarchy as classic, but the glitch text-shadow on headings changes the character entirely — controlled chaos.',
+    motion:'Same motion system as classic, plus glitch-style dual color text shadows that give headings a displaced, digital-artifact feel.',
+    texture:'Grain overlay on deep indigo. The dark blue-black background feels more digital than the warm classic — like looking at a terminal.' },
+  { id:'laser', name:'Laser', tag:'Light show',
+    c:{ bg:'#050510', fg:'#ffffff', muted:'#8888aa', accent:'#ff3333', card:'#0a0a20', border:'#1a1a3a' },
+    h:"'DM Serif Display', serif", hs:'', b:"'DM Sans', sans-serif", glitch:'red',
+    m:{ enter:'0.6s', ease:'ease-out', stagger:'0.08s' },
+    rows:[ ['reveal','600ms · ease-out · 80ms stagger','scroll-triggered entrances'], ['beams','continuous · canvas','lasers fire at random angles, fading with glow trails'], ['decay','randomized','each beam gets its own color, width, and half-life'] ],
+    color:'Near-black void with pure white text. Red accent (#ff3333) for labels and emphasis. The darkness makes the laser beams pop.',
+    type:'Standard type hierarchy against maximum contrast — white on near-black. Red accent text cuts through like a targeting laser.',
+    motion:'Animated laser beams fire across the background at random angles, fading out with glow trails. Each beam has a randomized color, width, and decay rate.',
+    texture:'No grain — the animated laser canvas provides all the texture. Beams spawn continuously and fade, creating an ever-changing light show behind the content.' },
+  { id:'neon', name:'Neon', tag:'Signage',
+    c:{ bg:'#000000', fg:'#f0f0f0', muted:'#888888', accent:'#ff2eea', card:'#0a0a0a', border:'#1a1a1a' },
+    h:"'DM Serif Display', serif", hs:'text-shadow: 0 0 18px rgba(255,46,234,0.65);', b:"'DM Sans', sans-serif", glitch:'red',
+    m:{ enter:'0.6s', ease:'ease-out', stagger:'0.08s' },
+    rows:[ ['reveal','600ms · ease-out · 80ms stagger','scroll-triggered entrances'], ['glow','250ms · ease','hover states bloom neon box-shadows'], ['pulse','loop','the pink tracer pulses against pure black'] ],
+    color:'Pure black background for maximum neon contrast. Neon pink (#ff2eea) dominates — labels, numbers, emphasis, interactive states. Cyan blue (#00d4ff) reserved for links and the nav border.',
+    type:'Light grey body text on pure black. Pink neon glow on headings via text-shadow. The glow effect makes text feel illuminated, like signage.',
+    motion:'Same scroll-triggered system, but hover states add neon glow box-shadows. The pink tracer on the hero rule pulses against pure black.',
+    texture:'No grain. Pure black creates the deepest possible contrast for neon glow. Card surfaces are barely above black (#0a0a0a) — just enough to define edges.' },
+  { id:'matrix', name:'Matrix', tag:'The terminal',
+    c:{ bg:'#000000', fg:'#00ff41', muted:'#005500', accent:'#00ff41', card:'#001100', border:'#003300' },
+    h:"'JetBrains Mono', monospace", hs:'', b:"'JetBrains Mono', monospace", glitch:'green',
+    m:{ enter:'0.6s', ease:'ease-out', stagger:'0.08s' },
+    rows:[ ['rain','continuous · 35% opacity','katakana + digit columns, white flashes at leading edges'], ['reveal','600ms · ease-out','scroll entrances behind backdrop-blur'], ['flash','random · 3%','bright white leading-edge characters'] ],
+    color:'Pure black with green (#00ff41) for everything. Monochrome CRT terminal aesthetic. Bright white and light green highlights flash through the rain.',
+    type:'Green-on-black monochrome. Text gets layered black shadows for readability against the falling character rain.',
+    motion:'Katakana and digit rain at 35% opacity with brightness accents — white flashes simulate column leading edges. Cards use backdrop-blur to soften the rain.',
+    texture:'The rain IS the texture. Translucent dark-green card backgrounds let it bleed through. Constant subtle movement without overwhelming readability.' },
+  { id:'cta', name:'CTA', tag:'Daylight mode',
+    c:{ bg:'#ffffff', fg:'#1a1a1a', muted:'#6b6b6b', accent:'#ff385c', card:'#f7f7f7', border:'#e8e8e8' },
+    h:"'DM Serif Display', serif", hs:'', b:"'DM Sans', sans-serif", glitch:'red',
+    m:{ enter:'0.6s', ease:'ease-out', stagger:'0.08s' },
+    rows:[ ['reveal','600ms · ease-out · 80ms stagger','scroll-triggered entrances'], ['shadow-lift','250ms · ease','hover shadows replace border glows'], ['blue','instant','interactive elements switch to #2563eb'] ],
+    color:'Clean white background with dark text. Pink (#ff385c) as the primary brand accent for labels and static elements. Blue (#2563eb) for all interactive elements — links, hovers, CTAs.',
+    type:'Same fonts, but on white the light-weight sans-serif feels more editorial. The contrast shift from dark-on-light changes the entire reading experience.',
+    motion:'Same animation system, but subtle card shadows replace border glows on hover. The lighter palette makes lift effects more visible.',
+    texture:'No grain overlay — white backgrounds don\u2019t need it. Depth comes from subtle box-shadows on cards instead of border-based separation.' },
+  { id:'aol', name:'AOL \u201903', tag:'You\u2019ve got mail',
+    c:{ bg:'#e8e4df', fg:'#000000', muted:'#555555', accent:'#336699', card:'#ffffff', border:'#b0b0b0' },
+    h:'Tahoma, Verdana, sans-serif', hs:'font-weight: 700;', b:'Tahoma, Verdana, sans-serif', glitch:'cyan',
+    m:{ enter:'0.6s', ease:'ease-out', stagger:'0.08s' },
+    rows:[ ['reveal','600ms · ease-out · 80ms stagger','scroll-triggered entrances'], ['soften','250ms · ease','XP-era gradients, rounded corners, 1px shadows'], ['buddy','hover','selecting anything feels like selecting a buddy'] ],
+    color:'Windows system grey (#e8e4df) with white card surfaces. Steel blue (#336699) — the exact shade from AIM\u2019s buddy list headers. Yellow (#ffcc00) for running-man highlights.',
+    type:'Tahoma — the system font of every AIM chat window. Clean, compact, unmistakably late-90s Microsoft. Bold used freely because Tahoma was built for it.',
+    motion:'Same scroll-triggered reveals, but the gradient nav bar, subtle card shadows, and rounded corners give everything a Windows XP-era softness.',
+    texture:'No grain. White cards on system grey. Subtle 1px shadows instead of hard bevels. The AIM aesthetic was cleaner than most people remember — 2003, not 1997.' },
+  { id:'synth84', name:'Synth \u201984', tag:'The upside down',
+    c:{ bg:'#0a0014', fg:'#e8d8ff', muted:'#7a6a9a', accent:'#ff1744', card:'#140024', border:'#2a1a44' },
+    h:"'Syne', sans-serif", hs:'text-shadow: 0 0 22px rgba(255,23,68,0.75); font-weight: 800;', b:"'DM Sans', sans-serif", glitch:'red',
+    m:{ enter:'0.6s', ease:'ease-out', stagger:'0.08s' },
+    rows:[ ['grid','continuous · canvas','perspective grid scrolls toward the viewer'], ['reveal','600ms · ease-out','scroll entrances over the grid'], ['glow','static','red neon-tube shadows on display type'] ],
+    color:'Deep purple-black (#0a0014) foundation. Stranger Things red (#ff1744) for primary headings and accent. Purple (#ba68c8) secondary. Blue (#64b5f6) for tags and links.',
+    type:'Syne for headings with heavy red glow text-shadows — the title feels like neon tubing. Purple glow on secondary text.',
+    motion:'Retro perspective grid animates behind all content — purple vertical lines converging to a vanishing point with red horizontal lines scrolling toward the viewer.',
+    texture:'The animated synthwave grid provides depth and atmosphere. Card surfaces are deep purple-black. Grain overlay adds analog warmth.' },
+  { id:'void', name:'Void · Concentric', tag:'The system of record',
+    c:{ bg:'#08080c', fg:'#dcdce0', muted:'#6b6b76', accent:'#2dd4bf', card:'rgba(255,255,255,0.03)', border:'rgba(255,255,255,0.08)' },
+    dc:{ card:'#0d0d12', border:'#1a1a22' },
+    h:"'Syne', sans-serif", hs:'', b:"'DM Sans', sans-serif", glitch:'green',
+    m:{ enter:'0.4s', ease:'cubic-bezier(0.16, 1, 0.3, 1)', stagger:'0.045s' },
+    rows:[ ['ease-enter','400ms · cubic-bezier(0.16, 1, 0.3, 1)','reveals, sheets, cards in'], ['ease-exit','220ms · cubic-bezier(0.7, 0, 0.84, 0)','dismiss, collapse'], ['micro','180ms · ease-out','hover, focus, toggles, press'], ['stagger','45ms per item · cap 8','list + grid entrances'], ['pulse','900ms · once','the signal ripple — saves, syncs, go-live'] ],
+    color:'Near-black (#08080c) void. Teal (#2dd4bf) as the sole interactive accent. Amber (#e8a317) for categorical labels only. No competing colors — the void is the canvas.',
+    type:'Syne for display headings — geometric, modern, confident. DM Sans for body. JetBrains Mono for labels and metadata — code-like precision.',
+    motion:'Reactive only — nothing loops at rest. Enter 400ms decelerating, exit 220ms accelerating, micro-feedback at 180ms, 45ms stagger capped at eight. One 900ms signal pulse for confirmations.',
+    texture:'Concentric ripple rings from offset origins. Dot grid at 32px intervals. Neutral white light pools. Background always monochrome — color lives in the content layer only.' },
+  { id:'cosmic', name:'Cosmic', tag:'The truth is out there',
+    c:{ bg:'#000000', fg:'#00ffff', muted:'#ffff00', accent:'#00ff00', card:'#000033', border:'#333399' },
+    h:"'Times New Roman', Times, serif", hs:'font-weight: 700; color: #ffff00;', b:"'Times New Roman', Times, serif", glitch:'green',
+    m:{ enter:'0.6s', ease:'ease-out', stagger:'0.08s' },
+    rows:[ ['starfield','continuous · 120 stars','five colors twinkling across the void'], ['sparkle','brightest stars','cross-shaped flare effects'], ['glow','static','every color gets a matching text-shadow'] ],
+    color:'Pure black void. Cyan for body. Yellow for headings. Green for interactive. Magenta for dates, tags, labels. Every color glows.',
+    type:'Times New Roman everywhere — the official font of \u201cI discovered something NASA doesn\u2019t want you to know.\u201d Bold on everything. The truth doesn\u2019t need kerning.',
+    motion:'120 twinkling stars in five colors animate continuously across the background. Brightest stars get cross-shaped sparkle effects. The void is alive.',
+    texture:'No grain — the starfield IS the texture. Navy card backgrounds (#000033) with purple borders evoke late-90s HTML tables. Every hover adds a green glow.' },
+  { id:'chaos', name:'Chaos', tag:'Anti-system',
+    c:{ bg:'#0a0a0a', fg:'#ffffff', muted:'#888888', accent:'#FF003C', card:'transparent', border:'#FF003C' },
+    dc:{ bg:'#FF003C', fg:'#00FF87', accent:'#FFE600', muted:'#3D00FF', card:'#FF00C8', border:'#00D4FF' },
+    labels:['Red','Green','Yellow','Blue','Magenta','Cyan'],
+    h:"'Rubik Glitch', system-ui", hs:'transform: rotate(-1deg);', b:"'Space Mono', monospace", glitch:'red',
+    m:{ enter:'0.24s', ease:'cubic-bezier(0.22, 1.6, 0.36, 1)', stagger:'0.05s' },
+    rows:[ ['reroll','every 5000ms · 600ms ease','all lots redraw — border, tilt, radius, heading font'], ['slam','240ms · cubic-bezier(0.22, 1.6, 0.36, 1)','entrances hit hard, once, then hold still'], ['jitter','steps(2) · hover only','RGB-split on the display face — never smooth'], ['marquee','22s · linear · loop','the one hairline that never stops'] ],
+    color:'Ten neon colors. No roles. No system. Any color, any time, any element. If it screams, let it scream.',
+    type:'Six fonts, all in play at once. Rubik Glitch for glitch headings. Impact for LOUD. Silkscreen for pixel labels. Space Mono for structure. Instrument Serif for ironic elegance.',
+    motion:'Three registers: the interval (everything re-randomizes every 5 seconds), the slam (entrances hit in 240ms with overshoot, once, then hold still), and the jitter (RGB-split on hover — steps(2), never smooth). The chrome never joins in.',
+    texture:'No texture. No grain. No glass. Cards are bordered, not filled — 2px neon strokes on black void. Every card picks a different rotation, border color, and radius.' },
+  { id:'commerce', name:'Commerce', tag:'Conversion machine',
+    c:{ bg:'#F8FAFB', fg:'#141B21', muted:'#5A6670', accent:'#00CCBB', card:'#FFFFFF', border:'#DDE3E8' },
+    dc:{ card:'#D94878' }, labels:['Canvas','Text','Teal','Secondary','Rose','Border'],
+    h:"'Plus Jakarta Sans', sans-serif", hs:'font-weight: 800; letter-spacing: -0.02em;', b:"'Plus Jakarta Sans', sans-serif", glitch:'cyan',
+    m:{ enter:'0.5s', ease:'ease', stagger:'0.06s' },
+    rows:[ ['press','120ms · scale(0.98)','every button, every time'], ['lift','240ms · ease-out','card hover raise + shadow bloom'], ['reveal','500ms · ease · 60ms stagger','scroll-in sections'], ['hero','700ms · once, on load','headline settles, sub-line and CTA follow at +120ms'], ['spring','600ms · cubic-bezier(0.34, 1.56, 0.64, 1)','cart badge + quantity bumps — commerce moments only'] ],
+    color:'Cool blue-white (#F8FAFB) canvas. Neon teal (#00CCBB) as the primary CTA color. Rose (#D94878) secondary for tags. Cool neutrals only — no warm greys anywhere.',
+    type:'Plus Jakarta Sans carries everything — headlines, body, UI, prices. Instrument Serif italic for display tension. JetBrains Mono for labels — shared DNA with Concentric.',
+    motion:'One orchestrated hero moment; after that, motion only answers the shopper. Reveals ride the scroll at 500ms with a 60ms stagger, presses compress to 0.98 in 120ms, hovers lift in 240ms. The cart spring is the one allowed spring — and prices never animate.',
+    texture:'Whitespace is the texture. No grain, no glass, no patterns. Cards exist only when content demands enclosure. Subtle box-shadows provide depth.' },
+  { id:'atelier', name:'Atelier', tag:'The boutique',
+    c:{ bg:'#F1EDE7', fg:'#282828', muted:'#7A7168', accent:'#8B7355', card:'rgba(255,255,255,0.6)', border:'rgba(0,0,0,0.06)' },
+    dc:{ card:'#FDFCFA', border:'#EBE7E1' }, labels:['Cream','Charcoal','Bronze','Warm Grey','Surface','Linen'],
+    h:"'Instrument Serif', serif", hs:'font-style: italic; font-weight: 400;', b:"'Plus Jakarta Sans', sans-serif", glitch:'amber',
+    m:{ enter:'0.7s', ease:'ease-out', stagger:'0.09s' },
+    rows:[ ['turn','350ms · ease-in-out','every state change — the floor, not the ceiling'], ['drift','700ms · ease-out','panels arriving, light pools settling'], ['veil','500ms · ease','scrims and frosted sheets — blur fades in with the glass'], ['breathe','9s · ease-in-out · loop','ambient light only, marketing surfaces only'] ],
+    color:'Warm cream canvas (#F1EDE7) — never cool grey. Bronze (#8B7355) as the sole accent — understated, warm, editorial. Muted tones pull brown, not blue.',
+    type:'Instrument Serif italic for all display text — headings, stat numbers, company names. The warmth of a hand-lettered sign. Plus Jakarta Sans for body.',
+    motion:'Nothing here is urgent — 350ms is the floor, not the ceiling. Pages turn at 350ms ease-in-out, panels drift in over 700ms, and the light pools breathe on a nine-second cycle. No bounce, no spring; momentum is for machines.',
+    texture:'Frosted glass everywhere. Cards are translucent white with backdrop-blur and soft multi-layered shadows. No hard borders — depth comes from light and blur alone.' },
+];
+let currentGlitch = 'green';
+let currentIdx = 0;
+const picker = document.getElementById('picker');
+LANGS.forEach((l, i) => {
+  const b = document.createElement('button');
+  b.textContent = l.name;
+  b.addEventListener('click', () => setLang(i));
+  picker.appendChild(b);
+});
+function setLang(i) {
+  currentIdx = i;
+  const l = LANGS[i];
+  const r = document.documentElement.style;
+  r.setProperty('--bg', l.c.bg); r.setProperty('--fg', l.c.fg); r.setProperty('--muted', l.c.muted);
+  r.setProperty('--accent', l.c.accent); r.setProperty('--card', l.c.card); r.setProperty('--border', l.c.border);
+  r.setProperty('--hfont', l.h); r.setProperty('--bfont', l.b);
+  r.setProperty('--k-enter', l.m.enter); r.setProperty('--k-ease', l.m.ease); r.setProperty('--k-stagger', l.m.stagger);
+  currentGlitch = l.glitch;
+  document.getElementById('langTag').textContent = l.tag;
+  const nameEl = document.getElementById('langName');
+  nameEl.textContent = l.name;
+  nameEl.style.cssText = l.hs || '';
+  document.getElementById('langCount').textContent = String(i + 1).padStart(2, '0') + ' / 13 · ' + l.m.enter.replace('0.', '.') + ' ' + l.m.ease;
+  const dc = l.dc || {};
+  const labels = l.labels || ['Background', 'Foreground', 'Accent', 'Muted', 'Card', 'Border'];
+  document.getElementById('swatches').innerHTML = [
+    dc.bg || l.c.bg, dc.fg || l.c.fg, dc.accent || l.c.accent, dc.muted || l.c.muted, dc.card || l.c.card, dc.border || l.c.border,
+  ].map((col, j) => '<div><div class="swatch" style="background:' + col + ';"></div><div class="swatch-label">' + labels[j] + '</div></div>').join('');
+  document.getElementById('colorDesc').textContent = l.color;
+  document.getElementById('typeDesc').textContent = l.type;
+  const tp = document.getElementById('typePreview');
+  tp.style.cssText = 'font-family:' + l.h + ';' + (l.hs || '');
+  document.getElementById('motionRows').innerHTML = l.rows.map(row =>
+    '<tr><td>' + row[0] + '</td><td class="val">' + row[1] + '</td><td>' + row[2] + '</td></tr>').join('');
+  document.getElementById('motionDesc').textContent = l.motion;
+  document.getElementById('textureDesc').textContent = l.texture;
+  document.getElementById('demoNote').textContent = 'entrance: ' + l.m.enter + ' · stagger: ' + l.m.stagger;
+  document.querySelectorAll('#picker button').forEach((b, j) => b.classList.toggle('active', j === i));
+  // The language-switch motion: the incoming language replays the page in its own dialect
+  const wrap = document.getElementById('wrap');
+  wrap.classList.remove('switching'); void wrap.offsetWidth; wrap.classList.add('switching');
+  replayDemo();
+}
+function replayDemo() {
+  const s = document.getElementById('kStage');
+  s.classList.remove('play'); void s.offsetWidth; s.classList.add('play');
+}
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight') setLang((currentIdx + 1) % LANGS.length);
+  if (e.key === 'ArrowLeft') setLang((currentIdx + LANGS.length - 1) % LANGS.length);
+});
+setLang(8); // start on Void · Concentric — the system of record
+</script>
+</body>
+</html>

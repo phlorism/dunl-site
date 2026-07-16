@@ -1,0 +1,263 @@
+{
+  "meta": {
+    "source": "dunl.app",
+    "generated": "2026-07-15",
+    "count": 13,
+    "note": "Motion tokens for the four named systems (void/concentric, chaos, commerce, atelier) are canonical; the nine site themes share the classic reveal system with per-theme ambience."
+  },
+  "languages": {
+    "classic": {
+      "name": "Classic",
+      "colors": {
+        "bg": "#0c0c0c",
+        "fg": "#e8e4df",
+        "muted": "#8a8580",
+        "accent": "#c9a96e",
+        "card": "#161614",
+        "border": "#2a2825"
+      },
+      "motion": {
+        "summary": "Scroll-triggered reveals. Timeline draws on scroll. Tracer bounces on the hero divider. Cards lift on hover. All under 600ms.",
+        "tokens": {
+          "reveal": "600ms ease-out, 80ms stagger",
+          "lift": "300ms ease-out",
+          "tracer": "5s ease-in-out loop",
+          "ceiling": "600ms"
+        }
+      }
+    },
+    "cyberpunk": {
+      "name": "Cyberpunk",
+      "colors": {
+        "bg": "#0a0a1a",
+        "fg": "#e0e0ff",
+        "muted": "#7070a0",
+        "accent": "#ff2d6b",
+        "card": "#12122a",
+        "border": "#2a2a4a"
+      },
+      "motion": {
+        "summary": "Classic motion system plus static dual-tone glitch text shadows (pink + cyan) on headings.",
+        "tokens": {
+          "reveal": "600ms ease-out, 80ms stagger",
+          "split": "static dual-tone shadow",
+          "lift": "300ms ease-out"
+        }
+      }
+    },
+    "laser": {
+      "name": "Laser",
+      "colors": {
+        "bg": "#050510",
+        "fg": "#ffffff",
+        "muted": "#8888aa",
+        "accent": "#ff3333",
+        "card": "#0a0a20",
+        "border": "#1a1a3a"
+      },
+      "motion": {
+        "summary": "Laser beams fire across the background at random angles, fading with glow trails. Randomized color, width, decay.",
+        "tokens": {
+          "reveal": "600ms ease-out, 80ms stagger",
+          "beams": "continuous canvas ambient",
+          "decay": "randomized per beam"
+        }
+      }
+    },
+    "neon": {
+      "name": "Neon",
+      "colors": {
+        "bg": "#000000",
+        "fg": "#f0f0f0",
+        "muted": "#888888",
+        "accent": "#ff2eea",
+        "card": "#0a0a0a",
+        "border": "#1a1a1a"
+      },
+      "motion": {
+        "summary": "Scroll system plus neon glow box-shadows on hover; the pink tracer pulses against pure black.",
+        "tokens": {
+          "reveal": "600ms ease-out, 80ms stagger",
+          "glow": "250ms ease hover bloom",
+          "pulse": "loop on hero tracer"
+        }
+      }
+    },
+    "matrix": {
+      "name": "Matrix",
+      "colors": {
+        "bg": "#000000",
+        "fg": "#00ff41",
+        "muted": "#005500",
+        "accent": "#00ff41",
+        "card": "#001100",
+        "border": "#003300"
+      },
+      "motion": {
+        "summary": "Katakana + digit rain at 35% opacity with white leading-edge flashes; cards use backdrop-blur.",
+        "tokens": {
+          "rain": "continuous, 35% opacity",
+          "reveal": "600ms ease-out",
+          "flash": "random 3% leading edges"
+        }
+      }
+    },
+    "cta": {
+      "name": "CTA",
+      "colors": {
+        "bg": "#ffffff",
+        "fg": "#1a1a1a",
+        "muted": "#6b6b6b",
+        "accent": "#ff385c",
+        "card": "#f7f7f7",
+        "border": "#e8e8e8"
+      },
+      "motion": {
+        "summary": "Same animation system; subtle card shadows replace border glows on hover.",
+        "tokens": {
+          "reveal": "600ms ease-out, 80ms stagger",
+          "shadowLift": "250ms ease",
+          "interactive": "#2563eb instant"
+        }
+      }
+    },
+    "aol": {
+      "name": "AOL '03",
+      "colors": {
+        "bg": "#e8e4df",
+        "fg": "#000000",
+        "muted": "#555555",
+        "accent": "#336699",
+        "card": "#ffffff",
+        "border": "#b0b0b0"
+      },
+      "motion": {
+        "summary": "Scroll reveals with Windows XP-era softness — gradients, rounded corners, 1px shadows.",
+        "tokens": {
+          "reveal": "600ms ease-out, 80ms stagger",
+          "soften": "250ms ease hovers"
+        }
+      }
+    },
+    "synth84": {
+      "name": "Synth '84",
+      "colors": {
+        "bg": "#0a0014",
+        "fg": "#e8d8ff",
+        "muted": "#7a6a9a",
+        "accent": "#ff1744",
+        "card": "#140024",
+        "border": "#2a1a44"
+      },
+      "motion": {
+        "summary": "Perspective synthwave grid scrolls toward the viewer behind all content; red neon-tube glow on display type.",
+        "tokens": {
+          "grid": "continuous canvas ambient",
+          "reveal": "600ms ease-out",
+          "glow": "static red text-shadow"
+        }
+      }
+    },
+    "void": {
+      "name": "Void · Concentric",
+      "colors": {
+        "bg": "#08080c",
+        "fg": "#dcdce0",
+        "muted": "#6b6b76",
+        "accent": "#2dd4bf",
+        "card": "rgba(255,255,255,0.03)",
+        "border": "rgba(255,255,255,0.08)"
+      },
+      "motion": {
+        "summary": "Reactive only — nothing loops at rest. Decelerate in, accelerate out. One 900ms signal pulse for confirmations.",
+        "tokens": {
+          "enter": "400ms cubic-bezier(0.16, 1, 0.3, 1)",
+          "exit": "220ms cubic-bezier(0.7, 0, 0.84, 0)",
+          "micro": "180ms ease-out",
+          "stagger": "45ms per item, cap 8",
+          "pulse": "900ms once"
+        }
+      }
+    },
+    "cosmic": {
+      "name": "Cosmic",
+      "colors": {
+        "bg": "#000000",
+        "fg": "#00ffff",
+        "muted": "#ffff00",
+        "accent": "#00ff00",
+        "card": "#000033",
+        "border": "#333399"
+      },
+      "motion": {
+        "summary": "120 twinkling stars in five colors; cross-shaped sparkles on the brightest. Every color glows.",
+        "tokens": {
+          "starfield": "continuous, 120 stars",
+          "sparkle": "cross flares",
+          "glow": "static text-shadows"
+        }
+      }
+    },
+    "chaos": {
+      "name": "Chaos",
+      "colors": {
+        "bg": "#0a0a0a",
+        "fg": "#ffffff",
+        "muted": "#888888",
+        "accent": "#FF003C",
+        "card": "transparent",
+        "border": "#FF003C"
+      },
+      "motion": {
+        "summary": "Three registers: the interval, the slam, and the jitter. The chrome never joins in.",
+        "tokens": {
+          "reroll": "every 5000ms, 600ms ease",
+          "slam": "240ms cubic-bezier(0.22, 1.6, 0.36, 1)",
+          "jitter": "steps(2) hover only",
+          "marquee": "22s linear infinite"
+        }
+      }
+    },
+    "commerce": {
+      "name": "Commerce",
+      "colors": {
+        "bg": "#F8FAFB",
+        "fg": "#141B21",
+        "muted": "#5A6670",
+        "accent": "#00CCBB",
+        "card": "#FFFFFF",
+        "border": "#DDE3E8"
+      },
+      "motion": {
+        "summary": "One orchestrated hero moment; after that, motion only answers the shopper. Prices never animate.",
+        "tokens": {
+          "press": "120ms scale(0.98)",
+          "lift": "240ms ease-out",
+          "reveal": "500ms ease, 60ms stagger",
+          "hero": "700ms once on load",
+          "spring": "600ms cubic-bezier(0.34, 1.56, 0.64, 1) — cart only"
+        }
+      }
+    },
+    "atelier": {
+      "name": "Atelier",
+      "colors": {
+        "bg": "#F1EDE7",
+        "fg": "#282828",
+        "muted": "#7A7168",
+        "accent": "#8B7355",
+        "card": "rgba(255,255,255,0.6)",
+        "border": "rgba(0,0,0,0.06)"
+      },
+      "motion": {
+        "summary": "Nothing here is urgent — 350ms is the floor. No bounce, no spring; momentum is for machines.",
+        "tokens": {
+          "turn": "350ms ease-in-out (the floor)",
+          "drift": "700ms ease-out",
+          "veil": "500ms ease",
+          "breathe": "9s ease-in-out loop — marketing only"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,2384 @@
+{
+  "$themes": [
+    {
+      "id": "void",
+      "name": "Concentric",
+      "selectedTokenSets": {
+        "global": "enabled",
+        "void": "enabled"
+      }
+    },
+    {
+      "id": "commerce-light",
+      "name": "Commerce / Light",
+      "selectedTokenSets": {
+        "global": "enabled",
+        "commerce/light": "enabled"
+      }
+    },
+    {
+      "id": "commerce-dark",
+      "name": "Commerce / Dark",
+      "selectedTokenSets": {
+        "global": "enabled",
+        "commerce/dark": "enabled"
+      }
+    },
+    {
+      "id": "editorial",
+      "name": "Editorial",
+      "selectedTokenSets": {
+        "global": "enabled",
+        "editorial": "enabled"
+      }
+    },
+    {
+      "id": "atelier",
+      "name": "Atelier",
+      "selectedTokenSets": {
+        "global": "enabled",
+        "atelier": "enabled"
+      }
+    },
+    {
+      "id": "chaos",
+      "name": "Chaos",
+      "selectedTokenSets": {
+        "global": "enabled",
+        "chaos": "enabled"
+      }
+    },
+    {
+      "id": "phosphor",
+      "name": "Phosphor",
+      "selectedTokenSets": {
+        "global": "enabled",
+        "phosphor": "enabled"
+      }
+    },
+    {
+      "id": "woodland",
+      "name": "Woodland",
+      "selectedTokenSets": {
+        "global": "enabled",
+        "woodland": "enabled"
+      }
+    },
+    {
+      "id": "celestia-dark-immersive",
+      "name": "Dark & Immersive",
+      "selectedTokenSets": {
+        "global": "enabled",
+        "celestia/dark-immersive": "enabled"
+      }
+    },
+    {
+      "id": "celestia-glassmorphism",
+      "name": "Glassmorphism",
+      "selectedTokenSets": {
+        "global": "enabled",
+        "celestia/glassmorphism": "enabled"
+      }
+    },
+    {
+      "id": "skins-classic",
+      "name": "Classic",
+      "selectedTokenSets": {
+        "global": "enabled",
+        "skins/classic": "enabled"
+      }
+    },
+    {
+      "id": "skins-cyberpunk",
+      "name": "Cyberpunk",
+      "selectedTokenSets": {
+        "global": "enabled",
+        "skins/cyberpunk": "enabled"
+      }
+    },
+    {
+      "id": "skins-laser-tag",
+      "name": "Laser Tag",
+      "selectedTokenSets": {
+        "global": "enabled",
+        "skins/laser-tag": "enabled"
+      }
+    },
+    {
+      "id": "skins-neon",
+      "name": "Neon",
+      "selectedTokenSets": {
+        "global": "enabled",
+        "skins/neon": "enabled"
+      }
+    },
+    {
+      "id": "skins-matrix",
+      "name": "Matrix",
+      "selectedTokenSets": {
+        "global": "enabled",
+        "skins/matrix": "enabled"
+      }
+    },
+    {
+      "id": "skins-cta-driver",
+      "name": "CTA Driver",
+      "selectedTokenSets": {
+        "global": "enabled",
+        "skins/cta-driver": "enabled"
+      }
+    },
+    {
+      "id": "skins-aol",
+      "name": "Instant Messenger",
+      "selectedTokenSets": {
+        "global": "enabled",
+        "skins/aol": "enabled"
+      }
+    },
+    {
+      "id": "skins-synth-84",
+      "name": "Synth '84",
+      "selectedTokenSets": {
+        "global": "enabled",
+        "skins/synth-84": "enabled"
+      }
+    },
+    {
+      "id": "skins-cosmic",
+      "name": "Cosmic Secrets",
+      "selectedTokenSets": {
+        "global": "enabled",
+        "skins/cosmic": "enabled"
+      }
+    }
+  ],
+  "$metadata": {
+    "tokenSetOrder": [
+      "global",
+      "void",
+      "commerce/light",
+      "commerce/dark",
+      "editorial",
+      "atelier",
+      "chaos",
+      "phosphor",
+      "woodland",
+      "celestia/dark-immersive",
+      "celestia/glassmorphism",
+      "skins/classic",
+      "skins/cyberpunk",
+      "skins/laser-tag",
+      "skins/neon",
+      "skins/matrix",
+      "skins/cta-driver",
+      "skins/aol",
+      "skins/synth-84",
+      "skins/cosmic"
+    ]
+  },
+  "global": {
+    "spacing": {
+      "xs": {
+        "value": "4",
+        "type": "spacing"
+      },
+      "sm": {
+        "value": "8",
+        "type": "spacing"
+      },
+      "md": {
+        "value": "12",
+        "type": "spacing"
+      },
+      "base": {
+        "value": "16",
+        "type": "spacing"
+      },
+      "lg": {
+        "value": "24",
+        "type": "spacing"
+      },
+      "xl": {
+        "value": "32",
+        "type": "spacing"
+      },
+      "2xl": {
+        "value": "48",
+        "type": "spacing"
+      },
+      "3xl": {
+        "value": "64",
+        "type": "spacing"
+      },
+      "section": {
+        "value": "80",
+        "type": "spacing"
+      }
+    },
+    "fontFamilies": {
+      "syne": {
+        "value": "Syne",
+        "type": "fontFamilies"
+      },
+      "dm-sans": {
+        "value": "DM Sans",
+        "type": "fontFamilies"
+      },
+      "jetbrains-mono": {
+        "value": "JetBrains Mono",
+        "type": "fontFamilies"
+      },
+      "plus-jakarta": {
+        "value": "Plus Jakarta Sans",
+        "type": "fontFamilies"
+      },
+      "instrument-serif": {
+        "value": "Instrument Serif",
+        "type": "fontFamilies"
+      },
+      "newsreader": {
+        "value": "Newsreader",
+        "type": "fontFamilies"
+      },
+      "rubik-glitch": {
+        "value": "Rubik Glitch",
+        "type": "fontFamilies"
+      },
+      "space-mono": {
+        "value": "Space Mono",
+        "type": "fontFamilies"
+      },
+      "silkscreen": {
+        "value": "Silkscreen",
+        "type": "fontFamilies"
+      },
+      "impact": {
+        "value": "Impact",
+        "type": "fontFamilies"
+      }
+    }
+  },
+  "void": {
+    "color": {
+      "bg": {
+        "value": "#08080c",
+        "type": "color",
+        "description": "Primary background - near-black void"
+      },
+      "surface-0": {
+        "value": "rgba(255,255,255,0.03)",
+        "type": "color"
+      },
+      "surface-1": {
+        "value": "rgba(255,255,255,0.06)",
+        "type": "color"
+      },
+      "surface-2": {
+        "value": "rgba(255,255,255,0.10)",
+        "type": "color"
+      },
+      "text": {
+        "value": "#dcdce0",
+        "type": "color",
+        "description": "Primary text - soft white"
+      },
+      "text-muted": {
+        "value": "#898994",
+        "type": "color",
+        "description": "Secondary text - 4.6:1 worst-case incl. glass surfaces (was #6b6b76 / 3.1:1)"
+      },
+      "text-dim": {
+        "value": "#3e3e4a",
+        "type": "color",
+        "description": "Decorative & disabled only - 1.9:1, never informative text"
+      },
+      "teal": {
+        "value": "#2dd4bf",
+        "type": "color",
+        "description": "Signal - primary accent"
+      },
+      "teal-muted": {
+        "value": "rgba(45,212,191,0.12)",
+        "type": "color"
+      },
+      "amber": {
+        "value": "#e8a317",
+        "type": "color",
+        "description": "Warmth - categorical accent"
+      },
+      "amber-muted": {
+        "value": "rgba(232,163,23,0.12)",
+        "type": "color"
+      },
+      "crimson": {
+        "value": "#d6336c",
+        "type": "color",
+        "description": "Pulse - categorical accent, never on metrics; component/large only (4.3:1) - words use crimson-ink"
+      },
+      "crimson-muted": {
+        "value": "rgba(214,51,108,0.12)",
+        "type": "color"
+      },
+      "crimson-ink": {
+        "value": "#DF5E8B",
+        "type": "color",
+        "description": "Text-grade crimson - 4.7:1 min; swap in wherever crimson carries small text"
+      },
+      "glass-border-top": {
+        "value": "rgba(255,255,255,0.10)",
+        "type": "color"
+      },
+      "glass-border-side": {
+        "value": "rgba(255,255,255,0.04)",
+        "type": "color"
+      },
+      "glass-specular": {
+        "value": "rgba(255,255,255,0.22)",
+        "type": "color"
+      }
+    },
+    "control": {
+      "tint": {
+        "value": "#2dd4bf",
+        "type": "color",
+        "description": "System controls - switches, sliders, checks (10.7:1)"
+      },
+      "on-tint": {
+        "value": "#08080c",
+        "type": "color"
+      },
+      "track": {
+        "value": "rgba(255,255,255,0.14)",
+        "type": "color",
+        "description": "Off/rest tracks - state carried by tint + border"
+      },
+      "border": {
+        "value": "#5C5C69",
+        "type": "color",
+        "description": "Field & control boundaries - 3:1 floor"
+      },
+      "focus": {
+        "value": "#2dd4bf",
+        "type": "color",
+        "description": "Focus ring - 2px offset"
+      }
+    },
+    "borderRadius": {
+      "card": {
+        "value": "20",
+        "type": "borderRadius"
+      },
+      "inner": {
+        "value": "12",
+        "type": "borderRadius"
+      },
+      "pill": {
+        "value": "20",
+        "type": "borderRadius"
+      },
+      "button": {
+        "value": "12",
+        "type": "borderRadius"
+      }
+    },
+    "typography": {
+      "display-xl": {
+        "value": {
+          "fontFamily": "{fontFamilies.syne}",
+          "fontWeight": "800",
+          "fontSize": "48",
+          "letterSpacing": "-3%",
+          "lineHeight": "110%"
+        },
+        "type": "typography"
+      },
+      "display": {
+        "value": {
+          "fontFamily": "{fontFamilies.syne}",
+          "fontWeight": "700",
+          "fontSize": "22",
+          "letterSpacing": "-2%",
+          "lineHeight": "120%"
+        },
+        "type": "typography"
+      },
+      "heading": {
+        "value": {
+          "fontFamily": "{fontFamilies.syne}",
+          "fontWeight": "700",
+          "fontSize": "18",
+          "letterSpacing": "-2%",
+          "lineHeight": "130%"
+        },
+        "type": "typography"
+      },
+      "body": {
+        "value": {
+          "fontFamily": "{fontFamilies.dm-sans}",
+          "fontWeight": "400",
+          "fontSize": "15",
+          "lineHeight": "170%"
+        },
+        "type": "typography"
+      },
+      "body-small": {
+        "value": {
+          "fontFamily": "{fontFamilies.dm-sans}",
+          "fontWeight": "400",
+          "fontSize": "13",
+          "lineHeight": "160%"
+        },
+        "type": "typography"
+      },
+      "stat": {
+        "value": {
+          "fontFamily": "{fontFamilies.dm-sans}",
+          "fontWeight": "700",
+          "fontSize": "28",
+          "letterSpacing": "-2%",
+          "lineHeight": "100%"
+        },
+        "type": "typography"
+      },
+      "mono-label": {
+        "value": {
+          "fontFamily": "{fontFamilies.jetbrains-mono}",
+          "fontWeight": "400",
+          "fontSize": "10",
+          "letterSpacing": "8%",
+          "lineHeight": "130%",
+          "textCase": "uppercase"
+        },
+        "type": "typography"
+      },
+      "mono-caption": {
+        "value": {
+          "fontFamily": "{fontFamilies.jetbrains-mono}",
+          "fontWeight": "300",
+          "fontSize": "10",
+          "letterSpacing": "6%",
+          "lineHeight": "130%",
+          "textCase": "uppercase"
+        },
+        "type": "typography"
+      }
+    },
+    "motion": {
+      "duration": {
+        "micro": {
+          "value": "180ms",
+          "type": "other",
+          "description": "hover, focus, toggles, press"
+        },
+        "exit": {
+          "value": "220ms",
+          "type": "other",
+          "description": "dismiss, collapse"
+        },
+        "enter": {
+          "value": "400ms",
+          "type": "other",
+          "description": "reveals, sheets, cards in"
+        },
+        "pulse": {
+          "value": "900ms",
+          "type": "other",
+          "description": "signal ripple - once"
+        },
+        "stagger": {
+          "value": "45ms",
+          "type": "other",
+          "description": "per item, cap 8"
+        }
+      },
+      "easing": {
+        "enter": {
+          "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+          "type": "other",
+          "description": "decelerate in"
+        },
+        "exit": {
+          "value": "cubic-bezier(0.7, 0, 0.84, 0)",
+          "type": "other",
+          "description": "accelerate out"
+        },
+        "micro": {
+          "value": "ease-out",
+          "type": "other"
+        }
+      }
+    }
+  },
+  "commerce/light": {
+    "color": {
+      "bg": {
+        "value": "#F8FAFB",
+        "type": "color"
+      },
+      "bg-alt": {
+        "value": "#EEF2F5",
+        "type": "color"
+      },
+      "surface": {
+        "value": "#FFFFFF",
+        "type": "color"
+      },
+      "text": {
+        "value": "#141B21",
+        "type": "color"
+      },
+      "text-secondary": {
+        "value": "#5A6670",
+        "type": "color"
+      },
+      "text-tertiary": {
+        "value": "#6A737C",
+        "type": "color",
+        "description": "4.6:1 min (was #8C949C / 2.9:1 - that value now lives at control.border)"
+      },
+      "border": {
+        "value": "#DDE3E8",
+        "type": "color"
+      },
+      "border-light": {
+        "value": "#EBF0F3",
+        "type": "color"
+      },
+      "pop": {
+        "value": "#00CCBB",
+        "type": "color",
+        "description": "Primary CTA - neon teal; fills + large type only (1.9:1 as ink) - words use pop-ink"
+      },
+      "pop-hover": {
+        "value": "#00B3A3",
+        "type": "color"
+      },
+      "pop-light": {
+        "value": "#E0FAF7",
+        "type": "color"
+      },
+      "pop-text": {
+        "value": "#141B21",
+        "type": "color",
+        "description": "Label on pop fills - 8.6:1 (was #FFFFFF / 2.0:1)"
+      },
+      "pop-ink": {
+        "value": "#008076",
+        "type": "color",
+        "description": "Text-grade teal - 4.6:1 as ink; also the fill for standard-size white-label CTAs (4.8:1)"
+      },
+      "secondary": {
+        "value": "#D94878",
+        "type": "color",
+        "description": "Secondary CTA - rose; white labels pass at large sizes only (4.1:1) - standard buttons fill with secondary-ink"
+      },
+      "secondary-hover": {
+        "value": "#C53E6B",
+        "type": "color"
+      },
+      "secondary-light": {
+        "value": "#FBF0F3",
+        "type": "color"
+      },
+      "secondary-text": {
+        "value": "#FFFFFF",
+        "type": "color"
+      },
+      "secondary-ink": {
+        "value": "#D32C63",
+        "type": "color",
+        "description": "Text-grade rose - 4.7:1 as ink; white labels on it hit 4.9:1"
+      }
+    },
+    "control": {
+      "tint": {
+        "value": "#00A497",
+        "type": "color",
+        "description": "System controls - 3.1:1 vs white; white glyphs on it 3.1:1"
+      },
+      "on-tint": {
+        "value": "#FFFFFF",
+        "type": "color"
+      },
+      "track": {
+        "value": "#DDE3E8",
+        "type": "color"
+      },
+      "border": {
+        "value": "#8C949C",
+        "type": "color",
+        "description": "Field & control boundaries - 3.1:1 vs surface"
+      },
+      "focus": {
+        "value": "#00A497",
+        "type": "color"
+      }
+    },
+    "borderRadius": {
+      "card": {
+        "value": "16",
+        "type": "borderRadius"
+      },
+      "button": {
+        "value": "10",
+        "type": "borderRadius"
+      },
+      "container": {
+        "value": "20",
+        "type": "borderRadius"
+      }
+    },
+    "typography": {
+      "display": {
+        "value": {
+          "fontFamily": "{fontFamilies.instrument-serif}",
+          "fontWeight": "400",
+          "fontSize": "56",
+          "letterSpacing": "-2%",
+          "lineHeight": "108%"
+        },
+        "type": "typography"
+      },
+      "display-sans": {
+        "value": {
+          "fontFamily": "{fontFamilies.plus-jakarta}",
+          "fontWeight": "800",
+          "fontSize": "56",
+          "letterSpacing": "-3.5%",
+          "lineHeight": "108%"
+        },
+        "type": "typography"
+      },
+      "section-title": {
+        "value": {
+          "fontFamily": "{fontFamilies.plus-jakarta}",
+          "fontWeight": "700",
+          "fontSize": "24",
+          "letterSpacing": "-2%",
+          "lineHeight": "120%"
+        },
+        "type": "typography"
+      },
+      "body": {
+        "value": {
+          "fontFamily": "{fontFamilies.plus-jakarta}",
+          "fontWeight": "400",
+          "fontSize": "17",
+          "lineHeight": "170%"
+        },
+        "type": "typography"
+      },
+      "body-small": {
+        "value": {
+          "fontFamily": "{fontFamilies.plus-jakarta}",
+          "fontWeight": "400",
+          "fontSize": "14",
+          "lineHeight": "150%"
+        },
+        "type": "typography"
+      },
+      "price": {
+        "value": {
+          "fontFamily": "{fontFamilies.instrument-serif}",
+          "fontWeight": "400",
+          "fontSize": "48",
+          "letterSpacing": "-2%",
+          "lineHeight": "100%"
+        },
+        "type": "typography"
+      },
+      "label": {
+        "value": {
+          "fontFamily": "{fontFamilies.jetbrains-mono}",
+          "fontWeight": "500",
+          "fontSize": "11",
+          "letterSpacing": "6%",
+          "lineHeight": "130%",
+          "textCase": "uppercase"
+        },
+        "type": "typography"
+      }
+    },
+    "motion": {
+      "duration": {
+        "press": {
+          "value": "120ms",
+          "type": "other",
+          "description": "scale(0.98) - every button"
+        },
+        "lift": {
+          "value": "240ms",
+          "type": "other",
+          "description": "card hover raise + shadow bloom"
+        },
+        "reveal": {
+          "value": "500ms",
+          "type": "other",
+          "description": "scroll-in sections"
+        },
+        "spring": {
+          "value": "600ms",
+          "type": "other",
+          "description": "cart badge + quantity bumps only"
+        },
+        "hero": {
+          "value": "700ms",
+          "type": "other",
+          "description": "once, on load"
+        },
+        "stagger": {
+          "value": "60ms",
+          "type": "other",
+          "description": "per section"
+        }
+      },
+      "easing": {
+        "standard": {
+          "value": "ease-out",
+          "type": "other"
+        },
+        "hero": {
+          "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+          "type": "other"
+        },
+        "spring": {
+          "value": "cubic-bezier(0.34, 1.56, 0.64, 1)",
+          "type": "other",
+          "description": "commerce moments only - never on price"
+        }
+      }
+    }
+  },
+  "commerce/dark": {
+    "color": {
+      "bg": {
+        "value": "#0E1114",
+        "type": "color"
+      },
+      "bg-alt": {
+        "value": "#151A1E",
+        "type": "color"
+      },
+      "surface": {
+        "value": "#1A2028",
+        "type": "color"
+      },
+      "text": {
+        "value": "#DDE3E8",
+        "type": "color"
+      },
+      "text-secondary": {
+        "value": "#8C949C",
+        "type": "color"
+      },
+      "text-tertiary": {
+        "value": "#7B8A95",
+        "type": "color",
+        "description": "4.6:1 min incl. surface (was #5A6670 / 2.8:1 on surface)"
+      },
+      "border": {
+        "value": "#242D35",
+        "type": "color"
+      },
+      "border-light": {
+        "value": "#1D252D",
+        "type": "color"
+      },
+      "pop": {
+        "value": "#2DD4BF",
+        "type": "color"
+      },
+      "pop-hover": {
+        "value": "#5AE0D0",
+        "type": "color"
+      },
+      "pop-light": {
+        "value": "#122825",
+        "type": "color"
+      },
+      "pop-text": {
+        "value": "#0E1114",
+        "type": "color"
+      },
+      "secondary": {
+        "value": "#E8609A",
+        "type": "color"
+      },
+      "secondary-hover": {
+        "value": "#EE80AE",
+        "type": "color"
+      },
+      "secondary-light": {
+        "value": "#2A1720",
+        "type": "color"
+      },
+      "secondary-text": {
+        "value": "#0E1114",
+        "type": "color"
+      }
+    },
+    "control": {
+      "tint": {
+        "value": "#2DD4BF",
+        "type": "color",
+        "description": "System controls (8.8:1 on surface)"
+      },
+      "on-tint": {
+        "value": "#0E1114",
+        "type": "color"
+      },
+      "track": {
+        "value": "#242D35",
+        "type": "color"
+      },
+      "border": {
+        "value": "#5F6C77",
+        "type": "color",
+        "description": "Field & control boundaries - 3:1 vs surface"
+      },
+      "focus": {
+        "value": "#2DD4BF",
+        "type": "color"
+      }
+    }
+  },
+  "editorial": {
+    "color": {
+      "bg": {
+        "value": "#F0F1F3",
+        "type": "color",
+        "description": "Light grey canvas"
+      },
+      "bg-alt": {
+        "value": "#E8E9EC",
+        "type": "color"
+      },
+      "surface": {
+        "value": "#FFFFFF",
+        "type": "color"
+      },
+      "text": {
+        "value": "#18191B",
+        "type": "color"
+      },
+      "text-secondary": {
+        "value": "#52555C",
+        "type": "color"
+      },
+      "text-tertiary": {
+        "value": "#696C74",
+        "type": "color",
+        "description": "4.6:1 min (was #8A8D95 / 2.9:1 - that value now lives at control.border)"
+      },
+      "border": {
+        "value": "#D4D6DB",
+        "type": "color"
+      },
+      "border-light": {
+        "value": "#E2E4E8",
+        "type": "color"
+      },
+      "accent": {
+        "value": "#2B5C8A",
+        "type": "color",
+        "description": "Ink blue - used sparingly"
+      },
+      "accent-light": {
+        "value": "#EDF3F8",
+        "type": "color"
+      },
+      "accent-dark": {
+        "value": "#1E4468",
+        "type": "color"
+      }
+    },
+    "control": {
+      "tint": {
+        "value": "#2B5C8A",
+        "type": "color",
+        "description": "System controls - ink blue on duty (7.0:1 on surface)"
+      },
+      "on-tint": {
+        "value": "#FFFFFF",
+        "type": "color",
+        "description": "Glyphs on tint - 7.0:1"
+      },
+      "track": {
+        "value": "#D4D6DB",
+        "type": "color"
+      },
+      "border": {
+        "value": "#8A8D95",
+        "type": "color",
+        "description": "Field & control boundaries - 3.3:1 vs surface"
+      },
+      "focus": {
+        "value": "#2B5C8A",
+        "type": "color"
+      }
+    },
+    "borderRadius": {
+      "card": {
+        "value": "4",
+        "type": "borderRadius"
+      },
+      "button": {
+        "value": "6",
+        "type": "borderRadius"
+      }
+    },
+    "typography": {
+      "display-editorial": {
+        "value": {
+          "fontFamily": "{fontFamilies.newsreader}",
+          "fontWeight": "400",
+          "fontSize": "48",
+          "letterSpacing": "-2%",
+          "lineHeight": "110%"
+        },
+        "type": "typography"
+      },
+      "display-tech": {
+        "value": {
+          "fontFamily": "{fontFamilies.jetbrains-mono}",
+          "fontWeight": "500",
+          "fontSize": "32",
+          "letterSpacing": "2%",
+          "lineHeight": "115%"
+        },
+        "type": "typography"
+      },
+      "lede-editorial": {
+        "value": {
+          "fontFamily": "{fontFamilies.newsreader}",
+          "fontWeight": "300",
+          "fontSize": "22",
+          "lineHeight": "170%"
+        },
+        "type": "typography"
+      },
+      "lede-tech": {
+        "value": {
+          "fontFamily": "{fontFamilies.jetbrains-mono}",
+          "fontWeight": "400",
+          "fontSize": "16",
+          "letterSpacing": "1%",
+          "lineHeight": "170%"
+        },
+        "type": "typography"
+      },
+      "body": {
+        "value": {
+          "fontFamily": "{fontFamilies.dm-sans}",
+          "fontWeight": "400",
+          "fontSize": "16",
+          "lineHeight": "180%"
+        },
+        "type": "typography"
+      },
+      "body-tech": {
+        "value": {
+          "fontFamily": "{fontFamilies.jetbrains-mono}",
+          "fontWeight": "400",
+          "fontSize": "13",
+          "letterSpacing": "1%",
+          "lineHeight": "180%"
+        },
+        "type": "typography"
+      },
+      "label": {
+        "value": {
+          "fontFamily": "{fontFamilies.jetbrains-mono}",
+          "fontWeight": "500",
+          "fontSize": "10",
+          "letterSpacing": "10%",
+          "lineHeight": "130%",
+          "textCase": "uppercase"
+        },
+        "type": "typography"
+      }
+    },
+    "motion": {
+      "duration": {
+        "ink": {
+          "value": "180ms",
+          "type": "other",
+          "description": "link + button color turns - color only"
+        },
+        "turn-out": {
+          "value": "240ms",
+          "type": "other",
+          "description": "old page dries"
+        },
+        "settle": {
+          "value": "300ms",
+          "type": "other",
+          "description": "entrances - opacity + 8px rise"
+        },
+        "turn-in": {
+          "value": "300ms",
+          "type": "other",
+          "description": "new page lands"
+        },
+        "rule": {
+          "value": "500ms",
+          "type": "other",
+          "description": "heavy rule draws left to right, once"
+        },
+        "reading": {
+          "value": "0ms",
+          "type": "other",
+          "description": "the column never moves"
+        }
+      },
+      "easing": {
+        "ink": {
+          "value": "ease",
+          "type": "other"
+        },
+        "settle": {
+          "value": "ease-out",
+          "type": "other"
+        },
+        "rule": {
+          "value": "ease-in-out",
+          "type": "other"
+        }
+      }
+    }
+  },
+  "atelier": {
+    "color": {
+      "bg": {
+        "value": "#F1EDE7",
+        "type": "color",
+        "description": "Warm cream canvas - set derived from the published /systems swatches; type & radius land with the full library build"
+      },
+      "surface": {
+        "value": "#FDFCFA",
+        "type": "color",
+        "description": "Paper"
+      },
+      "text": {
+        "value": "#282828",
+        "type": "color",
+        "description": "Ink - 12.6:1"
+      },
+      "text-secondary": {
+        "value": "#5D564C",
+        "type": "color",
+        "description": "Warm secondary - 6.2:1 min"
+      },
+      "border": {
+        "value": "#EBE7E1",
+        "type": "color",
+        "description": "Mist - hairlines, decorative"
+      },
+      "bronze": {
+        "value": "#8B7355",
+        "type": "color",
+        "description": "Bronze - accents, fills, large type (3.9:1); words use bronze-ink; standard-size paper labels need bronze-ink fills"
+      },
+      "bronze-ink": {
+        "value": "#7B664B",
+        "type": "color",
+        "description": "Text-grade bronze - 4.7:1 min as ink; paper labels on it hit 5.3:1"
+      },
+      "bronze-wash": {
+        "value": "rgba(139,115,85,0.10)",
+        "type": "color",
+        "description": "Tinted fills, hover states"
+      },
+      "glass-fill": {
+        "value": "rgba(253,252,250,0.60)",
+        "type": "color",
+        "description": "Frosted card over cream - pair with backdrop blur"
+      },
+      "glass-border": {
+        "value": "rgba(40,40,40,0.08)",
+        "type": "color"
+      }
+    },
+    "control": {
+      "tint": {
+        "value": "#8B7355",
+        "type": "color",
+        "description": "System controls - bronze (3.9:1 vs cream, 4.4:1 vs paper)"
+      },
+      "on-tint": {
+        "value": "#FDFCFA",
+        "type": "color",
+        "description": "Glyphs on bronze - 4.4:1 (non-text 3:1 bar)"
+      },
+      "track": {
+        "value": "#E4DED5",
+        "type": "color"
+      },
+      "border": {
+        "value": "#94897B",
+        "type": "color",
+        "description": "Field & control boundaries - 3.3:1 vs paper"
+      },
+      "focus": {
+        "value": "#8B7355",
+        "type": "color"
+      }
+    },
+    "motion": {
+      "duration": {
+        "turn": {
+          "value": "350ms",
+          "type": "other",
+          "description": "every state change - the floor, not the ceiling"
+        },
+        "veil": {
+          "value": "500ms",
+          "type": "other",
+          "description": "scrims + frosted sheets"
+        },
+        "drift": {
+          "value": "700ms",
+          "type": "other",
+          "description": "panels arriving, pools settling"
+        },
+        "breathe": {
+          "value": "9000ms",
+          "type": "other",
+          "description": "ambient light loop - marketing surfaces only"
+        }
+      },
+      "easing": {
+        "turn": {
+          "value": "ease-in-out",
+          "type": "other"
+        },
+        "drift": {
+          "value": "ease-out",
+          "type": "other"
+        },
+        "breathe": {
+          "value": "ease-in-out",
+          "type": "other"
+        }
+      }
+    }
+  },
+  "chaos": {
+    "color": {
+      "bg": {
+        "value": "#0A0A0A",
+        "type": "color",
+        "description": "Near-black canvas - always"
+      },
+      "text": {
+        "value": "#FFFFFF",
+        "type": "color"
+      },
+      "red": {
+        "value": "#FF003C",
+        "type": "color"
+      },
+      "green": {
+        "value": "#00FF87",
+        "type": "color"
+      },
+      "blue": {
+        "value": "#3D00FF",
+        "type": "color",
+        "description": "Fills & shapes only - 2.5:1 on black, never words; pair with blue-ink"
+      },
+      "blue-ink": {
+        "value": "#825BFF",
+        "type": "color",
+        "description": "Text-grade blue - 4.6:1; the one rule chaos keeps"
+      },
+      "yellow": {
+        "value": "#FFE600",
+        "type": "color"
+      },
+      "orange": {
+        "value": "#FF6B00",
+        "type": "color"
+      },
+      "cyan": {
+        "value": "#00D4FF",
+        "type": "color"
+      },
+      "magenta": {
+        "value": "#FF00C8",
+        "type": "color"
+      },
+      "lime": {
+        "value": "#8AFF00",
+        "type": "color"
+      },
+      "black": {
+        "value": "#000000",
+        "type": "color"
+      }
+    },
+    "control": {
+      "tint": {
+        "value": "#00FF87",
+        "type": "color",
+        "description": "Chrome doesn't re-randomize - one stable control accent (14.8:1)"
+      },
+      "on-tint": {
+        "value": "#000000",
+        "type": "color"
+      },
+      "track": {
+        "value": "#262626",
+        "type": "color"
+      },
+      "border": {
+        "value": "rgba(255,255,255,0.45)",
+        "type": "color",
+        "description": "Field & control boundaries - 4.5:1 composite"
+      },
+      "focus": {
+        "value": "#FFE600",
+        "type": "color"
+      }
+    },
+    "borderRadius": {
+      "none": {
+        "value": "0",
+        "type": "borderRadius"
+      },
+      "random-min": {
+        "value": "4",
+        "type": "borderRadius",
+        "description": "Random per instance 0-24"
+      },
+      "random-max": {
+        "value": "24",
+        "type": "borderRadius"
+      }
+    },
+    "typography": {
+      "glitch": {
+        "value": {
+          "fontFamily": "{fontFamilies.rubik-glitch}",
+          "fontWeight": "400",
+          "fontSize": "72",
+          "lineHeight": "100%"
+        },
+        "type": "typography"
+      },
+      "system": {
+        "value": {
+          "fontFamily": "{fontFamilies.space-mono}",
+          "fontWeight": "400",
+          "fontSize": "14",
+          "lineHeight": "180%"
+        },
+        "type": "typography"
+      },
+      "elegant": {
+        "value": {
+          "fontFamily": "{fontFamilies.instrument-serif}",
+          "fontWeight": "400",
+          "fontSize": "32",
+          "lineHeight": "110%"
+        },
+        "type": "typography"
+      },
+      "loud": {
+        "value": {
+          "fontFamily": "{fontFamilies.impact}",
+          "fontWeight": "400",
+          "fontSize": "48",
+          "lineHeight": "100%",
+          "textCase": "uppercase"
+        },
+        "type": "typography"
+      },
+      "pixel": {
+        "value": {
+          "fontFamily": "{fontFamilies.silkscreen}",
+          "fontWeight": "400",
+          "fontSize": "12",
+          "lineHeight": "130%"
+        },
+        "type": "typography"
+      },
+      "normal": {
+        "value": {
+          "fontFamily": "{fontFamilies.plus-jakarta}",
+          "fontWeight": "400",
+          "fontSize": "16",
+          "lineHeight": "160%"
+        },
+        "type": "typography"
+      }
+    },
+    "motion": {
+      "duration": {
+        "slam": {
+          "value": "240ms",
+          "type": "other",
+          "description": "entrances - once per element"
+        },
+        "reroll": {
+          "value": "600ms",
+          "type": "other",
+          "description": "lots redraw"
+        },
+        "interval": {
+          "value": "5000ms",
+          "type": "other",
+          "description": "the page rerolls itself"
+        },
+        "marquee": {
+          "value": "22000ms",
+          "type": "other",
+          "description": "the one hairline that never stops"
+        }
+      },
+      "easing": {
+        "slam": {
+          "value": "cubic-bezier(0.22, 1.6, 0.36, 1)",
+          "type": "other"
+        },
+        "reroll": {
+          "value": "ease",
+          "type": "other"
+        },
+        "jitter": {
+          "value": "steps(2)",
+          "type": "other",
+          "description": "hover only, never smooth"
+        },
+        "marquee": {
+          "value": "linear",
+          "type": "other"
+        }
+      }
+    }
+  },
+  "phosphor": {
+    "color": {
+      "void": {
+        "value": "#05060A",
+        "type": "color",
+        "description": "Canvas - always"
+      },
+      "p-100": {
+        "value": "#5CFF9A",
+        "type": "color",
+        "description": "Full emission - headlines, data, actions"
+      },
+      "p-62": {
+        "value": "rgba(92,255,154,0.62)",
+        "type": "color",
+        "description": "Decayed - the text floor: body, labels, hints (6.2:1)"
+      },
+      "p-38": {
+        "value": "rgba(92,255,154,0.38)",
+        "type": "color",
+        "description": "Faint - structure only: lines, ticks, brackets; never words (2.9:1)"
+      },
+      "p-16": {
+        "value": "rgba(92,255,154,0.16)",
+        "type": "color",
+        "description": "Residual - disabled, hover fills"
+      },
+      "p-08": {
+        "value": "rgba(92,255,154,0.08)",
+        "type": "color",
+        "description": "Surface tint"
+      },
+      "line": {
+        "value": "rgba(92,255,154,0.22)",
+        "type": "color"
+      },
+      "line-dim": {
+        "value": "rgba(92,255,154,0.10)",
+        "type": "color"
+      },
+      "split-a": {
+        "value": "#FF2E63",
+        "type": "color",
+        "description": "Aberration red - loading/error/takeover states only, never at rest"
+      },
+      "split-b": {
+        "value": "#2EE6FF",
+        "type": "color",
+        "description": "Aberration cyan - states + focus rings only"
+      },
+      "amber": {
+        "value": "#FFC24B",
+        "type": "color",
+        "description": "Warning"
+      },
+      "fault": {
+        "value": "#FF5C5C",
+        "type": "color",
+        "description": "Errors, destructive"
+      }
+    },
+    "control": {
+      "tint": {
+        "value": "#5CFF9A",
+        "type": "color",
+        "description": "System controls - full emission (15.7:1)"
+      },
+      "on-tint": {
+        "value": "#05060A",
+        "type": "color"
+      },
+      "track": {
+        "value": "rgba(92,255,154,0.16)",
+        "type": "color"
+      },
+      "border": {
+        "value": "rgba(92,255,154,0.40)",
+        "type": "color",
+        "description": "Input underlines, toggle borders, brackets - 3.1:1 component floor"
+      },
+      "focus": {
+        "value": "#2EE6FF",
+        "type": "color",
+        "description": "Focus ring - split/b on duty"
+      }
+    },
+    "borderRadius": {
+      "none": {
+        "value": "0",
+        "type": "borderRadius"
+      },
+      "max": {
+        "value": "2",
+        "type": "borderRadius",
+        "description": "Hard ceiling - nothing rounder"
+      }
+    },
+    "typography": {
+      "display": {
+        "value": {
+          "fontFamily": "{fontFamilies.jetbrains-mono}",
+          "fontWeight": "700",
+          "fontSize": "56",
+          "letterSpacing": "1%",
+          "lineHeight": "110%"
+        },
+        "type": "typography"
+      },
+      "heading": {
+        "value": {
+          "fontFamily": "{fontFamilies.jetbrains-mono}",
+          "fontWeight": "700",
+          "fontSize": "20",
+          "lineHeight": "120%"
+        },
+        "type": "typography"
+      },
+      "body": {
+        "value": {
+          "fontFamily": "{fontFamilies.jetbrains-mono}",
+          "fontWeight": "400",
+          "fontSize": "13",
+          "lineHeight": "165%"
+        },
+        "type": "typography"
+      },
+      "label": {
+        "value": {
+          "fontFamily": "{fontFamilies.jetbrains-mono}",
+          "fontWeight": "500",
+          "fontSize": "10",
+          "letterSpacing": "16%",
+          "lineHeight": "130%",
+          "textCase": "uppercase"
+        },
+        "type": "typography"
+      },
+      "data": {
+        "value": {
+          "fontFamily": "{fontFamilies.jetbrains-mono}",
+          "fontWeight": "400",
+          "fontSize": "13",
+          "lineHeight": "150%"
+        },
+        "type": "typography"
+      }
+    },
+    "motion": {
+      "duration": {
+        "step-fast": {
+          "value": "120ms",
+          "type": "other",
+          "description": "hover, focus, toggles"
+        },
+        "step-base": {
+          "value": "240ms",
+          "type": "other",
+          "description": "state changes, chips, reveals"
+        },
+        "step-slow": {
+          "value": "480ms",
+          "type": "other",
+          "description": "loaders, progress, transitions"
+        },
+        "sweep": {
+          "value": "900ms",
+          "type": "other",
+          "description": "scan pass across a frame"
+        },
+        "blink": {
+          "value": "1200ms",
+          "type": "other",
+          "description": "live indicators only - loop"
+        },
+        "takeover": {
+          "value": "1800ms",
+          "type": "other",
+          "description": "glitch overlay auto-dismiss"
+        }
+      },
+      "easing": {
+        "fast": {
+          "value": "steps(2)",
+          "type": "other"
+        },
+        "base": {
+          "value": "steps(3)",
+          "type": "other"
+        },
+        "slow": {
+          "value": "steps(4)",
+          "type": "other"
+        },
+        "sweep": {
+          "value": "steps(12)",
+          "type": "other",
+          "description": "no cubic-bezier, no spring - ever"
+        }
+      }
+    }
+  },
+  "woodland": {
+    "color": {
+      "bg": {
+        "value": "#FDF8EE",
+        "type": "color",
+        "description": "Spring morning cream - canonical light; full seasonal x time-of-day matrix lives in the app layer (Undergrowth)"
+      },
+      "bg-noon": {
+        "value": "#F6F9F2",
+        "type": "color",
+        "description": "Spring afternoon"
+      },
+      "surface": {
+        "value": "rgba(255,255,255,0.80)",
+        "type": "color",
+        "description": "Storybook card over cream"
+      },
+      "text": {
+        "value": "#3D3529",
+        "type": "color",
+        "description": "Reader ink - 10.9:1"
+      },
+      "text-soft": {
+        "value": "#7A6F5E",
+        "type": "color",
+        "description": "Soft ink - 4.6:1 min incl. surface"
+      },
+      "text-muted": {
+        "value": "#7B705D",
+        "type": "color",
+        "description": "Caption ink - 4.6:1 min (spring canon #A89E8C was 2.5:1 - that grade now lives at control.border)"
+      },
+      "leaf": {
+        "value": "#7BAE6B",
+        "type": "color",
+        "description": "Fresh leaf - fills, large type (2.6:1 as ink); words use leaf-ink"
+      },
+      "leaf-ink": {
+        "value": "#517B44",
+        "type": "color",
+        "description": "Text-grade leaf - 4.6:1 min; also the fill for standard-size cream labels"
+      },
+      "blossom": {
+        "value": "#E8A0B4",
+        "type": "color",
+        "description": "Cherry blossom - fills & decoration only (1.9:1), never words"
+      },
+      "pollen": {
+        "value": "#F2C94C",
+        "type": "color",
+        "description": "Pollen gold - fills & celebration only (1.6:1), never words"
+      },
+      "bark": {
+        "value": "#8B7355",
+        "type": "color",
+        "description": "Warm wood - accents & large type (3.7:1); words use bark-ink"
+      },
+      "bark-ink": {
+        "value": "#7B664B",
+        "type": "color",
+        "description": "Text-grade bark - shared value with atelier bronze-ink (4.7:1 min)"
+      },
+      "shadow": {
+        "value": "rgba(139,115,85,0.12)",
+        "type": "color",
+        "description": "Bark-tinted soft shadow"
+      }
+    },
+    "control": {
+      "tint": {
+        "value": "#679C56",
+        "type": "color",
+        "description": "System controls - leaf stepped to the 3:1 component bar vs cream"
+      },
+      "on-tint": {
+        "value": "#FDF8EE",
+        "type": "color"
+      },
+      "track": {
+        "value": "#E4DCCB",
+        "type": "color"
+      },
+      "border": {
+        "value": "#998D78",
+        "type": "color",
+        "description": "Field & control boundaries - 3:1 floor"
+      },
+      "focus": {
+        "value": "#679C56",
+        "type": "color"
+      }
+    },
+    "motion": {
+      "duration": {
+        "hop": {
+          "value": "450ms",
+          "type": "other",
+          "description": "Reed & Cove reactions - one hop, never a loop"
+        },
+        "settle": {
+          "value": "600ms",
+          "type": "other",
+          "description": "buttons, cards, page turns"
+        },
+        "bloom": {
+          "value": "900ms",
+          "type": "other",
+          "description": "success - once, max 8 petals"
+        },
+        "daylight": {
+          "value": "900ms",
+          "type": "other",
+          "description": "time-of-day canvas shifts"
+        },
+        "float": {
+          "value": "7000ms",
+          "type": "other",
+          "description": "ambient drift loop, +/-6px"
+        }
+      },
+      "easing": {
+        "settle": {
+          "value": "cubic-bezier(0.34, 1.4, 0.64, 1)",
+          "type": "other",
+          "description": "one gentle overshoot"
+        },
+        "float": {
+          "value": "ease-in-out",
+          "type": "other"
+        },
+        "daylight": {
+          "value": "ease",
+          "type": "other"
+        }
+      }
+    }
+  },
+  "celestia/dark-immersive": {
+    "color": {
+      "bg": {
+        "value": "#05060B",
+        "type": "color",
+        "description": "Void top - Celestia original: glass over the void, ice-cyan signal"
+      },
+      "bg-deep": {
+        "value": "#0C1020",
+        "type": "color",
+        "description": "Void bottom - gradient floor"
+      },
+      "surface": {
+        "value": "rgba(255,255,255,0.05)",
+        "type": "color",
+        "description": "Directional glass"
+      },
+      "text": {
+        "value": "#F5F7FA",
+        "type": "color",
+        "description": "15.9:1"
+      },
+      "text-secondary": {
+        "value": "#8B93A7",
+        "type": "color",
+        "description": "4.6:1 min incl. glass over the gradient's light end (canon #8B93A7 held)"
+      },
+      "ice": {
+        "value": "#7DD3FC",
+        "type": "color",
+        "description": "Ice cyan signal - 11.5:1"
+      },
+      "amber": {
+        "value": "#E8A317",
+        "type": "color",
+        "description": "Second accent - shared with concentric (8.9:1)"
+      },
+      "divider": {
+        "value": "rgba(255,255,255,0.08)",
+        "type": "color"
+      },
+      "glow": {
+        "value": "#BBE9FF",
+        "type": "color",
+        "description": "Moon glow - decorative"
+      }
+    },
+    "control": {
+      "tint": {
+        "value": "#7DD3FC",
+        "type": "color",
+        "description": "System controls - ice on duty"
+      },
+      "on-tint": {
+        "value": "#05060B",
+        "type": "color"
+      },
+      "track": {
+        "value": "rgba(255,255,255,0.14)",
+        "type": "color"
+      },
+      "border": {
+        "value": "rgba(255,255,255,0.34)",
+        "type": "color",
+        "description": "Field & control boundaries - 3:1 floor"
+      },
+      "focus": {
+        "value": "#7DD3FC",
+        "type": "color"
+      }
+    }
+  },
+  "celestia/glassmorphism": {
+    "color": {
+      "bg": {
+        "value": "#0E1030",
+        "type": "color",
+        "description": "Aurora base - Celestia original: frost on the aurora"
+      },
+      "aurora-violet": {
+        "value": "rgba(124,58,237,0.55)",
+        "type": "color",
+        "description": "Light pool - background only"
+      },
+      "aurora-teal": {
+        "value": "rgba(45,212,191,0.40)",
+        "type": "color",
+        "description": "Light pool - background only"
+      },
+      "aurora-magenta": {
+        "value": "rgba(236,72,153,0.35)",
+        "type": "color",
+        "description": "Light pool - background only"
+      },
+      "aurora-blue": {
+        "value": "rgba(59,130,246,0.30)",
+        "type": "color",
+        "description": "Light pool - background only"
+      },
+      "surface": {
+        "value": "rgba(255,255,255,0.07)",
+        "type": "color",
+        "description": "Ultra-thin panel - floor includes panels over the brightest pool"
+      },
+      "text": {
+        "value": "rgba(255,255,255,0.96)",
+        "type": "color",
+        "description": "10.2:1 worst-case over teal pool"
+      },
+      "text-secondary": {
+        "value": "rgba(255,255,255,0.79)",
+        "type": "color",
+        "description": "4.5:1 min over every pooled backdrop (was 0.62)"
+      },
+      "accent": {
+        "value": "#A78BFA",
+        "type": "color",
+        "description": "Lavender signal - 6.5:1 on base; fills + large type everywhere; words over the bright pools use accent-ink"
+      },
+      "accent-ink": {
+        "value": "#E0D7FD",
+        "type": "color",
+        "description": "Text-grade lavender - 4.5:1 min over every pooled backdrop"
+      },
+      "accent-2": {
+        "value": "#5EEAD4",
+        "type": "color",
+        "description": "Second accent - fills + large over bright pools"
+      },
+      "divider": {
+        "value": "rgba(255,255,255,0.14)",
+        "type": "color"
+      },
+      "glow": {
+        "value": "#C4B5FD",
+        "type": "color",
+        "description": "Moon glow - decorative"
+      }
+    },
+    "control": {
+      "tint": {
+        "value": "#BDA9FB",
+        "type": "color",
+        "description": "System controls - lavender stepped to the 3:1 component bar over every pool (canon #A78BFA sits at 2.3 over the teal pool)"
+      },
+      "on-tint": {
+        "value": "#0E1030",
+        "type": "color"
+      },
+      "track": {
+        "value": "rgba(255,255,255,0.16)",
+        "type": "color"
+      },
+      "border": {
+        "value": "rgba(255,255,255,0.49)",
+        "type": "color",
+        "description": "Canon stroke 0.32 nudged - 3:1 over the brightest pool"
+      },
+      "focus": {
+        "value": "#BDA9FB",
+        "type": "color"
+      }
+    }
+  },
+  "skins/classic": {
+    "color": {
+      "bg": {
+        "value": "#0C0C0C",
+        "type": "color",
+        "description": "The original dunl.app - gold on dark - values from the dunl.app skin spec (site.html)"
+      },
+      "surface": {
+        "value": "#161614",
+        "type": "color"
+      },
+      "text": {
+        "value": "#E8E4DF",
+        "type": "color"
+      },
+      "text-muted": {
+        "value": "#8A8580",
+        "type": "color"
+      },
+      "accent": {
+        "value": "#C9A96E",
+        "type": "color"
+      },
+      "border": {
+        "value": "#2A2825",
+        "type": "color",
+        "description": "Decorative hairline"
+      }
+    },
+    "control": {
+      "tint": {
+        "value": "#C9A96E",
+        "type": "color"
+      },
+      "on-tint": {
+        "value": "#0C0C0C",
+        "type": "color"
+      },
+      "track": {
+        "value": "#161614",
+        "type": "color"
+      },
+      "border": {
+        "value": "#69645C",
+        "type": "color",
+        "description": "Field & control boundaries - 3:1 floor"
+      },
+      "focus": {
+        "value": "#C9A96E",
+        "type": "color"
+      }
+    }
+  },
+  "skins/cyberpunk": {
+    "color": {
+      "bg": {
+        "value": "#0A0A1A",
+        "type": "color",
+        "description": "Values from the dunl.app skin spec (site.html)"
+      },
+      "surface": {
+        "value": "#12122A",
+        "type": "color"
+      },
+      "text": {
+        "value": "#E0E0FF",
+        "type": "color"
+      },
+      "text-muted": {
+        "value": "#7B7BA7",
+        "type": "color",
+        "description": "4.6:1 min (skin canon #7070A0 was 3.94:1)"
+      },
+      "accent": {
+        "value": "#FF2D6B",
+        "type": "color"
+      },
+      "border": {
+        "value": "#2A2A4A",
+        "type": "color",
+        "description": "Decorative hairline"
+      }
+    },
+    "control": {
+      "tint": {
+        "value": "#FF2D6B",
+        "type": "color"
+      },
+      "on-tint": {
+        "value": "#0A0A1A",
+        "type": "color"
+      },
+      "track": {
+        "value": "#12122A",
+        "type": "color"
+      },
+      "border": {
+        "value": "#5C5CA1",
+        "type": "color",
+        "description": "Field & control boundaries - 3:1 floor"
+      },
+      "focus": {
+        "value": "#FF2D6B",
+        "type": "color"
+      }
+    }
+  },
+  "skins/laser-tag": {
+    "color": {
+      "bg": {
+        "value": "#050510",
+        "type": "color",
+        "description": "Values from the dunl.app skin spec (site.html)"
+      },
+      "surface": {
+        "value": "#0A0A20",
+        "type": "color"
+      },
+      "text": {
+        "value": "#FFFFFF",
+        "type": "color"
+      },
+      "text-muted": {
+        "value": "#8888AA",
+        "type": "color"
+      },
+      "accent": {
+        "value": "#FF3333",
+        "type": "color"
+      },
+      "border": {
+        "value": "#1A1A3A",
+        "type": "color",
+        "description": "Decorative hairline"
+      }
+    },
+    "control": {
+      "tint": {
+        "value": "#FF3333",
+        "type": "color"
+      },
+      "on-tint": {
+        "value": "#050510",
+        "type": "color"
+      },
+      "track": {
+        "value": "#0A0A20",
+        "type": "color"
+      },
+      "border": {
+        "value": "#5454B2",
+        "type": "color",
+        "description": "Field & control boundaries - 3:1 floor"
+      },
+      "focus": {
+        "value": "#FF3333",
+        "type": "color"
+      }
+    }
+  },
+  "skins/neon": {
+    "color": {
+      "bg": {
+        "value": "#000000",
+        "type": "color",
+        "description": "Values from the dunl.app skin spec (site.html)"
+      },
+      "surface": {
+        "value": "#060F06",
+        "type": "color"
+      },
+      "text": {
+        "value": "#00FF41",
+        "type": "color"
+      },
+      "text-muted": {
+        "value": "#008F28",
+        "type": "color",
+        "description": "4.6:1 min (skin canon #007A22 was 3.53:1)"
+      },
+      "accent": {
+        "value": "#00FF41",
+        "type": "color"
+      },
+      "border": {
+        "value": "#003D12",
+        "type": "color",
+        "description": "Decorative hairline"
+      }
+    },
+    "control": {
+      "tint": {
+        "value": "#00FF41",
+        "type": "color"
+      },
+      "on-tint": {
+        "value": "#000000",
+        "type": "color"
+      },
+      "track": {
+        "value": "#060F06",
+        "type": "color"
+      },
+      "border": {
+        "value": "#006F21",
+        "type": "color",
+        "description": "Field & control boundaries - 3:1 floor"
+      },
+      "focus": {
+        "value": "#00FF41",
+        "type": "color"
+      }
+    }
+  },
+  "skins/matrix": {
+    "color": {
+      "bg": {
+        "value": "#000000",
+        "type": "color",
+        "description": "Values from the dunl.app skin spec (site.html)"
+      },
+      "surface": {
+        "value": "#001100",
+        "type": "color"
+      },
+      "text": {
+        "value": "#00FF41",
+        "type": "color"
+      },
+      "text-muted": {
+        "value": "#008F00",
+        "type": "color",
+        "description": "4.6:1 min (skin canon #005500 was 2.13:1)"
+      },
+      "accent": {
+        "value": "#00FF41",
+        "type": "color"
+      },
+      "border": {
+        "value": "#003300",
+        "type": "color",
+        "description": "Decorative hairline"
+      },
+      "depth": {
+        "value": "#005500",
+        "type": "color",
+        "description": "Rain & structure only (1.6:1) - never words"
+      }
+    },
+    "control": {
+      "tint": {
+        "value": "#00FF41",
+        "type": "color"
+      },
+      "on-tint": {
+        "value": "#000000",
+        "type": "color"
+      },
+      "track": {
+        "value": "#001100",
+        "type": "color"
+      },
+      "border": {
+        "value": "#007000",
+        "type": "color",
+        "description": "Field & control boundaries - 3:1 floor"
+      },
+      "focus": {
+        "value": "#00FF41",
+        "type": "color"
+      }
+    }
+  },
+  "skins/cta-driver": {
+    "color": {
+      "bg": {
+        "value": "#FFFFFF",
+        "type": "color",
+        "description": "Values from the dunl.app skin spec (site.html)"
+      },
+      "surface": {
+        "value": "#F7F7F7",
+        "type": "color"
+      },
+      "text": {
+        "value": "#1A1A1A",
+        "type": "color"
+      },
+      "text-muted": {
+        "value": "#6B6B6B",
+        "type": "color"
+      },
+      "accent": {
+        "value": "#FF385C",
+        "type": "color",
+        "description": "Fills + large only (3.28:1 as ink) - words use accent-ink"
+      },
+      "accent-ink": {
+        "value": "#E10029",
+        "type": "color",
+        "description": "Text-grade accent - 4.6:1 min"
+      },
+      "border": {
+        "value": "#E8E8E8",
+        "type": "color",
+        "description": "Decorative hairline"
+      },
+      "interactive": {
+        "value": "#2563EB",
+        "type": "color",
+        "description": "Links, hovers, CTAs - 5.2:1"
+      }
+    },
+    "control": {
+      "tint": {
+        "value": "#FF385C",
+        "type": "color"
+      },
+      "on-tint": {
+        "value": "#1A1A1A",
+        "type": "color"
+      },
+      "track": {
+        "value": "#F7F7F7",
+        "type": "color"
+      },
+      "border": {
+        "value": "#8E8E8E",
+        "type": "color",
+        "description": "Field & control boundaries - 3:1 floor"
+      },
+      "focus": {
+        "value": "#FF385C",
+        "type": "color"
+      }
+    }
+  },
+  "skins/aol": {
+    "color": {
+      "bg": {
+        "value": "#FFFFFF",
+        "type": "color",
+        "description": "Instant Messenger - white, AOL blue & yellow, Win95 bevels; derived from the published skin spec"
+      },
+      "surface": {
+        "value": "#FFFFFF",
+        "type": "color"
+      },
+      "text": {
+        "value": "#000000",
+        "type": "color",
+        "description": "21:1 - Comic Sans carries the rest"
+      },
+      "text-muted": {
+        "value": "#595959",
+        "type": "color",
+        "description": "7.0:1"
+      },
+      "accent": {
+        "value": "#0033CC",
+        "type": "color",
+        "description": "AOL blue - 10.7:1"
+      },
+      "highlight": {
+        "value": "#FFCC00",
+        "type": "color",
+        "description": "Yellow - fills & bevel highlights only (1.6:1), never words"
+      },
+      "bevel-face": {
+        "value": "#C0C0C0",
+        "type": "color",
+        "description": "Win95 button face"
+      },
+      "bevel-shadow": {
+        "value": "#808080",
+        "type": "color",
+        "description": "Win95 outset shadow - doubles as the control border (3.5:1)"
+      }
+    },
+    "control": {
+      "tint": {
+        "value": "#0033CC",
+        "type": "color",
+        "description": "System controls - AOL blue (10.7:1)"
+      },
+      "on-tint": {
+        "value": "#FFFFFF",
+        "type": "color"
+      },
+      "track": {
+        "value": "#C0C0C0",
+        "type": "color"
+      },
+      "border": {
+        "value": "#808080",
+        "type": "color",
+        "description": "Field & control boundaries - 3:1 floor"
+      },
+      "focus": {
+        "value": "#0033CC",
+        "type": "color"
+      }
+    }
+  },
+  "skins/synth-84": {
+    "color": {
+      "bg": {
+        "value": "#0A0014",
+        "type": "color",
+        "description": "Values from the dunl.app skin spec (site.html)"
+      },
+      "surface": {
+        "value": "#140024",
+        "type": "color"
+      },
+      "text": {
+        "value": "#E8D8FF",
+        "type": "color"
+      },
+      "text-muted": {
+        "value": "#81729F",
+        "type": "color",
+        "description": "4.6:1 min (skin canon #7A6A9A was 4.13:1)"
+      },
+      "accent": {
+        "value": "#FF1744",
+        "type": "color"
+      },
+      "border": {
+        "value": "#2A1A44",
+        "type": "color",
+        "description": "Decorative hairline"
+      },
+      "purple": {
+        "value": "#BA68C8",
+        "type": "color",
+        "description": "Secondary emphasis - 5.6:1"
+      },
+      "blue": {
+        "value": "#64B5F6",
+        "type": "color",
+        "description": "Tags & links - 8.0:1"
+      }
+    },
+    "control": {
+      "tint": {
+        "value": "#FF1744",
+        "type": "color"
+      },
+      "on-tint": {
+        "value": "#0A0014",
+        "type": "color"
+      },
+      "track": {
+        "value": "#140024",
+        "type": "color"
+      },
+      "border": {
+        "value": "#7046B6",
+        "type": "color",
+        "description": "Field & control boundaries - 3:1 floor"
+      },
+      "focus": {
+        "value": "#FF1744",
+        "type": "color"
+      }
+    }
+  },
+  "skins/cosmic": {
+    "color": {
+      "bg": {
+        "value": "#000000",
+        "type": "color",
+        "description": "thelivingmoon.com energy - cyan body, yellow emphasis, green links - values from the dunl.app skin spec (site.html)"
+      },
+      "surface": {
+        "value": "#000033",
+        "type": "color"
+      },
+      "text": {
+        "value": "#00FFFF",
+        "type": "color"
+      },
+      "text-muted": {
+        "value": "#FFFF00",
+        "type": "color"
+      },
+      "accent": {
+        "value": "#00FF00",
+        "type": "color"
+      },
+      "border": {
+        "value": "#333399",
+        "type": "color",
+        "description": "Decorative hairline"
+      }
+    },
+    "control": {
+      "tint": {
+        "value": "#00FF00",
+        "type": "color"
+      },
+      "on-tint": {
+        "value": "#000000",
+        "type": "color"
+      },
+      "track": {
+        "value": "#000033",
+        "type": "color"
+      },
+      "border": {
+        "value": "#4E4EC4",
+        "type": "color",
+        "description": "Field & control boundaries - 3:1 floor"
+      },
+      "focus": {
+        "value": "#00FF00",
+        "type": "color"
+      }
+    }
+  }
+}
