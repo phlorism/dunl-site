@@ -1,0 +1,2127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="robots" content="noindex">
+<script>
+/* dunl.app gate guard · checks the session unlock set by /instruments/.
+   file:// is exempt so local previews still open. Delete this block to un-gate the page. */
+(function(){
+  if(location.protocol==='file:')return;
+  try{if(sessionStorage.getItem('dunl_instruments_unlocked')==='1')return;}catch(e){}
+  try{sessionStorage.setItem('dunl_instruments_dest',location.pathname+location.search+location.hash);}catch(e){}
+  location.replace('/instruments/');
+})();
+</script>
+<title>MONOLITH · dunl.app</title>
+<meta name="description" content="A ladder-filtered stone in the rain. Genetic basslines, chords that learn your taste, a raymarched monolith that dances to its own storm. dunl.app instrument 02.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect x='38' y='12' width='24' height='76' fill='%237de3d0'/></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --h:190; --h2:calc(var(--h) + 180);
+  --acc:hsl(var(--h) 85% 62%);
+  --acc-dim:hsl(var(--h) 70% 52% / .55);
+  --acc2:hsl(var(--h2) 80% 64%);
+  --bg:#060709;
+  --panel:hsl(222 22% 7% / .82);
+  --ink-hi:#EAECF2;
+  --ink:#B9BEC9;
+  --ink-lo:hsl(222 12% 62% / .8);
+  --ink-ghost:hsl(222 12% 55% / .42);
+  --mono:'JetBrains Mono',ui-monospace,monospace;
+  --disp:'Syne',sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;overflow:hidden;background:var(--bg)}
+body{font-family:var(--mono);color:var(--ink);-webkit-font-smoothing:antialiased;touch-action:none;overscroll-behavior:none;user-select:none;-webkit-user-select:none}
+canvas#gl{position:fixed;inset:0;width:100vw;height:100vh;display:block}
+body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:40;
+  background:repeating-linear-gradient(0deg,transparent 0 2px,rgba(0,0,0,.055) 2px 4px);
+  mix-blend-mode:multiply}
+#strip{position:fixed;left:0;right:0;bottom:0;width:100vw;height:3px;z-index:32;opacity:.95}
+
+/* ---------- HUD framework: hard rules, not glass ---------- */
+.hud{position:fixed;z-index:30;font-size:10.5px;letter-spacing:.14em;line-height:1.85;
+  transition:opacity .5s ease,transform .5s ease}
+.hud .lbl{color:var(--ink-ghost);font-weight:500}
+.hud .val{color:var(--ink-hi);font-weight:700}
+.hud .acc{color:var(--acc)}
+.hud .dot{color:var(--ink-ghost);padding:0 .55em}
+.blk{background:var(--panel);border-left:2px solid var(--acc);padding:10px 14px 9px;
+  box-shadow:0 1px 0 rgba(255,255,255,.03) inset, 0 10px 30px rgba(0,0,0,.45)}
+#hudTL{top:18px;left:18px}
+#hudTL .mark{font-family:var(--disp);font-weight:800;font-size:15px;letter-spacing:.3em;color:var(--ink-hi);margin-bottom:6px}
+#hudTL .mark i{font-style:normal;color:var(--acc)}
+#hudTR{top:18px;right:18px;text-align:right}
+#hudTR .blk{border-left:none;border-right:2px solid var(--acc2)}
+#gaviz{display:block;width:176px;height:30px;margin:7px 0 3px auto;image-rendering:pixelated}
+#roll{display:block;width:176px;height:22px;margin:0 0 2px auto;image-rendering:pixelated}
+#hudTR .cap{font-size:8.5px;color:var(--ink-ghost);letter-spacing:.22em}
+
+/* ---------- chord monument ---------- */
+#chordBox{position:fixed;left:50%;bottom:64px;transform:translateX(-50%);z-index:30;text-align:center;pointer-events:none}
+#chordBig{font-family:var(--disp);font-weight:800;font-size:52px;letter-spacing:.06em;color:var(--ink-hi);
+  text-shadow:0 0 26px hsl(var(--h) 90% 60% / .35),0 2px 0 rgba(0,0,0,.6);
+  transition:transform .15s ease;line-height:1}
+#chordBig.hit{transform:translateY(-3px) scale(1.04)}
+#chordBig .q{color:var(--acc);font-size:.62em;vertical-align:.14em;letter-spacing:.02em}
+#chordSub{font-size:9.5px;letter-spacing:.3em;color:var(--ink-lo);margin-top:7px}
+#chordSub b{color:var(--acc2);font-weight:700}
+#chordYou{font-size:9px;letter-spacing:.3em;color:var(--acc);height:14px;margin-top:3px;opacity:0;transition:opacity .3s}
+#chordYou.on{opacity:1}
+
+/* ---------- log ---------- */
+#log{left:18px;bottom:26px;width:min(46ch,44vw);font-size:9.5px;line-height:2.05;letter-spacing:.1em}
+#log .ln{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#log .t{color:var(--ink-ghost)}
+#log .k{color:var(--acc);font-weight:700;padding:0 .6em 0 .5em}
+#log .m{color:var(--ink)}
+#log .a2{opacity:.85}#log .a3{opacity:.7}#log .a4{opacity:.58}#log .a5{opacity:.46}
+#log .a6{opacity:.36}#log .a7{opacity:.27}#log .a8{opacity:.19}#log .a9{opacity:.12}
+
+/* ---------- hint + buttons ---------- */
+#hint{left:50%;bottom:14px;transform:translateX(-50%);font-size:9px;letter-spacing:.24em;color:var(--ink-ghost);
+  white-space:nowrap;transition:opacity 1.2s ease}
+#hint b{color:var(--ink-lo);font-weight:700}
+#hint.faded{opacity:0}
+#btns{right:18px;bottom:22px;display:flex;gap:8px;z-index:34}
+.pbtn{pointer-events:auto;font-family:var(--mono);font-size:9px;letter-spacing:.22em;font-weight:700;
+  color:var(--ink-lo);background:var(--panel);border:1px solid hsl(222 14% 30% / .5);
+  padding:7px 11px;cursor:pointer;transition:all .18s ease}
+.pbtn:hover{color:var(--ink-hi);border-color:var(--acc);box-shadow:0 0 14px hsl(var(--h) 80% 60% / .25)}
+.pbtn.on{color:var(--acc);border-color:var(--acc)}
+.pbtn:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+
+body.hidden-ui .hud,body.hidden-ui #btns,body.hidden-ui #strip,body.hidden-ui #chordBox{opacity:0;pointer-events:none}
+
+/* ---------- info panel ---------- */
+#info{position:fixed;z-index:50;top:50%;left:50%;transform:translate(-50%,-50%) scale(.97);
+  width:min(620px,92vw);max-height:84vh;overflow-y:auto;background:hsl(222 24% 6% / .96);
+  border:1px solid hsl(222 14% 26% / .6);border-top:2px solid var(--acc);
+  padding:34px 38px 30px;opacity:0;pointer-events:none;transition:all .3s ease;
+  box-shadow:0 30px 90px rgba(0,0,0,.7)}
+#info.open{opacity:1;pointer-events:auto;transform:translate(-50%,-50%) scale(1)}
+#info h2{font-family:var(--disp);font-weight:800;font-size:24px;letter-spacing:.24em;color:var(--ink-hi);margin-bottom:4px}
+#info h2 i{font-style:normal;color:var(--acc)}
+#info .sect{margin-top:20px}
+#info .h{font-size:9px;letter-spacing:.3em;color:var(--acc2);font-weight:700;margin-bottom:7px}
+#info p{font-size:11.5px;line-height:1.95;letter-spacing:.03em;color:var(--ink)}
+#info .ctl{display:grid;grid-template-columns:auto 1fr;gap:5px 18px;font-size:10.5px;line-height:1.9}
+#info .k{color:var(--ink-hi);font-weight:700;letter-spacing:.14em;white-space:nowrap}
+#info .d{color:var(--ink-lo)}
+#info .close{position:sticky;top:0;float:right;font-size:9px;letter-spacing:.2em;color:var(--ink-ghost);cursor:pointer;padding:4px}
+#info .close:hover{color:var(--acc)}
+
+/* ---------- start overlay: rain over a waiting stone ---------- */
+#start{position:fixed;inset:0;z-index:60;display:flex;align-items:center;justify-content:center;
+  background:radial-gradient(120% 90% at 50% 110%, hsl(var(--h) 40% 12% / .9), transparent 55%), #05060A;
+  cursor:pointer;transition:opacity 1.1s ease}
+#start::before,#start::after{content:'';position:absolute;inset:-20%;pointer-events:none;
+  background:repeating-linear-gradient(78deg,transparent 0 46px,hsl(var(--h2) 70% 70% / .05) 46px 47px);
+  animation:rainA 1.1s linear infinite}
+#start::after{background:repeating-linear-gradient(80deg,transparent 0 23px,hsl(var(--h) 80% 75% / .08) 23px 24px);
+  animation:rainB .62s linear infinite}
+@keyframes rainA{to{transform:translateY(46px) translateX(-9px)}}
+@keyframes rainB{to{transform:translateY(23px) translateX(-4px)}}
+#start.gone{opacity:0;pointer-events:none}
+#start .card{position:relative;text-align:center;padding:40px 52px;z-index:2}
+#start .stone{width:2px;height:120px;margin:0 auto 26px;background:linear-gradient(180deg,var(--acc),var(--acc2));
+  box-shadow:0 0 24px hsl(var(--h) 90% 60% / .8),0 0 80px hsl(var(--h2) 90% 60% / .35);
+  animation:hum 3.2s ease-in-out infinite}
+@keyframes hum{50%{transform:scaleY(1.06);opacity:.85}}
+#start .eyebrow{font-size:9px;letter-spacing:.42em;color:var(--ink-ghost);margin-bottom:14px}
+#start h1{font-family:var(--disp);font-weight:800;font-size:clamp(40px,7.5vw,68px);letter-spacing:.3em;
+  color:var(--ink-hi);text-indent:.3em;
+  text-shadow:0 0 34px hsl(var(--h) 90% 60% / .3)}
+#start .sub{font-size:10px;letter-spacing:.34em;color:var(--ink-lo);margin-top:12px}
+#start .spec{margin:26px auto 0;font-size:9px;letter-spacing:.2em;line-height:2.3;color:var(--ink-ghost);text-align:center}
+#start .spec .v{color:var(--ink)}
+#start .go{display:inline-block;margin-top:30px;font-size:10px;font-weight:700;letter-spacing:.34em;color:var(--bg);
+  background:var(--acc);padding:13px 30px 12px;text-indent:.34em;cursor:pointer;transition:all .2s ease;
+  box-shadow:0 0 30px hsl(var(--h) 90% 60% / .4)}
+#start .go:hover{background:var(--ink-hi);box-shadow:0 0 46px hsl(var(--h) 90% 70% / .7)}
+#start .foot{margin-top:22px;font-size:8.5px;letter-spacing:.24em;color:var(--ink-ghost);line-height:2}
+
+/* ---------- fatal ---------- */
+#fatal{position:fixed;inset:0;z-index:70;display:none;align-items:center;justify-content:center;background:#05060A}
+#fatal.show{display:flex}
+#fatalMsg{font-size:11px;letter-spacing:.2em;color:hsl(6 80% 68%);text-align:center;line-height:2.2}
+
+@media (max-width:720px){
+  #hudTL{top:12px;left:12px}#hudTR{top:12px;right:12px}
+  .hud{font-size:9.5px}
+  #hudTL .mark{font-size:13px}
+  #chordBig{font-size:38px}
+  #chordBox{bottom:88px}
+  #log{display:none}
+  #hint{bottom:70px;font-size:8px;letter-spacing:.18em}
+  #btns{right:50%;transform:translateX(50%);bottom:16px}
+  #gaviz{width:140px}#roll{width:140px}
+}
+@media (prefers-reduced-motion: reduce){
+  #start::before,#start::after,#start .stone{animation:none}
+  *{transition-duration:.01ms !important}
+}
+</style>
+</head>
+<body>
+
+<canvas id="gl"></canvas>
+<canvas id="strip" width="512" height="3"></canvas>
+
+<div class="hud" id="hudTL">
+  <div class="blk">
+  <div class="mark">MONO<i>LITH</i></div>
+  <div><span class="lbl">KEY&nbsp;&nbsp;</span><span class="val acc" id="hKey">—</span></div>
+  <div><span class="lbl">BPM&nbsp;&nbsp;</span><span class="val" id="hBpm">—</span><span class="dot">·</span><span class="val" id="hMeter">4/4</span><span class="dot">·</span><span class="lbl">SW&nbsp;</span><span class="val" id="hSwing">—</span></div>
+  <div><span class="lbl">BAR&nbsp;&nbsp;</span><span class="val" id="hBar">000</span><span class="dot">·</span><span class="val acc" id="hSect">DORMANT</span></div>
+  </div>
+</div>
+
+<div class="hud" id="hudTR">
+  <div class="blk">
+  <div><span class="lbl">SCENE&nbsp;</span><span class="val" id="hScene">—</span><span class="dot">·</span><span class="val" id="hSceneMode">AUTO</span></div>
+  <div><span class="lbl">SEED&nbsp;&nbsp;</span><span class="val" id="hSeed">—</span><span class="dot">·</span><span class="lbl">GEN&nbsp;</span><span class="val" id="hGen">00</span></div>
+  <canvas id="gaviz" width="176" height="30"></canvas>
+  <div class="cap">POPULATION FITNESS</div>
+  <canvas id="roll" width="176" height="22"></canvas>
+  <div class="cap">ACTIVE BASS GENOME</div>
+  </div>
+</div>
+
+<div id="chordBox">
+  <div id="chordBig">—</div>
+  <div id="chordSub">WAITING</div>
+  <div id="chordYou"></div>
+</div>
+
+<div class="hud" id="log"></div>
+<div class="hud" id="hint"></div>
+
+<div class="hud" id="btns">
+  <button class="pbtn" id="bMute">MUTE</button>
+  <button class="pbtn" id="bXpose">KEY±</button>
+  <button class="pbtn" id="bEvolve">EVOLVE</button>
+  <button class="pbtn" id="bInfo">INFO</button>
+  <button class="pbtn" id="bHide">HIDE</button>
+</div>
+
+<div id="info">
+  <span class="close" id="infoClose">[ESC]</span>
+  <h2>MONO<i>LITH</i></h2>
+  <div class="sect"><p style="color:var(--ink-lo)">Low frequencies. High ceremony.</p></div>
+  <div class="sect"><div class="h">BRAIN</div>
+    <p>The bassline is alive. Eight pattern genomes — gate, degree, octave, accent, slide per sixteenth — compete in a genetic algorithm running in this tab. Every strike you land while a genome plays is a fitness vote; every 16 bars the population breeds, crosses over, and mutates. The harmony is a loop now — four chords chosen for the key, cadencing home every other pass. Play a chord and you don't nudge a probability: you rewrite that bar of the loop, permanently, and the matrix redraws to show the new circuit. The music bends toward your taste, honestly and measurably. Nothing is prerecorded.</p></div>
+  <div class="sect"><div class="h">SOUND</div>
+    <p>Every voice is modeled on the classic ladder architecture: three detuned oscillators plus a sub, driven into saturation, through a resonant 24dB-per-octave lowpass cascade with envelope, glide, and accent — plus slow analog drift so nothing is ever perfectly in tune. Mono bass with legato slides, four-voice chorus-widened poly chords, a vibrato lead, analog-modeled drums, a sidechain pump that breathes with the kick, and thunder when you release a charge. Raw Web Audio. Zero samples.</p></div>
+  <div class="sect"><div class="h">LIGHT</div>
+    <p>One stone, raymarched live in WebGL2 — a signed-distance form that morphs between solids as the sections turn, spinning faster as the energy rises, flexing on every kick, its surface rippled by the spectrum. Rain falls in parallax layers whose density follows the hi-hats and whose slant follows the wind; the wet floor reflects the stone; chords strike light into the sky. Sound and light share one clock, and the world's two colors are the current key and its opposite on the wheel.</p></div>
+  <div class="sect"><div class="h">CONTROLS</div>
+    <div class="ctl">
+      <span class="k">MOVE</span><span class="d">wind — slants the rain · tilts the filter</span>
+      <span class="k">CLICK / TAP</span><span class="d">strike — chord stab · votes for this bassline</span>
+      <span class="k">HOLD</span><span class="d">charge — the storm swells · release for thunder</span>
+      <span class="k">A – L</span><span class="d">play chords · I–vii plus two borrowed · rewrites that bar of the loop</span>
+      <span class="k">SHIFT + A – L</span><span class="d">extend — same chord, ninth voicing</span>
+      <span class="k">X</span><span class="d">transpose — force a key change now</span>
+      <span class="k">1 – 5</span><span class="d">force a scene · <b style="color:var(--ink-hi)">0</b> returns to auto</span>
+      <span class="k">SPACE</span><span class="d">evolve — breed the bassline population now</span>
+      <span class="k">↑ ↓</span><span class="d">bias the energy of the piece</span>
+      <span class="k">R</span><span class="d">rebirth — new seed, new storm</span>
+      <span class="k">M · V · I</span><span class="d">mute · hide interface · this panel</span>
+    </div></div>
+  <div class="sect" style="margin-top:22px"><p style="color:var(--ink-ghost);font-size:9.5px;letter-spacing:.16em;text-transform:uppercase">dunl.app · instrument 02 · seed in URL — share it, same stone, different storm</p></div>
+</div>
+
+<div id="start">
+  <div class="card">
+    <div class="stone"></div>
+    <div class="eyebrow">DUNL.APP&nbsp;&nbsp;/&nbsp;&nbsp;INSTRUMENT&nbsp;02</div>
+    <h1>MONOLITH</h1>
+    <div class="sub">LOW FREQUENCIES · HIGH CEREMONY</div>
+    <div class="spec">
+      <div><span>SEED&nbsp;</span><span class="v" id="sSeed">0x00000000</span></div>
+      <div><span>ENGINE&nbsp;</span><span class="v">3-OSC LADDER SYNTHESIS · ANALOG DRIFT</span></div>
+      <div><span>BRAIN&nbsp;</span><span class="v">GENETIC BASSLINES · HARMONY THAT LEARNS YOUR TASTE</span></div>
+    </div>
+    <div class="go" id="goBtn">TOUCH THE STONE</div>
+    <div class="foot">HEADPHONES OR A SUBWOOFER RECOMMENDED · NOTHING IS PRERECORDED<br>NO TWO STORMS ARE IDENTICAL</div>
+  </div>
+</div>
+
+<div id="fatal"><div id="fatalMsg"></div></div>
+
+<script>
+/*__JS_START__*/
+'use strict';
+/* ================================================================
+   MONOLITH · a ladder-filtered stone in the rain
+   dunl.app · instrument 02
+   One machine: seeded chance, a genetic algorithm breeding
+   basslines, a harmony matrix that learns from your hands,
+   nine analog-modeled voices, and a raymarched monolith that
+   dances to the storm it generates. One clock for ear and eye.
+   ================================================================ */
+/* ---------------- seeded chance ---------------- */
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+function newSeed(){
+  const m=location.search.match(/seed=([0-9a-fA-F]{1,8})/);
+  if(m) return parseInt(m[1],16)>>>0;
+  if(window.crypto&&crypto.getRandomValues){const u=new Uint32Array(1);crypto.getRandomValues(u);return u[0]}
+  return (Math.random()*4294967296)>>>0;
+}
+let SEED=newSeed(), rng=mulberry32(SEED);
+const R=(a,b)=>a+rng()*(b-a);
+const RI=(a,b)=>Math.floor(R(a,b+1));
+const pick=a=>a[Math.floor(rng()*a.length)];
+function wpick(pairs){let s=0;for(const p of pairs)s+=p[1];let r=rng()*s;for(const p of pairs){r-=p[1];if(r<=0)return p[0]}return pairs[0][0]}
+function gauss(){let u=0,v=0;while(u===0)u=rng();while(v===0)v=rng();return Math.sqrt(-2*Math.log(u))*Math.cos(6.2831853*v)}
+const clamp=(v,a,b)=>v<a?a:v>b?b:v;
+const lerp=(a,b,t)=>a+(b-a)*t;
+const TAU=Math.PI*2;
+const hex8=n=>'0x'+(n>>>0).toString(16).toUpperCase().padStart(8,'0');
+const $=id=>document.getElementById(id);
+
+/* ---------------- theory: keys, modes, nine chords ---------------- */
+const PC=['C','C♯','D','E♭','E','F','F♯','G','A♭','A','B♭','B'];
+const MODES={IONIAN:[0,2,4,5,7,9,11],DORIAN:[0,2,3,5,7,9,10],PHRYGIAN:[0,1,3,5,7,8,10],
+             MIXOLYDIAN:[0,2,4,5,7,9,10],AEOLIAN:[0,2,3,5,7,8,10]};
+const MODE_NAMES=Object.keys(MODES);
+const MODE_W=[['AEOLIAN',3],['DORIAN',3],['MIXOLYDIAN',2],['PHRYGIAN',1.5],['IONIAN',1.5]];
+const midi2f=m=>440*Math.pow(2,(m-69)/12);
+/* the key's pitch class becomes the world's hue via the circle of fifths */
+const pcHue=pc=>((pc*7)%12)/12;
+const degreePc=(key,d)=>(key.pc+MODES[key.mode][((d%7)+7)%7])%12;
+function degreeMidi(key,d,center=48){
+  const pc=degreePc(key,d);
+  let m=center-((center-pc)%12);
+  if(m>center+6)m-=12; if(m<center-6)m+=12;
+  return m;
+}
+function keyName(k){return PC[k.pc]+' '+k.mode}
+
+/* chord slots 0–6: diatonic sevenths · 7: ♭VII · 8: ♭VI */
+const ROM=['I','II','III','IV','V','VI','VII'];
+function chordDef(key,idx,ext9=false){
+  let pcs,rootPc,q,roman;
+  if(idx<=6){
+    rootPc=degreePc(key,idx);
+    const iv=n=>(degreePc(key,idx+n)-rootPc+12)%12;
+    const t3=iv(2),t5=iv(4),t7=iv(6);
+    pcs=[rootPc,(rootPc+t3)%12,(rootPc+t5)%12,(rootPc+t7)%12];
+    if(t3===4&&t5===7&&t7===11){q='Δ7';roman=ROM[idx]}
+    else if(t3===4&&t5===7&&t7===10){q='7';roman=ROM[idx]}
+    else if(t3===3&&t5===7&&t7===10){q='m7';roman=ROM[idx].toLowerCase()}
+    else if(t3===3&&t5===6&&t7===10){q='ø7';roman=ROM[idx].toLowerCase()+'ø'}
+    else if(t3===3&&t5===7&&t7===11){q='mΔ7';roman=ROM[idx].toLowerCase()}
+    else {q='7';roman=ROM[idx]}
+  } else if(idx===7){
+    rootPc=(key.pc+10)%12;
+    pcs=[rootPc,(rootPc+4)%12,(rootPc+7)%12,(rootPc+10)%12];
+    q='7';roman='♭VII';
+  } else {
+    rootPc=(key.pc+8)%12;
+    pcs=[rootPc,(rootPc+4)%12,(rootPc+7)%12,(rootPc+11)%12];
+    q='Δ7';roman='♭VI';
+  }
+  if(ext9){
+    pcs=[...pcs,(rootPc+(q==='ø7'?13:14))%12];
+    q=q.replace('7','9');
+  }
+  return {idx,rootPc,pcs,q,roman,name:PC[rootPc]+q};
+}
+/* voice-lead a pc set into a register, minimizing motion from prev */
+function voiceLead(prev,pcs,lo=50,hi=80){
+  const out=[];
+  pcs.forEach((pc,i)=>{
+    let best=null,bd=1e9;
+    for(let oct=3;oct<=6;oct++){
+      const m=pc+oct*12;
+      if(m<lo||m>hi) continue;
+      const tgt=prev?prev[Math.min(i,prev.length-1)]:lerp(lo+4,hi-6,i/Math.max(1,pcs.length-1));
+      const d=Math.abs(m-tgt)+(out.includes(m)?7:0);
+      if(d<bd){bd=d;best=m}
+    }
+    out.push(best??(pc+60));
+  });
+  return out.sort((a,b)=>a-b);
+}
+
+/* ---------------- global state ---------------- */
+const State={
+  running:false,muted:false,uiHidden:false,
+  bpm:108,spb:60/108/4,stepsPerBar:16,swing:0.1,
+  key:{pc:9,mode:'AEOLIAN'},hue:0,hueTarget:0,
+  energy:0.15,energyTarget:0.2,energyBias:0,tension:0.25,
+  gStep:0,bar:0,barStartStep:0,barInSection:0,sectionBars:8,section:'OVERTURE',
+  gen:0,chordIdx:0,chordPcsNow:[9,0,4,7],chordNow:null,nextChordIdx:0,userVote:null,
+  sceneIdx:0,sceneAuto:true,wind:0,wet:0.85,
+  timeline:{t0:0,s0:0},
+};
+let actx=null;
+function now(){return actx?actx.currentTime:performance.now()/1000}
+function setTempo(bpm){
+  const t=now();
+  State.timeline.s0=stepFloatAt(t);State.timeline.t0=t;
+  State.bpm=bpm;State.spb=60/bpm/4;
+  if(Audio.ready)Audio.syncDelay();
+}
+function stepFloatAt(t){return State.timeline.s0+(t-State.timeline.t0)/State.spb}
+
+/* sound events shipped to the GPU at their exact scheduled time */
+const VisQ=[];
+function emitVis(t,x,y,hue,mag){
+  VisQ.push({t,x,y,hue,mag});
+  if(VisQ.length>140)VisQ.splice(0,VisQ.length-140);
+  VisQ.sort((a,b)=>a.t-b.t);
+}
+const Ripples=[];
+
+/* ---------------- telemetry log ---------------- */
+const logEl=$('log');
+function barBeatStr(){
+  if(!State.running) return '···.·';
+  const s=stepFloatAt(now());
+  const bar=Math.max(0,State.bar);
+  const beat=clamp(Math.floor(((s-State.barStartStep)/4)%4)+1,1,4);
+  return String(bar).padStart(3,'0')+'.'+beat;
+}
+function log(k,m){
+  const d=document.createElement('div');
+  d.className='ln';
+  d.innerHTML='<span class="t">['+barBeatStr()+']</span><span class="k">'+k+'</span><span class="m">'+m+'</span>';
+  logEl.prepend(d);
+  while(logEl.children.length>9)logEl.lastChild.remove();
+  [...logEl.children].forEach((c,i)=>{c.className='ln'+(i>0?' a'+Math.min(9,i+1):'')});
+}
+
+/* ================================================================
+   SOUND — ladder-architecture synthesis, analog drift, real weight
+   ================================================================ */
+const Audio={
+  ready:false,master:null,analyser:null,fftData:null,fftPrev:null,
+  drumG:null,bassG:null,musG:null,colorLP:null,weight:null,
+  chorusIn:null,verb:null,verbG:null,dlyL:null,dlyR:null,dlyIn:null,
+  noiseBuf:null,driftHub:null,
+
+  init(){
+    if(this.ready)return;
+    actx=new (window.AudioContext||window.webkitAudioContext)({latencyHint:'interactive'});
+    const c=actx;
+    /* pink-ish noise bed */
+    const len=c.sampleRate*2,nb=c.createBuffer(1,len,c.sampleRate),d=nb.getChannelData(0);
+    let b0=0,b1=0,b2=0;
+    for(let i=0;i<len;i++){const w=Math.random()*2-1;b0=0.997*b0+w*0.03;b1=0.985*b1+w*0.02;b2=0.95*b2+w*0.05;d[i]=(b0+b1+b2+w*0.18)*2.4}
+    this.noiseBuf=nb;
+
+    /* master: weight shelf → drive → glue → limiter → analyser */
+    this.weight=c.createBiquadFilter();this.weight.type='lowshelf';
+    this.weight.frequency.value=105;this.weight.gain.value=0.8;
+    const drive=c.createWaveShaper();
+    const cur=new Float32Array(1024);
+    for(let i=0;i<1024;i++){const x=i/511.5-1;cur[i]=Math.tanh(x*1.3)/Math.tanh(1.3)}
+    drive.curve=cur;drive.oversample='2x';
+    const comp=c.createDynamicsCompressor();
+    comp.threshold.value=-15;comp.knee.value=8;comp.ratio.value=3.2;
+    comp.attack.value=0.006;comp.release.value=0.28;
+    const lim=c.createDynamicsCompressor();
+    lim.threshold.value=-2;lim.knee.value=0;lim.ratio.value=12;
+    lim.attack.value=0.004;lim.release.value=0.25;
+    this.analyser=c.createAnalyser();
+    this.analyser.fftSize=2048;this.analyser.smoothingTimeConstant=0.55;
+    this.fftData=new Uint8Array(this.analyser.frequencyBinCount);
+    this.fftPrev=new Float32Array(this.analyser.frequencyBinCount);
+    this.master=c.createGain();this.master.gain.value=0.74;
+    const loP=c.createBiquadFilter();loP.type='lowpass';loP.frequency.value=140;loP.Q.value=0.5;
+    const hiP=c.createBiquadFilter();hiP.type='highpass';hiP.frequency.value=140;hiP.Q.value=0.5;
+    const lsum=c.createGain();
+    this.master.connect(this.weight);
+    this.weight.connect(loP);loP.connect(lsum);
+    this.weight.connect(hiP);hiP.connect(drive);drive.connect(lsum);
+    lsum.connect(comp);
+    comp.connect(lim);lim.connect(this.analyser);this.analyser.connect(c.destination);
+
+    /* buses: drums straight · bass with light pump · music with full pump + color tilt */
+    this.drumG=c.createGain();this.drumG.gain.value=0.98;this.drumG.connect(this.master);
+    this.bassG=c.createGain();this.bassG.gain.value=1;this.bassG.connect(this.master);
+    this.colorLP=c.createBiquadFilter();this.colorLP.type='lowpass';
+    this.colorLP.frequency.value=13000;this.colorLP.Q.value=0.4;
+    this.musG=c.createGain();this.musG.gain.value=1;
+    this.musG.connect(this.colorLP);this.colorLP.connect(this.master);
+
+    /* one slow breath of imperfection shared by every oscillator */
+    const dr=c.createOscillator();dr.frequency.value=0.11;
+    this.driftHub=c.createGain();this.driftHub.gain.value=5.5; /* cents */
+    dr.connect(this.driftHub);dr.start();
+
+    /* chorus (for chords) */
+    this.chorusIn=c.createGain();
+    const chDry=c.createGain();chDry.gain.value=0.72;
+    this.chorusIn.connect(chDry);chDry.connect(this.musG);
+    const mkCh=(dt,rate,pan)=>{
+      const dl=c.createDelay(0.05);dl.delayTime.value=dt;
+      const lf=c.createOscillator();lf.frequency.value=rate;
+      const lg=c.createGain();lg.gain.value=0.0045;
+      lf.connect(lg);lg.connect(dl.delayTime);lf.start();
+      const pn=c.createStereoPanner();pn.pan.value=pan;
+      const g=c.createGain();g.gain.value=0.5;
+      this.chorusIn.connect(dl);dl.connect(pn);pn.connect(g);g.connect(this.musG);
+    };
+    mkCh(0.014,0.53,-0.55);mkCh(0.021,0.41,0.55);
+
+    /* dark plate */
+    this.verb=c.createConvolver();this.verb.buffer=this.makeIR(2.7,2.6);
+    this.verbG=c.createGain();this.verbG.gain.value=0.5;
+    this.verb.connect(this.verbG);this.verbG.connect(this.musG);
+
+    /* tempo-synced ping-pong */
+    this.dlyIn=c.createGain();
+    this.dlyL=c.createDelay(2);this.dlyR=c.createDelay(2);
+    const fbL=c.createGain(),fbR=c.createGain();fbL.gain.value=0.32;fbR.gain.value=0.32;
+    const hpL=c.createBiquadFilter(),hpR=c.createBiquadFilter();
+    hpL.type='highpass';hpL.frequency.value=300;hpR.type='highpass';hpR.frequency.value=300;
+    const pL=c.createStereoPanner(),pR=c.createStereoPanner();pL.pan.value=-0.66;pR.pan.value=0.66;
+    this.dlyIn.connect(this.dlyL);
+    this.dlyL.connect(hpL);hpL.connect(pL);pL.connect(this.musG);
+    this.dlyL.connect(fbL);fbL.connect(this.dlyR);
+    this.dlyR.connect(hpR);hpR.connect(pR);pR.connect(this.musG);
+    this.dlyR.connect(fbR);fbR.connect(this.dlyL);
+    this.syncDelay();
+
+    this.ready=true;
+  },
+  makeIR(sec,decay){
+    const c=actx,len=Math.floor(c.sampleRate*sec),ir=c.createBuffer(2,len,c.sampleRate);
+    for(let ch=0;ch<2;ch++){
+      const d=ir.getChannelData(ch);
+      let lp=0;
+      for(let i=0;i<len;i++){
+        const w=(Math.random()*2-1)*Math.pow(1-i/len,decay);
+        lp=lp*0.78+w*0.22; /* darker tail */
+        d[i]=lp*(1+0.13*Math.sin(i*0.0007+ch*2.1));
+      }
+    }
+    return ir;
+  },
+  syncDelay(){
+    const t=State.spb*6; /* dotted eighth */
+    this.dlyL.delayTime.setTargetAtTime(t,actx.currentTime,0.08);
+    this.dlyR.delayTime.setTargetAtTime(t*1.5,actx.currentTime,0.08);
+  },
+  duck(t){
+    const depth=0.3+0.42*State.energy;
+    this.musG.gain.cancelScheduledValues(t);
+    this.musG.gain.setValueAtTime(1,t);
+    this.musG.gain.setTargetAtTime(1-depth,t,0.006);
+    this.musG.gain.setTargetAtTime(1,t+0.06,0.11);
+    const bd=depth*0.4;
+    this.bassG.gain.cancelScheduledValues(t);
+    this.bassG.gain.setValueAtTime(1,t);
+    this.bassG.gain.setTargetAtTime(1-bd,t,0.006);
+    this.bassG.gain.setTargetAtTime(1,t+0.05,0.09);
+  },
+  noise(){const s=actx.createBufferSource();s.buffer=this.noiseBuf;s.loop=true;return s},
+  color(y){ if(this.ready) this.colorLP.frequency.setTargetAtTime(lerp(14000,900,clamp(y,0,1)**1.4),actx.currentTime,0.09); },
+};
+
+/* ---------------- the ladder: 24 dB/oct in two resonant stages ---------------- */
+function Ladder(){
+  const b1=actx.createBiquadFilter(),b2=actx.createBiquadFilter();
+  b1.type='lowpass';b2.type='lowpass';
+  b1.connect(b2);
+  return {
+    input:b1,output:b2,
+    set(cut,res){
+      const q=0.5+res*1.7;
+      b1.frequency.value=cut;b2.frequency.value=cut;
+      b1.Q.value=q;b2.Q.value=q*0.8;
+    },
+    env(t,peak,sus,atk,dec,res){
+      const q=0.5+res*1.7;
+      for(const [b,qs] of [[b1,q],[b2,q*0.8]]){
+        b.Q.setTargetAtTime(qs,t,0.01);
+        b.frequency.cancelScheduledValues(t);
+        b.frequency.setValueAtTime(Math.max(40,sus*0.6),t);
+        b.frequency.linearRampToValueAtTime(peak,t+atk);
+        b.frequency.setTargetAtTime(sus,t+atk,dec);
+      }
+    },
+    glideTo(t,cut){
+      b1.frequency.setTargetAtTime(cut,t,0.03);
+      b2.frequency.setTargetAtTime(cut,t,0.03);
+    },
+  };
+}
+function driveStage(k){
+  const ws=actx.createWaveShaper();
+  const cur=new Float32Array(512);
+  for(let i=0;i<512;i++){const x=i/255.5-1;cur[i]=Math.tanh(x*k)/Math.tanh(k)}
+  ws.curve=cur;return ws;
+}
+
+/* ---------------- persistent mono voice: 3 osc + sub, glide, drift ---------------- */
+function MonoVoice(dest,{oscN=3,type='sawtooth',subLvl=0.4,spread=9,drive=1.7,lfoVib=false}={}){
+  const mix=actx.createGain();mix.gain.value=0.26/oscN;
+  const dw=driveStage(drive);
+  const lad=Ladder();
+  const vca=actx.createGain();vca.gain.value=0.0001;
+  mix.connect(dw);dw.connect(lad.input);lad.output.connect(vca);vca.connect(dest);
+  const oscs=[];
+  let vibG=null;
+  if(lfoVib){
+    const lfo=actx.createOscillator();lfo.frequency.value=5.4;
+    vibG=actx.createGain();vibG.gain.value=0;
+    lfo.connect(vibG);lfo.start();
+  }
+  for(let i=0;i<oscN;i++){
+    const o=actx.createOscillator();
+    o.type=i===oscN-1&&oscN>2?'square':type;
+    o.detune.value=(i-(oscN-1)/2)*spread+R(-1.5,1.5);
+    Audio.driftHub.connect(o.detune);
+    if(vibG)vibG.connect(o.detune);
+    o.connect(mix);o.start();oscs.push(o);
+  }
+  const sub=actx.createOscillator();sub.type='sine';
+  const subG=actx.createGain();subG.gain.value=0.0001;
+  sub.connect(subG);subG.connect(vca);sub.start();
+  let lastF=110;
+  return {
+    lad,vca,
+    note(t,f,{gl=0.004,cut=900,peak=3200,res=0.35,vel=0.8,retrig=true,dur=0,atk=0.004,dec=0.14,rel=0.08,subMul=subLvl}={}){
+      const tc=Math.max(0.003,gl/3);
+      for(const o of oscs){o.frequency.cancelScheduledValues(t);o.frequency.setValueAtTime(lastF,t);o.frequency.setTargetAtTime(f,t,tc)}
+      sub.frequency.cancelScheduledValues(t);
+      sub.frequency.setValueAtTime(lastF/2,t);sub.frequency.setTargetAtTime(f/2,t,tc);
+      lastF=f;
+      if(retrig){
+        lad.env(t,peak,cut,atk+0.002,dec,res);
+        vca.gain.cancelScheduledValues(t);
+        vca.gain.setTargetAtTime(vel,t,atk);
+        subG.gain.cancelScheduledValues(t);
+        subG.gain.setTargetAtTime(vel*subMul,t,atk+0.004);
+        if(vibG){vibG.gain.cancelScheduledValues(t);vibG.gain.setValueAtTime(0,t);vibG.gain.setTargetAtTime(14,t+0.16,0.12)}
+      } else {
+        lad.glideTo(t,cut);
+      }
+      if(dur>0){
+        const r=t+dur;
+        vca.gain.setTargetAtTime(0.0001,r,rel);
+        subG.gain.setTargetAtTime(0.0001,r,rel*1.2);
+      }
+    },
+    off(t,rel=0.09){
+      vca.gain.cancelScheduledValues(t);
+      vca.gain.setTargetAtTime(0.0001,t,rel);
+      subG.gain.cancelScheduledValues(t);
+      subG.gain.setTargetAtTime(0.0001,t,rel*1.2);
+    },
+  };
+}
+
+/* ================================================================
+   INSTRUMENTS
+   ================================================================ */
+const I={
+  _bass:null,_lead:null,
+
+  /* --- drums: analog models, tuned heavy --- */
+  kick(t,v=1){
+    const c=actx;
+    const o=c.createOscillator();o.type='sine';
+    o.frequency.setValueAtTime(122,t);
+    o.frequency.exponentialRampToValueAtTime(39,t+0.085);
+    const g=c.createGain();
+    g.gain.setValueAtTime(0.92*v,t);
+    g.gain.setTargetAtTime(0.0001,t+0.012,0.085);
+    /* the boom: a second, longer sub tail */
+    const s=c.createOscillator();s.type='sine';s.frequency.setValueAtTime(43,t);
+    s.frequency.exponentialRampToValueAtTime(36,t+0.3);
+    const sg=c.createGain();
+    sg.gain.setValueAtTime(0.0001,t);
+    sg.gain.linearRampToValueAtTime(0.4*v,t+0.02);
+    sg.gain.setTargetAtTime(0.0001,t+0.05,0.16);
+    const cl=c.createOscillator();cl.type='square';cl.frequency.value=880;
+    const cg=c.createGain();cg.gain.setValueAtTime(0.16*v,t);cg.gain.setTargetAtTime(0.0001,t,0.006);
+    const hp=c.createBiquadFilter();hp.type='highpass';hp.frequency.value=500;
+    o.connect(g);s.connect(sg);cl.connect(hp);hp.connect(cg);
+    g.connect(Audio.drumG);sg.connect(Audio.drumG);cg.connect(Audio.drumG);
+    o.start(t);o.stop(t+0.5);s.start(t);s.stop(t+0.8);cl.start(t);cl.stop(t+0.03);
+    Audio.duck(t);
+    GLR.pulseAt('kick',t,v);
+    emitVis(t,0.5,0.86,State.hue,0.34*v);
+  },
+  snare(t,v=1,ghost=false){
+    const c=actx;
+    const o=c.createOscillator();o.type='triangle';
+    o.frequency.setValueAtTime(196,t);o.frequency.exponentialRampToValueAtTime(150,t+0.05);
+    const og=c.createGain();og.gain.setValueAtTime((ghost?0.2:0.45)*v,t);og.gain.setTargetAtTime(0.0001,t,0.045);
+    const n=Audio.noise();
+    const bp=c.createBiquadFilter();bp.type='bandpass';bp.frequency.value=1750;bp.Q.value=0.8;
+    const ng=c.createGain();ng.gain.setValueAtTime((ghost?0.16:0.5)*v,t);ng.gain.setTargetAtTime(0.0001,t,ghost?0.035:0.085);
+    o.connect(og);og.connect(Audio.drumG);
+    n.connect(bp);bp.connect(ng);ng.connect(Audio.drumG);
+    o.start(t);o.stop(t+0.25);n.start(t);n.stop(t+0.35);
+    if(!ghost){GLR.pulseAt('snap',t,v);emitVis(t,0.5,0.3,(State.hue+0.5)%1,0.3*v)}
+  },
+  clap(t,v=1){
+    const c=actx;
+    for(let i=0;i<3;i++){
+      const n=Audio.noise();
+      const bp=c.createBiquadFilter();bp.type='bandpass';bp.frequency.value=1500+i*260;bp.Q.value=1.4;
+      const g=c.createGain();
+      const tt=t+i*0.011;
+      g.gain.setValueAtTime(0.34*v,tt);
+      g.gain.setTargetAtTime(0.0001,tt,i===2?0.11:0.02);
+      n.connect(bp);bp.connect(g);g.connect(Audio.drumG);
+      n.start(tt);n.stop(tt+0.4);
+    }
+    GLR.pulseAt('snap',t,v*0.9);
+  },
+  hat(t,open=false,v=1){
+    const c=actx;
+    const n=Audio.noise();
+    const hp=c.createBiquadFilter();hp.type='highpass';hp.frequency.value=7600;
+    const g=c.createGain();
+    g.gain.setValueAtTime(0.22*v,t);
+    g.gain.setTargetAtTime(0.0001,t,open?0.13:0.02);
+    const p=c.createStereoPanner();p.pan.value=Math.sin(t*2.2)*0.35;
+    n.connect(hp);hp.connect(g);g.connect(p);p.connect(Audio.drumG);
+    n.start(t);n.stop(t+(open?0.6:0.09));
+  },
+  ride(t,v=1){
+    const c=actx;const n=Audio.noise();
+    const hp=c.createBiquadFilter();hp.type='highpass';hp.frequency.value=6200;
+    const g=c.createGain();g.gain.setValueAtTime(0.1*v,t);g.gain.setTargetAtTime(0.0001,t,0.32);
+    n.connect(hp);hp.connect(g);g.connect(Audio.drumG);n.start(t);n.stop(t+1.2);
+  },
+  rim(t,v=1){
+    const c=actx;const n=Audio.noise();
+    const bp=c.createBiquadFilter();bp.type='bandpass';bp.frequency.value=1150;bp.Q.value=9;
+    const g=c.createGain();g.gain.setValueAtTime(0.55*v,t);g.gain.setTargetAtTime(0.0001,t,0.018);
+    n.connect(bp);bp.connect(g);g.connect(Audio.drumG);n.start(t);n.stop(t+0.1);
+  },
+  tom(t,f,v=1){
+    const c=actx;const o=c.createOscillator();o.type='sine';
+    o.frequency.setValueAtTime(f,t);o.frequency.exponentialRampToValueAtTime(f*0.55,t+0.16);
+    const g=c.createGain();g.gain.setValueAtTime(0.6*v,t);g.gain.setTargetAtTime(0.0001,t+0.01,0.11);
+    o.connect(g);g.connect(Audio.drumG);o.start(t);o.stop(t+0.5);
+    emitVis(t,R(0.3,0.7),0.6,State.hue,0.2);
+  },
+  crash(t,v=1){
+    const c=actx;const n=Audio.noise();
+    const hp=c.createBiquadFilter();hp.type='highpass';hp.frequency.value=4300;
+    const g=c.createGain();g.gain.setValueAtTime(0.4*v,t);g.gain.setTargetAtTime(0.0001,t+0.02,0.5);
+    n.connect(hp);hp.connect(g);g.connect(Audio.drumG);
+    const s=c.createGain();s.gain.value=0.25;g.connect(s);s.connect(Audio.verb);
+    n.start(t);n.stop(t+2.2);
+  },
+
+  /* --- THE BASS: mono ladder voice, legato slides, 303 accents --- */
+  bass(t,midi,{acc=false,slide=false,dur=0.22,vel=0.85}={}){
+    if(!this._bass)this._bass=MonoVoice(Audio.bassG,{oscN:3,type:'sawtooth',subLvl:0.42,spread:7,drive:1.8});
+    const f=midi2f(midi);
+    const e=State.energy;
+    const cut=lerp(180,520,e)+(acc?260:0);
+    const peak=cut*lerp(2.2,4.6,e)*(acc?1.65:1);
+    this._bass.note(t,f,{
+      gl:slide?0.085:0.004,retrig:!slide,
+      cut,peak,res:clamp(0.3+e*0.35+(acc?0.28:0),0,0.95),
+      vel:vel*(acc?1.06:0.92),dur,dec:acc?0.09:0.15,rel:0.05,
+    });
+    const hue=pcHue(midi%12);
+    emitVis(t,0.5+((midi%12)/12-0.5)*0.3,0.8,hue,(acc?0.5:0.3)*vel);
+    if(acc)GLR.pulseAt('acc',t,1);
+  },
+  bassOff(t){ if(this._bass)this._bass.off(t); },
+
+  /* --- CHORDS: four saws each, one ladder per stab, chorus-widened --- */
+  chordStab(t,voicing,{mode='stab',vel=0.8,dur=0.5,bright=0.5}={}){
+    const c=actx;
+    const lad=Ladder();
+    const vca=c.createGain();vca.gain.value=0.0001;
+    const dw=driveStage(1.35);
+    dw.connect(lad.input);lad.output.connect(vca);
+    vca.connect(Audio.chorusIn);
+    const vs=c.createGain();vs.gain.value=0.3;vca.connect(vs);vs.connect(Audio.verb);
+    const ds=c.createGain();ds.gain.value=mode==='stab'?0.24:0.1;vca.connect(ds);ds.connect(Audio.dlyIn);
+    const stopAt=t+dur+3;
+    voicing.forEach((m,i)=>{
+      for(let k=0;k<2;k++){
+        const o=c.createOscillator();o.type='sawtooth';
+        o.frequency.value=midi2f(m);
+        o.detune.value=(k?1:-1)*R(4,9)+(i-1.5)*2;
+        Audio.driftHub.connect(o.detune);
+        const g=c.createGain();g.gain.value=0.07/Math.sqrt(voicing.length);
+        o.connect(g);g.connect(dw);
+        o.start(t);o.stop(stopAt);
+      }
+    });
+    const base=lerp(500,1600,bright), pk=base*lerp(2.4,4.2,vel);
+    if(mode==='pad'){
+      lad.set(base,0.18);
+      lad.env(t,pk*0.8,base,0.7,0.9,0.15);
+      vca.gain.setTargetAtTime(vel*0.6,t,0.45);
+      vca.gain.setTargetAtTime(0.0001,t+dur,0.8);
+    } else if(mode==='swell'){
+      lad.env(t,pk,base*1.2,dur*0.7,0.5,0.3);
+      vca.gain.setTargetAtTime(vel*0.75,t,dur*0.5);
+      vca.gain.setTargetAtTime(0.0001,t+dur,0.5);
+    } else {
+      lad.env(t,pk,base,0.006,0.2,0.34);
+      vca.gain.setTargetAtTime(vel,t,0.005);
+      vca.gain.setTargetAtTime(0.0001,t+dur,0.16);
+    }
+  },
+
+  /* --- LEAD: two-osc mono, vibrato blooms in late --- */
+  lead(t,midi,dur,vel=0.8){
+    if(!this._lead){
+      this._lead=MonoVoice(Audio.musG,{oscN:2,type:'sawtooth',subLvl:0.12,spread:11,drive:1.8,lfoVib:true});
+      const send=actx.createGain();send.gain.value=0.3;
+      this._lead.vca.connect(send);send.connect(Audio.dlyIn);
+    }
+    const e=State.energy;
+    this._lead.note(t,midi2f(midi),{
+      gl:0.028,retrig:true,cut:lerp(900,2100,e),peak:lerp(2600,5200,e),
+      res:0.3,vel:vel*0.55,dur,dec:0.3,rel:0.14,
+    });
+    emitVis(t,0.5+((midi%12)/12-0.5)*0.5,0.22,pcHue(midi%12),0.42*vel);
+  },
+
+  /* --- weather --- */
+  thunder(t,big=1){
+    const c=actx;
+    const n=Audio.noise();
+    const lp=c.createBiquadFilter();lp.type='lowpass';lp.Q.value=0.7;
+    lp.frequency.setValueAtTime(260,t);
+    lp.frequency.exponentialRampToValueAtTime(42,t+2.4);
+    const g=c.createGain();
+    g.gain.setValueAtTime(0.0001,t);
+    g.gain.linearRampToValueAtTime(0.68*big,t+0.06);
+    g.gain.setTargetAtTime(0.0001,t+0.4,0.85);
+    n.connect(lp);lp.connect(g);g.connect(Audio.drumG);
+    n.start(t);n.stop(t+4);
+    const s=c.createOscillator();s.type='sine';
+    s.frequency.setValueAtTime(48,t);
+    s.frequency.exponentialRampToValueAtTime(28,t+1.3);
+    const sg=c.createGain();
+    sg.gain.setValueAtTime(0.0001,t);
+    sg.gain.linearRampToValueAtTime(0.7*big,t+0.05);
+    sg.gain.setTargetAtTime(0.0001,t+0.25,0.5);
+    s.connect(sg);sg.connect(Audio.bassG);
+    s.start(t);s.stop(t+2.4);
+    this.crash(t+0.02,0.8*big);
+    Audio.duck(t);
+    GLR.pulseAt('flash',t,big);
+    GLR.pulseAt('kick',t,big);
+  },
+  riserStart(){
+    const c=actx,t=actx.currentTime;
+    const n=Audio.noise();
+    const bp=c.createBiquadFilter();bp.type='bandpass';bp.Q.value=1.5;
+    bp.frequency.setValueAtTime(260,t);
+    bp.frequency.exponentialRampToValueAtTime(4200,t+3.2);
+    const ng=c.createGain();
+    ng.gain.setValueAtTime(0.0001,t);
+    ng.gain.linearRampToValueAtTime(0.4,t+2.6);
+    n.connect(bp);bp.connect(ng);ng.connect(Audio.musG);
+    n.start(t);
+    const og=c.createGain();og.gain.setValueAtTime(0.0001,t);
+    og.gain.linearRampToValueAtTime(0.16,t+2.8);
+    const oscs=[];
+    for(let i=0;i<3;i++){
+      const o=c.createOscillator();o.type='sawtooth';
+      const f0=midi2f(degreeMidi(State.key,0,52))*(1+i*0.007);
+      o.frequency.setValueAtTime(f0,t);
+      o.frequency.exponentialRampToValueAtTime(f0*4,t+3.4);
+      o.connect(og);o.start(t);oscs.push(o);
+    }
+    og.connect(Audio.musG);
+    return {
+      stop(rt,strength){
+        ng.gain.cancelScheduledValues(rt);
+        ng.gain.setTargetAtTime(0.0001,rt,0.03);
+        og.gain.cancelScheduledValues(rt);
+        og.gain.setTargetAtTime(0.0001,rt,0.03);
+        n.stop(rt+0.4);oscs.forEach(o=>o.stop(rt+0.4));
+        if(strength>0.12)I.thunder(rt+0.02,clamp(strength,0.3,1.2));
+      },
+    };
+  },
+};
+
+/* ================================================================
+   BRAIN I — a genetic algorithm breeding basslines
+   genome: 16 steps × {gate, degree, octave, accent, slide}
+   ================================================================ */
+const POOL_N=6; /* per-chord note pool: root, 5th, oct, 3rd, 7th, 4th */
+let GENOME_ID=0;
+function Genome(tpl){
+  const g={id:++GENOME_ID,fitness:0.5,steps:[]};
+  for(let i=0;i<16;i++){
+    let gate=0,d=0,o=0,a=0,s=0;
+    if(tpl==='floor'){gate=i%4===0?1:0;d=0}
+    else if(tpl==='off'){gate=i%4===2?1:0;d=pick([0,1,2])}
+    else if(tpl==='roll'){gate=i%2===0?1:0;d=[0,0,1,0,3,0,1,4][Math.floor(i/2)]}
+    else if(tpl==='sync'){gate=[1,0,0,1,0,0,1,0,0,0,1,0,1,0,1,0][i];d=pick([0,0,1,3])}
+    else if(tpl==='oct'){gate=i%2===0?1:0;d=0;o=(i/2)%2}
+    else {gate=rng()<0.4?1:0;d=RI(0,POOL_N-1);o=rng()<0.2?1:0}
+    if(gate){a=rng()<0.2?1:0;s=rng()<0.14?1:0}
+    g.steps.push({g:gate,d,o,a,s});
+  }
+  g.steps[0].g=1;g.steps[0].d=0;g.steps[0].o=0;
+  return g;
+}
+function mutateGenome(g,rate){
+  for(const st of g.steps){
+    if(rng()<rate)st.g^=1;
+    if(rng()<rate)st.d=RI(0,POOL_N-1);
+    if(rng()<rate*0.8)st.o=pick([0,0,1,-0]);
+    if(rng()<rate*0.7)st.a^=1;
+    if(rng()<rate*0.5)st.s^=1;
+  }
+  g.steps[0].g=1;
+}
+function crossover(a,b){
+  const c=Genome('x');
+  c.steps=c.steps.map((_,i)=>({...(rng()<0.5?a:b).steps[i]}));
+  c.fitness=(a.fitness+b.fitness)*0.32+0.28;
+  return c;
+}
+const GA={
+  pop:[],active:0,
+  boot(){
+    const tpls=['floor','off','roll','sync','oct','floor','roll','rand'];
+    this.pop=tpls.map(t=>Genome(t));
+    this.pop.forEach(g=>mutateGenome(g,0.08));
+    this.active=0;
+  },
+  activeG(){return this.pop[this.active]},
+  vote(amt){
+    const g=this.activeG();
+    g.fitness=clamp(g.fitness+amt,0,3);
+  },
+  decay(){for(const g of this.pop)g.fitness=lerp(g.fitness,0.5,0.012)},
+  switchActive(){
+    const w=this.pop.map((g,i)=>[i,Math.exp(g.fitness*1.6)*(i===this.active?0.5:1)]);
+    const nxt=wpick(w);
+    if(nxt!==this.active){
+      this.active=nxt;
+      log('GENOME','#'+String(this.pop[nxt].id).padStart(2,'0')+' takes the bass · fit '+this.pop[nxt].fitness.toFixed(2));
+    }
+  },
+  generation(manual=false){
+    State.gen++;
+    this.pop.sort((a,b)=>b.fitness-a.fitness);
+    const anneal=1/(1+State.gen*0.04);
+    const kids=[];
+    for(let i=0;i<5;i++){
+      const pa=this.pop[RI(0,3)],pb=this.pop[RI(0,4)];
+      const k=crossover(pa,pb);
+      mutateGenome(k,0.12*anneal*(manual?1.5:1));
+      kids.push(k);
+    }
+    this.pop=[...this.pop.slice(0,3),...kids];
+    this.active=clamp(this.active,0,7);
+    log('EVOLVE','gen '+String(State.gen).padStart(2,'0')+' · best fit '+this.pop[0].fitness.toFixed(2)+(manual?' · forced':''));
+    HUD.dirty=true;
+  },
+};
+
+/* ================================================================
+   BRAIN II — harmony that learns your taste
+   9×9 transition weights over I…vii + ♭VII + ♭VI
+   ================================================================ */
+const Harmony={
+  T:[],
+  boot(){
+    this.T=Array.from({length:9},()=>new Float32Array(9).fill(0.15));
+  },
+  /* the matrix now mirrors the living loop — sparse and legible */
+  syncToProg(prog){
+    for(let i=0;i<9;i++)for(let j=0;j<9;j++)this.T[i][j]=Math.max(0.1,this.T[i][j]*0.55);
+    for(let k=0;k<prog.length;k++){
+      const a=prog[k],b=prog[(k+1)%prog.length];
+      this.T[a][b]=clamp(this.T[a][b]+2.6,0.1,6);
+    }
+  },
+  predict(cur){
+    let bi=0,bv=-1;
+    for(let j=0;j<9;j++)if(this.T[cur][j]>bv){bv=this.T[cur][j];bi=j}
+    return bi;
+  },
+  reinforce(from,to,r){
+    this.T[from][to]=clamp(this.T[from][to]+r,0.1,6);
+  },
+};
+
+/* curated loops per mode family · indices into chordDef (0-6 diatonic · 7 ♭VII · 8 ♭VI) */
+const PROG_BANK={
+  DARK:[    /* aeolian · phrygian */
+    [0,5,6,4],[0,3,5,6],[0,6,5,4],[0,2,3,4],[0,3,0,4],[0,5,3,6],[0,6,3,4],[0,2,5,6],
+  ],
+  DORIAN:[
+    [0,3,0,4],[0,3,6,4],[0,5,3,4],[0,3,2,4],[0,6,3,4],[0,3,5,4],
+  ],
+  LIGHT:[   /* ionian · mixolydian */
+    [0,5,3,4],[0,4,5,3],[0,5,1,4],[0,3,4,4],[0,2,3,4],[0,7,3,4],[0,3,0,4],
+  ],
+};
+function progFamily(mode){
+  return mode==='DORIAN'?'DORIAN':(mode==='IONIAN'||mode==='MIXOLYDIAN')?'LIGHT':'DARK';
+}
+
+/* ================================================================
+   THE CONDUCTOR
+   ================================================================ */
+const SECTIONS={
+  OVERTURE:{e:0.18,bars:[6,10], drums:null,   bass:'drone', chord:'pad',   lead:false,harm:2,meter:16},
+  PULSE:   {e:0.46,bars:[8,16], drums:'four', bass:'genome',chord:'pad',   lead:false,harm:2,meter:16},
+  ACID:    {e:0.64,bars:[8,16], drums:'tech', bass:'squelch',chord:'stab', lead:false,harm:1,meter:16},
+  ANTHEM:  {e:0.82,bars:[12,16],drums:'big',  bass:'genome',chord:'anthem',lead:true, harm:1,meter:16},
+  STRUT:   {e:0.58,bars:[8,12], drums:'half', bass:'genome',chord:'stab',  lead:false,harm:2,meter:16},
+  BREAK:   {e:0.34,bars:[6,8],  drums:'perc', bass:'drone', chord:'swell', lead:false,harm:1,meter:16},
+  STORM:   {e:0.96,bars:[12,20],drums:'storm',bass:'squelch',chord:'anthem',lead:true,harm:1,meter:16,hot:true},
+  COOL:    {e:0.4, bars:[8,12], drums:'four', bass:'genome',chord:'pad',   lead:false,harm:2,meter:16},
+  SWAY:    {e:0.5, bars:[8,12], drums:'sway', bass:'genome',chord:'pad',   lead:false,harm:2,meter:12},
+};
+const SECT_NEXT={
+  OVERTURE:[['PULSE',5],['SWAY',1.5]],
+  PULSE:[['ACID',4],['ANTHEM',3],['STRUT',2]],
+  ACID:[['ANTHEM',4],['STORM',2.5],['BREAK',2]],
+  ANTHEM:[['BREAK',3],['STORM',3],['COOL',2.5],['STRUT',2]],
+  STRUT:[['ACID',3],['ANTHEM',3],['SWAY',2]],
+  BREAK:[['STORM',3.5],['PULSE',3],['ACID',2]],
+  STORM:[['COOL',4],['BREAK',3]],
+  COOL:[['PULSE',3],['SWAY',2.5],['ACID',2]],
+  SWAY:[['PULSE',3],['BREAK',2],['STRUT',2]],
+};
+const SECT_SCENE={OVERTURE:[0,0],PULSE:[0,2],ACID:[1,1],ANTHEM:[2,3],STRUT:[3,2],BREAK:[4,0],STORM:[1,1],COOL:[3,4],SWAY:[4,2]};
+
+const Composer={
+  chordBars:2,chordBarCtr:0,padVoicing:null,chordStepsPat:null,
+  hook:null,fillArmed:false,forceKeyNow:false,phraseBars:8,
+  prog:[0,5,6,4],progPos:0,passN:0,sectionsSinceMod:0,
+
+  boot(){
+    GA.boot();Harmony.boot();
+    State.key={pc:RI(0,11),mode:wpick(MODE_W)};
+    State.hueTarget=pcHue(State.key.pc);State.hue=State.hueTarget;
+    setTempo(RI(94,122));
+    State.swing=R(0.04,0.14);
+    State.gen=0;
+    State.chordIdx=0;
+    State.chordNow=chordDef(State.key,0);
+    this.pickProg(true);
+  },
+  pickProg(first=false){
+    const bank=PROG_BANK[progFamily(State.key.mode)];
+    if(!first&&rng()<0.35){ /* keep the loop across the section — continuity */
+      Harmony.syncToProg(this.prog);
+      return;
+    }
+    this.prog=pick(bank).slice();
+    this.progPos=0;this.passN=0;
+    Harmony.syncToProg(this.prog);
+    log('LOOP',this.prog.map(i=>chordDef(State.key,i).roman).join(' – '));
+  },
+  begin(){this.enter('OVERTURE',true)},
+
+  enter(name,first=false){
+    const S=SECTIONS[name];
+    const prevMeter=State.stepsPerBar;
+    State.section=name;
+    State.sectionBars=RI(S.bars[0],S.bars[1]);
+    State.barInSection=0;
+    State.energyTarget=clamp(S.e+State.energyBias+R(-0.05,0.05),0.08,1);
+    if(S.meter!==prevMeter){
+      const t=now();
+      State.timeline.s0=stepFloatAt(t);State.timeline.t0=t;
+      State.stepsPerBar=S.meter;
+    }
+    this.chordBars=S.harm;
+    this.chordBarCtr=0;
+    this.phraseBars=State.sectionBars>=16?8:4;
+    this.fillArmed=false;
+    this.chordStepsPat=S.chord==='stab'?pick([[2,6,10,14],[2,7,10],[4,12],[3,6,11,14]]):null;
+    if(S.lead)this.makeHook();
+    if(!first){
+      this.sectionsSinceMod=(this.sectionsSinceMod||0)+1;
+      if(this.sectionsSinceMod>=3&&rng()<0.35&&name!=='ANTHEM'&&name!=='STORM'){
+        this.modulate();this.sectionsSinceMod=0;
+      }
+      this.pickProg();
+      if(rng()<0.4){
+        const nb=clamp(State.bpm+RI(-3,3),90,126);
+        if(Math.abs(nb-State.bpm)>=2){setTempo(nb);log('TEMPO','drift → '+nb+' bpm')}
+      }
+      if(rng()<0.3)State.swing=clamp(State.swing+R(-0.04,0.04),0.02,0.2);
+      if(name==='ANTHEM'||name==='STORM')I.thunder(now()+0.05,name==='STORM'?1:0.6);
+    }
+    if(State.sceneAuto&&(first||rng()<0.72)){
+      GLR.setScene(rng()<0.78?pick(SECT_SCENE[name]):RI(0,4));
+    }
+    GLR.formTgt={OVERTURE:1,PULSE:2,ACID:3,ANTHEM:2,STRUT:3,BREAK:0,STORM:2,COOL:0,SWAY:3}[name];
+    log('SECTION',name+' · '+State.sectionBars+' bars');
+    HUD.dirty=true;
+  },
+
+  makeHook(){
+    /* one motif per section · rhythm + contour from small banks · it repeats,
+       transposes with every chord, varies in bar 3, resolves in bar 4 */
+    const rhythm=pick([[0,3,6,10],[0,2,4,8],[0,4,6,12],[0,3,8,11],[0,2,6,8,12],[0,4,8,10]]);
+    const contour=pick([[0,1,2,-1],[0,2,1,0],[0,-1,1,3],[0,3,2,1],[0,1,-1,-2],[0,2,4,2]]);
+    this.hook={rhythm,contour,anchor:2}; /* anchor: chord-tone index to hang from */
+  },
+  hookNotesForBar(barInPhrase){
+    /* returns [{step,deg,long}] · deg = scale steps from the chord anchor */
+    const h=this.hook;if(!h)return [];
+    const P=this.phraseBars>=8?4:2;
+    const b=barInPhrase%P;
+    if(b===P-1){ /* resolution bar: land on the chord, then breathe */
+      return [{step:0,deg:0,long:true},{step:6,deg:h.contour[1]>0?-1:1,long:false}];
+    }
+    if(b===1&&rng()<0.25)return []; /* a breath */
+    let c=h.contour;
+    if(b===P-2)c=c.map(x=>-x); /* variation: inversion */
+    return h.rhythm.map((st,i)=>({step:st,deg:c[i%c.length]+(b===P-2?1:0),long:i===h.rhythm.length-1}));
+  },
+
+  modulate(){
+    const k=State.key;
+    const kind=wpick([['P4',3],['REL',3],['MODE',2]]);
+    let np=k.pc,nm=k.mode,how='';
+    if(kind==='P5'){np=(k.pc+7)%12;how='up a fifth'}
+    else if(kind==='P4'){np=(k.pc+5)%12;how='down a fifth'}
+    else if(kind==='LIFT'){np=(k.pc+2)%12;how='gear shift up'}
+    else if(kind==='REL'){
+      if(k.mode==='AEOLIAN'||k.mode==='PHRYGIAN'){np=(k.pc+3)%12;nm='IONIAN';how='relative major'}
+      else{np=(k.pc+9)%12;nm='AEOLIAN';how='relative minor'}
+    }
+    else if(kind==='MODE'){nm=pick(MODE_NAMES.filter(m=>m!==k.mode));how='parallel shift'}
+    else{np=(k.pc+pick([3,4,8,9]))%12;how='chromatic mediant'}
+    State.key={pc:np,mode:nm};
+    this.pickProg(false);
+    State.hueTarget=pcHue(np);
+    State.chordNow=chordDef(State.key,State.chordIdx);
+    GLR.pulseAt('flash',now(),0.8);
+    GLR.glitch(0.4);
+    log('TRANSPOSE',keyName(State.key)+' · '+how);
+    HUD.dirty=true;
+  },
+
+  chordAdvance(t){
+    const S=SECTIONS[State.section];
+    const slot=this.progPos%this.prog.length;
+    let nxt=this.prog[slot];
+    /* phrase turn: every second pass, the last slot cadences home */
+    const lastSlot=slot===this.prog.length-1;
+    if(lastSlot&&this.passN%2===1&&nxt!==4&&nxt!==6){
+      nxt=State.tension>0.5?6:4; /* VII or v pulling back to i */
+    }
+    if(State.userVote!==null){
+      nxt=State.userVote;State.userVote=null;
+      this.prog[slot]=nxt; /* you just rewrote this bar of the loop — for good */
+      Harmony.syncToProg(this.prog);
+      log('STEER','loop is now '+this.prog.map(i=>chordDef(State.key,i).roman).join(' – '));
+    }
+    this.progPos++;
+    if(this.progPos%this.prog.length===0)this.passN++;
+    Harmony.reinforce(State.chordIdx,nxt,0.18);
+    State.chordIdx=nxt;
+    const def=chordDef(State.key,nxt);
+    State.chordNow=def;
+    State.chordPcsNow=def.pcs;
+    State.nextChordIdx=this.prog[this.progPos%this.prog.length];
+    this.padVoicing=voiceLead(this.padVoicing,def.pcs);
+    const barLen=State.spb*State.stepsPerBar*this.chordBars;
+    if(S.chord==='pad')I.chordStab(t,this.padVoicing,{mode:'pad',vel:0.7,dur:barLen*0.92,bright:0.35+State.energy*0.3});
+    else if(S.chord==='swell')I.chordStab(t,this.padVoicing,{mode:'swell',vel:0.75,dur:barLen*0.85,bright:0.4});
+    else if(S.chord==='anthem'){
+      I.chordStab(t,this.padVoicing,{mode:'stab',vel:0.95,dur:State.spb*5,bright:0.7});
+      I.chordStab(t+State.spb*6,this.padVoicing.map(m=>m),{mode:'stab',vel:0.6,dur:State.spb*3,bright:0.55});
+    }
+    State.tension=clamp((nxt===4||nxt===6?0.62:nxt===7||nxt===8?0.5:nxt===0?0.16:0.36)+R(-0.05,0.05),0,1);
+    emitVis(t,0.5,0.42,pcHue(def.rootPc),0.55);
+    Strip.push(pcHue(def.rootPc));
+    HUD.chordShow();
+  },
+
+  bassPool(){
+    const d=State.chordNow;
+    const r=38+((d.rootPc-2+12)%12);
+    const third=r+((d.pcs[1]-d.rootPc+12)%12);
+    const sev=r+((d.pcs[3]-d.rootPc+12)%12);
+    return [r,r+7,r+12,third,sev,r+5];
+  },
+
+  step(t,gStep){
+    const S=SECTIONS[State.section];
+    const n=State.stepsPerBar;
+    const stepInBar=gStep-State.barStartStep>=0?(gStep-State.barStartStep)%n:0;
+    const swung=(stepInBar%4===2)?t+State.swing*State.spb*2:t;
+    if(stepInBar===0)this.barTick(t,gStep);
+    const e=State.energy,D=S.drums;
+    const fillNow=this.fillArmed&&stepInBar>=n-8;
+
+    /* ---- drums ---- */
+    if(D&&!fillNow){
+      if(D==='four'||D==='tech'||D==='big'||D==='storm'){
+        if(stepInBar%4===0)I.kick(swung,1);
+        if(D==='storm'&&stepInBar===14&&rng()<0.5)I.kick(swung,0.6);
+        if(stepInBar===4||stepInBar===12){if(D==='big'||D==='storm')I.clap(swung,1);else I.snare(swung,0.9)}
+        if((stepInBar===7||stepInBar===10)&&rng()<0.2*e)I.snare(swung,0.4,true);
+        const hatP=D==='tech'||D==='storm'?0.5+0.5*e:(stepInBar%2===0?0.75:0.3*e);
+        if(rng()<hatP)I.hat(swung,false,0.6+0.4*e);
+        if((stepInBar===2||stepInBar===10)&&(D==='big'||D==='storm')&&rng()<0.6)I.hat(swung,true,0.8);
+        if(D==='big'&&stepInBar%2===0)I.ride(swung,0.5);
+        if(D==='tech'&&stepInBar%4===2&&rng()<0.5)I.rim(swung,0.6);
+      } else if(D==='half'){
+        if(stepInBar===0)I.kick(swung,1);
+        if(stepInBar===10&&rng()<0.4)I.kick(swung,0.7);
+        if(stepInBar===8)I.snare(swung,1);
+        if(stepInBar%2===0&&rng()<0.5+0.3*e)I.hat(swung,false,0.55);
+        if(stepInBar===14&&rng()<0.4)I.hat(swung,true,0.7);
+      } else if(D==='perc'){
+        if(stepInBar%4===0&&rng()<0.5)I.rim(swung,0.5);
+        if(stepInBar%2===0&&rng()<0.3)I.hat(swung,false,0.35);
+      } else if(D==='sway'){
+        if(stepInBar===0)I.kick(swung,1);
+        if(stepInBar===6)I.snare(swung,0.85);
+        if(stepInBar%2===0&&rng()<0.6)I.hat(swung,false,0.5);
+        if(stepInBar===10&&rng()<0.3)I.rim(swung,0.5);
+      }
+    }
+    if(fillNow){
+      if(stepInBar%2===0||rng()<0.4*e)I.tom(swung,lerp(210,90,(stepInBar-(n-8))/8)*R(0.95,1.05),0.7);
+      if(stepInBar>=n-4&&rng()<0.5)I.snare(swung,0.5,true);
+    }
+
+    /* ---- bass ---- */
+    if(S.bass==='drone'){
+      if(stepInBar===0&&this.chordBarCtr===1){
+        const pool=this.bassPool();
+        I.bass(t,pool[0]-12<26?pool[0]:pool[0]-12,{dur:State.spb*n*this.chordBars*0.9,vel:0.75});
+      }
+    } else {
+      const g=GA.activeG().steps[stepInBar%16];
+      const squelch=S.bass==='squelch';
+      let fire=g.g===1;
+      if(squelch&&!fire&&stepInBar%2===0&&rng()<0.3*e)fire=true;
+      if(fire){
+        const pool=this.bassPool();
+        let midi=pool[clamp(g.d,0,POOL_N-1)]+g.o*12;
+        midi=clamp(midi,26,56);
+        const acc=g.a===1||(squelch&&rng()<0.18*e);
+        const nxtG=GA.activeG().steps[(stepInBar+1)%16];
+        const dur=State.spb*(nxtG.g&&nxtG.s?2.1:g.s?1.9:1.45);
+        I.bass(swung,midi,{acc,slide:g.s===1&&stepInBar>0,dur,vel:0.8+0.2*e});
+      }
+    }
+
+    /* ---- chord stabs pattern ---- */
+    if(this.chordStepsPat&&this.chordStepsPat.includes(stepInBar)&&rng()<0.85){
+      I.chordStab(swung,this.padVoicing,{mode:'stab',vel:0.55+0.3*e,dur:State.spb*2.2,bright:0.5+0.25*e});
+    }
+
+    /* ---- lead hook: the motif, planned per bar ---- */
+    if(S.lead&&this.hook){
+      if(stepInBar===0){
+        this._barLead=this.hookNotesForBar((State.barInSection-1+this.phraseBars)%this.phraseBars);
+        this._leadPrev=this._leadPrev||67;
+      }
+      const ev=(this._barLead||[]).find(x=>x.step===stepInBar%16);
+      if(ev){
+        const d=State.chordNow;
+        const scale=MODES[State.key.mode].map(iv=>(State.key.pc+iv)%12);
+        /* anchor = the chord's 3rd (or 5th), voiced near the last note */
+        const anchorPc=d.pcs[this.hook.anchor%d.pcs.length];
+        let a=this._leadPrev+((anchorPc-this._leadPrev%12+18)%12)-6;
+        a=clamp(a,60,79);
+        /* walk deg scale-steps from the anchor */
+        let m=a,steps=ev.deg;
+        const dir=Math.sign(steps)||1;
+        for(let k=0;k<Math.abs(steps);k++){
+          let mm=m+dir;
+          while(!scale.includes(((mm%12)+12)%12))mm+=dir;
+          m=mm;
+        }
+        if(ev.deg===0)m=a; /* dead-on the chord tone */
+        m=clamp(m,58,82);
+        const nextEv=(this._barLead||[]).find(x=>x.step>stepInBar%16);
+        const gap=nextEv?nextEv.step-stepInBar%16:(ev.long?6:3);
+        I.lead(swung,m,State.spb*clamp(gap*0.92,1.2,6),0.66+0.22*e);
+        this._leadPrev=m;
+        Strip.push(pcHue(m%12));
+      }
+    }
+  },
+
+  barTick(t,gStep){
+    State.bar++;State.barInSection++;
+    State.barStartStep=gStep;
+    GA.decay();
+    if(this.forceKeyNow){this.forceKeyNow=false;this.modulate();}
+    if(this.chordBarCtr===0)this.chordAdvance(t);
+    this.chordBarCtr=(this.chordBarCtr+1)%this.chordBars;
+    if(State.bar%8===0)GA.switchActive();
+    if(State.bar%16===0)GA.generation(false);
+    const S=SECTIONS[State.section];
+    this.fillArmed=!!S.drums&&S.drums!=='perc'
+      &&(State.barInSection%this.phraseBars===0||State.barInSection===State.sectionBars)
+      &&rng()<0.5;
+    if(State.barInSection>State.sectionBars){
+      this.enter(wpick(SECT_NEXT[State.section]));
+    }
+    HUD.dirty=true;
+  },
+};
+
+/* ---------------- lookahead scheduler ---------------- */
+const Sched={
+  timer:null,nextT:0,
+  start(){
+    State.gStep=0;State.bar=0;State.barStartStep=0;
+    this.nextT=actx.currentTime+0.12;
+    State.timeline={t0:this.nextT,s0:0};
+    this.timer=setInterval(()=>this.tick(),25);
+  },
+  tick(){
+    if(!State.running)return;
+    const ahead=document.hidden?0.6:0.16;
+    while(this.nextT<actx.currentTime+ahead){
+      Composer.step(this.nextT,State.gStep);
+      State.gStep++;
+      this.nextT+=State.spb;
+      State.energy+=(clamp(State.energyTarget+State.energyBias,0.05,1)-State.energy)*0.02;
+    }
+  },
+  stop(){clearInterval(this.timer);this.timer=null},
+};
+
+/* ================================================================
+   LIGHT — one stone, raymarched, in the rain
+   ================================================================ */
+const VERT=`#version 300 es
+out vec2 vUv;
+void main(){
+  vec2 p=vec2(float((gl_VertexID<<1)&2),float(gl_VertexID&2));
+  vUv=p;gl_Position=vec4(p*2.0-1.0,0.0,1.0);
+}`;
+
+const SCENE_FRAG=`#version 300 es
+precision highp float;
+out vec4 outColor;
+in vec2 vUv;
+uniform vec2 uRes;
+uniform sampler2D uPrev;
+uniform float uTime,uBass,uMid,uHigh,uOnset,uBeat,uBarPhase,uEnergy,uHue,uTension;
+uniform float uScene,uSpin,uTwist,uDispl,uKick,uAcc,uFlash,uWind,uRainD,uRainS,uWet,uHold,uRoll,uFloor,uSeed,uRM;
+uniform vec4 uFormW;
+uniform vec3 uPointer,uCam,uTgt;
+uniform vec4 uEvtA[12];
+uniform float uEvtT[12];
+
+float hash21(vec2 p){p=fract(p*vec2(123.34,456.21));p+=dot(p,p+45.32);return fract(p.x*p.y);}
+float n2(vec2 p){
+  vec2 i=floor(p),f=fract(p);f=f*f*(3.0-2.0*f);
+  float a=hash21(i),b=hash21(i+vec2(1.0,0.0)),c=hash21(i+vec2(0.0,1.0)),d=hash21(i+vec2(1.0,1.0));
+  return mix(mix(a,b,f.x),mix(c,d,f.x),f.y);
+}
+float fbm(vec2 p){
+  float v=0.0,a=0.5;
+  for(int i=0;i<3;i++){v+=a*n2(p);p=p*2.07+vec2(3.1,7.7);a*=0.5;}
+  return v;
+}
+vec2 rot2(vec2 p,float a){float c=cos(a),s=sin(a);return vec2(c*p.x-s*p.y,s*p.x+c*p.y);}
+vec3 neon(float h){
+  vec3 c=0.5+0.5*cos(6.2831853*(h+vec3(0.0,0.333,0.667)));
+  return pow(c,vec3(1.7))*1.35;
+}
+
+/* ---------- the stone ---------- */
+float sdBox(vec3 p,vec3 b){vec3 q=abs(p)-b;return length(max(q,0.0))+min(max(q.x,max(q.y,q.z)),0.0);}
+float mapMono(vec3 p){
+  p.y-=1.05;
+  p.xz=rot2(p.xz,uSpin);
+  p.xz=rot2(p.xz,(uTwist+0.12*sin(uBarPhase*6.2831853))*p.y);
+  float k=1.0+uKick*0.13;
+  p/=k;
+  float dS=length(p)-0.82;
+  float dB=sdBox(p,vec3(0.40,1.02,0.40))-0.05;
+  float dO=(abs(p.x)+abs(p.y)+abs(p.z)-1.14)*0.5774;
+  vec2 tq=vec2(length(p.xz)-0.66,p.y);
+  float dT=length(tq)-0.27;
+  float d=dS*uFormW.x+dB*uFormW.y+dO*uFormW.z+dT*uFormW.w;
+  d+=(fbm(vec2(atan(p.z,p.x)*1.6,p.y*2.4-uTime*0.13))-0.5)*uDispl;
+  d+=sin(p.y*4.0+uTime*1.3)*uBass*0.022;
+  return d*k*0.8;
+}
+float map(vec3 p,out float mat){
+  float dm=mapMono(p);
+  float d=dm;mat=1.0;
+  if(uFloor>0.5){
+    float df=p.y;
+    if(df<d){d=df;mat=0.0;}
+  }
+  if(uScene>1.5&&uScene<2.5){
+    vec3 q=p;
+    vec2 cell=floor((q.xz+2.2)/4.4);
+    q.xz=mod(q.xz+2.2,4.4)-2.2;
+    if(abs(cell.x)+abs(cell.y)>0.5){
+      float dc=sdBox(q-vec3(0.0,2.0,0.0),vec3(0.22,2.0,0.22))-0.03;
+      if(dc<d){d=dc;mat=2.0;}
+    }
+  }
+  return d;
+}
+vec3 calcN(vec3 p){
+  float m;
+  vec2 e=vec2(0.0016,-0.0016);
+  return normalize(e.xyy*map(p+e.xyy,m)+e.yyx*map(p+e.yyx,m)+e.yxy*map(p+e.yxy,m)+e.xxx*map(p+e.xxx,m));
+}
+float marchMono(vec3 ro,vec3 rd){
+  float t=0.02;
+  for(int i=0;i<44;i++){
+    float d=mapMono(ro+rd*t);
+    if(d<0.004*t+0.002)return t;
+    t+=d*0.95;
+    if(t>18.0)break;
+  }
+  return -1.0;
+}
+
+/* ---------- sky, beams, stars ---------- */
+vec3 sky(vec3 rd){
+  vec3 cA=neon(uHue),cB=neon(uHue+0.5);
+  float y=rd.y;
+  vec3 c=mix(vec3(0.010,0.011,0.016),vec3(0.002,0.002,0.004),clamp(y*1.4+0.4,0.0,1.0));
+  c+=cB*exp(-abs(y)*5.5)*(0.10+0.22*uEnergy);
+  c+=cA*exp(-abs(y-0.02)*22.0)*0.05;
+  float st=hash21(floor(rd.xz/max(0.05,abs(y))*3.0)+floor(uSeed));
+  c+=vec3(step(0.997,st))*smoothstep(0.1,0.5,y)*0.35*(0.5+0.5*sin(uTime*2.0+st*40.0));
+  c+=cB*fbm(rd.xz/max(0.12,abs(y+0.25))*0.7+uTime*0.015)*0.05*smoothstep(0.0,0.4,y);
+  /* strike beams: chords become light in the sky */
+  float az=atan(rd.z,rd.x)/6.2831853+0.5;
+  for(int i=0;i<12;i++){
+    vec4 e=uEvtA[i];float age=uTime-uEvtT[i];
+    if(e.w<0.55||age<0.0||age>2.2)continue;
+    float d=abs(fract(az-e.x+0.5)-0.5);
+    c+=neon(e.z)*exp(-d*110.0)*exp(-age*2.0)*e.w*1.7*smoothstep(-0.05,0.25,y);
+  }
+  c+=vec3(0.9,0.93,1.0)*uFlash*(0.35+0.3*fbm(rd.xy*3.0+uTime*7.0));
+  return c;
+}
+
+/* ---------- surfaces ---------- */
+vec3 shadeMono(vec3 p,vec3 n,vec3 rd){
+  vec3 cA=neon(uHue),cB=neon(uHue+0.5);
+  float F=pow(1.0-max(dot(n,-rd),0.0),3.0);
+  vec3 refl=sky(reflect(rd,n));
+  vec3 col=mix(vec3(0.012),cA*0.16,0.5+0.5*n.y);
+  col+=refl*(0.22+0.78*F)*(0.7+0.5*uMid);
+  col+=cA*F*(0.9+uOnset*0.8+uAcc*0.7);
+  col+=cA*uHold*(0.35+0.85*F);
+  float crack=smoothstep(0.62,0.72,fbm(p.xy*5.0+p.z*3.0));
+  col+=cB*crack*uTension*0.8;
+  if(uScene>3.5){
+    float bands=smoothstep(0.42,0.5,abs(fract(p.y*16.0-uTime*2.2)-0.5));
+    col=cA*(1.0-bands)*(0.5+F)+cB*F*0.9+cB*crack*0.5;
+  }
+  return col;
+}
+vec3 shadeFloor(vec3 p,vec3 rd){
+  vec3 cA=neon(uHue),cB=neon(uHue+0.5);
+  vec3 col=vec3(0.006,0.007,0.010)+cB*0.015;
+  float g=max(
+    smoothstep(0.44,0.5,abs(fract(p.x*0.8)-0.5)),
+    smoothstep(0.44,0.5,abs(fract(p.z*0.8)-0.5)));
+  col+=cB*g*0.05*exp(-length(p.xz)*0.14);
+  col+=cA*exp(-length(p.xz)*0.9)*uBass*0.35;
+  float br=uBeat*3.4;
+  col+=cA*exp(-abs(length(p.xz)-br)*6.0)*exp(-uBeat*3.2)*0.35;
+  for(int i=0;i<12;i++){
+    vec4 e=uEvtA[i];float age=uTime-uEvtT[i];
+    if(e.w<0.02||age<0.0||age>2.4)continue;
+    vec2 rp=vec2(cos(e.x*6.2831853),sin(e.x*6.2831853))*(1.1+e.y*2.4);
+    float dd=length(p.xz-rp);
+    col+=neon(e.z)*exp(-abs(dd-age*2.4)*9.0)*exp(-age*2.6)*e.w*1.3;
+  }
+  float tm=marchMono(vec3(p.x,0.001,p.z),reflect(rd,vec3(0.0,1.0,0.0)));
+  if(tm>0.0){
+    vec3 hp=vec3(p.x,0.001,p.z)+reflect(rd,vec3(0.0,1.0,0.0))*tm;
+    vec3 hn=calcN(hp);
+    float F=pow(1.0-max(dot(hn,vec3(0.0,-1.0,0.0)),0.0),2.0);
+    vec3 rc=cA*(0.12+0.5*F)+sky(reflect(reflect(rd,vec3(0.0,1.0,0.0)),hn))*0.3;
+    if(uScene>3.5)rc=cA*(1.0-smoothstep(0.42,0.5,abs(fract(hp.y*16.0-uTime*2.2)-0.5)))*0.8;
+    float Ff=pow(1.0-clamp(-rd.y,0.0,1.0),3.0);
+    col+=rc*mix(0.10,0.75,Ff)*uWet;
+  }
+  return col;
+}
+
+/* ---------- rain ---------- */
+float rainLayer(vec2 uv,float sc,float sp,float wmul,float glyph){
+  vec2 ruv=uv*vec2(sc,sc*0.5);
+  ruv.x+=uv.y*uWind*0.9;
+  ruv.y+=uTime*sp*uRainS*(1.0-uRM*0.5);
+  vec2 id=floor(ruv),f=fract(ruv);
+  float h=hash21(id);
+  if(h>uRainD)return 0.0;
+  float xo=0.15+0.7*hash21(id+7.7);
+  if(glyph>0.5){
+    float blink=step(0.6,hash21(id+floor(uTime*sp*2.0)));
+    float box=step(abs(f.x-0.5),0.28)*step(abs(f.y-0.5),0.34);
+    return box*blink*0.8;
+  }
+  float s=smoothstep(0.05*wmul,0.0,abs(f.x-xo));
+  return s*(0.3+0.7*hash21(id+3.3));
+}
+
+void main(){
+  vec2 uv=vUv;
+  vec2 asp=vec2(uRes.x/uRes.y,1.0);
+  vec2 sp=(uv-0.5)*asp*2.0;
+  sp=rot2(sp,uRoll);
+  vec3 fw=normalize(uTgt-uCam);
+  vec3 rt=normalize(cross(fw,vec3(0.0,1.0,0.0)));
+  vec3 up=cross(rt,fw);
+  vec3 rd=normalize(fw*1.5+rt*sp.x+up*sp.y);
+  vec3 ro=uCam;
+
+  float t=0.02,mat=-1.0;bool hit=false;
+  for(int i=0;i<80;i++){
+    float m;
+    float d=map(ro+rd*t,m);
+    if(d<0.0016*t+0.001){hit=true;mat=m;break;}
+    t+=d*0.9;
+    if(t>26.0)break;
+  }
+  vec3 col;
+  vec3 cA=neon(uHue),cB=neon(uHue+0.5);
+  if(!hit){
+    col=sky(rd);t=26.0;
+  } else {
+    vec3 p=ro+rd*t;
+    if(mat<0.5)col=shadeFloor(p,rd);
+    else if(mat<1.5){
+      vec3 n=calcN(p);
+      float ao=clamp(mapMono(p+n*0.22)/0.22,0.0,1.0)*0.5+0.5;
+      col=shadeMono(p,n,rd)*ao;
+    } else {
+      vec3 n=calcN(p);
+      float F=pow(1.0-max(dot(n,-rd),0.0),3.0);
+      col=vec3(0.01)+cB*0.05*(0.5+0.5*n.y)+sky(reflect(rd,n))*(0.15+0.6*F);
+    }
+  }
+  /* fog */
+  col=mix(col,cB*0.028+cA*0.012,1.0-exp(-t*0.05*(0.7+0.5*uEnergy)));
+  /* rain: two layers behind the stone, one in front */
+  float gly=uScene>3.5?1.0:0.0;
+  float rB=0.0;
+  if(t>9.0)rB+=rainLayer(uv,26.0,1.1,1.0,gly)*0.35;
+  if(t>4.5)rB+=rainLayer(uv+13.7,40.0,1.7,1.0,gly)*0.5;
+  float rF=rainLayer(uv+31.1,14.0,2.6,1.7,gly);
+  rF*=1.0+0.5*exp(-abs(uv.x-uPointer.x)*7.0)*uPointer.z;
+  vec3 rainC=mix(cB,cA,step(0.86,hash21(floor(uv*40.0))))*(0.55+0.8*uHigh+uFlash);
+  col+=rainC*(rB+rF*0.8);
+  /* charge glow at the hand */
+  col+=cA*exp(-length((uv-uPointer.xy)*asp)*3.2)*uHold*0.3;
+  /* rain memory: yesterday's frame, washed downward */
+  col+=texture(uPrev,uv+vec2(0.0,1.6/uRes.y)).rgb*0.07*(1.0-uRM);
+  col*=1.0+uOnset*0.1;
+  outColor=vec4(max(col,0.0),1.0);
+}`;
+
+const POST_FRAG=`#version 300 es
+precision highp float;
+out vec4 outColor;
+in vec2 vUv;
+uniform sampler2D uFrame;
+uniform vec2 uRes;
+uniform float uTime,uCA,uGrain,uGlitch,uVig,uFlash,uScan;
+float hh(vec2 p){p=fract(p*vec2(443.897,397.297));p+=dot(p,p.yx+19.19);return fract(p.x*p.y);}
+void main(){
+  vec2 uv=vUv;
+  if(uGlitch>0.003){
+    float row=floor(uv.y*110.0);
+    float h=hh(vec2(row,floor(uTime*24.0)));
+    if(h<uGlitch*0.4)uv.x+=(hh(vec2(row,1.7))-0.5)*0.12*uGlitch;
+  }
+  vec2 d=(uv-0.5)*uCA;
+  vec3 col;
+  col.r=texture(uFrame,uv+d).r;
+  col.g=texture(uFrame,uv).g;
+  col.b=texture(uFrame,uv-d).b;
+  /* cheap glow: cross-sampled brights */
+  vec2 px=2.5/uRes;
+  vec3 gl=texture(uFrame,uv+vec2(px.x,0.0)).rgb+texture(uFrame,uv-vec2(px.x,0.0)).rgb
+        +texture(uFrame,uv+vec2(0.0,px.y)).rgb+texture(uFrame,uv-vec2(0.0,px.y)).rgb;
+  col+=max(gl*0.25-0.32,0.0)*0.55;
+  col+=uFlash*vec3(0.10,0.11,0.13);
+  col=1.0-exp(-col*1.35);
+  col*=1.0-uScan*0.25*sin(uv.y*uRes.y*3.14159);
+  col+=(hh(uv*uRes.xy+fract(uTime)*7.0)-0.5)*uGrain;
+  float vg=smoothstep(1.6,0.35,length(uv-0.5)*1.7);
+  col*=mix(1.0,0.28+0.72*vg,uVig);
+  outColor=vec4(col,1.0);
+}`;
+
+const GLR={
+  gl:null,ok:false,fallback:false,c2d:null,
+  pScene:null,pPost:null,uS:{},uP:{},
+  texA:null,texB:null,readIsA:true,W:0,H:0,scale:0.85,dprCap:1.5,floatOk:false,
+  evtA:new Float32Array(48),evtT:new Float32Array(12),evtHead:0,
+  pulseQ:[],P:{kick:0,flash:0,acc:0,snap:0},
+  spin:0,twist:0,formW:new Float32Array([0,1,0,0]),formTgt:1,
+  wind:0,glitchAmt:0,
+  RM:matchMedia('(prefers-reduced-motion: reduce)').matches?1:0,
+  SCN:[
+    {name:'MONOLITH', r:3.4,h:1.55,az:0.07,roll:0,floor:1,scan:0.12},
+    {name:'STORMCELL',r:2.5,h:1.05,az:0.10,roll:0,floor:1,scan:0.16},
+    {name:'HALL',     r:4.6,h:1.35,az:0.05,roll:0,floor:1,scan:0.12},
+    {name:'ORBIT',    r:2.3,h:1.6, az:0.55,roll:1,floor:0,scan:0.10},
+    {name:'RELIC',    r:3.7,h:2.2, az:0.11,roll:0,floor:1,scan:0.5},
+  ],
+  init(canvas){
+    const gl=canvas.getContext('webgl2',{antialias:false,alpha:false,depth:false,preserveDrawingBuffer:false});
+    if(!gl){this.fallback=true;this.c2d=canvas.getContext('2d');log('LIGHT','webgl2 unavailable · 2d fallback');return}
+    this.gl=gl;
+    this.floatOk=!!gl.getExtension('EXT_color_buffer_float');
+    this.pScene=this.program(VERT,SCENE_FRAG);
+    this.pPost=this.program(VERT,POST_FRAG);
+    if(!this.pScene||!this.pPost){this.fallback=true;this.c2d=null;return}
+    const grab=(p,names,store)=>{gl.useProgram(p);for(const n of names)store[n]=gl.getUniformLocation(p,n)};
+    grab(this.pScene,['uRes','uPrev','uTime','uBass','uMid','uHigh','uOnset','uBeat','uBarPhase','uEnergy','uHue','uTension','uScene','uSpin','uTwist','uDispl','uKick','uAcc','uFlash','uWind','uRainD','uRainS','uWet','uHold','uRoll','uFloor','uSeed','uRM','uFormW','uPointer','uCam','uTgt','uEvtA','uEvtT'],this.uS);
+    grab(this.pPost,['uFrame','uRes','uTime','uCA','uGrain','uGlitch','uVig','uFlash','uScan'],this.uP);
+    canvas.addEventListener('webglcontextlost',e=>{e.preventDefault();this.ok=false;log('LIGHT','context lost')});
+    canvas.addEventListener('webglcontextrestored',()=>{this.init(canvas);this.resize();log('LIGHT','context restored')});
+    this.ok=true;
+    this.resize();
+  },
+  program(vs,fs){
+    const gl=this.gl;
+    const mk=(t,s)=>{const sh=gl.createShader(t);gl.shaderSource(sh,s);gl.compileShader(sh);
+      if(!gl.getShaderParameter(sh,gl.COMPILE_STATUS)){console.error('shader:',gl.getShaderInfoLog(sh));return null}
+      return sh};
+    const v=mk(gl.VERTEX_SHADER,vs),f=mk(gl.FRAGMENT_SHADER,fs);
+    if(!v||!f)return null;
+    const p=gl.createProgram();
+    gl.attachShader(p,v);gl.attachShader(p,f);gl.linkProgram(p);
+    if(!gl.getProgramParameter(p,gl.LINK_STATUS)){console.error('link:',gl.getProgramInfoLog(p));return null}
+    return p;
+  },
+  target(w,h){
+    const gl=this.gl;
+    const tex=gl.createTexture();
+    gl.bindTexture(gl.TEXTURE_2D,tex);
+    if(this.floatOk)gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA16F,w,h,0,gl.RGBA,gl.HALF_FLOAT,null);
+    else gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA8,w,h,0,gl.RGBA,gl.UNSIGNED_BYTE,null);
+    gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);
+    const fb=gl.createFramebuffer();
+    gl.bindFramebuffer(gl.FRAMEBUFFER,fb);
+    gl.framebufferTexture2D(gl.FRAMEBUFFER,gl.COLOR_ATTACHMENT0,gl.TEXTURE_2D,tex,0);
+    gl.clearColor(0,0,0,1);gl.clear(gl.COLOR_BUFFER_BIT);
+    gl.bindFramebuffer(gl.FRAMEBUFFER,null);
+    return {tex,fb};
+  },
+  resize(){
+    const c=$('gl');
+    const dpr=Math.min(this.dprCap,window.devicePixelRatio||1);
+    c.width=Math.floor(innerWidth*dpr);
+    c.height=Math.floor(innerHeight*dpr);
+    if(this.fallback||!this.ok)return;
+    const gl=this.gl;
+    this.W=Math.max(2,Math.floor(c.width*this.scale));
+    this.H=Math.max(2,Math.floor(c.height*this.scale));
+    if(this.texA){gl.deleteTexture(this.texA.tex);gl.deleteFramebuffer(this.texA.fb);
+                  gl.deleteTexture(this.texB.tex);gl.deleteFramebuffer(this.texB.fb)}
+    this.texA=this.target(this.W,this.H);
+    this.texB=this.target(this.W,this.H);
+    this.readIsA=true;
+  },
+  setScene(i,manual=false){
+    i=clamp(i|0,0,4);
+    if(i===State.sceneIdx&&!manual)return;
+    State.sceneIdx=i;
+    this.glitch(0.35);
+    log('SCENE','→ '+this.SCN[i].name+(manual?' · forced':''));
+    HUD.dirty=true;
+  },
+  glitch(a){if(!this.RM)this.glitchAmt=Math.max(this.glitchAmt,a)},
+  pushEvent(e){
+    const i=this.evtHead;this.evtHead=(this.evtHead+1)%12;
+    this.evtA[i*4]=e.x;this.evtA[i*4+1]=e.y;
+    this.evtA[i*4+2]=e.hue;this.evtA[i*4+3]=e.mag;
+    this.evtT[i]=e.t;
+  },
+  pulseAt(kind,t,v){this.pulseQ.push({t,kind,v});this.pulseQ.sort((a,b)=>a.t-b.t)},
+  render(t,A,ptr,hold,beat,barPhase,dt){
+    while(VisQ.length&&VisQ[0].t<=t+0.02)this.pushEvent(VisQ.shift());
+    while(this.pulseQ.length&&this.pulseQ[0].t<=t+0.015){
+      const p=this.pulseQ.shift();
+      this.P[p.kind]=Math.max(this.P[p.kind],p.v);
+    }
+    this.P.kick*=Math.pow(0.86,dt*0.06);this.P.flash*=Math.pow(0.88,dt*0.06);
+    this.P.acc*=Math.pow(0.8,dt*0.06);this.P.snap*=Math.pow(0.8,dt*0.06);
+    this.glitchAmt*=0.9;
+    /* stone dynamics */
+    const S=this.SCN[State.sceneIdx];
+    this.spin+=dt*0.001*(0.22+State.energy*1.1+hold*1.8)*(1-this.RM*0.5);
+    this.twist+=((State.tension*0.9-0.2)-this.twist)*0.03;
+    for(let i=0;i<4;i++)this.formW[i]+=((i===this.formTgt?1:0)-this.formW[i])*0.022;
+    this.wind+=((ptr.x-0.5)*1.6+Math.sin(t*0.13)*0.4-this.wind)*0.04;
+    if(this.fallback)return this.render2d(t,A);
+    if(!this.ok)return;
+    const gl=this.gl,read=this.readIsA?this.texA:this.texB,write=this.readIsA?this.texB:this.texA;
+    const az=t*S.az+Math.PI*0.15+(State.sceneIdx===1?A.onset*0.06*Math.sin(t*40):0);
+    const camH=S.h+(State.sceneIdx===3?Math.sin(t*0.4)*0.7:0);
+    const cx=Math.cos(az)*S.r,cz=Math.sin(az)*S.r;
+    const roll=S.roll?Math.sin(t*0.23)*0.3:0;
+    const rainD=clamp(0.3+State.energy*0.5+A.high*0.35+hold*0.5,0.05,0.97);
+    const rainS=0.7+State.energy*0.9+hold*1.6;
+
+    gl.bindFramebuffer(gl.FRAMEBUFFER,write.fb);
+    gl.viewport(0,0,this.W,this.H);
+    gl.useProgram(this.pScene);
+    const u=this.uS;
+    gl.activeTexture(gl.TEXTURE0);
+    gl.bindTexture(gl.TEXTURE_2D,read.tex);
+    gl.uniform1i(u.uPrev,0);
+    gl.uniform2f(u.uRes,this.W,this.H);
+    gl.uniform1f(u.uTime,t);
+    gl.uniform1f(u.uBass,A.bass);gl.uniform1f(u.uMid,A.mid);
+    gl.uniform1f(u.uHigh,A.high);gl.uniform1f(u.uOnset,A.onset);
+    gl.uniform1f(u.uBeat,beat);gl.uniform1f(u.uBarPhase,barPhase);
+    gl.uniform1f(u.uEnergy,State.energy);
+    gl.uniform1f(u.uHue,State.hue);
+    gl.uniform1f(u.uTension,State.tension);
+    gl.uniform1f(u.uScene,State.sceneIdx);
+    gl.uniform1f(u.uSpin,this.spin);
+    gl.uniform1f(u.uTwist,this.twist);
+    gl.uniform1f(u.uDispl,0.045+A.mid*0.2+State.tension*0.1);
+    gl.uniform1f(u.uKick,this.P.kick);
+    gl.uniform1f(u.uAcc,this.P.acc);
+    gl.uniform1f(u.uFlash,this.P.flash);
+    gl.uniform1f(u.uWind,this.wind);
+    gl.uniform1f(u.uRainD,rainD);
+    gl.uniform1f(u.uRainS,rainS);
+    gl.uniform1f(u.uWet,0.85);
+    gl.uniform1f(u.uHold,hold);
+    gl.uniform1f(u.uRoll,roll);
+    gl.uniform1f(u.uFloor,S.floor);
+    gl.uniform1f(u.uSeed,(SEED%1000)+0.5);
+    gl.uniform1f(u.uRM,this.RM);
+    gl.uniform4fv(u.uFormW,this.formW);
+    gl.uniform3f(u.uPointer,ptr.x,1-ptr.y,ptr.down?1:0);
+    gl.uniform3f(u.uCam,cx,camH,cz);
+    gl.uniform3f(u.uTgt,0,1.02,0);
+    gl.uniform4fv(u.uEvtA,this.evtA);
+    gl.uniform1fv(u.uEvtT,this.evtT);
+    gl.drawArrays(gl.TRIANGLES,0,3);
+
+    this.readIsA=!this.readIsA;
+    const show=this.readIsA?this.texA:this.texB;
+    const c=$('gl');
+    gl.bindFramebuffer(gl.FRAMEBUFFER,null);
+    gl.viewport(0,0,c.width,c.height);
+    gl.useProgram(this.pPost);
+    const q=this.uP;
+    gl.activeTexture(gl.TEXTURE0);
+    gl.bindTexture(gl.TEXTURE_2D,show.tex);
+    gl.uniform1i(q.uFrame,0);
+    gl.uniform2f(q.uRes,c.width,c.height);
+    gl.uniform1f(q.uTime,t);
+    gl.uniform1f(q.uCA,0.0014+A.onset*0.003+this.glitchAmt*0.012);
+    gl.uniform1f(q.uGrain,0.04);
+    gl.uniform1f(q.uGlitch,this.glitchAmt);
+    gl.uniform1f(q.uVig,0.85);
+    gl.uniform1f(q.uFlash,this.P.flash);
+    gl.uniform1f(q.uScan,S.scan);
+    gl.drawArrays(gl.TRIANGLES,0,3);
+  },
+  render2d(t,A){
+    const c=$('gl');if(!this.c2d)this.c2d=c.getContext('2d');
+    const x=this.c2d,W=c.width,H=c.height;
+    x.fillStyle='rgba(4,5,8,0.3)';x.fillRect(0,0,W,H);
+    const hue=(State.hue*360)|0,hue2=(hue+180)%360;
+    for(let i=0;i<60;i++){
+      const rx=((i*97.3+t*260*(1+A.high))%W+W)%W;
+      const ry=((i*53.7+t*640)% (H+80))-40;
+      x.strokeStyle='hsl('+hue2+' 80% 65% / .5)';
+      x.beginPath();x.moveTo(rx,ry);x.lineTo(rx-6,ry+26);x.lineWidth=1.4;x.stroke();
+    }
+    const bw=40+A.bass*140,bh=H*0.4*(1+this.P.kick*0.15);
+    x.fillStyle='hsl('+hue+' 85% 60%)';
+    x.fillRect(W/2-bw/2,H/2-bh/2,bw,bh);
+    this.P.kick*=0.9;
+  },
+  adapt(dt){
+    this._ema=(this._ema||16)*0.95+dt*0.05;
+    this._n=(this._n||0)+1;
+    if(this._n%150!==0)return;
+    if(this._ema>27&&this.scale>0.45){this.scale=Math.max(0.45,this.scale-0.13);this.resize();log('PERF','render scale '+this.scale.toFixed(2))}
+    else if(this._ema<15&&this.scale<1){this.scale=Math.min(1,this.scale+0.08);this.resize()}
+  },
+};
+
+/* ================================================================
+   TOUCH — strikes, charges, and nine chords under your fingers
+   ================================================================ */
+const Ptr={x:0.5,y:0.5,down:false,downT:0,downX:0.5,downY:0.5};
+let hold=0,riserH=null,riserStarted=false,userVoicing=null,youTmr=null;
+
+function strike(x,y){
+  if(!State.running||!Audio.ready)return;
+  const t=actx.currentTime+0.02;
+  const def=State.chordNow;
+  let v=voiceLead(userVoicing,def.pcs,52,84);
+  const inv=Math.floor((1-y)*3);
+  v=v.map((m,i)=>i<inv?m+12:m).sort((a,b)=>a-b);
+  userVoicing=v;
+  I.chordStab(t,v,{mode:'stab',vel:0.7+0.25*(1-y),dur:0.45,bright:0.35+(1-y)*0.5});
+  GA.vote(0.6);
+  emitVis(t,x,y,pcHue(def.rootPc),0.7);
+  Strip.push(pcHue(def.rootPc));
+  log('STRIKE',def.name+' · +0.6 to genome #'+GA.activeG().id);
+  HUD.dirty=true;
+}
+function playChord(idx,ext9){
+  if(!State.running||!Audio.ready)return;
+  const t=actx.currentTime+0.015;
+  const def=chordDef(State.key,idx,ext9);
+  let v=voiceLead(userVoicing,def.pcs,54,86);
+  userVoicing=v;
+  I.chordStab(t,v,{mode:'stab',vel:0.85,dur:0.6,bright:0.6});
+  State.userVote=idx;
+  Harmony.reinforce(State.chordIdx,idx,0.25);
+  emitVis(t,0.1+0.8*(idx/8),0.35,pcHue(def.rootPc),0.75);
+  Strip.push(pcHue(def.rootPc));
+  const el=$('chordYou');
+  el.textContent='YOU · '+def.name+' → STEERING';
+  el.classList.add('on');
+  clearTimeout(youTmr);
+  youTmr=setTimeout(()=>el.classList.remove('on'),2400);
+}
+function chargeRelease(){
+  if(riserH){
+    const rt=actx.currentTime;
+    riserH.stop(rt,hold);
+    GA.vote(0.3);
+    Composer.fillArmed=true;
+    emitVis(rt,Ptr.x,Ptr.y,(State.hue+0.5)%1,0.6+hold*0.4);
+    log('CHARGE',(hold*100|0)+'% · released');
+  }
+  riserH=null;riserStarted=false;
+}
+function ptrPos(e){Ptr.x=clamp(e.clientX/innerWidth,0,1);Ptr.y=clamp(e.clientY/innerHeight,0,1);
+  if(Audio.ready)Audio.color(Ptr.y)}
+function uiTarget(e){return e.target.closest&&e.target.closest('.pbtn,#info,#start')}
+
+addEventListener('pointerdown',e=>{
+  if(uiTarget(e))return;
+  ptrPos(e);Ptr.down=true;Ptr.downT=performance.now();
+  Ptr.downX=Ptr.x;Ptr.downY=Ptr.y;
+  Hint.wake();
+},{passive:true});
+addEventListener('pointermove',e=>{ptrPos(e)},{passive:true});
+addEventListener('pointerup',e=>{
+  if(!Ptr.down)return;
+  Ptr.down=false;
+  const dur=(performance.now()-Ptr.downT)/1000;
+  if(uiTarget(e))return;
+  if(dur<0.24&&!riserStarted)strike(Ptr.downX,Ptr.downY);
+  else chargeRelease();
+},{passive:true});
+addEventListener('pointercancel',()=>{Ptr.down=false;chargeRelease()},{passive:true});
+addEventListener('contextmenu',e=>{if(!uiTarget(e))e.preventDefault()});
+
+const KEYMAP={a:0,s:1,d:2,f:3,g:4,h:5,j:6,k:7,l:8};
+addEventListener('keydown',e=>{
+  const k=e.key.toLowerCase();
+  if(e.metaKey||e.ctrlKey||e.altKey)return;
+  if(k==='escape'){$('info').classList.remove('open');return}
+  if(k==='i'){$('info').classList.toggle('open');return}
+  if(!State.running)return;
+  Hint.wake();
+  if(k in KEYMAP&&!e.repeat){playChord(KEYMAP[k],e.shiftKey);return}
+  if(k==='v'){toggleHide();return}
+  if(k==='x'){queueTranspose();return}
+  if(k>='1'&&k<='5'){State.sceneAuto=false;GLR.setScene(+k-1,true);return}
+  if(k==='0'){State.sceneAuto=true;log('SCENE','auto engaged');HUD.dirty=true;return}
+  if(k===' '){e.preventDefault();GA.generation(true);return}
+  if(k==='m'){toggleMute();return}
+  if(k==='r'){rebirth();return}
+  if(k==='arrowup'){State.energyBias=clamp(State.energyBias+0.08,-0.3,0.3);log('BIAS','energy '+(State.energyBias>=0?'+':'')+State.energyBias.toFixed(2));return}
+  if(k==='arrowdown'){State.energyBias=clamp(State.energyBias-0.08,-0.3,0.3);log('BIAS','energy '+(State.energyBias>=0?'+':'')+State.energyBias.toFixed(2));return}
+  if(k==='arrowright'){State.sceneAuto=false;GLR.setScene((State.sceneIdx+1)%5,true);return}
+  if(k==='arrowleft'){State.sceneAuto=false;GLR.setScene((State.sceneIdx+4)%5,true);return}
+});
+function queueTranspose(){
+  if(!Composer.forceKeyNow){
+    Composer.forceKeyNow=true;
+    log('TRANSPOSE','queued · lands on the next bar');
+  }
+}
+
+/* ================================================================
+   HUD · chord monument · GA viz · genome roll · strip
+   ================================================================ */
+const HUD={dirty:true,last:0,
+  update(){
+    $('hKey').textContent=keyName(State.key);
+    $('hBpm').textContent=State.bpm;
+    $('hMeter').textContent=State.stepsPerBar===12?'6/8':'4/4';
+    $('hSwing').textContent=(State.swing*100|0)+'%';
+    $('hBar').textContent=String(State.bar).padStart(3,'0');
+    $('hSect').textContent=State.running?State.section:'DORMANT';
+    $('hScene').textContent=GLR.SCN[State.sceneIdx].name;
+    $('hSceneMode').textContent=State.sceneAuto?'AUTO':'HELD';
+    $('hSeed').textContent=hex8(SEED);
+    $('hGen').textContent=String(State.gen).padStart(2,'0');
+    GAviz.draw();
+  },
+  chordShow(){
+    const d=State.chordNow;if(!d)return;
+    const root=d.name.slice(0,d.name.length-d.q.length);
+    $('chordBig').innerHTML=root+'<span class="q">'+d.q+'</span>';
+    const nx=chordDef(State.key,State.nextChordIdx);
+    $('chordSub').textContent=d.roman+' · NEXT '+nx.roman+' (LEARNED)';
+    const cb=$('chordBig');
+    cb.classList.remove('hit');void cb.offsetWidth;cb.classList.add('hit');
+  },
+};
+const GAviz={
+  c:$('gaviz'),x:null,
+  draw(){
+    if(!this.x)this.x=this.c.getContext('2d');
+    const x=this.x,W=this.c.width,H=this.c.height;
+    x.clearRect(0,0,W,H);
+    const bw=W/8;
+    GA.pop.forEach((g,i)=>{
+      const h=Math.max(2,clamp(g.fitness/2.2,0,1)*H);
+      x.fillStyle=i===GA.active
+        ?'hsl('+(State.hue*360|0)+' 90% 62%)'
+        :'rgba(255,255,255,'+(0.16+clamp(g.fitness-0.5,0,1)*0.25)+')';
+      x.fillRect(i*bw+1,H-h,bw-2,h);
+    });
+  },
+};
+const Roll={
+  c:$('roll'),x:null,
+  draw(stepInBar){
+    if(!this.x)this.x=this.c.getContext('2d');
+    const x=this.x,W=this.c.width,H=this.c.height;
+    x.clearRect(0,0,W,H);
+    const g=GA.activeG(),cw=W/16;
+    const hue=(State.hue*360)|0,hue2=(hue+180)%360;
+    for(let i=0;i<16;i++){
+      const st=g.steps[i];
+      if(i===((stepInBar|0)%16)){x.fillStyle='rgba(255,255,255,.07)';x.fillRect(i*cw,0,cw,H)}
+      if(!st.g)continue;
+      const y=H-3-((st.d+st.o*5)/11)*(H-6);
+      x.fillStyle=st.a?'hsl('+hue+' 95% 66%)':'hsl('+hue+' 60% 55% / .8)';
+      x.fillRect(i*cw+1,y-1.5,cw-2,3);
+      if(st.s){x.fillStyle='hsl('+hue2+' 80% 60% / .6)';x.fillRect(i*cw-2,y-0.5,4,1)}
+    }
+  },
+};
+const Strip={
+  c:$('strip'),x:null,hues:[],
+  push(h){
+    if(!this.x)this.x=this.c.getContext('2d');
+    this.hues.push(h);if(this.hues.length>170)this.hues.shift();
+    const x=this.x,W=this.c.width,H=this.c.height,seg=W/170;
+    x.clearRect(0,0,W,H);
+    this.hues.forEach((hu,i)=>{
+      x.fillStyle='hsl('+(hu*360|0)+' 85% 60%)';
+      x.fillRect(W-(this.hues.length-i)*seg,0,seg+0.5,H);
+    });
+  },
+};
+const Hint={
+  el:$('hint'),tmr:null,
+  init(){
+    const coarse=matchMedia('(pointer: coarse)').matches;
+    this.el.innerHTML=coarse
+      ?'<b>TAP</b> STRIKE · <b>HOLD</b> CHARGE · <b>DRAG</b> WIND'
+      :'<b>CLICK</b> STRIKE · <b>HOLD</b> CHARGE · <b>A–L</b> CHORDS · <b>SHIFT</b> 9THS · <b>X</b> TRANSPOSE · <b>1–5</b> SCENES · <b>0</b> AUTO · <b>SPACE</b> EVOLVE · <b>↑↓</b> ENERGY · <b>R</b> REBIRTH · <b>V</b> HIDE · <b>I</b> INFO';
+    this.wake();
+  },
+  wake(){
+    this.el.classList.remove('faded');
+    clearTimeout(this.tmr);
+    this.tmr=setTimeout(()=>this.el.classList.add('faded'),8000);
+  },
+};
+
+function toggleMute(){
+  State.muted=!State.muted;
+  if(Audio.ready)Audio.master.gain.setTargetAtTime(State.muted?0.0001:0.74,actx.currentTime,0.15);
+  $('bMute').classList.toggle('on',State.muted);
+  $('bMute').textContent=State.muted?'UNMUTE':'MUTE';
+  log('SOUND',State.muted?'muted':'open');
+}
+function toggleHide(){
+  State.uiHidden=!State.uiHidden;
+  document.body.classList.toggle('hidden-ui',State.uiHidden);
+}
+$('bMute').addEventListener('click',toggleMute);
+$('bHide').addEventListener('click',toggleHide);
+$('bXpose').addEventListener('click',()=>{if(State.running)queueTranspose()});
+$('bEvolve').addEventListener('click',()=>{if(State.running)GA.generation(true)});
+$('bInfo').addEventListener('click',()=>$('info').classList.toggle('open'));
+$('infoClose').addEventListener('click',()=>$('info').classList.remove('open'));
+$('info').addEventListener('pointerdown',e=>e.stopPropagation());
+
+/* ================================================================
+   REBIRTH
+   ================================================================ */
+let rebirthLock=false;
+function rebirth(){
+  if(rebirthLock||!State.running)return;
+  rebirthLock=true;
+  log('REBIRTH','the storm collapses…');
+  Audio.master.gain.setTargetAtTime(0.0001,actx.currentTime,0.4);
+  GLR.glitch(0.7);
+  setTimeout(()=>{
+    Sched.stop();
+    if(I._bass)I._bass.off(actx.currentTime);
+    if(I._lead)I._lead.off(actx.currentTime);
+    SEED=(Math.random()*4294967296)>>>0;
+    rng=mulberry32(SEED);
+    history.replaceState(null,'',location.pathname+'?seed='+SEED.toString(16));
+    Object.assign(State,{gen:0,energy:0.15,energyBias:0,tension:0.25,
+      bar:0,barStartStep:0,barInSection:0,gStep:0,userVote:null});
+    Composer.padVoicing=null;Composer.forceKeyNow=false;userVoicing=null;
+    VisQ.length=0;GLR.evtA.fill(0);GLR.pulseQ.length=0;
+    Composer.boot();Composer.begin();Sched.start();
+    $('hSeed').textContent=hex8(SEED);$('sSeed').textContent=hex8(SEED);
+    if(!State.muted)Audio.master.gain.setTargetAtTime(0.74,actx.currentTime+0.2,0.8);
+    log('AWAKE','seed '+hex8(SEED));
+    rebirthLock=false;
+  },1400);
+}
+
+/* ================================================================
+   ANALYSIS + MAIN LOOP
+   ================================================================ */
+const A={bass:0.2,mid:0.15,high:0.1,onset:0};
+let fluxThr=2;
+function updateAnalysis(t){
+  if(Audio.ready&&State.running&&!State.muted){
+    const an=Audio.analyser,N=an.frequencyBinCount;
+    an.getByteFrequencyData(Audio.fftData);
+    const binHz=actx.sampleRate/2/N;
+    const band=(a,b)=>{
+      let s=0,i0=Math.max(1,Math.floor(a/binHz)),i1=Math.min(N-1,Math.floor(b/binHz));
+      for(let i=i0;i<=i1;i++)s+=Audio.fftData[i];
+      return s/((i1-i0+1)*255);
+    };
+    A.bass+=(band(25,160)-A.bass)*0.3;
+    A.mid+=(band(200,2000)-A.mid)*0.25;
+    A.high+=(band(2500,9500)-A.high)*0.25;
+    let flux=0;
+    for(let i=1;i<420;i++){
+      const v=Audio.fftData[i],d=v-Audio.fftPrev[i];
+      if(d>0)flux+=d;
+      Audio.fftPrev[i]=v;
+    }
+    flux/=420;
+    fluxThr=fluxThr*0.985+flux*0.015;
+    if(flux>fluxThr*1.7+1.2)A.onset=1;
+    A.onset*=0.88;
+  } else {
+    A.bass=0.24+0.12*Math.sin(t*0.6);
+    A.mid=0.15+0.07*Math.sin(t*0.4+2.0);
+    A.high=0.12+0.06*Math.sin(t*1.05+4.0);
+    A.onset*=0.9;
+  }
+}
+function circHue(){
+  let d=State.hueTarget-State.hue;
+  d=((d+0.5)%1+1)%1-0.5;
+  State.hue=((State.hue+d*0.03)%1+1)%1;
+}
+let lastF=performance.now(),lastRoll=0;
+function frame(){
+  const nowP=performance.now(),dt=nowP-lastF;lastF=nowP;
+  const t=now();
+  updateAnalysis(t);
+  if(Ptr.down&&(nowP-Ptr.downT)>240){
+    if(!riserStarted&&State.running&&Audio.ready){riserStarted=true;riserH=I.riserStart()}
+    hold=Math.min(1,hold+dt*0.00042);
+  } else hold*=0.92;
+  circHue();
+  document.documentElement.style.setProperty('--h',(State.hue*360).toFixed(1));
+  let beat=0,barPhase=0,sf=0;
+  if(State.running){
+    sf=stepFloatAt(t);
+    beat=((sf/4)%1+1)%1;
+    const ib=sf-State.barStartStep;
+    barPhase=clamp(ib/State.stepsPerBar,0,1)%1;
+  } else {beat=(t*0.5)%1;barPhase=(t*0.12)%1}
+  GLR.render(t,A,Ptr,hold,beat,barPhase,dt);
+  GLR.adapt(dt);
+  if(nowP-lastRoll>70){Roll.draw(State.running?sf-State.barStartStep:0);lastRoll=nowP}
+  if(HUD.dirty||nowP-HUD.last>300){HUD.update();HUD.last=nowP;HUD.dirty=false}
+  requestAnimationFrame(frame);
+}
+
+/* ================================================================
+   BOOT
+   ================================================================ */
+function fatal(msg){$('fatalMsg').innerHTML=msg;$('fatal').classList.add('show')}
+function start(){
+  if(State.running)return;
+  try{
+    Audio.init();
+    actx.resume();
+    Composer.begin();
+    Sched.start();
+    State.running=true;
+    $('start').classList.add('gone');
+    setTimeout(()=>{const s=$('start');if(s)s.remove()},1700);
+    log('AWAKE','seed '+hex8(SEED));
+    log('BRAIN','8 genomes · a loop that cadences · a hook that repeats');
+    HUD.chordShow();
+    Hint.wake();
+    HUD.dirty=true;
+  }catch(err){
+    console.error(err);
+    fatal('SOUND ENGINE FAILED TO START<br>'+String(err).slice(0,120));
+  }
+}
+try{
+  if(!location.search.includes('seed='))
+    history.replaceState(null,'',location.pathname+'?seed='+SEED.toString(16));
+  GLR.init($('gl'));
+  Composer.boot();
+  $('sSeed').textContent=hex8(SEED);
+  HUD.update();
+  Hint.init();
+  addEventListener('resize',()=>GLR.resize());
+  document.addEventListener('visibilitychange',()=>{
+    if(!actx)return;
+    if(document.hidden)actx.suspend();
+    else actx.resume();
+  });
+  $('start').addEventListener('pointerup',start);
+  $('goBtn').addEventListener('pointerup',e=>{e.stopPropagation();start()});
+  console.log('%cMONOLITH','font-family:monospace;font-size:16px;color:#7de3d0','· dunl.app · seed '+hex8(SEED));
+  requestAnimationFrame(frame);
+}catch(err){
+  console.error(err);
+  fatal('MONOLITH FAILED TO WAKE<br>'+String(err).slice(0,140));
+}
+/*__JS_END__*/
+</script>
+</body>
+</html>
