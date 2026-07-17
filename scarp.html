@@ -3,17 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<meta name="robots" content="noindex">
-<script>
-/* dunl.app gate guard · checks the session unlock set by /instruments/.
-   file:// is exempt so local previews still open. Delete this block to un-gate the page. */
-(function(){
-  if(location.protocol==='file:')return;
-  try{if(sessionStorage.getItem('dunl_instruments_unlocked')==='1')return;}catch(e){}
-  try{sessionStorage.setItem('dunl_instruments_dest',location.pathname+location.search+location.hash);}catch(e){}
-  location.replace('/instruments/');
-})();
-</script>
 <title>SCARP — dunl.app</title>
 <meta name="description" content="An asymmetric mountain range that writes its own music. The climb is gentle. The drop is not. Pentatonic and augmented — synthesized live.">
 <meta property="og:title" content="SCARP">

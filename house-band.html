@@ -3,17 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<meta name="robots" content="noindex">
-<script>
-/* dunl.app gate guard · checks the session unlock set by /instruments/.
-   file:// is exempt so local previews still open. Delete this block to un-gate the page. */
-(function(){
-  if(location.protocol==='file:')return;
-  try{if(sessionStorage.getItem('dunl_instruments_unlocked')==='1')return;}catch(e){}
-  try{sessionStorage.setItem('dunl_instruments_dest',location.pathname+location.search+location.hash);}catch(e){}
-  location.replace('/instruments/');
-})();
-</script>
 <title>HOUSE BAND — dunl.app</title>
 <meta name="description" content="Eight residencies, one band. Original songs written live in eight classic idioms — plucked-string physical models, tonewheel organ, acoustic drums. Real song form, real modulations.">
 <meta property="og:title" content="HOUSE BAND">
