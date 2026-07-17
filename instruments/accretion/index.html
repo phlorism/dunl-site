@@ -272,6 +272,8 @@ body.touch #info .kb{display:none}
 'use strict';
 const IS_TOUCH=matchMedia('(pointer:coarse)').matches;
 const MB=IS_TOUCH&&Math.min(screen.width,screen.height)<=820;
+/* iOS: route Web Audio to the playback session so the ring/silent switch doesn't mute it */
+try{if('audioSession' in navigator){navigator.audioSession.type='playback'}}catch(e){}
 /* ================================================================
    ACCRETION · matter in, music out
    dunl.app · instrument 03
@@ -1953,6 +1955,8 @@ function start(){
   try{
     Audio.init();
     actx.resume();
+    /* iOS unlock nudge: one silent sample through the destination inside the gesture */
+    try{const _b=actx.createBuffer(1,1,22050),_s=actx.createBufferSource();_s.buffer=_b;_s.connect(actx.destination);_s.start(0)}catch(e){}
     Star.begin();
     Sched.start();
     State.running=true;
@@ -1978,6 +1982,9 @@ try{
   Hint.init();
   if(IS_TOUCH)document.body.classList.add('touch');
   addEventListener('resize',()=>GLR.resize());
+  /* WebKit doesn't always grant user-activation to pointerup — any trailing tap/click re-arms the context */
+  const kickAudio=()=>{if(actx&&actx.state!=='running')actx.resume()};
+  ['touchend','click'].forEach(ev=>document.addEventListener(ev,kickAudio,{passive:true}));
   document.addEventListener('visibilitychange',()=>{
     if(!actx)return;
     if(document.hidden)actx.suspend();
