@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="robots" content="noindex">
 <title>Instruments — dunl.app</title>
-<meta name="description" content="Five instruments synthesized live in your browser — four compose themselves, one hands you the booth. Nothing prerecorded.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 36 32'%3E%3Ccircle cx='4' cy='16' r='3' fill='%232DD4BF'/%3E%3Ccircle cx='11' cy='16' r='3' fill='%2346CBEE'/%3E%3Ccircle cx='18' cy='16' r='3' fill='%23F2C24E'/%3E%3Ccircle cx='25' cy='16' r='3' fill='%2384CE62'/%3E%3Ccircle cx='32' cy='16' r='3' fill='%23FF4FA3'/%3E%3C/svg%3E">
+<meta name="description" content="Seven instruments synthesized live in your browser — six write themselves, one hands you the booth. Nothing prerecorded.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 50 32'%3E%3Ccircle cx='4' cy='16' r='3' fill='%232DD4BF'/%3E%3Ccircle cx='11' cy='16' r='3' fill='%2346CBEE'/%3E%3Ccircle cx='18' cy='16' r='3' fill='%23F2C24E'/%3E%3Ccircle cx='25' cy='16' r='3' fill='%2384CE62'/%3E%3Ccircle cx='32' cy='16' r='3' fill='%23FF4FA3'/%3E%3Ccircle cx='39' cy='16' r='3' fill='%23FF6A3D'/%3E%3Ccircle cx='46' cy='16' r='3' fill='%23F2E3C2'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:opsz,wght@9..40,400;9..40,500&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
@@ -140,6 +140,8 @@ body.open #library .card:nth-child(2){animation-delay:.12s}
 body.open #library .card:nth-child(3){animation-delay:.18s}
 body.open #library .card:nth-child(4){animation-delay:.24s}
 body.open #library .card:nth-child(5){animation-delay:.3s}
+body.open #library .card:nth-child(6){animation-delay:.36s}
+body.open #library .card:nth-child(7){animation-delay:.42s}
 @keyframes rise{from{opacity:0; transform:translateY(10px)}to{opacity:1; transform:translateY(0)}}
 
 @media (max-width:520px){
@@ -157,7 +159,7 @@ body.open #library .card:nth-child(5){animation-delay:.3s}
   <div class="gate-box">
     <div class="gate-label">dunl.app / instruments</div>
     <div class="gate-title">Instruments</div>
-    <p class="gate-sub">Five live-synthesis instruments. Enter the passphrase to continue.</p>
+    <p class="gate-sub">Seven live-synthesis instruments. Enter the passphrase to continue.</p>
     <div class="gate-row">
       <input id="gate-input" type="password" placeholder="passphrase" autocomplete="off" spellcheck="false" aria-label="Passphrase">
       <button id="gate-btn">Enter</button>
@@ -175,7 +177,7 @@ body.open #library .card:nth-child(5){animation-delay:.3s}
     </div>
     <a class="lib-back" href="/">&larr; dunl.app</a>
   </div>
-  <p class="lib-sub">Five instruments, all synthesized live in your browser — four compose themselves, the fifth hands you the booth. <em>Nothing is prerecorded.</em> Sound on, headphones better.</p>
+  <p class="lib-sub">Seven instruments, all synthesized live in your browser — six write themselves, one hands you the booth. <em>Nothing is prerecorded.</em> Sound on, headphones better.</p>
 
   <div class="lib-grid">
 
@@ -234,6 +236,30 @@ body.open #library .card:nth-child(5){animation-delay:.3s}
       <div class="card-name">DJ BOOTH</div>
       <p class="card-tag">The booth is yours. Synth, drums, a step sequencer, a loop station — record the set, keep the takes.</p>
       <div class="card-meta">Synth + drums &middot; 16-step seq &middot; Rec to WAV</div>
+    </a>
+
+    <a class="card" href="scarp/" style="--acc:hsl(16 95% 60%)">
+      <svg class="glyph" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+        <path d="M8 50 L40 14 L47 50 Z" fill="currentColor" opacity=".22"/>
+        <path d="M8 50 L40 14" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+        <path d="M40 14 L47 50" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" opacity=".45"/>
+      </svg>
+      <div class="card-num">INSTRUMENT 06</div>
+      <div class="card-name">SCARP</div>
+      <p class="card-tag">The climb is gentle. The drop is not. An asymmetric range whose terrain is the score.</p>
+      <div class="card-meta">Terrain engine &middot; Pent + aug 5 &middot; Quantized touch</div>
+    </a>
+
+    <a class="card" href="house-band/" style="--acc:#F2E3C2">
+      <svg class="glyph" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+        <path d="M20 8 L44 8 L52 54 L12 54 Z" fill="currentColor" opacity=".16"/>
+        <circle cx="32" cy="38" r="5.5" stroke="currentColor" stroke-width="2.4"/>
+        <path d="M32 43.5 L32 54 M25 54 L39 54" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
+      </svg>
+      <div class="card-num">INSTRUMENT 07</div>
+      <div class="card-name">HOUSE BAND</div>
+      <p class="card-tag">Eight residencies, one band. Original songs, written live, in the language of the rooms that made rock and roll.</p>
+      <div class="card-meta">Physical-model strings &middot; Real song form &middot; Eight idioms</div>
     </a>
 
   </div>

@@ -151,12 +151,15 @@ body.hidden-ui .hud,body.hidden-ui #btns,body.hidden-ui #strip,body.hidden-ui #s
 #info{max-height:84dvh}
 body.touch #info .kb{display:none}
 @media (pointer:coarse){
-  .pbtn{font-size:10px;letter-spacing:.13em;padding:12px 12px;min-height:42px}
-  #btns{gap:8px;flex-wrap:wrap;justify-content:center;max-width:calc(100vw - 20px);bottom:calc(14px + env(safe-area-inset-bottom,0px))}
+  .pbtn{flex:0 0 auto;font-size:9.5px;letter-spacing:.1em;padding:12px 9px;min-height:42px}
+  #btns{left:0;right:0;transform:none;gap:6px;bottom:calc(14px + env(safe-area-inset-bottom,0px));flex-wrap:nowrap;justify-content:flex-start;max-width:none;overflow-x:auto;touch-action:pan-x;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding:0 10px}
+  #btns::-webkit-scrollbar{display:none}
+  #btns .pbtn:first-child{margin-left:auto}
+  #btns .pbtn:last-child{margin-right:auto}
   #hudTL{top:calc(12px + env(safe-area-inset-top,0px));left:calc(12px + env(safe-area-inset-left,0px))}
   #hudTR{top:calc(12px + env(safe-area-inset-top,0px));right:calc(12px + env(safe-area-inset-right,0px))}
-  #hint{bottom:calc(68px + env(safe-area-inset-bottom,0px))}
-  #songCard{bottom:calc(90px + env(safe-area-inset-bottom,0px))}
+  #hint{bottom:calc(64px + env(safe-area-inset-bottom,0px))}
+  #songCard{bottom:calc(86px + env(safe-area-inset-bottom,0px))}
   #info{padding:26px 20px 24px}
   #info .close{padding:12px;margin:-8px -8px 0 0}
 }

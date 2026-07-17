@@ -226,10 +226,13 @@ body.hidden-ui .hud, body.hidden-ui #strip{opacity:0}
 #info{max-height:min(78dvh,640px)}
 body.touch #info .kb{display:none}
 @media (pointer:coarse){
-  .pbtn{font-size:10px;letter-spacing:.12em;padding:12px 13px;min-height:42px;border-radius:11px}
-  #btns{right:auto;left:50%;transform:translateX(-50%);bottom:calc(14px + env(safe-area-inset-bottom,0px));gap:9px;flex-wrap:wrap;justify-content:center;max-width:calc(100vw - 20px)}
-  #hint{bottom:calc(70px + env(safe-area-inset-bottom,0px))}
-  #log{bottom:calc(94px + env(safe-area-inset-bottom,0px));max-width:92vw;font-size:8.5px}
+  .pbtn{flex:0 0 auto;font-size:9.5px;letter-spacing:.1em;padding:12px 9px;min-height:42px;border-radius:11px}
+  #btns{right:0;left:0;transform:none;bottom:calc(14px + env(safe-area-inset-bottom,0px));gap:6px;flex-wrap:nowrap;justify-content:flex-start;max-width:none;overflow-x:auto;touch-action:pan-x;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding:0 10px}
+  #btns::-webkit-scrollbar{display:none}
+  #btns .pbtn:first-child{margin-left:auto}
+  #btns .pbtn:last-child{margin-right:auto}
+  #hint{bottom:calc(64px + env(safe-area-inset-bottom,0px))}
+  #log{bottom:calc(86px + env(safe-area-inset-bottom,0px));max-width:92vw;font-size:8.5px}
   #hudTL{top:calc(14px + env(safe-area-inset-top,0px));left:calc(14px + env(safe-area-inset-left,0px))}
   #hudTR{top:calc(14px + env(safe-area-inset-top,0px));right:calc(14px + env(safe-area-inset-right,0px))}
   #info{padding:26px 22px 24px}

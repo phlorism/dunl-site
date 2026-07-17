@@ -1,0 +1,1099 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<script>
+/* dunl.app gate guard · checks the session unlock set by /instruments/.
+   file:// is exempt so local previews still open. Delete this block to un-gate the page. */
+(function(){
+  if(location.protocol==='file:')return;
+  try{if(sessionStorage.getItem('dunl_instruments_unlocked')==='1')return;}catch(e){}
+  try{sessionStorage.setItem('dunl_instruments_dest',location.pathname+location.search+location.hash);}catch(e){}
+  location.replace('/instruments/');
+})();
+</script>
+<title>SCARP — dunl.app</title>
+<meta name="description" content="An asymmetric mountain range that writes its own music. The climb is gentle. The drop is not. Pentatonic and augmented — synthesized live.">
+<meta property="og:title" content="SCARP">
+<meta property="og:description" content="Instrument 06. The terrain is the score: gentle climbs, low valleys, real drops.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230A0912'/%3E%3Cpath d='M2 26 L19 8 L22 26 Z' fill='%23FF6A3D'/%3E%3Cpath d='M2 26 L19 8' stroke='%23FFD9C8' stroke-width='1.6' fill='none'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;700;800&family=DM+Sans:opsz,wght@9..40,400;9..40,500&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --acc:hsl(252 28% 64%);
+  --void:#0A0912; --panel:#141322; --ink:#EDE9E4; --ink-lo:#8E8BA3; --dim:#5B5970;
+  --disp:'Big Shoulders Display',sans-serif; --body:'DM Sans',sans-serif; --mono:'JetBrains Mono',ui-monospace,monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%}
+body{
+  background:var(--void); color:var(--ink); font-family:var(--body); overflow:hidden;
+  touch-action:none; overscroll-behavior:none; user-select:none; -webkit-user-select:none;
+  -webkit-tap-highlight-color:transparent; -webkit-touch-callout:none;
+}
+canvas#gl{position:fixed; inset:0; width:100vw; height:100vh; height:100dvh; display:block; cursor:crosshair}
+
+/* ---------- HUD ---------- */
+.hud{position:fixed; z-index:30; pointer-events:none; font-family:var(--mono)}
+#hudTL{top:18px; left:20px}
+#hudTL .t{font-family:var(--disp); font-weight:800; font-size:26px; letter-spacing:.14em; line-height:1; color:var(--ink)}
+#hudTL .s{font-size:9.5px; letter-spacing:.12em; color:var(--dim); margin-top:6px; text-transform:uppercase}
+#hudTL .s b{color:var(--acc); font-weight:500; transition:color .5s}
+#hudTR{top:20px; right:26px; text-align:right; font-size:9.5px; letter-spacing:.1em; color:var(--dim); text-transform:uppercase; line-height:1.9}
+#hudTR b{color:var(--ink-lo); font-weight:500}
+#hudTR .st{color:var(--acc); transition:color .5s}
+
+/* ---------- tension spine (right edge only — asymmetric chrome) ---------- */
+#spine{
+  position:fixed; z-index:29; right:8px; top:16vh; bottom:16vh; width:7px; pointer-events:none;
+  clip-path:polygon(0 0,100% 3%,62% 11%,100% 22%,55% 33%,100% 41%,70% 55%,100% 64%,58% 74%,100% 85%,66% 93%,100% 100%,0 100%);
+  background:rgba(255,255,255,.055);
+}
+#spineFill{
+  position:absolute; left:0; right:0; bottom:0; height:8%;
+  background:linear-gradient(0deg, var(--acc), rgba(255,255,255,.75));
+  transition:height .3s ease-out;
+}
+#spineTag{
+  position:fixed; z-index:29; right:20px; top:calc(16vh - 16px); pointer-events:none;
+  font-family:var(--mono); font-size:8.5px; letter-spacing:.14em; color:var(--dim); text-transform:uppercase;
+}
+body.armed #spineFill{animation:armPulse .5s ease-in-out infinite alternate}
+@keyframes armPulse{from{filter:brightness(.9)}to{filter:brightness(1.6)}}
+
+/* ---------- buttons / hint ---------- */
+#btns{position:fixed; z-index:34; bottom:22px; left:50%; transform:translateX(-50%); display:flex; gap:8px}
+.pbtn{
+  pointer-events:auto; font-family:var(--mono); font-size:9px; font-weight:500; letter-spacing:.16em;
+  color:var(--ink-lo); background:rgba(20,19,34,.72); border:1px solid rgba(255,255,255,.12);
+  padding:9px 13px; cursor:pointer; backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);
+  transition:color .2s,border-color .2s;
+}
+.pbtn:hover{color:var(--ink); border-color:var(--acc)}
+#bDrop{border-color:rgba(255,106,61,.35)}
+body.armed #bDrop{color:#FF6A3D; border-color:#FF6A3D}
+#hint{
+  position:fixed; z-index:30; bottom:70px; left:50%; transform:translateX(-50%); pointer-events:none;
+  font-family:var(--mono); font-size:9.5px; letter-spacing:.12em; color:var(--dim); text-transform:uppercase;
+  opacity:0; transition:opacity .8s; text-align:center; max-width:92vw;
+}
+#hint.on{opacity:1}
+
+/* ---------- info ---------- */
+#info{
+  position:fixed; z-index:40; top:50%; left:50%; transform:translate(-50%,-50%) scale(.98);
+  width:min(560px,calc(100vw - 32px)); max-height:84vh; max-height:84dvh; overflow:auto;
+  background:rgba(16,15,28,.96); border:1px solid rgba(255,255,255,.12); border-left:3px solid var(--acc);
+  padding:30px 30px 26px; opacity:0; pointer-events:none; transition:opacity .25s,transform .25s;
+  backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
+}
+#info.show{opacity:1; pointer-events:auto; transform:translate(-50%,-50%) scale(1)}
+#info .close{position:absolute; top:10px; right:10px; pointer-events:auto; background:none; border:none; color:var(--dim); font-size:17px; cursor:pointer; padding:8px}
+#info .close:hover{color:var(--ink)}
+#info h2{font-family:var(--disp); font-weight:800; font-size:24px; letter-spacing:.12em; margin-bottom:4px}
+#info .sub{font-family:var(--mono); font-size:10px; letter-spacing:.1em; color:var(--acc); text-transform:uppercase; margin-bottom:16px}
+#info p{font-size:13px; line-height:1.65; color:var(--ink-lo); margin-bottom:14px}
+#info p b{color:var(--ink); font-weight:500}
+#info .ctl{display:grid; grid-template-columns:auto 1fr; gap:7px 14px; font-size:11.5px; margin-top:4px}
+#info .k{font-family:var(--mono); font-size:10px; color:var(--acc); letter-spacing:.06em; white-space:nowrap; padding-top:1px}
+#info .d{color:var(--ink-lo); line-height:1.5}
+body.touch #info .kb{display:none}
+
+/* ---------- start ---------- */
+#start{
+  position:fixed; inset:0; z-index:50; display:flex; align-items:center; justify-content:center;
+  background:radial-gradient(120% 90% at 66% 30%, #171227 0%, var(--void) 62%);
+  transition:opacity .7s; cursor:pointer;
+}
+#start.gone{opacity:0; pointer-events:none}
+#start .card{max-width:520px; width:100%; padding:0 26px; text-align:left}
+#start .eyebrow{font-family:var(--mono); font-size:10px; letter-spacing:.22em; color:var(--dim); text-transform:uppercase; margin-bottom:14px}
+#start h1{font-family:var(--disp); font-weight:800; font-size:clamp(64px,17vw,150px); letter-spacing:.05em; line-height:.9; color:var(--ink)}
+#start .ridge{display:block; width:78%; height:44px; margin:10px 0 18px}
+#start .tag{font-size:14.5px; line-height:1.6; color:var(--ink-lo); max-width:40ch; margin-bottom:22px}
+#start .tag b{color:#FF6A3D; font-weight:500}
+#start .spec{font-family:var(--mono); font-size:9px; letter-spacing:.14em; color:var(--dim); text-transform:uppercase; line-height:2.1}
+#start .go{
+  display:inline-block; margin-top:24px; font-family:var(--mono); font-size:11px; letter-spacing:.2em;
+  color:#FF6A3D; border:1px solid rgba(255,106,61,.55); padding:13px 30px; text-transform:uppercase;
+  animation:goPulse 2.2s ease-in-out infinite;
+}
+@keyframes goPulse{0%,100%{background:rgba(255,106,61,0)}50%{background:rgba(255,106,61,.12)}}
+
+#fatal{position:fixed; inset:0; z-index:60; display:none; align-items:center; justify-content:center; background:var(--void); text-align:center; padding:24px}
+#fatal.show{display:flex}
+#fatal .fm{font-family:var(--mono); font-size:12px; color:var(--ink-lo); line-height:1.8}
+
+body.hidden-ui .hud, body.hidden-ui #btns, body.hidden-ui #hint, body.hidden-ui #spine, body.hidden-ui #spineTag{opacity:0; pointer-events:none; transition:opacity .4s}
+
+/* ---------- mweb pass ---------- */
+@media (pointer:coarse){
+  .pbtn{flex:0 0 auto; font-size:9.5px; letter-spacing:.1em; padding:12px 9px; min-height:42px}
+  #btns{left:0; right:0; transform:none; gap:6px; bottom:calc(14px + env(safe-area-inset-bottom,0px)); flex-wrap:nowrap;justify-content:flex-start;max-width:none;overflow-x:auto;touch-action:pan-x;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding:0 10px}
+  #btns::-webkit-scrollbar{display:none}
+  #btns .pbtn:first-child{margin-left:auto}
+  #btns .pbtn:last-child{margin-right:auto}
+  #hudTL{top:calc(14px + env(safe-area-inset-top,0px)); left:calc(16px + env(safe-area-inset-left,0px))}
+  #hudTR{top:calc(16px + env(safe-area-inset-top,0px)); right:calc(20px + env(safe-area-inset-right,0px))}
+  #hint{bottom:calc(64px + env(safe-area-inset-bottom,0px))}
+  #spine{right:calc(6px + env(safe-area-inset-right,0px))}
+  #info{padding:26px 20px 24px}
+  #info .close{padding:12px; margin:-8px -8px 0 0}
+}
+@media (max-width:480px){
+  #hudTL .t{font-size:21px}
+  #hudTR{display:none}
+  #start h1{font-size:clamp(56px,19vw,96px)}
+  #start .card{padding:0 18px}
+}
+@media (max-width:720px){
+  #hint{font-size:8.5px}
+}
+@media (prefers-reduced-motion: reduce){
+  #start .go{animation:none; background:rgba(255,106,61,.1)}
+  body.armed #spineFill{animation:none; filter:brightness(1.3)}
+}
+</style>
+</head>
+<body>
+<canvas id="gl"></canvas>
+
+<div class="hud" id="hudTL">
+  <div class="t">SCARP</div>
+  <div class="s"><b id="hPhase">VALLEY</b> · <span id="hChord">Am</span></div>
+</div>
+<div class="hud" id="hudTR">
+  SEED <b id="hSeed">—</b><br>
+  A MINOR PENT <b>+ AUG 5</b><br>
+  <span class="st" id="hState">STANDBY</span>
+</div>
+
+<div id="spine"><div id="spineFill"></div></div>
+<div id="spineTag">TENSION</div>
+
+<div id="hint"></div>
+
+<div id="btns">
+  <button class="pbtn" id="bMute">MUTE</button>
+  <button class="pbtn" id="bDrop">DROP</button>
+  <button class="pbtn" id="bNew">NEW</button>
+  <button class="pbtn" id="bInfo">INFO</button>
+  <button class="pbtn" id="bHide">HIDE</button>
+</div>
+
+<div id="info">
+  <button class="close" id="infoClose">✕</button>
+  <h2>SCARP</h2>
+  <div class="sub">Instrument 06 · Asymmetric terrain engine</div>
+  <p>A mountain range with no symmetry: every peak climbs gently and falls off a <b>cliff</b>. The terrain is the score — height is tension, driving density, brightness, register and drive. Valleys breathe in cold A&nbsp;minor pentatonic. Climbs walk a rising line. Summits turn <b>augmented</b> — the fifth lifts, the harmony refuses to resolve — until the ridge runs out and the music falls with it.</p>
+  <p>Your touches land <b>in time</b>: strikes snap to the next sixteenth, swells resolve at the half-bar, drops arm for the next barline. Nothing fires off-grid; nothing feels late.</p>
+  <div class="ctl">
+    <span class="k">TAP SKY</span><span class="d">strike a note — height picks the pitch, the clock picks the moment</span>
+    <span class="k">TAP / DRAG RIDGE</span><span class="d">raise peaks or carve valleys ahead of the climber — reshape the future</span>
+    <span class="k">HOLD</span><span class="d">swell — release resolves as a chord on the half-bar</span>
+    <span class="k">DROP</span><span class="d">arm a drop at the next barline</span>
+    <span class="k kb">A – L</span><span class="d kb">strike the pentatonic scale, two octaves</span>
+    <span class="k kb">SPACE</span><span class="d kb">arm a drop</span>
+    <span class="k kb">↑ ↓</span><span class="d kb">bias the energy of the range</span>
+    <span class="k kb">R</span><span class="d kb">rebirth — a new seed raises a new range</span>
+    <span class="k kb">M · V · I</span><span class="d kb">mute · hide interface · this panel</span>
+  </div>
+</div>
+
+<div id="start">
+  <div class="card">
+    <div class="eyebrow">dunl.app · Instrument 06</div>
+    <h1>SCARP</h1>
+    <svg class="ridge" viewBox="0 0 300 44" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0 40 L54 26 L70 30 L128 8 L136 38 L170 24 L214 4 L220 41 L262 30 L300 34" fill="none" stroke="#FF6A3D" stroke-width="2"/>
+    </svg>
+    <p class="tag">An asymmetric range that writes its own music. <b>The climb is gentle. The drop is not.</b> Pentatonic below, augmented at the summit — nothing prerecorded, no two ranges alike.</p>
+    <div class="spec">
+      ASYMMETRIC TERRAIN ENGINE · TENSION-DRIVEN ARRANGEMENT<br>
+      A MINOR PENTATONIC + AUGMENTED FIFTH · REAL CADENCES<br>
+      QUANTIZED TOUCH · LIVE SYNTHESIS · SEEDED
+    </div>
+    <span class="go">Begin the climb</span>
+  </div>
+</div>
+
+<div id="fatal"><div class="fm" id="fatalMsg"></div></div>
+
+<script>
+/*__JS_START__*/
+'use strict';
+const IS_TOUCH=matchMedia('(pointer:coarse)').matches;
+const MB=IS_TOUCH&&Math.min(screen.width,screen.height)<=820;
+/* iOS: route Web Audio to the playback session so the ring/silent switch doesn't mute it */
+try{if('audioSession' in navigator){navigator.audioSession.type='playback'}}catch(e){}
+
+const $=id=>document.getElementById(id);
+const clamp=(v,a,b)=>v<a?a:v>b?b:v;
+const lerp=(a,b,t)=>a+(b-a)*t;
+
+/* ---------------- seeded PRNG ---------------- */
+function mulberry32(s){return function(){s|=0;s=s+0x6D2B79F5|0;let t=Math.imul(s^s>>>15,1|s);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+let SEED=(Math.random()*99999)|0, rng=mulberry32(SEED);
+const rr=(a,b)=>a+rng()*(b-a);
+const pick=(arr,weights)=>{let s=0;for(const w of weights)s+=w;let r=rng()*s;for(let i=0;i<arr.length;i++){r-=weights[i];if(r<=0)return arr[i]}return arr[arr.length-1]};
+
+const State={running:false,muted:false,energyBias:0};
+
+/* ---------------- MUSIC CONSTANTS ---------------- */
+const BPM=92, SPB=60/BPM, KEY=45;              /* A2 = midi 45 root */
+const PENT=[0,3,5,7,10], AUG5=8;               /* A minor pentatonic; G# as summit color */
+/* chords as semitone offsets from A. E+ = the augmented dominant: E G# C */
+const CHORDS={
+  Am:{n:[0,3,7],  label:'Am'},  F:{n:[8,0,3],  label:'F'},   C:{n:[3,7,10], label:'C'},
+  Dm:{n:[5,8,0],  label:'Dm'},  G:{n:[10,2,5], label:'G'},   Eaug:{n:[7,11,3],label:'E+'},
+  A5:{n:[0,7],    label:'A5'}
+};
+/* functional-ish transition weights inside A minor (valleys) */
+const NEXT={ Am:[['F',.34],['C',.24],['Dm',.22],['G',.2]],
+             F: [['Am',.34],['G',.26],['Dm',.22],['C',.18]],
+             C: [['Am',.36],['F',.3],['G',.34]],
+             Dm:[['G',.4],['Am',.34],['F',.26]],
+             G: [['Am',.62],['F',.2],['C',.18]] };
+
+/* ---------------- TERRAIN (the score) ---------------- */
+/* Segments in whole bars. Asymmetry is structural: climbs are long, cliffs are short. */
+const Terrain={
+  segs:[], edits:[], endBar:0,
+  reset(){ this.segs=[]; this.edits=[]; this.endBar=0; this.extend(0,0.12); },
+  extend(fromBar,fromH){
+    let bar=fromBar,h=fromH;
+    const target=Math.max(fromBar,this.endBar)+64;
+    while(bar<target||this.segs.length<4){
+      const vBars=Math.round(rr(2,4)), vH=rr(.05,.2);
+      this.segs.push({b0:bar,b1:bar+vBars,h0:h,h1:vH,kind:'valley'}); bar+=vBars; h=vH;
+      const cBars=Math.round(rr(3,6)), peak=rr(.5,1.0);
+      this.segs.push({b0:bar,b1:bar+cBars,h0:h,h1:peak,kind:'climb'}); bar+=cBars; h=peak;
+      if(rng()<.4){ this.segs.push({b0:bar,b1:bar+1,h0:h,h1:h*rr(.94,1.0),kind:'plateau'}); bar+=1; }
+      const fBars=1, vH2=rr(.05,.18);                       /* the scarp face: one bar, straight down */
+      this.segs.push({b0:bar,b1:bar+fBars,h0:h,h1:vH2,kind:'cliff',peak:h}); bar+=fBars; h=vH2;
+      this.endBar=bar;
+    }
+  },
+  baseH(beat){
+    const bar=beat/4;
+    if(bar>this.endBar-40) this.extend(this.endBar,this.segs.length?this.segs[this.segs.length-1].h1:.12);
+    for(const s of this.segs){
+      if(bar>=s.b0&&bar<s.b1){
+        let t=(bar-s.b0)/(s.b1-s.b0);
+        if(s.kind==='cliff') t=Math.pow(t,.32);             /* fall fast — the steep face */
+        if(s.kind==='climb') t=t*t*(3-2*t);                 /* smoothstep grind upward */
+        return lerp(s.h0,s.h1,t);
+      }
+    }
+    return .12;
+  },
+  h(beat){
+    let v=this.baseH(beat);
+    for(const e of this.edits){
+      const d=(beat-e.beat)/e.width;
+      v+=e.amt*Math.exp(-d*d);
+    }
+    return clamp(v,0.03,1);
+  },
+  addEdit(beat,amt){
+    this.edits.push({beat,amt:clamp(amt,-.6,.7),width:rr(2.5,4.5)});
+    if(this.edits.length>40)this.edits.shift();
+  },
+  segAt(beat){ const bar=beat/4; for(const s of this.segs){ if(bar>=s.b0&&bar<s.b1) return s; } return null; },
+  prune(beforeBar){
+    while(this.segs.length&&this.segs[0].b1<beforeBar)this.segs.shift();
+    this.edits=this.edits.filter(e=>e.beat/4>beforeBar-4);
+  },
+  /* next cliff whose peak clears the drop threshold */
+  nextDropBar(fromBar){
+    for(const s of this.segs){ if(s.kind==='cliff'&&s.b0>=fromBar&&(s.peak||0)>=.72) return s.b0; }
+    return null;
+  }
+};
+
+/* ---------------- AUDIO ---------------- */
+let actx=null,noiseBuf=null;
+let synthBus,drumBus,tenseFilt,dryG,dSend,delay,dFb,dFilt,dWet,rSend,conv,rWet,mixG,comp,shaper,master,analyser;
+let ohGain=null,voices=[];
+const A={
+  init(){
+    if(actx)return;
+    const AC=window.AudioContext||window.webkitAudioContext;
+    actx=new AC({latencyHint:'interactive'});
+    /* one shared noise buffer — created once, reused by every drum */
+    noiseBuf=actx.createBuffer(1,actx.sampleRate*2,actx.sampleRate);
+    const nd=noiseBuf.getChannelData(0);
+    for(let i=0;i<nd.length;i++)nd[i]=Math.random()*2-1;
+    /* generated stereo impulse response */
+    const irLen=Math.floor(actx.sampleRate*2.6), ir=actx.createBuffer(2,irLen,actx.sampleRate);
+    for(let ch=0;ch<2;ch++){const d=ir.getChannelData(ch);for(let i=0;i<irLen;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/irLen,2.8);}
+    /* graph: buses → sum → tension filter → dry + sends → mix → glue comp → softclip → master → analyser → out */
+    synthBus=actx.createGain(); synthBus.gain.value=.9;
+    drumBus=actx.createGain();  drumBus.gain.value=.95;
+    const sum=actx.createGain();
+    tenseFilt=actx.createBiquadFilter(); tenseFilt.type='lowpass'; tenseFilt.frequency.value=900; tenseFilt.Q.value=.6;
+    dryG=actx.createGain(); dryG.gain.value=1;
+    delay=actx.createDelay(2); delay.delayTime.value=.75*SPB;   /* dotted eighth */
+    dFb=actx.createGain(); dFb.gain.value=.38;
+    dFilt=actx.createBiquadFilter(); dFilt.type='lowpass'; dFilt.frequency.value=4200;
+    dSend=actx.createGain(); dSend.gain.value=.16;
+    dWet=actx.createGain(); dWet.gain.value=.8;
+    conv=actx.createConvolver(); conv.buffer=ir;
+    rSend=actx.createGain(); rSend.gain.value=.3;
+    rWet=actx.createGain(); rWet.gain.value=.85;
+    mixG=actx.createGain();
+    comp=actx.createDynamicsCompressor();
+    comp.threshold.value=-10; comp.knee.value=16; comp.ratio.value=6; comp.attack.value=.004; comp.release.value=.25;
+    shaper=actx.createWaveShaper();
+    const n=1024,curve=new Float32Array(n);
+    for(let i=0;i<n;i++){const x=(i/(n-1))*2-1;curve[i]=Math.tanh(1.5*x)}
+    shaper.curve=curve; shaper.oversample='2x';
+    master=actx.createGain(); master.gain.value=.92;
+    analyser=actx.createAnalyser(); analyser.fftSize=1024; analyser.smoothingTimeConstant=.82;
+    synthBus.connect(sum); drumBus.connect(sum);
+    sum.connect(tenseFilt);
+    tenseFilt.connect(dryG); dryG.connect(mixG);
+    tenseFilt.connect(dSend); dSend.connect(delay); delay.connect(dFilt); dFilt.connect(dFb); dFb.connect(delay);
+    delay.connect(dWet); dWet.connect(mixG);
+    tenseFilt.connect(rSend); rSend.connect(conv); conv.connect(rWet); rWet.connect(mixG);
+    mixG.connect(comp); comp.connect(shaper); shaper.connect(master);
+    master.connect(analyser); analyser.connect(actx.destination);
+    this.fdata=new Uint8Array(analyser.frequencyBinCount);
+  },
+  setTension(x,t){
+    /* one scalar, many dimensions — the range breathes together */
+    const cut=300*Math.pow(55,x);                                /* 300 Hz .. ~16.5 kHz */
+    tenseFilt.frequency.setTargetAtTime(cut,t,.12);
+    rSend.gain.setTargetAtTime(.16+.28*(1-x),t,.2);              /* valleys swim, peaks stay upfront */
+    dSend.gain.setTargetAtTime(.1+.12*x,t,.2);
+  },
+  duck(t){ synthBus.gain.setTargetAtTime(.66,t,.02); synthBus.gain.setTargetAtTime(.9,t+.06,.09); },
+  choke(t,ms){ /* the fall: everything to a whisper, fast but curved — no clicks */
+    synthBus.gain.setTargetAtTime(.001,t,ms/3000);
+    drumBus.gain.setTargetAtTime(.001,t,ms/3000);
+  },
+  unchoke(t){ synthBus.gain.setTargetAtTime(.9,t,.02); drumBus.gain.setTargetAtTime(.95,t,.02); }
+};
+const mFreq=m=>440*Math.pow(2,(m-69)/12);
+
+/* voice registry — every source gets a stop time; refs get dropped */
+function reg(nodes,until){ voices.push({nodes,until}); if(voices.length>96)voices.splice(0,32); }
+function gc(){ const now=actx?actx.currentTime:0; voices=voices.filter(v=>v.until>now); }
+
+/* ---------------- INSTRUMENT VOICES ---------------- */
+function pluck(midi,t,vel,dur){
+  const f=mFreq(midi);
+  const o1=actx.createOscillator(); o1.type='square'; o1.frequency.value=f;
+  const o2=actx.createOscillator(); o2.type='sawtooth'; o2.frequency.value=f; o2.detune.value=9;
+  const g1=actx.createGain(),g2=actx.createGain(); g1.gain.value=.62; g2.gain.value=.5;
+  const fl=actx.createBiquadFilter(); fl.type='lowpass'; fl.Q.value=2.5;
+  fl.frequency.setValueAtTime(f*1.5,t);
+  fl.frequency.linearRampToValueAtTime(Math.min(12000,f*9),t+.012);
+  fl.frequency.setTargetAtTime(f*2.2,t+.012,.09);
+  const amp=actx.createGain(); const v=.2*vel;
+  amp.gain.setValueAtTime(.0001,t);
+  amp.gain.linearRampToValueAtTime(v,t+.004);
+  amp.gain.setTargetAtTime(Math.max(.0001,v*.28),t+.004,.11);
+  const te=t+(dur||.5);
+  amp.gain.setTargetAtTime(.0001,te,.05);
+  o1.connect(g1);g1.connect(fl);o2.connect(g2);g2.connect(fl);fl.connect(amp);amp.connect(synthBus);
+  o1.start(t);o2.start(t);o1.stop(te+.5);o2.stop(te+.5);
+  reg([o1,o2],te+.6);
+}
+function bell(midi,t,vel){
+  const f=mFreq(midi), parts=[[1,.5],[2.7,.24],[5.4,.1]];
+  for(const[r,g0]of parts){
+    const o=actx.createOscillator(); o.type='sine'; o.frequency.value=f*r;
+    const g=actx.createGain(); const v=g0*.16*vel;
+    g.gain.setValueAtTime(.0001,t);
+    g.gain.linearRampToValueAtTime(v,t+.006);
+    g.gain.setTargetAtTime(.0001,t+.006,.5/r);
+    o.connect(g);g.connect(synthBus);
+    o.start(t);o.stop(t+2.2);
+    reg([o],t+2.3);
+  }
+}
+/* voice-led pad: three sustained voices, minimal motion, register 200Hz–1k */
+const Pad={
+  cur:[null,null,null], nodes:[null,null,null],
+  place(pc,prev){ /* nearest instance of pitch-class to prev, inside register */
+    let best=null,bd=1e9;
+    for(let m=55;m<=79;m++){ if(((m-KEY)%12+12)%12===pc){ const d=prev==null?Math.abs(m-64):Math.abs(m-prev); if(d<bd){bd=d;best=m} } }
+    return best;
+  },
+  set(chord,t){
+    const pcs=CHORDS[chord].n.slice();
+    /* assign each existing voice the nearest chord tone; common tones hold */
+    const targets=pcs.map((pc,i)=>this.place(pc,this.cur[i]));
+    for(let i=0;i<3;i++){
+      const m=targets[i];
+      if(this.cur[i]===m&&this.nodes[i])continue;                /* common tone: don't retrigger */
+      if(this.nodes[i])this.release(i,t);
+      this.spawn(i,m,t);
+    }
+    ui.chord=CHORDS[chord].label;
+  },
+  spawn(i,m,t){
+    const f=mFreq(m);
+    const o1=actx.createOscillator(); o1.type='sawtooth'; o1.frequency.value=f; o1.detune.value=-7;
+    const o2=actx.createOscillator(); o2.type='triangle'; o2.frequency.value=f; o2.detune.value=7;
+    const hp=actx.createBiquadFilter(); hp.type='highpass'; hp.frequency.value=120;
+    const lp=actx.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=Math.min(2400,f*5); lp.Q.value=.5;
+    const g=actx.createGain();
+    g.gain.setValueAtTime(.0001,t);
+    g.gain.linearRampToValueAtTime(.055,t+rr(.4,.7));
+    o1.connect(hp);o2.connect(hp);hp.connect(lp);lp.connect(g);g.connect(synthBus);
+    o1.start(t);o2.start(t);
+    this.cur[i]=m; this.nodes[i]={o1,o2,g};
+  },
+  release(i,t){
+    const n=this.nodes[i]; if(!n)return;
+    n.g.gain.cancelScheduledValues(t);
+    n.g.gain.setValueAtTime(Math.max(.0001,n.g.gain.value),t);
+    n.g.gain.setTargetAtTime(.0001,t,.35);
+    n.o1.stop(t+1.6); n.o2.stop(t+1.6);
+    reg([n.o1,n.o2],t+1.7);
+    this.nodes[i]=null;
+  },
+  killAll(t){ for(let i=0;i<3;i++){this.release(i,t);this.cur[i]=null} }
+};
+/* the climbing rope: a lone voice walking 5 → #5 → 6 over the pedal */
+const Rope={
+  node:null,
+  play(step,t){ /* step 0=E4,1=F4(#5!),2=F#4,3=F4 */
+    const m=[64,65,66,65][step%4];
+    if(this.node)this.stop(t);
+    const o=actx.createOscillator(); o.type='triangle'; o.frequency.value=mFreq(m);
+    const g=actx.createGain();
+    g.gain.setValueAtTime(.0001,t);
+    g.gain.linearRampToValueAtTime(.075,t+.1);
+    o.connect(g);g.connect(synthBus);o.start(t);
+    this.node={o,g};
+  },
+  stop(t){ const n=this.node; if(!n)return;
+    n.g.gain.cancelScheduledValues(t);
+    n.g.gain.setValueAtTime(Math.max(.0001,n.g.gain.value),t);
+    n.g.gain.setTargetAtTime(.0001,t,.09);
+    n.o.stop(t+.6); reg([n.o],t+.7); this.node=null;
+  }
+};
+function bass(midi,t,dur,vel){
+  const f=mFreq(midi);
+  const sub=actx.createOscillator(); sub.type='sine'; sub.frequency.value=f;
+  const saw=actx.createOscillator(); saw.type='sawtooth'; saw.frequency.value=f;
+  const lp=actx.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=340; lp.Q.value=1.1;
+  const gS=actx.createGain(); gS.gain.value=.5;
+  const gW=actx.createGain(); gW.gain.value=.34;
+  const amp=actx.createGain(); const v=.34*vel;
+  amp.gain.setValueAtTime(.0001,t);
+  amp.gain.linearRampToValueAtTime(v,t+.008);
+  amp.gain.setTargetAtTime(v*.7,t+.008,.1);
+  const te=t+dur;
+  amp.gain.setTargetAtTime(.0001,te,.04);
+  sub.connect(gS);gS.connect(amp);
+  saw.connect(gW);gW.connect(lp);lp.connect(amp);
+  amp.connect(synthBus);
+  sub.start(t);saw.start(t);sub.stop(te+.4);saw.stop(te+.4);
+  reg([sub,saw],te+.5);
+}
+/* drums — all noise from the one shared buffer */
+function nHit(t,dur,type,freq,Q,gain,dest){
+  const s=actx.createBufferSource(); s.buffer=noiseBuf; s.loop=true;
+  const f=actx.createBiquadFilter(); f.type=type; f.frequency.value=freq; f.Q.value=Q||1;
+  const g=actx.createGain(); g.gain.setValueAtTime(gain,t); g.gain.exponentialRampToValueAtTime(.001,t+dur);
+  s.connect(f);f.connect(g);g.connect(dest||drumBus);
+  s.start(t);s.stop(t+dur+.05); reg([s],t+dur+.1);
+  return g;
+}
+function kick(t,vel){
+  const o=actx.createOscillator(); o.type='sine';
+  o.frequency.setValueAtTime(158,t);
+  o.frequency.exponentialRampToValueAtTime(46,t+.075);
+  const g=actx.createGain(); const v=1.05*vel;
+  g.gain.setValueAtTime(v,t); g.gain.exponentialRampToValueAtTime(.001,t+.42);
+  o.connect(g);g.connect(drumBus);
+  o.start(t);o.stop(t+.5); reg([o],t+.6);
+  nHit(t,.02,'highpass',3600,.7,.4*vel);
+  A.duck(t);
+}
+function snare(t,vel){
+  const o=actx.createOscillator(); o.type='triangle';
+  o.frequency.setValueAtTime(196,t); o.frequency.exponentialRampToValueAtTime(168,t+.06);
+  const g=actx.createGain(); g.gain.setValueAtTime(.5*vel,t); g.gain.exponentialRampToValueAtTime(.001,t+.12);
+  o.connect(g);g.connect(drumBus); o.start(t);o.stop(t+.2); reg([o],t+.25);
+  nHit(t,.19,'bandpass',1850,.9,.55*vel);
+  nHit(t,.14,'highpass',5200,.7,.3*vel);
+}
+function hat(t,open,vel){
+  if(ohGain){try{ohGain.gain.cancelScheduledValues(t);ohGain.gain.setTargetAtTime(.0001,t,.012)}catch(e){} ohGain=null}
+  const g=nHit(t,open?.42:.04,'highpass',8200,.8,(open?.3:.24)*vel);
+  if(open)ohGain=g;
+}
+function clap(t,vel){
+  nHit(t,.028,'bandpass',1150,2.5,.5*vel);
+  nHit(t+.012,.028,'bandpass',1150,2.5,.5*vel);
+  nHit(t+.026,.2,'bandpass',1150,2.2,.28*vel);
+}
+function impact(t){
+  const o=actx.createOscillator(); o.type='sine'; o.frequency.setValueAtTime(52,t);
+  o.frequency.exponentialRampToValueAtTime(34,t+.5);
+  const g=actx.createGain(); g.gain.setValueAtTime(1.1,t); g.gain.setTargetAtTime(.0001,t+.15,.35);
+  o.connect(g);g.connect(drumBus); o.start(t);o.stop(t+2); reg([o],t+2.1);
+  kick(t,1);
+  nHit(t,1.4,'highpass',5800,.7,.26,drumBus);
+}
+
+/* ---------------- COMPOSER ---------------- */
+const C={
+  step:0,nextTime:0,anchorT:0,anchorB:0,
+  chord:'Am',clichPhase:0,motif:null,lastDeg:2,prevWasLeapUp:null,
+  drop:{armed:false,bar:null,phase:'none',userArmed:false},
+  swing:.56,
+  reset(){
+    this.step=0;this.chord='Am';this.clichPhase=0;this.lastDeg=2;this.prevWasLeapUp=null;
+    this.motif=this.makeMotif();
+    this.drop={armed:false,bar:null,phase:'none',userArmed:false,wasUser:false,rideBars:0,rideBar0:0};
+  },
+  makeMotif(){ /* a 4-slot cell of pent degrees, developed rather than replaced */
+    return [0,1,2,3].map(()=>({deg:(rng()*5)|0,on:rng()<.7}));
+  },
+  beatNow(){ if(!actx)return 0; return this.anchorB+(actx.currentTime-this.anchorT)/SPB; },
+  timeOfBeat(b){ return this.anchorT+(b-this.anchorB)*SPB; },
+  tension(beat){
+    if(this.drop&&this.drop.phase==='ride'){
+      const p=clamp((beat/4-this.drop.rideBar0)/Math.max(1,this.drop.rideBars),0,1);
+      return clamp(lerp(.86,.64,p)+State.energyBias,.03,1);
+    }
+    return clamp(Terrain.h(beat)+State.energyBias,0.03,1);
+  },
+  tick(){
+    if(!actx||!State.running)return;
+    gc();
+    while(this.nextTime<actx.currentTime+.12){
+      this.schedule(this.step,this.nextTime);
+      this.nextTime+=SPB/4;
+      this.step++;
+    }
+  },
+  schedule(step,t){
+    this.anchorT=t; this.anchorB=step/4;
+    const beat=step/4, bar=beat/4, s16=step%16, sInBar=step%16;
+    if(sInBar===0)Terrain.prune(bar-16);
+    const x=this.tension(beat);
+    const seg=Terrain.segAt(beat);
+    const kind=seg?seg.kind:'valley';
+    A.setTension(x,t);
+    ui.tension=x; ui.phase=this.drop.phase==='gap'?'THE FALL':(this.drop.phase==='ride'?'THE RUN':kind.toUpperCase());
+
+    /* swing: delay off-16ths; humanize non-anchor voices only */
+    const off=(s16%2===1)?(this.swing-.5)*2*(SPB/4):0;
+    const hum=()=>off+rr(-.007,.007);
+
+    /* ---------- drop state machine ---------- */
+    if(this.drop.phase==='gap'){
+      if(sInBar===4){ /* one silent beat has passed — impact on beat 2 */
+        this.drop.phase='land';
+        const cs=Terrain.segAt(beat-.6);
+        const pk=this.drop.wasUser?1:((cs&&cs.peak)||0);
+        this.drop.rideBars = pk>=.82 ? 8 : (pk>=.72&&rng()<.5 ? 4 : 0);
+        A.unchoke(t); impact(t);
+        Pad.killAll(t); Rope.stop(t);
+        this.chord='A5'; Pad.set('Am',t+.02); ui.chord='Am';
+        Vis.dropFlash(t);
+      }
+      return;                                                   /* the fall is silence */
+    }
+    if(this.drop.phase==='land'){
+      if(this.drop.rideBars>0&&sInBar>=10){                     /* snare roll announces the run */
+        snare(t,.3+((sInBar-10)/6)*.6);
+        if(sInBar>=13)hat(t,false,.5+((sInBar-13)/3)*.4);
+      }
+      if(sInBar===0){
+        if(this.drop.rideBars>0){ this.drop.phase='ride'; this.drop.rideBar0=bar; ui.flashHint('THE RUN'); }
+        else this.drop.phase='none';
+      }
+    }
+    /* ---------- THE RUN: the payoff groove ---------- */
+    if(this.drop.phase==='ride'){
+      const rb=Math.floor(bar)-this.drop.rideBar0;
+      if(rb>=this.drop.rideBars&&sInBar===0){ this.drop.phase='none'; this.drop.rideBars=0; }
+      else { this.scheduleRide(rb,sInBar,s16,bar,t,off); return; }
+    }
+
+    /* arm at cliffs — the terrain schedules its own drops */
+    if(sInBar===0&&this.drop.phase==='none'&&!this.drop.userArmed){
+      if(Terrain.nextDropBar(bar)===bar){
+        this.drop={armed:false,bar:null,phase:'gap',userArmed:false,wasUser:false,rideBars:0,rideBar0:0};
+        document.body.classList.remove('armed');
+        A.choke(t,90); Rope.stop(t);
+        Vis.cliffEdge(t);
+        return;
+      }
+    }
+
+    /* ---------- harmony ---------- */
+    if(sInBar===0){
+      if(kind==='climb'){
+        if(this.chord!=='Am'){ this.chord='Am'; Pad.set('Am',t); }
+        Rope.play(this.clichPhase++,t);                          /* 5 → #5 → 6 — the rising line */
+      } else if(kind==='plateau'||x>.8){
+        if(this.chord!=='Eaug'){ this.chord='Eaug'; Pad.set('Eaug',t); }  /* the summit refuses to resolve */
+        Rope.stop(t);
+      } else {
+        Rope.stop(t); this.clichPhase=0;
+        if(bar%2===0){                                           /* valleys wander with intent */
+          const opts=NEXT[this.chord]||NEXT.Am;
+          this.chord=pick(opts.map(o=>o[0]),opts.map(o=>o[1]));
+          /* cadence pull: end of 4-bar phrase leans home */
+          if(bar%4===3&&this.chord!=='Am'&&rng()<.6)this.chord=rng()<.5?'G':'F';
+          Pad.set(this.chord,t);
+        }
+      }
+    }
+
+    /* ---------- bass (alone below 200 Hz, tight to the grid) ---------- */
+    const rootPc=CHORDS[this.chord].n[0];
+    const rootM=KEY+((rootPc<=7)?rootPc:rootPc-12);
+    if(x<.3){ if(sInBar===0) bass(rootM,t,SPB*3.2,.8); }
+    else if(x<.62){ if(sInBar===0||sInBar===8) bass(rootM,t,SPB*1.6,.85); }
+    else { if(s16%4===0) bass(rootM,t,SPB*.7,.92); if(sInBar===14) bass(rootM+7,t+hum(),SPB*.4,.7); }
+
+    /* ---------- drums by tier — velocity accents + jitter, fills at phrase ends ---------- */
+    const acc=v=>v*(s16%8===0?1:(s16%4===0?.85:.62))*rr(.9,1.05);
+    if(x>=.18){
+      if(s16%8===0) kick(t,acc(1));
+      if(x>=.45&&s16===6&&rng()<.35) kick(t+hum(),.7);
+      if(x>=.4&&(s16===4||s16===12)) snare(t+rr(-.004,.004),acc(1));
+      if(x>=.62&&(s16===4||s16===12)) clap(t+rr(0,.008),.6);
+      const hatRes=x<.4?4:(x<.7?2:1);
+      if(s16%hatRes===0&&!(s16%8===0&&x<.35)) hat(t+hum(),false,acc(.9));
+      if(x>=.5&&s16===14) hat(t+hum(),true,.8);
+      if(bar%4===3&&sInBar>=12&&x>=.55&&rng()<.6) snare(t+hum(),.45+((sInBar-12)/4)*.4);  /* phrase-end fill */
+    } else if(s16===0&&bar%2===0){ kick(t,.55); }
+
+    /* ---------- melody: pent + summit color, chord-tone strong beats, motif development ---------- */
+    const dens=.12+x*.6;
+    if(s16%2===0&&rng()<dens){
+      const slot=this.motif[(s16/2)%4|0];
+      if(slot.on||rng()<.3){
+        let deg;
+        const strong=s16%4===0;
+        if(strong&&rng()<.7){
+          /* target a chord tone mapped into pent space */
+          const ct=CHORDS[this.chord].n[(rng()*CHORDS[this.chord].n.length)|0];
+          deg=PENT.indexOf(ct)>=0?PENT.indexOf(ct):slot.deg;
+        } else deg=clamp(slot.deg+((rng()<.7?1:2)*(rng()<.5?-1:1)),0,4);  /* steps over leaps */
+        if(this.prevWasLeapUp!==null){ deg=clamp(this.lastDeg+(this.prevWasLeapUp?-1:1),0,4); this.prevWasLeapUp=null; }
+        else if(Math.abs(deg-this.lastDeg)>2) this.prevWasLeapUp=deg>this.lastDeg;
+        this.lastDeg=deg;
+        /* the augmented fifth: admitted in proportion to altitude */
+        const useAug=rng()<x*x*.4;
+        const oct=x>.55&&rng()<x?24:12;
+        const m=KEY+12+(useAug?AUG5:PENT[deg])+oct;
+        pluck(m,t+hum(),.5+x*.5,SPB*(rng()<.3?.9:.45));
+        Vis.note(t,m,x);
+      }
+    }
+    if(bar%8===7&&sInBar===0) this.motif=this.motif.map(sl=>rng()<.3?{deg:(rng()*5)|0,on:rng()<.7}:sl);
+
+    /* ---------- summit arpeggio: stacked major thirds, whole-tone shimmer ---------- */
+    if(x>.8&&s16%2===0){
+      const arp=[7,11,3,7+12,11+12];                            /* E G# C E' G#' */
+      const m=KEY+24+arp[(step/2)%arp.length|0];
+      bell(m,t+hum(),.5+.4*rng());
+    }
+    /* valley bells — sparse, wet, cold */
+    if(x<.25&&s16===0&&rng()<.4) bell(KEY+24+PENT[(rng()*5)|0],t+rr(0,.05),.7);
+  },
+  scheduleRide(rb,sInBar,s16,bar,t,off){
+    const hum=()=>off+rr(-.006,.006);
+    const RIDE_PROG=['Am','Am','F','F','Am','Am','G','G'];
+    const ch=RIDE_PROG[rb%8];
+    if(sInBar===0){
+      if(this.chord!==ch){ this.chord=ch; Pad.set(ch,t); }
+      /* chord stab — punch on the downbeat */
+      for(const pc of CHORDS[ch].n) pluck(KEY+24+pc,t+rr(0,.008),.85,SPB*.6);
+      bell(KEY+36+CHORDS[ch].n[0],t,.55);
+      if(rb===0){ nHit(t,1.2,'highpass',6000,.7,.24); Vis.dropFlash(t); }
+    }
+    const rootPc=CHORDS[ch].n[0];
+    const rootM=KEY+((rootPc<=7)?rootPc:rootPc-12);
+    /* syncopated bass riff: root · root · b7 · root · 5 · b7 */
+    const BR={0:0,3:0,6:10,8:0,11:7,14:10};
+    const bo=BR[s16];
+    if(bo!==undefined){
+      const nm = bo===0 ? rootM : bo===7 ? rootM+7 : rootM-2;   /* b7 voiced below — bass stays low and alone */
+      bass(nm,t+(s16%2?hum():0),SPB*.42,.95);
+    }
+    /* drums — the beat that slaps */
+    const acc=v=>v*(s16%8===0?1:(s16%4===0?.85:.6))*rr(.92,1.04);
+    if(s16%4===0) kick(t,1);
+    if(s16===(rb%2?10:7)) kick(t+hum(),.72);
+    if(s16===4||s16===12){ snare(t+rr(-.003,.003),1); clap(t+rr(0,.007),.62); }
+    hat(t+hum(),s16===14,acc(.95));
+    /* last-bar fill */
+    if(rb===this.drop.rideBars-1&&sInBar>=12){ snare(t+hum(),.4+((sInBar-12)/4)*.55); if(sInBar===15)kick(t,1); }
+    /* the hook: motif as an insistent riff, high, aug-5 on the turnaround */
+    const HOOK=[0,2,4,7,10,12];
+    if(HOOK.indexOf(s16)>=0&&rng()<.85){
+      const i=HOOK.indexOf(s16);
+      const slot=this.motif[i%4];
+      const turn=(rb%4===3&&s16===12);
+      const m=KEY+36+(turn?AUG5:PENT[slot.deg]);
+      pluck(m,t+hum(),.9,SPB*.4);
+      if(s16===0)bell(m+12,t,.5);
+      Vis.note(t,m,.9);
+    }
+    Vis.ride(t);
+  },
+  /* ---------- interaction quantizer: in time, never off-sounding ---------- */
+  qNote(){
+    const b=this.beatNow(), s=b*4, frac=s-Math.floor(s);
+    const step=frac<.18?Math.floor(s):Math.ceil(s);              /* grace window: just-past fires now */
+    return Math.max(this.timeOfBeat(step/4)+rr(-.006,.006),actx.currentTime+.005);
+  },
+  qHalfBar(){
+    const b=this.beatNow(), hb=Math.ceil(b/2+.02)*2;
+    return Math.max(this.timeOfBeat(hb),actx.currentTime+.01);
+  },
+  armDrop(){
+    if(this.drop.phase!=='none'||!State.running)return;
+    this.drop.userArmed=true; this.drop.armed=true;
+    this.drop.bar=Math.floor(this.beatNow()/4)+1;
+    document.body.classList.add('armed');
+    ui.flashHint('DROP ARMED — NEXT BAR');
+  }
+};
+/* user-armed drops fire on their bar */
+const _origSched=C.schedule.bind(C);
+C.schedule=function(step,t){
+  const bar=(step/4)/4, sInBar=step%16;
+  if(this.drop.userArmed&&this.drop.armed&&sInBar===0&&bar>=this.drop.bar&&this.drop.phase==='none'){
+    this.drop={armed:false,bar:null,phase:'gap',userArmed:false,wasUser:true,rideBars:0,rideBar0:0};
+    document.body.classList.remove('armed');
+    A.choke(t,90); Rope.stop(t); Vis.cliffEdge(t);
+    this.anchorT=t; this.anchorB=step/4;
+    return;
+  }
+  _origSched(step,t);
+};
+
+/* ---------------- RENDERER (2D, asymmetric by construction) ---------------- */
+const R={
+  cv:null,g:null,W:0,H:0,dpr:1,dprCap:MB?1.5:2,detail:MB?.7:1,ema:16,
+  resize(){
+    this.dpr=Math.min(this.dprCap,devicePixelRatio||1);
+    this.W=Math.floor(innerWidth*this.dpr); this.H=Math.floor(innerHeight*this.dpr);
+    this.cv.width=this.W; this.cv.height=this.H;
+  },
+  adapt(dt){
+    this.ema=this.ema*.95+dt*1000*.05;
+    if(this.ema>19&&this.detail>.4)this.detail-=.02;
+    else if(this.ema<13&&this.detail<(MB?.85:1))this.detail+=.005;
+  }
+};
+const Vis={
+  shards:[],queued:[],flash:0,shake:0,stars:null,streaks:[],rideGlow:0,
+  ride(t){ this.rideGlow=1; },
+  note(t,m,x){ this.shards.push({t,x:rr(.15,.9),y:.2+((84-m)/40)*.45,a:rr(-.6,.6),sz:rr(10,26)*(1+x),hot:x,life:0,fired:false}); if(this.shards.length>70)this.shards.shift(); },
+  queue(px,py,fireT){ this.queued.push({px,py,fireT}); if(this.queued.length>16)this.queued.shift(); },
+  dropFlash(t){ this.flash=Math.max(this.flash,1); this.shake=1; },
+  cliffEdge(t){ this.flash=Math.max(this.flash,.35); },
+  makeStars(){
+    this.stars=[]; const n=Math.floor(90*R.detail);
+    for(let i=0;i<n;i++)this.stars.push({x:Math.random(),y:Math.random()*.55,s:Math.random()*1.6+.4,tw:Math.random()*6});
+  }
+};
+const ui={
+  tension:.12,phase:'VALLEY',chord:'Am',shownT:.12,hintT:0,
+  flashHint(msg){ const h=$('hint'); h.textContent=msg; h.classList.add('on'); ui.hintT=performance.now(); }
+};
+const PLAYHEAD_X=.34;                                            /* never the center */
+let lastFrame=0;
+function frame(ts){
+  const dt=Math.min(.05,(ts-(lastFrame||ts))/1000); lastFrame=ts;
+  R.adapt(dt);
+  const g=R.g,W=R.W,H=R.H,dpr=R.dpr;
+  const beat=State.running?C.beatNow():0;
+  const x=ui.tension=lerp(ui.tension,C.tension?C.tension(beat):.12,.06);
+
+  /* live UI temperature: cold violet valleys → ember summits */
+  ui.shownT=lerp(ui.shownT,x,.05);
+  const hue=lerp(252,16,ui.shownT), sat=lerp(26,94,ui.shownT);
+  if((ts|0)%3===0)document.documentElement.style.setProperty('--acc',`hsl(${hue} ${sat}% 62%)`);
+  $('spineFill').style.height=(6+ui.shownT*92)+'%';
+
+  /* shake decays; reduced-motion users get none */
+  let shx=0,shy=0;
+  if(Vis.shake>0&&!matchMedia('(prefers-reduced-motion: reduce)').matches){
+    shx=rr(-1,1)*Vis.shake*5*dpr; shy=rr(-1,1)*Vis.shake*3*dpr; Vis.shake*=.88;
+  }
+  g.setTransform(1,0,0,1,shx,shy);
+  /* sky: light source off-center (66%), opposite the playhead */
+  const grad=g.createLinearGradient(0,0,0,H);
+  grad.addColorStop(0,`hsl(${lerp(250,22,x)} ${lerp(30,70,x)}% ${lerp(7,13,x)}%)`);
+  grad.addColorStop(1,'#08070E');
+  g.fillStyle=grad; g.fillRect(-8*dpr,-8*dpr,W+16*dpr,H+16*dpr);
+  const glow=g.createRadialGradient(W*.66,H*.24,0,W*.66,H*.24,W*.5);
+  glow.addColorStop(0,`hsla(${hue} ${sat}% 60% / ${.10+.2*x})`);
+  glow.addColorStop(1,'transparent');
+  g.fillStyle=glow; g.fillRect(0,0,W,H);
+  if(!Vis.stars)Vis.makeStars();
+  g.fillStyle='rgba(230,228,244,.5)';
+  for(const s of Vis.stars){
+    const a=(.25+.3*Math.sin(ts/900+s.tw))*(1-x*.7);
+    if(a>.05){g.globalAlpha=a;g.fillRect(s.x*W,s.y*H,s.s*dpr,s.s*dpr)}
+  }
+  g.globalAlpha=1;
+
+  /* ---------- the escarpment ---------- */
+  const beatsAcross=28, b0=beat-beatsAcross*PLAYHEAD_X;
+  const ridgeY=b=>H*(.9-Terrain.h(b)*.62);
+  const jag=(b,amp)=>Math.sin(b*12.7)*amp+Math.sin(b*31.3+2)*amp*.5;   /* fractal-ish, never mirrored */
+  /* far ridge: slower parallax, colder */
+  g.beginPath();
+  const steps=Math.floor(90*R.detail);
+  for(let i=0;i<=steps;i++){
+    const px=i/steps, b=b0+px*beatsAcross;
+    const y=H*(.92-Terrain.h(b*.5+40)*.34)+jag(b*.5,4*dpr);
+    i?g.lineTo(px*W,y):g.moveTo(px*W,y);
+  }
+  g.lineTo(W,H);g.lineTo(0,H);g.closePath();
+  g.fillStyle=`hsl(${lerp(250,20,x)} 22% 9%)`; g.fill();
+  /* main ridge */
+  const pts=[];
+  for(let i=0;i<=steps;i++){
+    const px=i/steps, b=b0+px*beatsAcross;
+    pts.push([px*W, ridgeY(b)+jag(b,6*dpr*R.detail)]);
+  }
+  g.beginPath(); g.moveTo(pts[0][0],pts[0][1]);
+  for(let i=1;i<pts.length;i++)g.lineTo(pts[i][0],pts[i][1]);
+  g.lineTo(W,H);g.lineTo(0,H);g.closePath();
+  const rg=g.createLinearGradient(0,H*.3,0,H);
+  rg.addColorStop(0,`hsl(${lerp(250,18,x)} 26% 13%)`);
+  rg.addColorStop(1,'#07060C');
+  g.fillStyle=rg; g.fill();
+  /* rim light: windward (left/rising) faces only — asymmetric illumination */
+  g.globalCompositeOperation='lighter';
+  g.lineWidth=1.6*dpr;
+  for(let i=1;i<pts.length;i++){
+    const rising=pts[i][1]<pts[i-1][1];
+    if(rising){
+      g.strokeStyle=`hsla(${hue} ${sat}% 64% / ${.25+.55*x})`;
+      g.beginPath();g.moveTo(pts[i-1][0],pts[i-1][1]);g.lineTo(pts[i][0],pts[i][1]);g.stroke();
+    }
+  }
+  /* the climber */
+  const cy=ridgeY(beat);
+  g.fillStyle=`hsla(${hue} 90% 70% / .95)`;
+  g.beginPath();g.arc(W*PLAYHEAD_X,cy-4*dpr,3.4*dpr,0,7);g.fill();
+  const tr=g.createRadialGradient(W*PLAYHEAD_X,cy-4*dpr,0,W*PLAYHEAD_X,cy-4*dpr,26*dpr);
+  tr.addColorStop(0,`hsla(${hue} 95% 65% / ${.5+.35*Vis.rideGlow})`);tr.addColorStop(1,'transparent');
+  g.fillStyle=tr;g.fillRect(W*PLAYHEAD_X-26*dpr,cy-30*dpr,52*dpr,52*dpr);
+
+  /* queued strikes: pulse until their scheduled moment, then release a shard */
+  const now=actx?actx.currentTime:0;
+  for(let i=Vis.queued.length-1;i>=0;i--){
+    const q=Vis.queued[i];
+    if(now>=q.fireT){ Vis.shards.push({t:0,x:q.px/W*1,y:q.py/H,a:rr(-.7,.7),sz:rr(14,30),hot:x,life:0}); Vis.queued.splice(i,1); continue; }
+    const p=(Math.sin(ts/70)+1)/2;
+    g.strokeStyle=`hsla(${hue} 90% 70% / ${.35+.4*p})`;
+    g.lineWidth=1.2*dpr;
+    g.beginPath();g.arc(q.px,q.py,(5+p*4)*dpr,0,7);g.stroke();
+  }
+  /* canyon speed streaks — only during the run */
+  if(C.drop&&C.drop.phase==='ride'){
+    if(Math.random()<.5*R.detail)Vis.streaks.push({x:1.04,y:.62+Math.random()*.3,len:rr(.04,.11),spd:rr(.9,1.6)});
+    Vis.rideGlow=Math.min(1,Vis.rideGlow+dt*2);
+  } else Vis.rideGlow=Math.max(0,Vis.rideGlow-dt*1.5);
+  if(Vis.streaks.length){
+    g.lineWidth=1.1*dpr;
+    for(let i=Vis.streaks.length-1;i>=0;i--){
+      const st=Vis.streaks[i]; st.x-=st.spd*dt;
+      if(st.x+st.len<0){Vis.streaks.splice(i,1);continue}
+      g.strokeStyle=`hsla(${hue} 95% 66% / ${.35*Vis.rideGlow})`;
+      g.beginPath();g.moveTo(st.x*W,st.y*H);g.lineTo((st.x+st.len)*W,st.y*H);g.stroke();
+    }
+  }
+  /* strike shards: rotated, never symmetric */
+  for(let i=Vis.shards.length-1;i>=0;i--){
+    const s=Vis.shards[i]; s.life+=dt/1.1;
+    if(s.life>=1){Vis.shards.splice(i,1);continue}
+    const a=(1-s.life);
+    g.save();
+    g.translate(s.x*W,s.y*H-s.life*30*dpr);
+    g.rotate(s.a+s.life*.8);
+    g.fillStyle=`hsla(${lerp(252,16,s.hot)} 90% 66% / ${a*.8})`;
+    g.fillRect(-s.sz*dpr*.5,-s.sz*dpr*.08,s.sz*dpr,s.sz*dpr*.16);
+    g.restore();
+  }
+  if(Vis.flash>0){
+    g.fillStyle=`hsla(${hue} 95% 72% / ${Vis.flash*.5})`;
+    g.fillRect(0,0,W,H); Vis.flash*=.86;
+  }
+  g.globalCompositeOperation='source-over';
+
+  /* HUD text */
+  $('hPhase').textContent=ui.phase;
+  $('hChord').textContent=ui.chord;
+  $('hState').textContent=State.running?(State.muted?'MUTED':'RUNNING'):'STANDBY';
+  if(ui.hintT&&performance.now()-ui.hintT>3200){$('hint').classList.remove('on');ui.hintT=0}
+
+  requestAnimationFrame(frame);
+}
+
+/* ---------------- INTERACTION ---------------- */
+let holdInfo=null;
+function terrainYAt(px){ const beat=State.running?C.beatNow():0; const b=beat-28*PLAYHEAD_X+(px/R.cv.clientWidth)*28; return (0.9-Terrain.h(b)*.62)*R.cv.clientHeight; }
+function beatAt(px){ const beat=State.running?C.beatNow():0; return beat-28*PLAYHEAD_X+(px/R.cv.clientWidth)*28; }
+function strike(px,py){
+  if(!State.running)return;
+  const t=C.qNote();
+  const h=1-py/R.cv.clientHeight;
+  const idx=Math.floor(h*10);
+  const useAug=ui.tension>.55&&idx%5===4&&rng()<ui.tension*.5;
+  const m=KEY+12+(useAug?AUG5:PENT[idx%5])+(idx>=5?12:0)+(ui.tension>.6?12:0);
+  pluck(m,t,.9,.5);
+  if(ui.tension>.5)bell(m+12,t,.5);
+  Vis.queue(px*R.dpr,py*R.dpr,t);
+}
+function onDown(e){
+  if(!State.running)return;
+  if(e.target.closest('.pbtn,#info,#start'))return;
+  const px=e.clientX,py=e.clientY;
+  const ty=terrainYAt(px);
+  holdInfo={px,py,t0:performance.now(),onTerrain:py>ty-20,started:false,lastY:py};
+}
+function onMove(e){
+  if(!holdInfo)return;
+  if(holdInfo.onTerrain){
+    const dy=holdInfo.lastY-e.clientY;
+    if(Math.abs(dy)>2){
+      const b=beatAt(holdInfo.px);
+      if(b>C.beatNow()+1){ Terrain.addEdit(b,dy*.004); ui.flashHint(dy>0?'RAISING THE RANGE':'CARVING A VALLEY'); }
+      holdInfo.lastY=e.clientY;
+    }
+  }
+}
+function onUp(e){
+  if(!holdInfo)return;
+  const held=performance.now()-holdInfo.t0;
+  if(held>300&&!holdInfo.onTerrain){
+    /* swell release: chord stab lands on the half-bar — in time, always */
+    const t=C.qHalfBar();
+    const ch=ui.tension>.6?'Eaug':(rng()<.5?'F':'Am');
+    for(const pc of CHORDS[ch].n){ pluck(KEY+24+pc,t+rr(0,.015),.7,SPB); }
+    bell(KEY+36+CHORDS[ch].n[0],t,.6);
+    ui.flashHint('SWELL → '+CHORDS[ch].label+' ON THE HALF-BAR');
+  } else if(held<=300){
+    if(holdInfo.onTerrain){
+      const b=beatAt(holdInfo.px);
+      if(b>C.beatNow()+1){ Terrain.addEdit(b,.22); ui.flashHint('PEAK RAISED AHEAD'); }
+      else strike(holdInfo.px,holdInfo.py);
+    } else strike(holdInfo.px,holdInfo.py);
+  }
+  holdInfo=null;
+}
+
+/* ---------------- BOOT ---------------- */
+function fatal(msg){ $('fatalMsg').innerHTML=msg; $('fatal').classList.add('show'); }
+let wakeLock=null;
+async function reqWake(){try{if('wakeLock' in navigator&&document.visibilityState==='visible'){wakeLock=await navigator.wakeLock.request('screen')}}catch(e){}}
+function start(){
+  if(State.running)return;
+  try{
+    A.init();
+    actx.resume();
+    /* iOS unlock nudge: one silent sample through the destination inside the gesture */
+    try{const _b=actx.createBuffer(1,1,22050),_s=actx.createBufferSource();_s.buffer=_b;_s.connect(actx.destination);_s.start(0)}catch(e){}
+    Terrain.reset(); C.reset();
+    C.nextTime=actx.currentTime+.1; C.anchorT=C.nextTime; C.anchorB=0;
+    Pad.set('Am',actx.currentTime+.15);
+    State.running=true;
+    reqWake();
+    $('start').classList.add('gone');
+    $('hSeed').textContent=SEED;
+    ui.flashHint('TAP THE SKY · SHAPE THE RIDGE · HOLD TO SWELL');
+  }catch(err){ fatal('SCARP could not start.<br>'+(err&&err.message||err)); }
+}
+function rebirth(){
+  if(!State.running)return;
+  SEED=(Math.random()*99999)|0; rng=mulberry32(SEED);
+  const t=actx.currentTime;
+  Pad.killAll(t); Rope.stop(t);
+  Terrain.reset(); C.reset();
+  C.step=0; C.nextTime=t+.15; C.anchorT=C.nextTime; C.anchorB=0;
+  Pad.set('Am',t+.2);
+  $('hSeed').textContent=SEED;
+  ui.flashHint('A NEW RANGE RISES · SEED '+SEED);
+}
+function toggleMute(){
+  if(!actx)return;
+  State.muted=!State.muted;
+  master.gain.setTargetAtTime(State.muted?.0001:.92,actx.currentTime,.03);
+  $('bMute').textContent=State.muted?'UNMUTE':'MUTE';
+}
+function toggleHide(){ document.body.classList.toggle('hidden-ui'); }
+function toggleInfo(){ $('info').classList.toggle('show'); }
+
+try{
+  R.cv=$('gl'); R.g=R.cv.getContext('2d'); R.resize();
+  if(IS_TOUCH)document.body.classList.add('touch');
+  addEventListener('resize',()=>{R.resize();Vis.stars=null});
+  requestAnimationFrame(frame);
+  setInterval(()=>C.tick(),25);
+
+  $('start').addEventListener('pointerup',start);
+  R.cv.addEventListener('pointerdown',onDown);
+  addEventListener('pointermove',onMove);
+  addEventListener('pointerup',onUp);
+  addEventListener('pointercancel',()=>{holdInfo=null});
+  document.addEventListener('contextmenu',e=>e.preventDefault());
+
+  $('bMute').addEventListener('click',toggleMute);
+  $('bDrop').addEventListener('click',()=>C.armDrop());
+  $('bNew').addEventListener('click',()=>rebirth());
+  $('bInfo').addEventListener('click',toggleInfo);
+  $('infoClose').addEventListener('click',toggleInfo);
+  $('bHide').addEventListener('click',toggleHide);
+
+  addEventListener('keydown',e=>{
+    if(e.metaKey||e.ctrlKey||e.altKey)return;
+    const k=e.key.toLowerCase();
+    if(k==='escape'){$('info').classList.remove('show');return}
+    if(!State.running)return;
+    if(e.repeat)return;
+    if(k===' '){e.preventDefault();C.armDrop();return}
+    if(k==='r'){rebirth();return}
+    if(k==='m'){toggleMute();return}
+    if(k==='v'){toggleHide();return}
+    if(k==='i'){toggleInfo();return}
+    if(k==='arrowup'){State.energyBias=clamp(State.energyBias+.05,-.3,.3);ui.flashHint('ENERGY +');return}
+    if(k==='arrowdown'){State.energyBias=clamp(State.energyBias-.05,-.3,.3);ui.flashHint('ENERGY −');return}
+    const KM='asdfghjkl;'.indexOf(k);
+    if(KM>=0){
+      const t=C.qNote();
+      const useAug=ui.tension>.55&&KM%5===4&&rng()<ui.tension*.5;
+      const m=KEY+12+(useAug?AUG5:PENT[KM%5])+(KM>=5?12:0);
+      pluck(m,t,.9,.5);
+      Vis.note(t,m,ui.tension);
+    }
+  });
+
+  /* WebKit doesn't always grant user-activation to pointerup — any trailing tap/click re-arms the context */
+  const kickAudio=()=>{if(actx&&actx.state!=='running')actx.resume()};
+  ['touchend','click'].forEach(ev=>document.addEventListener(ev,kickAudio,{passive:true}));
+  document.addEventListener('visibilitychange',()=>{
+    if(!actx)return;
+    if(document.hidden)actx.suspend();
+    else {actx.resume();if(State.running)reqWake()}
+  });
+}catch(err){ fatal('SCARP failed to boot.<br>'+(err&&err.message||err)); }
+/*__JS_END__*/
+</script>
+</body>
+</html>
